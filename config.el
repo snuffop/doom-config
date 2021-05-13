@@ -26,8 +26,6 @@
 (display-time-mode 1)                     ; Enable time in the mode-line
 (global-subword-mode 1)                   ; Iterate through CamelCase words
 
-<<<<<<< HEAD
-
 (add-hook 'doom-init-ui-hook #'spacemacs/home)
 (remove-hook 'org-load-hook #'+org-init-keybinds-h)
 
@@ -35,8 +33,5 @@
 (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
 
 (setq flycheck-global-modes '(not org-mode))
-=======
 (add-hook 'doom-init-ui-hook #'spacemacs/home)
 (remove-hook 'org-load-hook #'+org-init-keybinds-h)
-
->>>>>>> master
