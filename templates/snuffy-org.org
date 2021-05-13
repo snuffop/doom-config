@@ -1,0 +1,3 @@
+#+TITLE:  ${1:`(replace-regexp-in-string "-" " " (capitalize (file-name-nondirectory (file-name-sans-extension (buffer-file-name)))))`}
+#+AUTHOR: Marty Buchaus
+#+EMAIL:  marty@dabuke.com
