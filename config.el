@@ -19,8 +19,8 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
-;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 10.5 :weight 'normal)
+      doom-variable-pitch-font (font-spec :family "sans" :size 10))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -55,6 +55,10 @@
 
 ;;;; Spacemacs Config
 
+(add-hook 'doom-init-ui-hook #'spacemacs/home)
+(remove-hook 'org-load-hook #'+org-init-keybinds-h)
+
+;;;;; Layouts
 (spacemacs|define-custom-layout "@Org"
   :binding "o"
   :body
@@ -84,3 +88,12 @@
   :binding "s"
   :body
   (find-file "~/Source/NSI/salt-master/README.org"))
+
+
+;;;; Wakatime
+
+(use-package! wakatime-mode
+  :hook (doom-first-buffer . global-wakatime-mode)
+  :config
+  (setq wakatime-cli-path "/usr/bin/wakatime")
+  (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
