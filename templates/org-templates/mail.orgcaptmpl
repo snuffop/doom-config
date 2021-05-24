@@ -1,0 +1,7 @@
+** TODO EMail  %:description   :EMAIL:
+  :PROPERTIES:
+  :CREATED: %U
+  :EMAIL-SOURCE: %:link
+  :END:
+  %:link 
+    %?
