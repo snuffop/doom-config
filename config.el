@@ -48,6 +48,15 @@
 (set-file-template! "/[0-9]\\{8\\}.org$" :trigger "__defaultJournal.org" :mode 'org-mode)
 
 
+;;;; Outshine
+(after! outshine
+  (add-hook 'emacs-lisp-mode-hook 'outshine-mode)
+  (defvar outline-minor-mode-prefix "\M-#"))
+
+(map! :after outshine
+      :map outshine-mode-map
+      "TAB" #'outshine-cycle)
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one

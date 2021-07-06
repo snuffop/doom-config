@@ -2,7 +2,7 @@
 
 (after! org
 
-  ;; Setting
+;;;; Setting
   (setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
   (setq org-default-notes-file (concat org-directory "0mobile.org"))
   (setq org-download-image-dir "~/Nextcloud/Notes/images/")
@@ -13,8 +13,8 @@
 
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h)
 
-;;;;; Templates
-;;;;;; Capture
+;;;; Templates
+;;;;; Capture
 
   (setq org-capture-templates
         '(("t" "Task" entry

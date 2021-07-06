@@ -33,6 +33,11 @@
     "C-j" #'next-line-or-history-element
     "C-k" #'previous-line-or-history-element))
 
+(define-key! help-map
+   "h"    #'helpful-at-point
+)
+
+
 
 ;;
 ;;; Global keybindings
