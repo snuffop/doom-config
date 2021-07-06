@@ -17,10 +17,21 @@
 ;;;;  Line Numbers
 (setq display-line-numbers-type 'relative)
 
+;;;; Leader keys and keybindings
 
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
+(setq doom-localleader-key ",")
+(load! "keybindings.el")
+;;;; Org Mode
+
 (setq org-directory "~/Nextcloud/Notes/org/")
+
+(load! "org-mode.el")
+(load! "functions.el")
+
+;;;; File Templates
+
+(set-file-template! "\\.org" :trigger "__default.org" :mode 'org-mode)
+(set-file-template! "daily/[^/].+\\.org?$" :trigger "__roam-daily.org" :mode 'org--mode)
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -39,4 +50,3 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(load! org-mode.el)
