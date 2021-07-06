@@ -1,0 +1,9 @@
+#+TITLE: Daily Notes for `(marty/journal-title)`
+#+STARTUP: overview
+
+* Status () {}
+* Links
+** [[file:2021 Index Org-Journal.org][2021 Index Org-Journal]]
+** `(marty/journal-graphicslink)`
+* Tasks
+* Entries

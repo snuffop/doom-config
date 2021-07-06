@@ -296,8 +296,8 @@
       :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
       :desc "Search project"               "/" #'+default/search-project
 
-      ;; :desc "Find file in project"  "SPC"  #'projectile-find-file
-      :desc "Counsel Meta X"        "SPC"  #'counsel-M-x
+      :desc "Find file in project"  "SPC"  #'projectile-find-file
+      ;;:desc "Counsel Meta X"        "SPC"  #'counsel-M-x
       :desc "Jump to bookmark"      "RET"  #'bookmark-jump
 
 

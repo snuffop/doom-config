@@ -31,7 +31,22 @@
 ;;;; File Templates
 
 (set-file-template! "\\.org" :trigger "__default.org" :mode 'org-mode)
-(set-file-template! "daily/[^/].+\\.org?$" :trigger "__roam-daily.org" :mode 'org--mode)
+(set-file-template! "\\.sh" :trigger "__default.sh" :mode 'sh-mode)
+(set-file-template! "\\.html?$" :trigger "__default.html" :mode 'web-mode)
+(set-file-template! "\\.el" :trigger "__default.el" :mode 'emacs-lisp-mode)
+(set-file-template! "Blorg/snuffy-org/.+\\.org?$" :trigger "__snuffy-org.org" :mode 'org-mode)
+(set-file-template! "Sites/snuffy.org/.+\\.org?$" :trigger "__snuffy-org-posts.org" :mode 'org-mode)
+(set-file-template! "salt-master.+\\.org?$" :trigger "__salt-master.org" :mode 'org-mode)
+(set-file-template! "NSI-Documentation/[^/]+\\.org?$" :trigger "__NSI-Documentation.org":mode 'org-mode)
+(set-file-template! "NSI-Documentation/.+/[^/]+\\.org?$" :trigger "__NSI-Documentation.org" :mode 'org-mode)
+(set-file-template! "NSI-Documentation/tipjar/[^/]+\\.org?$" :trigger "__NSI-Documentation-tipjar.org" :mode 'org-mode)
+(set-file-template! "NSI-Documentation/TVA/[^/]+\\.org?$" :trigger "__NSI-Documentation-TVA.org" :mode 'org-mode)
+(set-file-template! "NSI-Documentation/TVA/ScanReports/.+[^/]+\\.org?$" :trigger "__NSI-Documentation-TVA-scanreport.org" :mode 'org-mode)
+(set-file-template! "NSI-Documentation/Patching/.+[^/]+\\.org?$" :trigger "__NSI-Documentation-Patching-Notes.org" :mode 'org-mode)
+(set-file-template! "masons/[^/].+\\.org?$" :trigger "__masonsMeetingMinuets.org" :mode 'org-mode)
+(set-file-template! "daily/[^/].+\\.org?$" :trigger "__defaultRoamDaily.org" :mode 'org-mode)
+(set-file-template! "/[0-9]\\{8\\}.org$" :trigger "__defaultJournal.org" :mode 'org-mode)
+
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
