@@ -6,10 +6,6 @@
 * Links
 ** [[file:index.org][R:Dailies Index]]
 ** `(marty/org-roam-dailies-graphicslink)`
-
 * Tasks
-
 * Rackspace
-
 * Journal
-$0

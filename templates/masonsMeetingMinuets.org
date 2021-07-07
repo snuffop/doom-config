@@ -1,15 +1,7 @@
-# -*- mode: snippet -*-
-# name: Masons Meeting Minuets
-# --
-#+TITLE: ${1:`(if (string-match "modules/\\([^/]+\\)/\\([^/]+\\)/.+" buffer-file-name)
-                    (format "%s/%s"
-                            (match-string 1 buffer-file-name)
-                            (match-string 2 buffer-file-name))
-                  "")`}
-#+DATE: `(format (format-time-string "%B %%s, %Y") (string-to-number (format-time-string "%d")))`
-#+SINCE: ${2:<replace with next tagged release version>}
+#+TITLE:  ${1:`(replace-regexp-in-string "-" " " (capitalize (file-name-nondirectory (file-name-sans-extension (buffer-file-name)))))`}
 #+AUTHOR: Marty Buchaus
 #+EMAIL:  marty@dabuke.com
+#+DATE: `(format-time-string "%B %d, %Y")`
 #+STARTUP: entitiespretty
 #+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org
 #+LaTeX_HEADER: \usepackage{indentfirst}

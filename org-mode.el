@@ -1,8 +1,7 @@
 ;;; org-mode.el -*- lexical-binding: t; -*-
-
+;;;; ORG
 (after! org
-
-;;;; Setting
+;;;;; Setting
   (setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
   (setq org-default-notes-file (concat org-directory "0mobile.org"))
   (setq org-download-image-dir "~/Nextcloud/Notes/images/")
@@ -11,10 +10,30 @@
   (setq org-projectile-file "todo.org")
   (setq org-fancy-priorities-list '("🅰" "🅱" "🅲" "🅳" "🅴"))
 
-  (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h)
 
-;;;; Templates
-;;;;; Capture
+  (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h)
+  ;; clocking
+
+  (setq org-clock-into-drawer "CLOCKING")          ;; Where to put the clock in and out for tracked items
+  (setq org-clock-out-remove-zero-time-clocks t)
+
+  ;; Logging and ID
+
+  (setq org-log-done t)
+  (setq org-log-into-drawer t)
+  (setq org-icalendar-store-UID t)
+  (setq org-id-track-globally t)
+
+;;;;; org agenda
+  (after! org-agenda
+    (require 'org-projectile)
+    (mapcar #'(lambda (file)
+                (when (file-exists-p file)
+                  (push file org-agenda-files)))
+            (org-projectile-todo-files)))
+
+;;;;; Templates
+;;;;;; Capture
 
   (setq org-capture-templates
         '(("t" "Task" entry
@@ -58,7 +77,7 @@
   (setq org-protocol-default-template-key "t")
 
 
-  ;;; Org Roam
+;;;;; Org Roam
 
   (setq org-roam-buffer-width 0.15)
   (setq org-roam-directory "~/Nextcloud/Notes/org/")
@@ -92,4 +111,189 @@
             :olp ("Journal"))))
 
   ) ;; after org-roam
+;;;;; Publish Alist
+
+  ;; Proprietary Stuff for work
+
+  (setq org-publish-project-alist
+        '(
+          ("NSI-Documentation-content"
+           :base-directory "~/Source/NSI/NSI-Documentation/"
+           :base-extension "org"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs"
+           :publishing-function marty/publish
+           :exclude "Archive"
+           :section-numbers nil
+           :with-toc nil
+           :auto-sitemap t
+           :sitemap-filename "filemap.org"
+           :sitemap-title "& Sitemap"
+           :headline-levels 10
+           :auto-preamble t
+           :recursive t)
+
+          ("NSI-Documentation-images"
+           :base-directory "~/Source/NSI/NSI-Documentation/images/"
+           :base-extension "jpg\\|gif\\|png"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/images/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2020-images"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2020/images/"
+           :base-extension "jpg\\|gif\\|png"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2020/images/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2020-reports"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2020/reports/"
+           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2020/reports/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2021-images"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2021/images/"
+           :base-extension "jpg\\|gif\\|png"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2021/images/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2021-reports"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2021/reports/"
+           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2021/reports/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-files"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/files/"
+           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/files/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("salt-master"
+           :base-directory "~/Source/NSI/salt-master/"
+           :base-extension "org"
+           :publishing-directory "~/Source/NSI/salt-master/docs"
+           :publishing-function marty/publish
+           :exclude "docs"
+           :section-numbers nil
+           :with-toc nil
+           :auto-sitemap t
+           :sitemap-filename "filemap.org"
+           :sitemap-title "& Sitemap"
+           :headline-levels 7
+           :auto-preamble t
+           :recursive t)
+
+          ("NSI-Documentation" :components ("NSI-Documentation-content" "NSI-Documentation-images" "NSI-Documentation-TVA-ScanReports-2020-images" "NSI-Documentation-TVA-ScanReports-2020-reports" "NSI-Documentation-TVA-ScanReports-2021-images" "NSI-Documentation-TVA-ScanReports-2021-reports" "NSI-Documentation-TVA-ScanReports-files"))))
+
+;;;;; Tags
+
+  (setq org-tag-alist (quote
+                       ((:startgroup)
+                        ("@ASITS"     . ?A)
+                        ("@BillPay"   . ?B)
+                        ("@RedEarth"  . ?D)
+                        ("@Email"     . ?E)
+                        ("@Jazney"    . ?J)
+                        ("@Outside"   . ?o)
+                        ("@PhoneCall" . ?p)
+                        ("@Personal"  . ?P)
+                        ("@Rackspace" . ?R)
+                        ("@Reading"   . ?r)
+                        ("@errand"    . ?e)
+                        ("@home"      . ?h)
+                        ("@inside"    . ?i)
+                        ("@masons"    . ?M)
+                        ("@music"     . ?m)
+                        ("@office"    . ?O)
+                        ("@system"    . ?x)
+                        ("2637E20th")
+                        (:endgroup)
+                        ("CANCELLED"  . ?C)
+                        ("DRAFT"      . ?D)
+                        ("FLAGGED"    . ?F)
+                        ("HOLD"       . ?H)
+                        ("IDEA"       . ?I)
+                        ("NOTE"       . ?N)
+                        ("PROJECT"    . ?P)
+                        ("WAITING"    . ?w)
+                        ("WORK"       . ?W))))
+
+;;;;; Todo
+;;;;;; Faces
+
+  (setq org-todo-keyword-faces
+        '(("TODO"       . org-warning)
+          ("NEXT"       . (:foreground "#008080" :weight bold))
+          ("STARTED"    . (:foreground "#E35DBF" :weight bold))
+          ("BLOCKED"    . (:foreground "White"   :weight bold))
+          ("TODELEGATE" . (:foreground "White"   :weight bold))
+          ("DELEGATED"  . (:foreground "pink"    :weight bold))
+          ("CANCELED"   . (:foreground "white"   :weight bold))
+          ("TICKLE"     . (:foreground "White"   :weight bold))
+          ("DONE"       . (:foreground "green"   :weight bold))))
+
+;;;;;; keywords
+
+  (setq org-todo-keywords
+        '((sequence "TODO(t)"
+                    "NEXT(n!)"
+                    "STARTED(s!)"
+                    "BLOCKED(b@/!)"
+                    "TODELEGATE(g@/!)"
+                    "DELEGATED(D@/!)"
+                    "FOLLOWUP(f@/!)"
+                    "TICKLE(T!)"
+                    "|"
+                    "CANCELLED(c@)"
+                    "DONE(d@)")))
+;;;;; Symbols
+
+  (setq-default prettify-symbols-alist '(
+                                    ("->"  .  "→")
+                                    ("->>" .  "↠")
+                                    ("<-"  .  "←")
+                                    ("<="  . "≤")
+                                    ("<|"  . "◁")
+                                    ("=>"  . "⇒")
+                                    (">="  . "≥")
+                                    ("|>"  . "▷")
+                                    ("[ ]" . "☐")
+                                    ("[-]" . "⊡")
+                                    ("[X]" . "☑")
+                                    ("lambda" . "λ")
+                                    ("#+BEGIN_EXAMPLE" . ">EG>")
+                                    ("#+BEGIN_SRC" . "†")
+                                    ("#+END_EXAMPLE" . "<EG<")
+                                    ("#+END_SRC" . "†")
+                                    ("#+begin_example" . ">EG>")
+                                    ("#+begin_src" . "†")
+                                    ("#+end_example" . "<EG<")
+                                    ("#+end_src" . "†")
+                                    ))
+;;;;; Mail/Mutt
+
+(org-add-link-type "message" 'mutt-open-message)
+
+;;;;; ORG-MODULES
+
+;;;;;; org-caldav
+
+(use-package org-caldav
+  :after org
+  :config (progn
+            (setq org-caldav-url "https://nextcloud.home.snuffy.org/remote.php/dav/calendars/marty")
+            (setq org-caldav-calendar-id "personal")
+            (setq org-caldav-inbox "~/Nextcloud/Notes/calendar/personal.org")
+            (setq org-caldav-files '("~/Nextcloud/Notes/calendar/personal.org"))
+            (setq org-icalendar-timezone "America/New York")
+            (setq org-icalendar-use-deadline t)
+            ))
+
+;;;; end ORG
 );; after org

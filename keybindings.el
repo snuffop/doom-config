@@ -1,4 +1,12 @@
-;;; config/default/+bindings.el -*- lexical-binding: t; -*-
+;;; $DOOMDIR/keybindings.el --- Summary -*- lexical-binding: t; -*-
+;;
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
+;; Created:  7 July 2021
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;;; Code:
 
 (when (featurep! :editor evil +everywhere)
   ;; NOTE SPC u replaces C-u as the universal argument.
@@ -37,9 +45,6 @@
    "h"    #'helpful-at-point
 )
 
-
-
-;;
 ;;; Global keybindings
 
 ;; Smart tab, these will only work in GUI Emacs
@@ -117,6 +122,7 @@
       ;; misc
       :n "C-S-f"  #'toggle-frame-fullscreen
       :n "C-+"    #'doom/reset-font-size
+      :n "C-:"    #'flyspell-correct-at-point
       ;; Buffer-local font resizing
       :n "C-="    #'text-scale-increase
       :n "C--"    #'text-scale-decrease
@@ -305,6 +311,14 @@
       ;;:desc "Counsel Meta X"        "SPC"  #'counsel-M-x
       :desc "Jump to bookmark"      "RET"  #'bookmark-jump
 
+      ;;; <leader> a --- Application
+      (:prefix-map ("a" . "Applicaion")
+       (:prefix-map ("t" . "Tramp")
+        :desc "Cleanup All Connections"    "C"  #'tramp-cleanup-all-connections
+        :desc "Cleanup All Buffers"        "B"  #'tramp-cleanup-all-buffers
+        :desc "Cleanup This Connection"    "c"  #'tramp-cleanup-this-connection
+        :desc "Counsel Tramp"              "t"  #'counsel-tramp
+        :desc "Counsel Tramp Quit"         "q"  #'counsel-tramp-quit))
 
       ;;; <leader> b --- buffer
       (:prefix-map ("b" . "buffer")
@@ -480,7 +494,7 @@
         :desc "Switch workspace"          "."   #'+workspace/switch-to
         :desc "Switch to last workspace"  "`"   #'+workspace/other
         :desc "New workspace"             "n"   #'+workspace/new
-        :desc "Load workspace from file"  "l"   #'+workspace/load
+        :desc "open workspace from file"  "o"   #'+workspace/load
         :desc "Save workspace to file"    "s"   #'+workspace/save
         :desc "Delete session"            "x"   #'+workspace/kill-session
         :desc "Delete this workspace"     "d"   #'+workspace/delete
@@ -593,11 +607,23 @@
        (:when (featurep! :tools docker)
         :desc "Docker" "D" #'docker)
        (:when (featurep! :email mu4e)
-        :desc "mu4e" "m" #'=mu4e)
-       (:when (featurep! :email notmuch)
-        :desc "notmuch" "m" #'=notmuch)
-       (:when (featurep! :email wanderlust)
-        :desc "wanderlust" "m" #'=wanderlust))
+        :desc "mu4e" "e" #'=mu4e)
+       (:prefix-map ("m" . "MY")
+        :desc "0mobile"       "0" #'mb/0mobile
+        :desc "Desktop"       "d" #'mb/desktop
+        :desc "contacts"      "c" #'mb/contacts
+        :desc "Tasks"         "g" #'mb/Tasks
+        :desc "Habits"        "h" #'mb/Habits
+        :desc "read later"    "l" #'mb/read-later
+        :desc "Someday"       "s" #'mb/Someday
+        :desc "Tip Jar"       "t" #'mb/TipJar
+         (:prefix-map ("c" . "+config")
+          :desc "keybindings"  "k"  #'mb/base-keybinding
+          :desc "config"       "c"  #'mb/base-config
+          :desc "org"          "o"  #'mb/org-config
+          :desc "functions"    "f"  #'mb/functions
+          :desc "packages"     "p"  #'mb/packages
+          )))
 
       ;;; <leader> p --- project
       (:prefix-map ("p" . "project")
@@ -724,3 +750,53 @@
     (cl-pushnew `((,(format "\\`\\(?:C-w\\|%s w\\) m\\'" prefix-re))
                   nil . "maximize")
                 which-key-replacement-alist)))
+
+
+;;;;; Override org mode map
+;;;;;
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      (:prefix-map ("r" . "org-roam")
+       "b" #'org-roam-switch-to-buffer
+       "f" #'org-roam-find-file
+       "g" #'org-roam-graph
+       "i" #'org-roam-insert
+       "I" #'org-roam-insert-immediate
+       "j" #'org-roam-dailies-capture-today
+       "m" #'org-roam
+       "t" #'org-roam-tag-add
+       "T" #'org-roam-tag-delete
+       (:prefix ("d" . "by date")
+        :desc "Find previous note" "b" #'org-roam-dailies-find-previous-note
+        :desc "Find date"          "d" #'org-roam-dailies-find-date
+        :desc "Find next note"     "f" #'org-roam-dailies-find-next-note
+        :desc "Find tomorrow"      "m" #'org-roam-dailies-find-tomorrow
+        :desc "Capture today"      "n" #'org-roam-dailies-capture-today
+        :desc "Find today"         "t" #'org-roam-dailies-find-today
+        :desc "Capture Date"       "v" #'org-roam-dailies-capture-date
+        :desc "Find yesterday"     "y" #'org-roam-dailies-find-yesterday
+        :desc "Find directory"     "." #'org-roam-dailies-find-directory))
+      (:prefix-map ("s" . "tree/subtree")
+       "a" #'org-toggle-archive-tag
+       "b" #'org-tree-to-indirect-buffer
+       "d" #'org-cut-subtree
+       "h" #'org-promote-subtree
+       "j" #'org-move-subtree-down
+       "k" #'org-move-subtree-up
+       "l" #'org-demote-subtree
+       "n" #'org-narrow-to-subtree
+       (:prefix ("r" . "refile")
+        "." #'+org/refile-to-current-file
+        "c" #'+org/refile-to-running-clock
+        "l" #'+org/refile-to-last-location
+        "f" #'+org/refile-to-file
+        "o" #'+org/refile-to-other-window
+        "O" #'+org/refile-to-other-buffer
+        "v" #'+org/refile-to-visible
+        "r" #'org-refile) ; to all `org-refile-targets'
+       "s" #'org-sparse-tree
+       "A" #'org-archive-subtree
+       "N" #'widen
+       "S" #'org-sort))
