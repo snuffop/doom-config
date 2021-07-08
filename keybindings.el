@@ -11,7 +11,7 @@
 (when (featurep! :editor evil +everywhere)
   ;; NOTE SPC u replaces C-u as the universal argument.
 
-  ;; Minibuffer
+  ;; Mini buffer
   (map! :map (evil-ex-completion-map evil-ex-search-keymap)
         "C-a" #'evil-beginning-of-line
         "C-b" #'evil-backward-char
@@ -62,7 +62,7 @@
                       (and (featurep! :editor fold)
                            (save-excursion (end-of-line) (invisible-p (point))))
                       #'+fold/toggle
-                      ;; Fixes #4548: without this, this tab keybind overrides
+                      ;; Fixes #4548: without this, this tab key bind overrides
                       ;; mode-local ones for modes that don't have an evil
                       ;; keybinding scheme or users who don't have :editor (evil
                       ;; +everywhere) enabled.

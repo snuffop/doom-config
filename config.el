@@ -114,7 +114,6 @@
   (setq tramp-default-method "scp")
   (setq remote-file-name-inhibit-cache nil)
   (setq tramp-completion-reread-directory-timeout nil)
-  ;; (setq tramp-use-ssh-controlmaster-options t)
   (setq helm-tramp-control-master t)
 
   (setq vc-ignore-dir-regexp
@@ -122,25 +121,16 @@
                 vc-ignore-dir-regexp
                 tramp-file-name-regexp))
 
-  ;; (add-hook 'counsel-tramp-pre-command-hook
-  ;;           '(lambda () (global-aggressive-indent-mode 0)
-  ;;              (projectile-mode 0)
-  ;;              (editorconfig-mode 0)))
-
-  (add-hook 'helm-tramp-pre-command-hook
+  (add-hook 'counsel-tramp-pre-command-hook
             '(lambda () (global-aggressive-indent-mode 0)
                (projectile-mode 0)
                (editorconfig-mode 0)))
 
-  ;; (add-hook 'counsel-tramp-quit-hook
-  ;;           '(lambda () (global-aggressive-indent-mode 1)
-  ;;              (projectile-mode 1)
-  ;;              (editorconfig-mode 1)))
-
-  (add-hook 'helm-tramp-quit-hook
+  (add-hook 'counsel-tramp-quit-hook
             '(lambda () (global-aggressive-indent-mode 1)
                (projectile-mode 1)
                (editorconfig-mode 1)))
+
 ;;;;;; List of Hosts
 
   ;; (setq counsel-tramp-custom-connections
@@ -294,11 +284,14 @@
   :defer t)
 
 ;;;;; Outshine
+
+(use-package! outshine)
+
 (after! outshine
   (map! :after outshine
         :map emacs-lisp-mode-map
         "TAB" #'outshine-cycle)
-  (add-hook 'emacs-lisp-mode-hook 'outshine-mode)
+  (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
 
 ;;;;; Salt Mode
