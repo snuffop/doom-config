@@ -110,7 +110,10 @@
 
    ;;; Org Roam Capture Templates
   (after! org-roam
+
     (custom-set-faces '(org-roam-link ((t (:inherit org-link :foreground "#F2C3BD")))))
+
+    (remove-hook! 'find-file-hook #'org-roam-open-buffer-maybe-h)
 
     (setq org-roam-dailies-capture-templates
           '(
@@ -136,6 +139,7 @@
              :olp ("Journal"))))
 
     ) ;; after org-roam
+
 ;;;;; Publish Alist
 
   ;; Proprietary Stuff for work

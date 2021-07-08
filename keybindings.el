@@ -501,6 +501,7 @@
         :desc "Delete session"            "x"   #'+workspace/kill-session
         :desc "Delete this workspace"     "d"   #'+workspace/delete
         :desc "Rename workspace"          "r"   #'+workspace/rename
+        :desc "Switch workspace"          "l"   #'+workspace/switch-to
         :desc "Restore last session"      "R"   #'+workspace/restore-last-session
         :desc "Next workspace"            "]"   #'+workspace/switch-right
         :desc "Previous workspace"        "["   #'+workspace/switch-left
@@ -619,13 +620,13 @@
         :desc "read later"    "l" #'mb/read-later
         :desc "Someday"       "s" #'mb/Someday
         :desc "Tip Jar"       "t" #'mb/TipJar
-         (:prefix-map ("c" . "+config")
-          :desc "keybindings"  "k"  #'mb/base-keybinding
-          :desc "config"       "c"  #'mb/base-config
-          :desc "org"          "o"  #'mb/org-config
-          :desc "functions"    "f"  #'mb/functions
-          :desc "packages"     "p"  #'mb/packages
-          )))
+        (:prefix-map ("c" . "+config")
+         :desc "keybindings"  "k"  #'mb/base-keybinding
+         :desc "config"       "c"  #'mb/base-config
+         :desc "org"          "o"  #'mb/org-config
+         :desc "functions"    "f"  #'mb/functions
+         :desc "packages"     "p"  #'mb/packages
+         )))
 
       ;;; <leader> p --- project
       (:prefix-map ("p" . "project")

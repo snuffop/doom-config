@@ -110,6 +110,8 @@
   (setq mu4e-action-tags-header "X-Label")
   (setq mu4e-attachment-dir "/home/marty/Downloads/Mail")
   (setq mu4e-change-filenames-when-moving t)
+  (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
+  (setq mu4e-update-interval  300)
 
   ;;;;;; Set from Context  these are default
 
@@ -402,6 +404,5 @@
                                              "Marty Buchaus\n"
                                              "Real House Hunters / Jazney Inc\n"))))))
 ;;;;;; End Contexts
-;;;; mu4e.el ends here
+;;;;;; mu4e.el ends here
   )
-:
