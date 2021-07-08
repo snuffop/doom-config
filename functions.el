@@ -94,7 +94,7 @@
       ((message-id
         (replace-regexp-in-string "^/*" "" message-id))
        (mail-file
-;; notmuch
+        ;; notmuch
         (replace-regexp-in-string
          "\n$" "" (shell-command-to-string
                    (format "notmuch search --output=files id:%s" message-id))))
@@ -103,14 +103,14 @@
                                            (file-name-directory mail-box)))
        (mutt-keystrokes
         (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
-        (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-dir  mutt-keystrokes)))
-;; MU
-;;         (replace-regexp-in-string
-;;          "\n$" "" (shell-command-to-string
-;;                    (format "mu find -u i:%s --fields 'm'" message-id ))))
-;;        (mutt-keystrokes
-;;         (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
-;;         (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-file  mutt-keystrokes)))
+       (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-dir  mutt-keystrokes)))
+    ;; MU
+    ;;         (replace-regexp-in-string
+    ;;          "\n$" "" (shell-command-to-string
+    ;;                    (format "mu find -u i:%s --fields 'm'" message-id ))))
+    ;;        (mutt-keystrokes
+    ;;         (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
+    ;;         (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-file  mutt-keystrokes)))
 
     (message "Launching neomutt for message %s" message-id)
     (message " %s" mutt-command)
@@ -118,3 +118,38 @@
                   "-f" "termite" "-e"
                   mutt-command)))
 
+;;;;;; MU4E
+
+(defvar marty-mu4e/mu4e-compose-signed-p t)
+(defvar marty-mu4e/mu4e-compose-signed-and-crypted-p nil)
+
+(defun marty-mu4e/mu4e-compose-maybe-signed-and-crypted ()
+  "Maybe sign or encrypt+sign message.
+Message is signed or encrypted+signed when replying to a signed or encrypted
+message, respectively.
+Alternatively, message is signed or encrypted+signed if
+`ambrevar/mu4e-compose-signed-p' or `ambrevar/mu4e-compose-signed-and-crypted-p' is
+non-nil, respectively.
+This function is suitable for `mu4e-compose-mode-hook'."
+  (let ((msg mu4e-compose-parent-message))
+    (cond
+     ((or marty-mu4e/mu4e-compose-signed-and-crypted-p
+          (and msg (member 'encrypted (mu4e-message-field msg :flags))))
+      (mml-secure-message-sign-encrypt))
+     ((or marty-mu4e/mu4e-compose-signed-p
+          (and msg (member 'signed (mu4e-message-field msg :flags))))
+      (mml-secure-message-sign-pgpmime)))))
+
+;; Follow up quick key
+
+(defun marty/capture-mail-follow-up (msg)
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture "ma"))
+
+(defun marty/capture-mail-read-later (msg)
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture "mr"))
+
+;; End MU4E

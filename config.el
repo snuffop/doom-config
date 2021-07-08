@@ -1,4 +1,4 @@
-;;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; -*-
+;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -19,14 +19,9 @@
 
 ;;;; Fonts
 
-;; (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 10.5 :weight 'normal)
-;;       doom-variable-pitch-font (font-spec :family "Noto Serif" )
-;;       doom-unicode-font (font-spec :family "Ubuntu" :size 12)
-;;       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 19))
-
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 10.5 )
-      doom-unicode-font (font-spec :family "Symbola" :size 12)
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
+      doom-unicode-font (font-spec :family "Symbola" :size 11)
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 14)
       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20))
 
 (custom-set-faces!
@@ -34,7 +29,7 @@
   '(mode-line-inactive :family "DejaVu Sans Mono" :height 105))
 
 ;;;; Theme
-(setq doom-theme 'doom-dracula)
+(setq doom-theme 'doom-dracula )
 
 ;;;; Spelling
 
@@ -44,10 +39,9 @@
 ;;;; Line Numbers
 (setq display-line-numbers-type 'relative)
 
-;;;; Leader keys and keybindings
+;;;; Treemacs
 
-(setq doom-localleader-key ",")
-(load! "keybindings.el")
+(setq +treemacs-git-mode 'extended)
 
 ;;;; Org Mode
 
@@ -59,6 +53,11 @@
 ;;;; MU4E
 
 (load! "mu4e.el")
+
+;;;; Leader keys and keybindings
+
+(setq doom-localleader-key ",")
+(load! "keybindings.el")
 
 ;;;; Modules
 ;;;;; aggressive indent
@@ -294,19 +293,6 @@
 (use-package! khardel
   :defer t)
 
-;;;;; Mutt
-
-(use-package! mutt   ;; local loaded
-  :config (progn
-            (add-to-list 'auto-mode-alist '("/tmp/neomutt.*"        . mutt-mode))
-            (add-to-list 'auto-mode-alist '("/tmp/mutt.*"           . mutt-mode))))
-
-(use-package! muttrc-mode  ;; Packages
-  :defer t
-  :config (progn
-            (add-to-list 'auto-mode-alist '("mutt\\'" . muttrc-mode))
-            (add-to-list 'auto-mode-alist '("muttrc\\'" . muttrc-mode))))
-
 ;;;;; Outshine
 (after! outshine
   (map! :after outshine
@@ -342,7 +328,7 @@
 ;;;;; Wakatime
 
 (use-package! wakatime-mode
-  :hook (doom-first-buffer . global-wakatime-mode)
+  :hook (doom-first-buffer . #'global-wakatime-mode)
   :config
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))

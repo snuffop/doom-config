@@ -55,7 +55,6 @@
 (package! counsel-tramp)
 (package! ebuku)
 (package! khardel)
-(package! mutt-mode)
 (package! org-caldav)
 (package! org-projectile)
 (package! paperless)

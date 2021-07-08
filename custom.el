@@ -2,7 +2,7 @@
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;; Created:  7 July 2021
+;; Created:  8 July 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -56,5 +56,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(mode-line ((t (:family "DejaVu Sans Mono" :height 105))))
- '(mode-line-inactive ((t (:family "DejaVu Sans Mono" :height 105))))
- '(org-roam-link ((t (:inherit org-link :foreground "#F2C3BD")))))
+ '(mode-line-inactive ((t (:family "DejaVu Sans Mono" :height 105)))))

@@ -2,6 +2,7 @@
 ;;;; ORG
 (after! org
 ;;;;; Setting
+
   (setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
   (setq org-default-notes-file (concat org-directory "0mobile.org"))
   (setq org-download-image-dir "~/Nextcloud/Notes/images/")
@@ -12,6 +13,7 @@
 
 
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h)
+
   ;; clocking
 
   (setq org-clock-into-drawer "CLOCKING")          ;; Where to put the clock in and out for tracked items
@@ -25,7 +27,30 @@
   (setq org-id-track-globally t)
 
 ;;;;; org agenda
+
   (after! org-agenda
+
+    (setq org-agenda-files '("~/Nextcloud/Notes/org"
+                             "~/Nextcloud/Notes/org/daily"
+                             "~/.cache/calendar/google.org"
+                             "~/.cache/calendar/rackspace.org"
+                             "~/.cache/calendar/tatjana.org"))
+
+    (setq org-agenda-compact-blocks t)
+    (setq org-agenda-include-deadlines t)
+    (setq org-agenda-start-on-weekday 1)
+    (setq org-agenda-start-with-log-mode t)
+    (setq org-agenda-window-setup 'current-window)
+    (setq org-deadline-warning-days 14)
+
+    ;; Ignore scheduled tasks in task list
+    (setq org-agenda-todo-ignore-scheduled 'all)
+    (setq org-agenda-todo-ignore-deadlines 'far)
+
+    ;; Skip Finished Items
+    (setq org-agenda-skip-deadline-if-done t)
+    (setq org-agenda-skip-scheduled-if-done t)
+
     (require 'org-projectile)
     (mapcar #'(lambda (file)
                 (when (file-exists-p file)
@@ -65,7 +90,7 @@
           ("mF" "Follow Up With Deadline" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
            "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\nDEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n%a\n\n%i")
           ("mr" "Read Later" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Read Later")
-          "* TODO Read  Later on %:subject\nSCHEDULED:%t\n%a\n\n%i":immediate-finish t)
+           "* TODO Read  Later on %:subject\nSCHEDULED:%t\n%a\n\n%i":immediate-finish t)
           ("mm" "Masons Follow Up" entry (file+olp "~/Nextcloud/Notes/org/Masons.org" "Follow Up")
            "* TODO Follow up with %:fromname on %:subject %a\nSCHEDULED:%t\n\\n%i")
           ("mR" "Workflow Rackspace")
@@ -87,30 +112,30 @@
   (after! org-roam
     (custom-set-faces '(org-roam-link ((t (:inherit org-link :foreground "#F2C3BD")))))
 
-  (setq org-roam-dailies-capture-templates
-         '(
-           ("d" "default" plain (function org-roam--capture-get-point)
-            "%?"
-            :file-name "daily/%<%Y-%m-%d>"
-            ;; :head "#+TITLE: Daily Notes for %<%A, %B %d %Y>"
-            :unnarrowed t)
-           ("t" "Tasks" entry
-            #'org-roam-capture--get-point
-            "* TODO  %?"
-            :file-name "daily/%<%Y-%m-%d>"
-            :olp ("Tasks"))
-           ("r" "Rackspace" entry
-            #'org-roam-capture--get-point
-            "* %<%H:%M>  %?"
-            :file-name "daily/%<%Y-%m-%d>"
-            :olp ("Rackspace"))
-           ("j" "Journal" entry
-            #'org-roam-capture--get-point
-            "* %<%H:%M>  %?"
-            :file-name "daily/%<%Y-%m-%d>"
-            :olp ("Journal"))))
+    (setq org-roam-dailies-capture-templates
+          '(
+            ("d" "default" plain (function org-roam--capture-get-point)
+             "%?"
+             :file-name "daily/%<%Y-%m-%d>"
+             ;; :head "#+TITLE: Daily Notes for %<%A, %B %d %Y>"
+             :unnarrowed t)
+            ("t" "Tasks" entry
+             #'org-roam-capture--get-point
+             "* TODO  %?"
+             :file-name "daily/%<%Y-%m-%d>"
+             :olp ("Tasks"))
+            ("r" "Rackspace" entry
+             #'org-roam-capture--get-point
+             "* %<%H:%M>  %?"
+             :file-name "daily/%<%Y-%m-%d>"
+             :olp ("Rackspace"))
+            ("j" "Journal" entry
+             #'org-roam-capture--get-point
+             "* %<%H:%M>  %?"
+             :file-name "daily/%<%Y-%m-%d>"
+             :olp ("Journal"))))
 
-  ) ;; after org-roam
+    ) ;; after org-roam
 ;;;;; Publish Alist
 
   ;; Proprietary Stuff for work
@@ -255,45 +280,94 @@
 ;;;;; Symbols
 
   (setq-default prettify-symbols-alist '(
-                                    ("->"  .  "→")
-                                    ("->>" .  "↠")
-                                    ("<-"  .  "←")
-                                    ("<="  . "≤")
-                                    ("<|"  . "◁")
-                                    ("=>"  . "⇒")
-                                    (">="  . "≥")
-                                    ("|>"  . "▷")
-                                    ("[ ]" . "☐")
-                                    ("[-]" . "⊡")
-                                    ("[X]" . "☑")
-                                    ("lambda" . "λ")
-                                    ("#+BEGIN_EXAMPLE" . ">EG>")
-                                    ("#+BEGIN_SRC" . "†")
-                                    ("#+END_EXAMPLE" . "<EG<")
-                                    ("#+END_SRC" . "†")
-                                    ("#+begin_example" . ">EG>")
-                                    ("#+begin_src" . "†")
-                                    ("#+end_example" . "<EG<")
-                                    ("#+end_src" . "†")
-                                    ))
+                                         ("->"  .  "→")
+                                         ("->>" .  "↠")
+                                         ("<-"  .  "←")
+                                         ("<="  . "≤")
+                                         ("<|"  . "◁")
+                                         ("=>"  . "⇒")
+                                         (">="  . "≥")
+                                         ("|>"  . "▷")
+                                         ("[ ]" . "☐")
+                                         ("[-]" . "⊡")
+                                         ("[X]" . "☑")
+                                         ("lambda" . "λ")
+                                         ("#+BEGIN_EXAMPLE" . ">EG>")
+                                         ("#+BEGIN_SRC" . "†")
+                                         ("#+END_EXAMPLE" . "<EG<")
+                                         ("#+END_SRC" . "†")
+                                         ("#+begin_example" . ">EG>")
+                                         ("#+begin_src" . "†")
+                                         ("#+end_example" . "<EG<")
+                                         ("#+end_src" . "†")
+                                         ))
 ;;;;; Mail/Mutt
 
-(org-add-link-type "message" 'mutt-open-message)
+  (org-add-link-type "message" 'mutt-open-message)
 
 ;;;;; ORG-MODULES
 
 ;;;;;; org-caldav
 
-(use-package org-caldav
-  :after org
-  :config (progn
-            (setq org-caldav-url "https://nextcloud.home.snuffy.org/remote.php/dav/calendars/marty")
-            (setq org-caldav-calendar-id "personal")
-            (setq org-caldav-inbox "~/Nextcloud/Notes/calendar/personal.org")
-            (setq org-caldav-files '("~/Nextcloud/Notes/calendar/personal.org"))
-            (setq org-icalendar-timezone "America/New York")
-            (setq org-icalendar-use-deadline t)
-            ))
+  (use-package org-caldav
+    :after org
+    :config (progn
+              (setq org-caldav-url "https://nextcloud.home.snuffy.org/remote.php/dav/calendars/marty")
+              (setq org-caldav-calendar-id "personal")
+              (setq org-caldav-inbox "~/Nextcloud/Notes/calendar/personal.org")
+              (setq org-caldav-files '("~/Nextcloud/Notes/calendar/personal.org"))
+              (setq org-icalendar-timezone "America/New York")
+              (setq org-icalendar-use-deadline t)
+              ))
 
-;;;; end ORG
-);; after org
+
+;;;;; end ORG
+  );; after org
+
+;;;; TSfile Links
+
+(defvar memacs-root "~/Nextcloud/Notes/memacs/")
+(defvar memacs-file-pattern "files.org")
+
+;; by John Kitchin
+(defun my-handle-tsfile-link (querystring)
+  ;; get a list of hits
+  (let ((queryresults (split-string
+                       (s-trim
+                        (shell-command-to-string
+                         (concat
+                          "grep \""
+                          querystring
+                          "\" "
+                          (concat memacs-root memacs-file-pattern))))
+                       "\n" t)))
+    ;; check length of list (number of lines)
+    (cond
+     ((= 0 (length queryresults))
+      ;; edge case: empty query result
+      (message "Sorry, no results found for query: %s" querystring))
+     (t
+      (with-temp-buffer
+        (insert (if (= 1 (length queryresults))
+                    (car queryresults)
+                  (completing-read "Choose: " queryresults)))
+        (org-mode)
+        (goto-char (point-min))
+        (org-next-link)
+        (org-open-at-point "file:"))))))
+
+(after! 'org
+  (org-link-set-parameters
+   "tsfile"
+   :follow (lambda (path) (my-handle-tsfile-link path))
+   :help-echo "Opens the linked file with your default application")
+  )
+
+(defun marty/dired-copy-filename-as-tsfile-link ()
+  "Copy current file name with its basename as [[tsfile:<basename>]] custom org-mode link."
+  (interactive)
+  (dired-copy-filename-as-kill) ;; current file name to kill ring
+  (let* ((filename (current-kill 0))) ;; get topmost kill ring element
+    (kill-new (concat "[[tsfile:" filename "]]")) ;; write back new/modified kill ring element
+    )
+  )

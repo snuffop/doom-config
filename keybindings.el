@@ -42,8 +42,8 @@
     "C-k" #'previous-line-or-history-element))
 
 (define-key! help-map
-   "h"    #'helpful-at-point
-)
+  "h"    #'helpful-at-point
+  )
 
 ;;; Global keybindings
 
@@ -97,9 +97,9 @@
        :n "o"    #'link-hint-open-link)
 
       (:unless (featurep! :input layout +bepo)
-        (:after (evil-org evil-easymotion)
-         :map evil-org-mode-map
-         :m "gsh" #'+org/goto-visible))
+       (:after (evil-org evil-easymotion)
+        :map evil-org-mode-map
+        :m "gsh" #'+org/goto-visible))
 
       (:when (featurep! :editor multiple-cursors)
        :prefix "gz"
@@ -122,7 +122,9 @@
       ;; misc
       :n "C-S-f"  #'toggle-frame-fullscreen
       :n "C-+"    #'doom/reset-font-size
-      :n "C-:"    #'flyspell-correct-at-point
+      :n "C-:"    #'+spell/correct
+      :n "C-,"    #'+spell/next-error
+
       ;; Buffer-local font resizing
       :n "C-="    #'text-scale-increase
       :n "C--"    #'text-scale-decrease
@@ -130,11 +132,11 @@
       :n "M-C-="  #'doom/increase-font-size
       :n "M-C--"  #'doom/decrease-font-size)
 
-
 ;;
-;;; Module keybinds
+;;; Module key-binds
+;;
 
-;;; :completion
+;;; completion
 (map! (:when (featurep! :completion company)
        :i "C-@"    (cmds! (not (minibufferp)) #'company-complete-common)
        :i "C-SPC"  (cmds! (not (minibufferp)) #'company-complete-common)
@@ -312,7 +314,7 @@
       :desc "Jump to bookmark"      "RET"  #'bookmark-jump
 
       ;;; <leader> a --- Application
-      (:prefix-map ("a" . "Applicaion")
+      (:prefix-map ("a" . "Application")
        (:prefix-map ("t" . "Tramp")
         :desc "Cleanup All Connections"    "C"  #'tramp-cleanup-all-connections
         :desc "Cleanup All Buffers"        "B"  #'tramp-cleanup-all-buffers
@@ -434,7 +436,7 @@
         :desc "Magit file dispatch"       "."   #'magit-file-dispatch
         :desc "Forge dispatch"            "'"   #'forge-dispatch
         :desc "Magit switch branch"       "b"   #'magit-branch-checkout
-        :desc "Magit status"              "g"   #'magit-status
+        :desc "Magit status"              "s"   #'magit-status
         :desc "Magit status here"         "G"   #'magit-status-here
         :desc "Magit file delete"         "D"   #'magit-file-delete
         :desc "Magit blame"               "B"   #'magit-blame-addition
@@ -751,7 +753,7 @@
                   nil . "maximize")
                 which-key-replacement-alist)))
 
-
+;;;;;
 ;;;;; Override org mode map
 ;;;;;
 

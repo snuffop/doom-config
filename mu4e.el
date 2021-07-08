@@ -20,18 +20,14 @@
   (add-to-list 'mu4e-headers-actions
                '("read later" . marty/capture-mail-read-later) t)
 
-  (add-to-list 'mu4e-view-actions
-               '("read later" . marty/capture-mail-read-later) t)
-
   (add-to-list 'mu4e-view-actions '("ytag message" . mu4e-action-retag-message) t)
 
-;;;;; Compose
+  ;;;;; Compose
 
   (setq mu4e-compose-dont-reply-to-self t)
-  (setq mu4e-compose-format-flowed t)
   (setq mu4e-compose-signature nil)        ;; Pulled from Context
 
-;;;;;; compose mode hook
+  ;;;;;; compose mode hook
 
   (add-hook 'mu4e-compose-mode-hook
             '(lambda ()
@@ -41,11 +37,10 @@
                (save-excursion (message-add-header "X-PGP-Key-ID: 0x090F6CEA"))
                (save-excursion (message-add-header "X-PGP-Key: https://keybase.io/mbuchaus/key.asc "))
                (marty-mu4e/mu4e-compose-maybe-signed-and-crypted)
-               (flyspell-mode)
                (set-fill-column 72)
                (turn-on-auto-fill)))
 
-;;;;;; Encryption
+  ;;;;;; Encryption
 
   (setq epg-user-id "0x090F6CEA")
   (setq mu4e-decryption-policy t)
@@ -53,33 +48,33 @@
   (setq mml-secure-openpgp-encrypt-to-self t)
   (setq mml-secure-openpgp-sign-with-sender  t)
 
-;;;;; Header
+  ;;;;; Header
 
   (setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
   (setq mu4e-headers-include-related t)
 
-;;;;;; Info
+  ;;;;;; Info
 
   (add-to-list 'mu4e-header-info-custom
                '(:full-mailing-list .
-                                    ( :name "Mailing-list"                     ;; long name, as seen in the message-view
-                                            :shortname "Mail List"                    ;; short name, as seen in the headers view
-                                            :help "Full name for mailing list" ;; tooltip
-                                            :function (lambda (msg)
-                                                        (or (mu4e-message-field msg :mailing-list) "")))))
+                 ( :name "Mailing-list"                     ;; long name, as seen in the message-view
+                   :shortname "Mail List"                    ;; short name, as seen in the headers view
+                   :help "Full name for mailing list" ;; tooltip
+                   :function (lambda (msg)
+                               (or (mu4e-message-field msg :mailing-list) "")))))
 
   (add-to-list 'mu4e-header-info-custom
                '(:xlabel .
-                         ( :name "X-Label or Tag"                 ;; long name, as seen in the message-view
-                                 :shortname "X-Label"        ;; short name, as seen in the headers view
-                                 :help "Maildir X-Label"   ;; tooltip
-                                 :function (lambda (msg)
-                                             (or (mu4e-message-field msg :X-Label) "")))))
+                 ( :name "X-Label or Tag"                 ;; long name, as seen in the message-view
+                   :shortname "X-Label"        ;; short name, as seen in the headers view
+                   :help "Maildir X-Label"   ;; tooltip
+                   :function (lambda (msg)
+                               (or (mu4e-message-field msg :X-Label) "")))))
 
-;;;;;; fields
+  ;;;;;; fields
 
   (setq mu4e-headers-fields '(
-                              (:human-date . 18)    ;; alternatively, use :human-date
+                              (:date . 18)    ;; alternatively, use :human-date
                               (:flags . 7)
                               (:from-or-to . 40)
                               (:full-mailing-list . 40)
@@ -110,86 +105,72 @@
                                       "^X-Mailer:"
                                       "^User-agent:"))
 
-;;;;; (config)
+  ;;;;; (config)
 
-  (setq mail-user-agent 'mu4e-user-agent)
-  (setq message-kill-buffer-on-exit t)
   (setq mu4e-action-tags-header "X-Label")
   (setq mu4e-attachment-dir "/home/marty/Downloads/Mail")
   (setq mu4e-change-filenames-when-moving t)
-  (setq mu4e-split-view 'horizontal)
-  (setq mu4e-index-update-in-background t)
-  (setq mu4e-use-fancy-chars t)
-  (setq mu4e-update-interval 300)
-  (setq mu4e-headers-precise-alignment t)
 
-;;;;;; Set from Context  these are default
+  ;;;;;; Set from Context  these are default
 
   (setq mu4e-drafts-folder nil)                      ;; set from context
   (setq mu4e-get-mail-command nil)                   ;; set from context
   (setq mu4e-sent-folder nil)                        ;; set from context
   (setq mu4e-trash-folder nil)                       ;; set from context
 
-;;;;;; PGP
+  ;;;;;; PGP
 
   (setq mml-secure-openpgp-sign-with-sender t)
   (setq mml-secure-openpgp-encrypt-to-self t)
-;;;;; Send Mail
+
+  ;;;;; Send Mail
 
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
   (setq message-sendmail-extra-arguments '("--read-envelope-from"))
   (setq sendmail-program "/usr/bin/msmtp")
   (setq mu4e-sent-messages-behavior 'sent)
+  (setq send-mail-function #'smtpmail-send-it)
+  (setq message-sendmail-f-is-evil t)
 
-;;;;; VIEW Email
+  ;;;;; VIEW Email
 
-  ;; (setq mu4e-view-html-plaintext-ratio-heuristic  most-positive-fixnum)
-  ;; (setq mu4e-html2text-command "html2text -utf8 -width 72")
-  (setq shr-color-visible-luminance-min 80)
-  (setq shr-color-visible-distance-min 5)
+  (setq mu4e-headers-precise-alignment t)
 
-  (setq mu4e-view-auto-mark-as-read t)
-  (setq mu4e-view-image-max-width 800)
-  (setq mu4e-view-show-addresses t)
-  (setq mu4e-view-show-images t)
-
-  (when (fboundp 'imagemagick-register-types)
-    (imagemagick-register-types))
-;;;;; bookmarks
+  ;;;;; bookmarks
 
   (setq mu4e-bookmarks
         '(
           (:name "All Inboxes"
-                 ;; :query "maildir:/Dabuke/INBOX OR maildir:/Gmail/INBOX OR maildir:/Rackspace/INBOX OR maildir:/RHH/INBOX"
-                 :query "maildir:/Dabuke/INBOX OR maildir:/Gmail/INBOX OR maildir:/RHH/INBOX"
-                 :key ?i)
+           ;; :query "maildir:/Dabuke/INBOX OR maildir:/Gmail/INBOX OR maildir:/Rackspace/INBOX OR maildir:/RHH/INBOX"
+           :query "maildir:/Dabuke/INBOX OR maildir:/Gmail/INBOX OR maildir:/RHH/INBOX"
+           :key ?i)
           (:name "Unread messages"
-                 :query "flag:unread AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
-                 :key ?u)
+           :query "flag:unread AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
+           :key ?u)
           (:name "Unread Dabuke"
-                 :query "flag:unread AND NOT flag:trashed AND maildir:/Dabuke/"
-                 :key ?d)
+           :query "flag:unread AND NOT flag:trashed AND maildir:/Dabuke/"
+           :key ?d)
           (:name "Today's messages"
-                 :query "date:today..now AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
-                 :key ?t)
+           :query "date:today..now AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
+           :key ?t)
           (:name "Yesterday and today messages"
-                 :query "date:1d..now AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
-                 :key ?y)
+           :query "date:1d..now AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
+           :key ?y)
           (:name "Last 7 days"
-                 :query "date:7d..now AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
-                 :key ?w)
+           :query "date:7d..now AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
+           :key ?w)
           (:name "Messages with images last 30 days"
-                 :query "date:30d..now mime:image/*"
-                 :key ?p)
+           :query "date:30d..now mime:image/*"
+           :key ?p)
           (:name "Messages with images All"
-                 :query "mime:image/*"
-                 :key ?P)
+           :query "mime:image/*"
+           :key ?P)
           (:name "Messages with attachments last 30 days"
-                 :query "date:30d..now flag:attach"
-                 :key ?a)
+           :query "date:30d..now flag:attach"
+           :key ?a)
           (:name "Messages with attachments All"
-                 :query "flag:attach"
-                 :key ?A)
+           :query "flag:attach"
+           :key ?A)
           ))
 
 ;;;;; Contexts
