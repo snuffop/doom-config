@@ -41,9 +41,11 @@
     "C-j" #'next-line-or-history-element
     "C-k" #'previous-line-or-history-element))
 
+(define-key! dired-mode-map
+  (kbd "C-t") #'marty/dired-copy-filename-as-tsfile-link)
+
 (define-key! help-map
-  "h"    #'helpful-at-point
-  )
+  "h"    #'helpful-at-point)
 
 ;;; Global keybindings
 

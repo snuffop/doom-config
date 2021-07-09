@@ -345,7 +345,7 @@
         (org-next-link)
         (org-open-at-point "file:"))))))
 
-(after! 'org
+(after! org
   (org-link-set-parameters
    "tsfile"
    :follow (lambda (path) (my-handle-tsfile-link path))

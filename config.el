@@ -7,7 +7,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Code:
+
 ;;;; Global
+
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
 
@@ -29,14 +31,18 @@
   '(mode-line-inactive :family "DejaVu Sans Mono" :height 105))
 
 ;;;; Theme
+
 (setq doom-theme 'doom-dracula )
 
 ;;;; Spelling
 
-(setq ispell-dictionary "en_US")
-(setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+(after! spell-fu
+  (setq spell-fu-idle-delay 0.5)
+  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+  )
 
 ;;;; Line Numbers
+
 (setq display-line-numbers-type 'relative)
 
 ;;;; Treemacs
