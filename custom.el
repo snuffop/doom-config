@@ -47,7 +47,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((org-roam-db-location . "~/Source/NSI/NSI-Documentation/org-roam.db")
+   '((\,
+      ((org-roam-directory . "~/Source/NSI/salt-master/")
+       (org-roam-index-file . "~/Source/NSI/salt-master/README.org")
+       (org-roam-db-location . "~/Source/NSI/salt-master/org-roam.db")))
+     (org-roam-db-location . "~/Source/NSI/NSI-Documentation/org-roam.db")
      (org-roam-index-file . "~/Source/NSI/NSI-Documentation/README.org")
      (org-roam-directory . "~/Source/NSI/NSI-Documentation"))))
 (custom-set-faces
@@ -56,4 +60,5 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(mode-line ((t (:family "DejaVu Sans Mono" :height 105))))
- '(mode-line-inactive ((t (:family "DejaVu Sans Mono" :height 105)))))
+ '(mode-line-inactive ((t (:family "DejaVu Sans Mono" :height 105))))
+ '(org-roam-link ((t (:inherit org-link :foreground "#F2C3BD")))))

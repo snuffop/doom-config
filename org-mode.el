@@ -105,10 +105,11 @@
 ;;;;; Org Roam
 
   (setq org-roam-buffer-width 0.15)
-  (setq org-roam-directory "~/Nextcloud/Notes/org/")
+  (setq org-roam-directory "~/Nextcloud/Notes/org")
   (setq org-roam-index-file "~/Nextcloud/Notes/org/index.org")
 
-   ;;; Org Roam Capture Templates
+;;;;;; Org Roam Capture Templates
+
   (after! org-roam
 
     (custom-set-faces '(org-roam-link ((t (:inherit org-link :foreground "#F2C3BD")))))
@@ -124,17 +125,17 @@
              :unnarrowed t)
             ("t" "Tasks" entry
              #'org-roam-capture--get-point
-             "* TODO  %?"
+             "* TODO %?"
              :file-name "daily/%<%Y-%m-%d>"
              :olp ("Tasks"))
             ("r" "Rackspace" entry
              #'org-roam-capture--get-point
-             "* %<%H:%M>  %?"
+             "* %<%H:%M> %?"
              :file-name "daily/%<%Y-%m-%d>"
              :olp ("Rackspace"))
             ("j" "Journal" entry
              #'org-roam-capture--get-point
-             "* %<%H:%M>  %?"
+             "* %<%H:%M> %?"
              :file-name "daily/%<%Y-%m-%d>"
              :olp ("Journal"))))
 
@@ -308,22 +309,6 @@
 ;;;;; Mail/Mutt
 
   (org-add-link-type "message" 'mutt-open-message)
-
-;;;;; ORG-MODULES
-
-;;;;;; org-caldav
-
-  (use-package org-caldav
-    :after org
-    :config (progn
-              (setq org-caldav-url "https://nextcloud.home.snuffy.org/remote.php/dav/calendars/marty")
-              (setq org-caldav-calendar-id "personal")
-              (setq org-caldav-inbox "~/Nextcloud/Notes/calendar/personal.org")
-              (setq org-caldav-files '("~/Nextcloud/Notes/calendar/personal.org"))
-              (setq org-icalendar-timezone "America/New York")
-              (setq org-icalendar-use-deadline t)
-              ))
-
 
 ;;;;; end ORG
   );; after org

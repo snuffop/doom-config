@@ -313,6 +313,11 @@
       :prefix ("h" . "Help")
       "d" #'systemd-doc-directives
       "o" #'systemd-doc-open)
+
+;;;;; Saltstack
+
+(use-package! salt-mode)
+
 ;;;;; VLF
 
 (use-package! vlf-setup

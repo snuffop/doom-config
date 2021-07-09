@@ -112,6 +112,7 @@
   (setq mu4e-change-filenames-when-moving t)
   (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
   (setq mu4e-update-interval  300)
+  (setq mu4e-confirm-quit t)
 
   ;;;;;; Set from Context  these are default
 
