@@ -199,6 +199,7 @@
                                                (:maildir "/Dabuke/INBOX"                :key ?i)
                                                (:maildir "/Dabuke/Spam"                 :key ?S)
                                                (:maildir "/Dabuke/Junk"                 :key ?j)
+                                               (:maildir "/Dabuke/Lists.Doom"           :key ?D)
                                                (:maildir "/Dabuke/Lists.Emacs"          :key ?e)
                                                (:maildir "/Dabuke/Lists.Linode"         :key ?l)
                                                (:maildir "/Dabuke/Lists.Mutt"           :key ?M)

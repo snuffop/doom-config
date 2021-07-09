@@ -134,7 +134,7 @@
 ;;;;;; List of Hosts
 
   ;; (setq counsel-tramp-custom-connections
-  (setq helm-tramp-custom-connections
+  (setq counsel-tramp-custom-connections
         '(
           /sshx:appgate:/home/marty
           /sshx:appgate|sudo:appgate:/
