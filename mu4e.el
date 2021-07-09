@@ -51,7 +51,6 @@
   ;;;;; Header
 
   (setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
-  (setq mu4e-headers-include-related t)
 
   ;;;;;; Info
 
@@ -110,9 +109,9 @@
   (setq mu4e-action-tags-header "X-Label")
   (setq mu4e-attachment-dir "/home/marty/Downloads/Mail")
   (setq mu4e-change-filenames-when-moving t)
+  (setq mu4e-confirm-quit t)
   (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
   (setq mu4e-update-interval  300)
-  (setq mu4e-confirm-quit t)
 
   ;;;;;; Set from Context  these are default
 
@@ -123,21 +122,23 @@
 
   ;;;;;; PGP
 
-  (setq mml-secure-openpgp-sign-with-sender t)
   (setq mml-secure-openpgp-encrypt-to-self t)
+  (setq mml-secure-openpgp-sign-with-sender t)
 
   ;;;;; Send Mail
 
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
   (setq message-sendmail-extra-arguments '("--read-envelope-from"))
-  (setq sendmail-program "/usr/bin/msmtp")
+  (setq message-sendmail-f-is-evil t)
   (setq mu4e-sent-messages-behavior 'sent)
   (setq send-mail-function #'smtpmail-send-it)
-  (setq message-sendmail-f-is-evil t)
+  (setq sendmail-program "/usr/bin/msmtp")
 
   ;;;;; VIEW Email
 
+  (setq mu4e-headers-include-related t)
   (setq mu4e-headers-precise-alignment t)
+  (setq mu4e-thread-folding-default-view 'unfolded)
 
   ;;;;; bookmarks
 
