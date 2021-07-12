@@ -551,12 +551,14 @@
        (:when (featurep! :lang org +roam)
         (:prefix ("r" . "roam")
          :desc "Switch to buffer"              "b" #'org-roam-switch-to-buffer
-         :desc "Org Roam Capture"              "c" #'org-roam-capture
+         :desc "Org Roam Capture"              "j" #'org-roam-capture
          :desc "Find file"                     "f" #'org-roam-find-file
          :desc "Show graph"                    "g" #'org-roam-graph
          :desc "Insert"                        "i" #'org-roam-insert
          :desc "Insert (skipping org-capture)" "I" #'org-roam-insert-immediate
          :desc "Org Roam"                      "r" #'org-roam
+         :desc "dailies next"                  "n" #'org-roam-dailies-find-next-note
+         :desc "dailies prev"                  "p" #'org-roam-dailies-find-previous-note
          (:prefix ("d" . "by date")
           :desc "Arbitrary date" "d" #'org-roam-dailies-find-date
           :desc "Today"          "t" #'org-roam-dailies-find-today
@@ -771,7 +773,9 @@
        "i" #'org-roam-insert
        "I" #'org-roam-insert-immediate
        "j" #'org-roam-dailies-capture-today
-       "m" #'org-roam
+       "r" #'org-roam
+       "n" #'org-roam-dailies-find-next-note
+       "p" #'org-roam-dailies-find-previous-note
        "t" #'org-roam-tag-add
        "T" #'org-roam-tag-delete
        (:prefix ("d" . "by date")
