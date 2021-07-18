@@ -8,6 +8,7 @@
 (package! ebuku)
 (package! khardel)
 (package! org-projectile)
+(package! org-caldav)
 (package! paperless)
 (package! salt-mode)
 (package! systemd)

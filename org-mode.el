@@ -34,7 +34,10 @@
                              "~/Nextcloud/Notes/org/daily"
                              "~/.cache/calendar/google.org"
                              "~/.cache/calendar/rackspace.org"
-                             "~/.cache/calendar/tatjana.org"))
+                             "~/.cache/calendar/tatjana.org"
+                             "~/Nextcloud/Notes/Calendars/personal.org"
+                             "~/Nextcloud/Notes/Calendars/org-mode.org"
+                             "~/Nextcloud/Notes/Calendars/contact_birthdays.org"))
 
     (setq org-agenda-compact-blocks t)
     (setq org-agenda-include-deadlines t)
@@ -312,6 +315,77 @@
 
 ;;;;; end ORG
   );; after org
+
+;;;; org-caldav
+
+;; (use-package org-caldav
+;;   :after org
+;;   :init
+;;   ;; This is the sync on close function; it also prompts for save after syncing so
+;;   ;; no late changes get lost
+;;   (defun org-caldav-sync-at-close ()
+;;     ;; (org-caldav-sync)
+;;     (save-some-buffers))
+
+;; This is the delayed sync function; it waits until emacs has been idle for
+;; "secs" seconds before syncing.  The delay is important because the caldav-sync
+;; can take five or ten seconds, which would be painful if it did that right at save.
+;; This way it just waits until you've been idle for a while to avoid disturbing
+;; the user.
+;; (defvar org-caldav-sync-timer nil
+;;   "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+;; (defun org-caldav-sync-with-delay (secs)
+;;   (when org-caldav-sync-timer
+;;     (cancel-timer org-caldav-sync-timer))
+;;   (setq org-caldav-sync-timer
+;;         (run-with-idle-timer
+;;          (* 1 secs) nil 'org-caldav-sync)))
+
+;; Actual calendar configuration edit this to meet your specific needs
+;; (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty/")
+;; (setq org-caldav-calendars
+;;       '((:calendar-id "personal"
+;;          :files ("~/Nextcloud/Notes/Calendars/personal.org")
+;;          :inbox "~/Nextcloud/Notes/Calendars/personal.org")
+;;         (:calendar-id "contact_birthdays"
+;;          :files ("~/Nextcloud/Notes/Calendars/contact-birthdays.org")
+;;          :inbox "~/Nextcloud/Notes/Calendars/contact-birthdays.org")
+;;         (:calendar-id "org-mode"
+;;          :files ("~/Nextcloud/Notes/Calendars/org-mode.org")
+;;          :inbox "~/Nextcloud/Notes/Calendars/org-mode.org")))
+;; (setq org-caldav-backup-file "~/Nextcloud/Notes/Calendars/org-caldav-backup.org")
+;; (setq org-caldav-save-directory "~/Nextcloud/Notes/Calendars/")
+
+;; :config
+;; (setq org-icalendar-alarm-time 1)
+;; ;; This makes sure to-do items as a category can show up on the calendar
+;; (setq org-icalendar-include-todo t)
+;; ;; This ensures all org "deadlines" show up, and show up as due dates
+;; (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
+;; ;; This ensures "scheduled" org items show up, and show up as start times
+;; (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
+;; ;; Add the delayed save hook with a five minute idle timer
+;; (add-hook 'after-save-hook
+;;           (lambda ()
+;;             (when (eq major-mode 'org-mode)
+;;               (org-caldav-sync-with-delay 300))))
+;; Add the close emacs hook
+;;(add-hook 'kill-emacs-hook 'org-caldav-sync-at-close))
+
+;;;; Calendar
+
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    ;; (cfw:org-create-file-source "Google" "~/.cache/calendar/google.com" "Blue")
+    (cfw:org-create-file-source "Tatjana" "~/.cache/calendar/tatjana.org" "Pink")  ; other org source
+    ;; (cfw:org-create-file-source "Rackspace" "~/.cache/calendar/rackspace.org" "Red")  ; other org source
+    (cfw:org-create-file-source "Next-Personal" "~/Nextcloud/Notes/Calendars/personal.org" "Blue")  ; other org source
+    (cfw:org-create-file-source "Next-Birthdays" "~/Nextcloud/Notes/Calendars/contact_birthdays.org" "Brown")  ; other org source
+    (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
+    )))
 
 ;;;; TSfile Links
 

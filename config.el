@@ -49,24 +49,6 @@
 
 (setq +treemacs-git-mode 'extended)
 
-;;;; Calendar
-
-(defun my-open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:ical-create-source "Next-Personal" "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty/personal" "Blue")
-    (cfw:ical-create-source "Next-Org-Mode" "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty/org-mode" "Brown")
-    (cfw:ical-create-source "Next-P2" "https://nextcloud.dabuke.com/remote.php/dav/principals/users/marty/" "Red")
-    ;; (cfw:org-create-file-source "Google" "~/.cache/calendar/google.com" "Blue")
-    (cfw:org-create-file-source "Tatjana" "~/.cache/calendar/tatjana.org" "Pink")  ; other org source
-    ;; (cfw:org-create-file-source "Rackspace" "~/.cache/calendar/rackspace.org" "Red")  ; other org source
-    ;; (cfw:howm-create-source "Blue")  ; howm source
-    ;; (cfw:cal-create-source "Orange") ; diary source
-    ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
-    ;; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
-    )))
 ;;;; Magit
 
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
