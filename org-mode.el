@@ -1,6 +1,8 @@
 ;;; org-mode.el -*- lexical-binding: t; -*-
 ;;;; ORG
+
 (after! org
+
 ;;;;; Setting
 
   (setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
@@ -109,9 +111,13 @@
 
 ;;;;; Org Roam
 
-  (setq org-roam-buffer-width 0.15)
-  (setq org-roam-directory "~/Nextcloud/Notes/org/Roam")
-  (setq org-roam-index-file "~/Nextcloud/Notes/org/Roam/index.org")
+  (setq org-roam-directory "~/Nextcloud/Notes/org/")
+  (setq +org-roam-open-buffer-on-find-file nil)
+  (set-popup-rules!
+    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+      ("^\\*org-roam: " ; node dedicated org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
 
 
 ;;;;;; Org Roam Capture Templates

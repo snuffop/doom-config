@@ -21,14 +21,14 @@
 
 ;;;; Fonts
 
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 10.5 )
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 10.0 )
       doom-unicode-font (font-spec :family "Symbola" :size 11)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 14)
       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20))
 
 (custom-set-faces!
-  '(mode-line :family "DejaVu Sans Mono" :height 105)
-  '(mode-line-inactive :family "DejaVu Sans Mono" :height 105))
+  '(mode-line :family "DejaVu Sans Mono" :height 100)
+  '(mode-line-inactive :family "DejaVu Sans Mono" :height 100))
 
 ;;;; Theme
 
@@ -53,23 +53,34 @@
 
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
-;;;; Org Mode
+;;;; Load Org Mode
 
 (setq org-directory "~/Nextcloud/Notes/org/")
-
 (load! "org-mode.el")
+
+(use-package! org-pandoc-import
+  :after org)
+
+(use-package! org-web-tools
+  :after org
+  :bind (("C-c n u" . org-web-tools-read-url-as-org)))
+
+;;;; Load Functions.el
+
 (load! "functions.el")
 
-;;;; MU4E
+;;;; Load MU4E.el
 
 (load! "mu4e.el")
 
 ;;;; Leader keys and keybindings
 
 (setq doom-localleader-key ",")
+
 (load! "keybindings.el")
 
 ;;;; Modules
+
 ;;;;; aggressive indent
 
 (use-package! aggressive-indent
@@ -95,6 +106,7 @@
             (define-auto-insert "\\.org" ["default.org" marty/autoinsert-yas-expand])
             (define-auto-insert "\\.sh" ["default.sh" marty/autoinsert-yas-expand])
             (define-auto-insert "\\.el" ["default.el" marty/autoinsert-yas-expand])
+            (define-auto-insert "Roam/.+\\.org?$" ["defaultRoam.org" marty/autoinsert-yas-expand])
             (define-auto-insert "Blorg/snuffy-org/.+\\.org?$" ["snuffy-org.org" marty/autoinsert-yas-expand])
             (define-auto-insert "Sites/snuffy.org/.+\\.org?$" ["snuffy-org-posts.org" marty/autoinsert-yas-expand])
             (define-auto-insert "salt-master.+\\.org?$" ["salt-master.org" marty/autoinsert-yas-expand])
@@ -303,6 +315,28 @@
         "TAB" #'outshine-cycle)
   (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
+
+;;;;; Paperless
+
+(use-package paperless
+  :init (require 'org-paperless)
+  :config (progn
+            (custom-set-variables
+             '(paperless-capture-directory "~/Nextcloud/Documents/INBOX/")
+             '(paperless-root-directory "~/Nextcloud/Documents"))))
+
+(after! paperless
+  (map! :leader
+        :prefix "a"
+        "X"  #'paperless)
+  (map! :after paperless
+        :localleader
+        :mode paperless-mode
+        "d"  #'paperless-display
+        "r"  #'paperless-rename
+        "R"  #'paperless-scan-directories
+        "f"  #'paperless-file
+        "X"  #'paperless-execute))
 
 ;;;;; Salt Mode
 
