@@ -1,5 +1,0 @@
-#+AUTHOR: `(user-full-name)`
-#+EMAIL:  `user-mail-address`
-#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org
-
-$0

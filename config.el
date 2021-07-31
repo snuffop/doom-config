@@ -93,7 +93,7 @@
 
 (global-aggressive-indent-mode 1)
 
-;;;;; auto Insert
+;;;;; autoinsert
 
 (use-package! autoinsert
   :init (progn
@@ -106,7 +106,6 @@
             (define-auto-insert "\\.org" ["default.org" marty/autoinsert-yas-expand])
             (define-auto-insert "\\.sh" ["default.sh" marty/autoinsert-yas-expand])
             (define-auto-insert "\\.el" ["default.el" marty/autoinsert-yas-expand])
-            (define-auto-insert "Roam/.+\\.org?$" ["defaultRoam.org" marty/autoinsert-yas-expand])
             (define-auto-insert "Blorg/snuffy-org/.+\\.org?$" ["snuffy-org.org" marty/autoinsert-yas-expand])
             (define-auto-insert "Sites/snuffy.org/.+\\.org?$" ["snuffy-org-posts.org" marty/autoinsert-yas-expand])
             (define-auto-insert "salt-master.+\\.org?$" ["salt-master.org" marty/autoinsert-yas-expand])
