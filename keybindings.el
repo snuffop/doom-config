@@ -27,6 +27,7 @@
 (map! :leader
       ;;; <leader> a --- Application
       (:prefix-map ("a" . "Application")
+       "m"  #'=mu4e
        (:prefix-map ("o" . "org")
         "/" #'org-occur-in-agenda-files
         "a" #'org-agenda-list
