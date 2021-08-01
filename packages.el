@@ -29,3 +29,6 @@
 (package! org-pandoc-import :recipe (:host github
                                      :repo "tecosaur/org-pandoc-import"
                                      :files ("*.el" "filters" "preprocessors")))
+
+(package! websocket)
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))

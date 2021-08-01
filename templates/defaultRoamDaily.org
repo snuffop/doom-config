@@ -4,7 +4,6 @@
 
 * Status () {}
 * Links
-** [[id:51171123-7a7a-4db5-9fe7-93d9e0b225bf][Dailies index]]
 ** `(marty/org-roam-dailies-graphicslink)`
 * Tasks
 * Rackspace

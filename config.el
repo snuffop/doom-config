@@ -65,6 +65,14 @@
   :after org
   :bind (("C-c n u" . org-web-tools-read-url-as-org)))
 
+;;;;; org-roam-ui
+
+(use-package! org-roam-ui
+  :after org-roam ;; or :after org
+  :hook (org-roam . org-roam-ui-mode)
+  :config
+  )
+
 ;;;; Load Functions.el
 
 (load! "functions.el")
@@ -373,6 +381,11 @@
   :config
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
+
+;;;;; Web Socket
+
+(use-package! websocket
+  :after org-roam)
 
 ;;;; Outro
 ;; Here are some additional functions/macros that could help you configure Doom:
