@@ -438,6 +438,8 @@ TODO entries marked as done are ignored, meaning the this
 function returns nil if current buffer contains only completed
 tasks."
   (seq-find                                 ; (3)
+   ;; (lambda (type)
+   ;;   (eq type 'done))
    (lambda (type)
      (eq type 'todo))
    (org-element-map                         ; (2)
@@ -458,7 +460,8 @@ tasks."
             (setq tags (cons "project" tags))
           (setq tags (remove "project" tags)))
         (unless (eq original-tags tags)
-          (apply #'vulpea-buffer-tags-set (seq-uniq tags)))))))
+          (apply #'vulpea-buffer-tags-set (seq-uniq tags))
+          #'org-roam-db-sync)))))
 
 (defun vulpea-buffer-p ()
   "Return non-nil if the currently visited buffer is a note."
