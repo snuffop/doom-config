@@ -12,6 +12,7 @@
   (setq org-persp-startup-org-file "~/Nextcloud/Notes/org/0mobile.org")
   (setq org-projectile-file "todo.org")
   (setq org-fancy-priorities-list '("🅰" "🅱" "🅲" "🅳" "🅴"))
+  (setq org-clock-sound "~/Nextcloud/Music/sounds/shipsBell.wav")
 
 
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h)

@@ -14,17 +14,43 @@
 (setq user-mail-address "marty@dabuke.com")
 
 ;; Allow for reading the local variables file
-(setq-default enable-local-variables t)
+(setq-default enable-local-variables t
+              delete-by-moving-to-trash t
+              window-combination-resize t
+              x-stretch-cursor t)
+
+(setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
+      evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
+      auto-save-default t                         ; Nobody likes to loose work, I certainly don't
+      truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
+      password-cache-expiry nil                   ; I can trust my computers ... can't I?
+      ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
+      scroll-margin 2)                            ; It's nice to maintain a little margin
+
+(display-time-mode 1)                             ; Enable time in the mode-line
+
+(unless (string-match-p "^Power N/A" (battery))   ; On laptops...
+  (display-battery-mode 1))                       ; it's nice to know how much power you have
+
+(global-subword-mode 1)
 
 ;; Remove the s/S from evil snipe
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
+
 ;;;; Fonts
 
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 10.0 )
-      doom-unicode-font (font-spec :family "Symbola" :size 11)
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 14)
-      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20))
+;; (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 10.0 )
+;;       doom-unicode-font (font-spec :family "Symbola" :size 11)
+;;       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 14)
+;;       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20))
+;;
+
+(setq doom-font (font-spec :family "JetBrains Mono" :size 10)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 11)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 14)
+      doom-unicode-font (font-spec :family "JuliaMono")
+      doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
 
 (custom-set-faces!
   '(mode-line :family "DejaVu Sans Mono" :height 100)
@@ -61,17 +87,30 @@
 (use-package! org-pandoc-import
   :after org)
 
-(use-package! org-web-tools
-  :after org
-  :bind (("C-c n u" . org-web-tools-read-url-as-org)))
+;;;; Calendar
 
+
+;;;;; org-caldav
+
+(use-package org-caldav
+  :after org
+  :config (progn
+            (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
+            (setq org-icalendar-timezone "America/New York")
+            (setq org-icalendar-use-deadline t)
+            (setq org-caldav-calendars
+                  '((:calendar-id "personal"
+                     :files ("~/Nextcloud/Notes/org/Calendar.org")
+                     :inbox "~/Nextcloud/Notes/Calendars/personal-inbox.org"))
+                  )))
+
+
+(use-package alert
+  :defer t)
 ;;;;; org-roam-ui
 
 (use-package! org-roam-ui
-  :after org-roam ;; or :after org
-  :hook (org-roam . org-roam-ui-mode)
-  :config
-  )
+  :after org-roam)
 
 ;;;; Load Functions.el
 
@@ -387,21 +426,8 @@
 (use-package! websocket
   :after org-roam)
 
-;;;; Outro
-;; Here are some additional functions/macros that could help you configure Doom:
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package!' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
-;; This will open documentation for it, including demos of how they are used.
-;;
-;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
-;; they are implemented.
+;;;; Custom
 
+(setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
+(when (file-exists-p custom-file)
+  (load custom-file))

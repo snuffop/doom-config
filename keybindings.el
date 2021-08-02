@@ -19,15 +19,20 @@
   "h"    #'helpful-at-point)
 
 (map!
- :n "C-:"    #'+spell/correct
+ ;; :n "C-:"    #'+spell/correct
  :n "C-,"    #'+spell/next-error)
 
 ;;;;; Leader Keybindings
 
 (map! :leader
+      "TAB"  #'evil-switch-to-windows-last-buffer
       ;;; <leader> a --- Application
       (:prefix-map ("a" . "Application")
        "m"  #'=mu4e
+       (:prefix-map ("c" . "calendar")
+        "c"  #' mb/open-calendar
+        "C"  #' mb/calendar
+        "s"  #' org-caldav-sync)
        (:prefix-map ("o" . "org")
         "/" #'org-occur-in-agenda-files
         "a" #'org-agenda-list
@@ -44,7 +49,11 @@
          "j"  #'org-clock-jump-to-current-clock
          "o"  #'org-clock-out
          "r"  #'org-resolve-clocks
-         "I"  #'org-clock-in-last))
+         "I"  #'org-clock-in-last
+         (:prefix-map ("t" . "org-timer")
+          "t"  #'org-timer-set-timer
+          "p"  #'org-timer-pause-or-continue
+          "q"  #'org-timer-stop)))
        (:prefix-map ("t" . "tools")
         (:when (featurep! :tools pass)
          (:prefix-map ("p" . "pass")
