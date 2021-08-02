@@ -40,17 +40,10 @@
 
 ;;;; Fonts
 
-;; (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 10.0 )
-;;       doom-unicode-font (font-spec :family "Symbola" :size 11)
-;;       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 14)
-;;       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20))
-;;
-
-(setq doom-font (font-spec :family "JetBrains Mono" :size 10)
-      doom-big-font (font-spec :family "JetBrains Mono" :size 11)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 14)
-      doom-unicode-font (font-spec :family "JuliaMono")
-      doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 10.0 )
+      doom-unicode-font (font-spec :family "Symbola" :size 11)
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 14)
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20))
 
 (custom-set-faces!
   '(mode-line :family "DejaVu Sans Mono" :height 100)
@@ -70,6 +63,17 @@
 ;;;; Line Numbers
 
 (setq display-line-numbers-type 'relative)
+
+;;;; Company
+
+(after! company
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2)
+  (setq company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
+
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
 
 ;;;; Treemacs
 
@@ -111,6 +115,36 @@
 
 (use-package! org-roam-ui
   :after org-roam)
+
+;;;; Mixed Pitch
+
+(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
+Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
+  (when (memq major-mode mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+
+(autoload #'mixed-pitch-serif-mode "mixed-pitch"
+  "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
+
+(after! mixed-pitch
+  (defface variable-pitch-serif
+    '((t (:family "serif")))
+    "A variable-pitch face with serifs."
+    :group 'basic-faces)
+  (setq mixed-pitch-set-height t)
+  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 27))
+  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
+  (defun mixed-pitch-serif-mode (&optional arg)
+    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
+    (interactive)
+    (let ((mixed-pitch-face 'variable-pitch-serif))
+      (mixed-pitch-mode (or arg 'toggle)))))
 
 ;;;; Load Functions.el
 

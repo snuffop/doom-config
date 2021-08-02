@@ -29,10 +29,6 @@
       ;;; <leader> a --- Application
       (:prefix-map ("a" . "Application")
        "m"  #'=mu4e
-       (:prefix-map ("c" . "calendar")
-        "c"  #' mb/open-calendar
-        "C"  #' mb/calendar
-        "s"  #' org-caldav-sync)
        (:prefix-map ("o" . "org")
         "/" #'org-occur-in-agenda-files
         "a" #'org-agenda-list
@@ -87,6 +83,8 @@
         :desc "Cycle tab bar"             "TAB" #'+workspace/cycle
         :desc "Switch workspace"          "."   #'+workspace/switch-to
         :desc "Switch to last workspace"  "`"   #'+workspace/other
+        :desc "Move workspace left"       "<"   #'+workspace/swap-left
+        :desc "Move workspace right"      ">"   #'+workspace/swap-right
         :desc "New workspace"             "n"   #'+workspace/new
         :desc "Create named workspace"    "N"   #'+workspace/new-named
         :desc "open workspace from file"  "o"   #'+workspace/load
@@ -127,19 +125,23 @@
         :desc "config"       "c"  #'mb/base-config
         :desc "org"          "o"  #'mb/org-config
         :desc "functions"    "f"  #'mb/functions
-        :desc "packages"     "p"  #'mb/packages)))
+        :desc "packages"     "p"  #'mb/packages)
+       (:prefix-map ("C" . "calendar")
+        "c"  #' mb/open-calendar
+        "C"  #' mb/calendar
+        "s"  #' org-caldav-sync)))
 
 
 ;;;;;
 ;;;;; Mode Maps
 ;;;;;; Override org mode map
 
-(map! :after org
-      :map org-mode-map
-      :localleader
-      :prefix "m"
-      "j"  #'org-roam-dailies-capture-today
-      :prefix "md"
-      "p"  #'org-roam-dailies-goto-previous-note
-      "n"  #'org-roam-dailies-goto-next-note
-      )
+      (map! :after org
+            :map org-mode-map
+            :localleader
+            :prefix "m"
+            "j"  #'org-roam-dailies-capture-today
+            :prefix "md"
+            "p"  #'org-roam-dailies-goto-previous-note
+            "n"  #'org-roam-dailies-goto-next-note
+            )
