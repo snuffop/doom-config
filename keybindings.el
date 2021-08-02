@@ -136,12 +136,13 @@
 ;;;;; Mode Maps
 ;;;;;; Override org mode map
 
-      (map! :after org
-            :map org-mode-map
-            :localleader
-            :prefix "m"
-            "j"  #'org-roam-dailies-capture-today
-            :prefix "md"
-            "p"  #'org-roam-dailies-goto-previous-note
-            "n"  #'org-roam-dailies-goto-next-note
-            )
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :prefix "m"
+      "j"  #'org-roam-dailies-capture-today
+      "s"  #'org-roam-db-sync
+      :prefix "md"
+      "p"  #'org-roam-dailies-goto-previous-note
+      "n"  #'org-roam-dailies-goto-next-note
+      )
