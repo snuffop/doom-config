@@ -1,15 +1,51 @@
-;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; -*-
-;;
-;; Author: Marty Buchaus <marty@dabuke.com>
-;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;; Created:  7 July 2021
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;; Code:
+#+TITLE:  Marty Buchaus Doom Emacs Config
+#+AUTHOR: Marty Buchaus
+#+EMAIL:  marty@dabuke.com
+#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org
+#+STARTUP: showeverything
 
-;;;; Global
+* TABLE OF CONTENTS :toc:
+- [[#about-this-config][ABOUT THIS CONFIG]]
+- [[#global-settings][GLOBAL SETTINGS]]
+  -  [[#company-settings][COMPANY SETTINGS]]
+- [[#fonts-and-faces][FONTS and FACES]]
+  - [[#fonts][Fonts]]
+  - [[#faces][Faces]]
+  - [[#mixed-pitch][Mixed Pitch]]
+- [[#theme][THEME]]
+- [[#spelling][SPELLING]]
+- [[#line-numbers][LINE NUMBERS]]
+- [[#org-mode][ORG-MODE]]
+- [[#calendar][CALENDAR]]
+  - [[#org-roam][org-roam]]
+- [[#load-functions][LOAD FUNCTIONS]]
+- [[#load-mu4e][LOAD MU4E]]
+- [[#keybinding][KEYBINDING]]
+- [[#modules][MODULES]]
+  - [[#treemacs][TREEMACS]]
+  - [[#magit][MAGIT]]
+  - [[#aggressive-indent][Aggressive indent]]
+  - [[#auto-insert][auto insert]]
+  - [[#tramp][TRAMP]]
+  - [[#i3-window-manager-config][I3 Window manager Config]]
+  - [[#khard][Khard]]
+  - [[#outshine][Outshine]]
+  - [[#paperless][Paperless]]
+  - [[#saltstack][Saltstack]]
+  - [[#systemd-mode][systemd mode]]
+  - [[#very-large-file][Very Large File]]
+  - [[#wakatime][Wakatime]]
+- [[#custom-file][CUSTOM FILE]]
 
+* ABOUT THIS CONFIG
+This is my personal config of Doom Emacs. making heavy use of EVIL everywhere
+
+* GLOBAL SETTINGS
+
+Set Default variables  and hooks to be seen globally
+
+#+BEGIN_SRC emacs-lisp
+;; Global
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
 
@@ -37,22 +73,31 @@
 ;; Remove the s/S from evil snipe
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
-;; company
+#+END_SRC
+**  COMPANY SETTINGS
+#+BEGIN_SRC emacs-lisp
+
 (setq company-idle-delay 0.5)
 
-;;;; Fonts
-
-;; (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14)
-;;       doom-unicode-font (font-spec :family "Symbola" :size 15)
-;;       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 18)
-;;       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
+#+END_SRC
+* FONTS and FACES
+** Fonts
+#+BEGIN_SRC emacs-lisp
+;; Fonts
 
 (setq doom-font (font-spec :family "Source Code Pro" :size 15)
+      doom-unicode-font (font-spec :family "Symbola" :size 15)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
       doom-big-font (font-spec :family "Source Code Pro" :size 24))
+
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
+#+END_SRC
+** Faces
+#+BEGIN_SRC emacs-lisp
+;; Faces
+
 (custom-set-faces!
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
@@ -61,64 +106,12 @@
 (custom-set-faces!
   '(mode-line :family "DejaVu Sans Mono" :height 100)
   '(mode-line-inactive :family "DejaVu Sans Mono" :height 100))
+#+END_SRC
 
-;;;; Theme
+** Mixed Pitch
+#+BEGIN_SRC emacs-lisp
 
-(setq doom-theme 'doom-dracula )
-
-;;;; Spelling
-
-(after! spell-fu
-  (setq spell-fu-idle-delay 0.5)
-  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
-  )
-
-;;;; Line Numbers
-
-(setq display-line-numbers-type 'relative)
-
-;;;; Treemacs
-
-(setq +treemacs-git-mode 'extended)
-
-;;;; Magit
-
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-
-;;;; Load Org Mode
-
-(setq org-directory "~/Nextcloud/Notes/org/")
-(load! "org-mode.el")
-
-(use-package! org-pandoc-import
-  :after org)
-
-;;;; Calendar
-
-
-;;;;; org-caldav
-
-(use-package org-caldav
-  :after org
-  :config (progn
-            (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
-            (setq org-icalendar-timezone "America/New York")
-            (setq org-icalendar-use-deadline t)
-            (setq org-caldav-calendars
-                  '((:calendar-id "personal"
-                     :files ("~/Nextcloud/Notes/org/Calendar.org")
-                     :inbox "~/Nextcloud/Notes/Calendars/personal-inbox.org"))
-                  )))
-
-
-(use-package alert
-  :defer t)
-;;;;; org-roam-ui
-
-(use-package! org-roam-ui
-  :after org-roam)
-
-;;;; Mixed Pitch
+;; Mixed Pitch
 
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
   "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
@@ -147,23 +140,130 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (interactive)
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
+#+END_SRC
 
+* THEME
+
+I have become quite attached to the dracula theme..
+
+#+BEGIN_SRC emacs-lisp
+;;;; Theme
+
+(setq doom-theme 'doom-dracula )
+
+#+END_SRC
+
+* SPELLING
+
+#+BEGIN_SRC emacs-lisp
+;;;; Spelling
+
+(after! spell-fu
+  (setq spell-fu-idle-delay 0.5)
+  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+  )
+
+#+END_SRC
+
+* LINE NUMBERS
+#+BEGIN_SRC emacs-lisp
+;;;; Line Numbers
+
+(setq display-line-numbers-type 'relative)
+#+END_SRC
+
+* ORG-MODE
+
+#+begin_src emacs-lisp
+
+;;;; Load Org Mode
+
+(setq org-directory "~/Nextcloud/Notes/org/")
+(load! "org-mode.el")
+
+(use-package! org-pandoc-import
+  :after org)
+
+#+end_src
+* CALENDAR
+#+BEGIN_SRC emacs-lisp
+
+
+;;;; Calendar
+
+
+;;;;; org-caldav
+
+(use-package org-caldav
+  :after org
+  :config (progn
+            (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
+            (setq org-icalendar-timezone "America/New York")
+            (setq org-icalendar-use-deadline t)
+            (setq org-caldav-calendars
+                  '((:calendar-id "personal"
+                     :files ("~/Nextcloud/Notes/org/Calendar.org")
+                     :inbox "~/Nextcloud/Notes/Calendars/personal-inbox.org"))
+                  )))
+
+
+(use-package alert
+  :defer t)
+#+END_SRC
+** org-roam
+#+BEGIN_SRC emacs-lisp
+
+
+;;;;; org-roam-ui
+
+(use-package! org-roam-ui
+  :after org-roam)
+
+#+END_SRC
+
+* LOAD FUNCTIONS
+#+BEGIN_SRC emacs-lisp
 ;;;; Load Functions.el
 
 (load! "functions.el")
+
+#+END_SRC
+* LOAD MU4E
+#+BEGIN_SRC emacs-lisp
+
 
 ;;;; Load MU4E.el
 
 (load! "mu4e.el")
 
+#+END_SRC
+* KEYBINDING
+#+BEGIN_SRC emacs-lisp
 ;;;; Leader keys and keybindings
 
 (setq doom-localleader-key ",")
 
 (load! "keybindings.el")
 
-;;;; Modules
+#+END_SRC
 
+* MODULES
+** TREEMACS
+#+BEGIN_SRC emacs-lisp
+;;;; Treemacs
+
+(setq +treemacs-git-mode 'extended)
+#+END_SRC
+
+** MAGIT
+#+BEGIN_SRC emacs-lisp
+;;;; Magit
+
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+#+END_SRC
+
+** Aggressive indent
+#+BEGIN_SRC emacs-lisp
 ;;;;; aggressive indent
 
 (use-package! aggressive-indent
@@ -176,6 +276,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (global-aggressive-indent-mode 1)
 
+#+END_SRC
+** auto insert
+#+BEGIN_SRC emacs-lisp
 ;;;;; autoinsert
 
 (use-package! autoinsert
@@ -202,6 +305,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
             (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
             (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand])))
 
+#+END_SRC
+** TRAMP
+*** Counsel Tramp
+#+BEGIN_SRC emacs-lisp
 ;;;;; Counsel Tramp
 
 (use-package! counsel-tramp
@@ -234,7 +341,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
             '(lambda () (global-aggressive-indent-mode 1)
                (projectile-mode 1)
                (editorconfig-mode 1)))
-
+#+END_SRC
+*** List of Hosts
+#+BEGIN_SRC emacs-lisp
 ;;;;;; List of Hosts
 
   (setq counsel-tramp-custom-connections
@@ -376,21 +485,30 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
           /sshx:d-salt-master-1.iad3.nsi.rackspace.com|sudo:d-salt-master-1.iad3.nsi.rackspace.com:/
           /sshx:s-jenkins-uk-1.lon3.nsi.rackspace.com|sudo:s-jenkins-uk-1.lon3.nsi.rackspace.com:/
           )))
-
-
+;; End of  List of hosts
+#+END_SRC
+** I3 Window manager Config
+#+BEGIN_SRC emacs-lisp
 ;;;;; i3 Window manager config
 
 (use-package! i3wm-config-mode
   :defer t)
 
+#+END_SRC
+** Khard
+#+BEGIN_SRC emacs-lisp
 ;;;;; Khard
 
 (use-package! khardel
   :defer t)
 
+#+END_SRC
+** Outshine
+#+BEGIN_SRC emacs-lisp
 ;;;;; Outshine
 
-(use-package! outshine)
+(use-package! outshine
+  :defer t)
 
 (after! outshine
   (map! :after outshine
@@ -399,6 +517,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
 
+#+END_SRC
+** Paperless
+#+BEGIN_SRC emacs-lisp
 ;;;;; Paperless
 
 (use-package paperless
@@ -421,6 +542,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
         "f"  #'paperless-file
         "X"  #'paperless-execute))
 
+#+END_SRC
+** Saltstack
+#+BEGIN_SRC emacs-lisp
 ;;;;; Salt Mode
 
 (use-package! salt-mode
@@ -429,8 +553,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   (add-hook 'salt-mode-hook
             (lambda ()
               (flyspell-mode 1))))
+#+END_SRC
+** systemd mode
+#+BEGIN_SRC emacs-lisp
 ;;;;; Systemd Mode
-
 
 (use-package! systemd
   :defer t)
@@ -441,15 +567,18 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
       "d" #'systemd-doc-directives
       "o" #'systemd-doc-open)
 
-;;;;; Saltstack
-
-(use-package! salt-mode)
-
+#+END_SRC
+** Very Large File
+#+BEGIN_SRC emacs-lisp
 ;;;;; VLF
 
 (use-package! vlf-setup
   :defer-incrementally  vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 
+#+END_SRC
+
+** Wakatime
+#+BEGIN_SRC emacs-lisp
 ;;;;; Wakatime
 
 (use-package! wakatime-mode
@@ -458,13 +587,18 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
 
-;;;;; Web Socket
+#+END_SRC
+* CUSTOM FILE
 
-(use-package! websocket
-  :after org-roam)
+Keep this at the end of the file to allow for override of any settings that are
+set before and customized in this file
 
+#+BEGIN_SRC emacs-lisp
 ;;;; Custom
 
 (setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
 (when (file-exists-p custom-file)
   (load custom-file))
+
+
+#+END_SRC

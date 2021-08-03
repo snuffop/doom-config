@@ -26,9 +26,12 @@
 
 (map! :leader
       "TAB"  #'evil-switch-to-windows-last-buffer
+      "SPC"  #'execute-extended-command
       ;;; <leader> a --- Application
       (:prefix-map ("a" . "Application")
        "m"  #'=mu4e
+       "r"  #'ranger
+       ;; ORG
        (:prefix-map ("o" . "org")
         "/" #'org-occur-in-agenda-files
         "a" #'org-agenda-list
@@ -50,6 +53,7 @@
           "t"  #'org-timer-set-timer
           "p"  #'org-timer-pause-or-continue
           "q"  #'org-timer-stop)))
+       ;; Tools
        (:prefix-map ("t" . "tools")
         (:when (featurep! :tools pass)
          (:prefix-map ("p" . "pass")
