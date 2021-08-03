@@ -1,0 +1,13 @@
+:;; -*- no-byte-compile: t; -*-
+;;; $DOOMDIR/packages.el
+
+(package! async)
+(package! ebuku)
+(package! org-web-tools)
+(package! vdirel)
+(package! tldr)
+
+(package! muttrc-mode       :recipe (:host github
+                                     :repo "neomutt/muttrc-mode-el"))
+
+(package! websocket)

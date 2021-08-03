@@ -2,10 +2,13 @@
 #+AUTHOR: Marty Buchaus
 #+EMAIL:  marty@dabuke.com
 #+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org
-#+STARTUP: showeverything
+#+STARTUP: overview
 
 * TABLE OF CONTENTS :toc:
 - [[#about-this-config][ABOUT THIS CONFIG]]
+  - [[#headers-of-files][Headers of Files]]
+  - [[#packages][Packages]]
+  - [[#initel][init.el]]
 - [[#global-settings][GLOBAL SETTINGS]]
   -  [[#company-settings][COMPANY SETTINGS]]
 - [[#fonts-and-faces][FONTS and FACES]]
@@ -16,29 +19,325 @@
 - [[#spelling][SPELLING]]
 - [[#line-numbers][LINE NUMBERS]]
 - [[#org-mode][ORG-MODE]]
+  - [[#packages-1][Packages]]
+  - [[#code][code]]
+  - [[#org-super-agenda][org-super-agenda]]
+  - [[#tsfile-links][TSfile Links]]
+  - [[#dynamic-todos-in-agenda][Dynamic todo's in agenda]]
+  - [[#load-org][LOAD ORG]]
+  - [[#org-pandoc][org-pandoc]]
+  - [[#org-publish-functions][Org publish functions]]
 - [[#calendar][CALENDAR]]
+  - [[#org-caldav][org-caldav]]
   - [[#org-roam][org-roam]]
-- [[#load-functions][LOAD FUNCTIONS]]
-- [[#load-mu4e][LOAD MU4E]]
+- [[#functions][FUNCTIONS]]
+  -  [[#open-file-functions][Open File Functions]]
+  - [[#roam-functions][Roam Functions]]
+  - [[#mutt-functions][Mutt Functions]]
+  - [[#load-functionsel][Load functions.el]]
+- [[#mu4e][MU4E]]
+  - [[#mu4e-functions][mu4e functions]]
+  - [[#load-mu4eel][Load mu4e.el]]
 - [[#keybinding][KEYBINDING]]
 - [[#modules][MODULES]]
-  - [[#treemacs][TREEMACS]]
-  - [[#magit][MAGIT]]
+  - [[#alert][alert]]
   - [[#aggressive-indent][Aggressive indent]]
   - [[#auto-insert][auto insert]]
-  - [[#tramp][TRAMP]]
   - [[#i3-window-manager-config][I3 Window manager Config]]
-  - [[#khard][Khard]]
-  - [[#outshine][Outshine]]
-  - [[#paperless][Paperless]]
-  - [[#saltstack][Saltstack]]
+  - [[#khard][khard]]
+  - [[#magit][magit]]
+  - [[#outshine][outshine]]
+  - [[#paperless][paperless]]
+  - [[#saltstack][saltstack]]
   - [[#systemd-mode][systemd mode]]
-  - [[#very-large-file][Very Large File]]
-  - [[#wakatime][Wakatime]]
-- [[#custom-file][CUSTOM FILE]]
+  - [[#tramp][tramp]]
+  - [[#treemacs][treemacs]]
+  - [[#very-large-file][very large file]]
+  - [[#wakatime][wakatime]]
+- [[#custom][CUSTOM]]
 
 * ABOUT THIS CONFIG
 This is my personal config of Doom Emacs. making heavy use of EVIL everywhere
+** Headers of Files
+*** config.el
+the header of the config.el file followes
+
+#+BEGIN_SRC emacs-lisp
+;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
+;; Created:  7 July 2021
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+
+#+END_SRC
+
+*** functions.el
+Functions.el   pretty self explanatory
+
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;; functions.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
+;; Created:  7 July 2021
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;;; Functions
+#+END_SRC
+*** org-mode.el
+org-mode.el  Header file for the org-mode  config
+
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;;; org-mode.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
+;; Created:  7 July 2021
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+(after! org
+
+#+END_SRC
+
+*** packages.el
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+;;; packages.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Packages
+
+#+END_SRC
+** Packages
+** init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
+;;; init.el -*- lexical-binding: t; -*-
+
+;; This file controls what Doom modules are enabled and what order they load
+;; in. Remember to run 'doom sync' after modifying it!
+
+;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
+;;      documentation. There you'll find a "Module Index" link where you'll find
+;;      a comprehensive list of Doom's modules and what flags they support.
+
+;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
+;;      'C-c c k' for non-vim users) to view its documentation. This works on
+;;      flags as well (those symbols that start with a plus).
+;;
+;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
+;;      directory (for easy access to its source code).
+
+(doom! :input
+       ;;chinese
+       ;;japanese
+       ;;layout            ; auie,ctsrnm is the superior home row
+
+       :completion
+       (company           ; the ultimate code completion backend
+        +childframe)
+       ;;helm              ; the *other* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       ;;(ivy               ; a search engine for love and life
+       ;; +prescient
+       ;; +fuzzy
+       ;; +icons)
+       (vertico
+        +icons)
+
+       :ui
+       doom              ; what makes DOOM look the way it does
+       doom-dashboard    ; a nifty splash screen for Emacs
+       ;; doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       (emoji +unicode)  ; 🙂
+       ;;fill-column       ; a `fill-column' indicator
+       hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       hydra
+       ;;indent-guides     ; highlighted indent columns
+       (ligatures         ; ligatures and symbols to make your code pretty again
+        +extras)
+       ;;minimap           ; show a map of the code on the side
+       modeline          ; snazzy, Atom-inspired modeline, plus API
+       nav-flash         ; blink cursor line after big motions
+       ;;neotree           ; a project drawer, like NERDTree for vim
+       ophints           ; highlight the region an operation acts on
+       (popup            ; tame sudden yet inevitable temporary windows
+        +defaults
+        +all)
+       ;;tabs              ; a tab bar for Emacs
+       (treemacs          ; a project drawer, like neotree but cooler
+        +lsp)
+       ;;unicode           ; extended unicode support for various languages
+       vc-gutter         ; vcs diff in the fringe
+       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       ;; (window-select     ; visually switch windows
+       ;;  +numbers)
+       workspaces        ; tab emulation, persistence & separate workspaces
+       ;;zen               ; distraction-free coding or writing
+
+       :editor
+       (evil +everywhere); come to the dark side, we have cookies
+       ;;file-templates    ; auto-snippets for empty files
+       fold                ; (nigh) universal code folding
+       format              ; automated prettiness
+       ;;god               ; run Emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who don't like vim
+       ;;multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;;parinfer          ; turn lisp into python, sort of
+       ;;rotate-text       ; cycle region at point between text candidates
+       snippets          ; my elves. They type so I don't have to
+       word-wrap         ; soft wrapping with language-aware indent
+
+       :emacs
+       (dired             ; making dired pretty [functional]
+        +ranger
+        +icons)
+       electric          ; smarter, keyword-based electric-indent
+       (ibuffer         ; interactive buffer management
+        +icons)
+       (undo              ; persistent, smarter undo for your inevitable mistakes
+        +tree)
+       vc                ; version-control and Emacs, sitting in a tree
+
+       :term
+       eshell            ; the elisp shell that works everywhere
+       ;;shell             ; simple shell REPL for Emacs
+       ;;term              ; basic terminal emulator for Emacs
+       vterm             ; the best terminal emulation in Emacs
+
+       :checkers
+       (syntax           ; tasing you for every semicolon you forget
+        +childframe)
+       (spell
+        +aspell)         ; tasing you for misspelling mispelling
+       grammar           ; tasing grammar mistake every you make
+
+       :tools
+       ansible
+       debugger          ; FIXME stepping through code, to help you add bugs
+       ;;direnv
+       docker
+       editorconfig      ; let someone else argue about tabs vs spaces
+       ;;ein               ; tame Jupyter notebooks with emacs
+       (eval +overlay)     ; run code, run (also, repls)
+       ;; gist              ; interacting with github gists
+       (lookup              ; navigate your code and its documentation
+        +dictionary
+        +docsets)
+       lsp
+       (magit             ; a git porcelain for Emacs
+        +forge)
+       make              ; run make tasks from Emacs
+       (pass              ; password manager for nerds
+        +auth)
+       pdf               ; pdf enhancements
+       ;;prodigy           ; FIXME managing external services & code builders
+       ;;rgb               ; creating color strings
+       ;;taskrunner        ; taskrunner for all your projects
+       ;;terraform         ; infrastructure as code
+       ;;tmux              ; an API for interacting with tmux
+       upload            ; map local to remote projects via ssh/ftp
+
+       :os
+       ;; (:if IS-MAC macos)  ; improve compatibility with macOS
+       tty               ; improve the terminal Emacs experience
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       ;;beancount         ; mind the GAAP
+       ;;cc                ; C > C++ == 1
+       ;;clojure           ; java with a lisp
+       common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .NET, and mono shenanigans
+       data              ; config/data formats
+       ;;(dart +flutter)   ; paint ui and not much else
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of TEA?
+       emacs-lisp        ; drown in parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;factor
+       ;;faust             ; dsp, but you get to keep your soul
+       ;;fsharp            ; ML stands for Microsoft's Language
+       ;;fstar             ; (dependent) types and (monadic) effects and Z3
+       ;;gdscript          ; the language you waited for
+       (go +lsp)         ; the hipster dialect
+       (haskell +dante)  ; a language that's lazier than I am
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ; a language you can depend on
+       json              ; At least it ain't XML
+       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
+       javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       ;;julia             ; a better, faster MATLAB
+       ;;kotlin            ; a better, slicker Java(Script)
+       latex             ; writing papers in Emacs has never been so fun
+       ;;lean              ; for folks with too much to prove
+       ledger            ; be audit you can be
+       lua               ; one-based indices? one-based indices
+       markdown          ; writing docs for people to ignore
+       ;;nim               ; python + lisp at the speed of c
+       ;;nix               ; I hereby declare "nix geht mehr!"
+       ;; ocaml             ; an objective camel
+       (org               ; organize your plain life in plain text
+        +hugo
+        +pandoc
+        +pretty
+        +pomodoro
+        +noter
+        +present
+        +gnuplot
+        +roam2)
+       php               ; perl's insecure younger brother
+       ;;plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       python            ; beautiful is better than ugly
+       qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a DSL for DSLs
+       ;;raku              ; the artist formerly known as perl6
+       ;;rest              ; Emacs as a REST client
+       ;;rst               ; ReST in peace
+       ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       ;; rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;scala             ; java, but good
+       ;;(scheme +guile)   ; a fully conniving family of lisps
+       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       ;;sml
+       ;;solidity          ; do you need a blockchain? No.
+       ;;swift             ; who asked for emoji variables?
+       ;;terra             ; Earth and Moon in alignment for performance.
+       web               ; the tubes
+       yaml              ; JSON, but readable
+       ;;zig               ; C, but simpler
+
+       :email
+       mu4e
+       ;;notmuch
+       ;;(wanderlust +gmail)
+
+       :app
+       calendar
+       ;;emms
+       everywhere        ; *leave* Emacs!? You must be joking
+       ;;irc               ; how neckbeards socialize
+       ;;(rss +org)        ; emacs as an RSS reader
+       ;;twitter           ; twitter client https://twitter.com/vnought
+
+       :config
+       literate
+       (default
+         +bindings
+         +smartparens))
+#+END_SRC
 
 * GLOBAL SETTINGS
 
@@ -65,8 +364,8 @@ Set Default variables  and hooks to be seen globally
 
 (display-time-mode 1)                             ; Enable time in the mode-line
 
-(unless (string-match-p "^Power N/A" (battery))   ; On laptops...
-  (display-battery-mode 1))                       ; it's nice to know how much power you have
+;; (unless (string-match-p "^Power N/A" (battery))   ; On laptops...
+;;   (display-battery-mode 1))                       ; it's nice to know how much power you have
 
 (global-subword-mode 1)
 
@@ -109,8 +408,13 @@ Set Default variables  and hooks to be seen globally
 #+END_SRC
 
 ** Mixed Pitch
-#+BEGIN_SRC emacs-lisp
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! mixed-pitch)
+#+END_SRC
 
+*** code
+#+BEGIN_SRC emacs-lisp
 ;; Mixed Pitch
 
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
@@ -173,65 +477,928 @@ I have become quite attached to the dracula theme..
 #+END_SRC
 
 * ORG-MODE
-
 #+begin_src emacs-lisp
-
 ;;;; Load Org Mode
 
 (setq org-directory "~/Nextcloud/Notes/org/")
-(load! "org-mode.el")
-
-(use-package! org-pandoc-import
-  :after org)
+(setq org-roam-directory "~/Nextcloud/Notes/org/")
 
 #+end_src
-* CALENDAR
+** Packages
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-projectile)
+#+END_SRC
+
+** code
+*** Mail/Mutt
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+;; Mail/Mutt
+
+  (org-add-link-type "message" 'mutt-open-message)
+
+#+END_SRC
+*** org agenda
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+;;;;; org agenda
+
+  (setq  marty/org-agenda-files (list
+                                 (concat org-directory "Tasks.org")
+                                 (concat org-directory "Habits.org")
+                                 (concat org-directory "Calendar.org")
+                                 (concat org-directory "contacts.org")
+                                 (concat org-directory "Someday.org")
+                                 (concat org-directory "0mobile.org")
+                                 "~/.cache/calendar/google.org"
+                                 "~/.cache/calendar/personal.org"
+                                 "~/.cache/calendar/tatjana.org"))
+  (after! org-agenda
+
+    (setq org-agenda-files marty/org-agenda-files)
+    (setq org-agenda-compact-blocks t)
+    (setq org-agenda-include-deadlines t)
+    (setq org-agenda-start-on-weekday 1)
+    (setq org-agenda-start-with-log-mode t)
+    (setq org-agenda-window-setup 'current-window)
+    (setq org-deadline-warning-days 14)
+
+    ;; Ignore scheduled tasks in task list
+    (setq org-agenda-todo-ignore-scheduled 'all)
+    (setq org-agenda-todo-ignore-deadlines 'far)
+
+    ;; Skip Finished Items
+    (setq org-agenda-skip-deadline-if-done t)
+    (setq org-agenda-skip-scheduled-if-done t)
+
+    (require 'org-projectile)
+    (mapcar #'(lambda (file)
+                (when (file-exists-p file)
+                  (push file org-agenda-files)))
+            (org-projectile-todo-files)))
+
+#+END_SRC
+
+*** org-roam
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;;;;; Org Roam
+
+  (setq +org-roam-open-buffer-on-find-file nil)
+  (set-popup-rules!
+    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+      ("^\\*org-roam: " ; node dedicated org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
+#+END_SRC
+
+*** publish-alist
+
+  Proprietary Stuff for Rackspace mostly
+
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+;;;;; Publish Alist
+
+  (setq org-publish-project-alist
+        '(
+          ("NSI-Documentation-content"
+           :base-directory "~/Source/NSI/NSI-Documentation/"
+           :base-extension "org"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs"
+           :publishing-function marty/publish
+           :exclude "Archive"
+           :section-numbers nil
+           :with-toc nil
+           :auto-sitemap t
+           :sitemap-filename "filemap.org"
+           :sitemap-title "& Sitemap"
+           :headline-levels 10
+           :auto-preamble t
+           :recursive t)
+
+          ("NSI-Documentation-images"
+           :base-directory "~/Source/NSI/NSI-Documentation/images/"
+           :base-extension "jpg\\|gif\\|png"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/images/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2020-images"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2020/images/"
+           :base-extension "jpg\\|gif\\|png"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2020/images/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2020-reports"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2020/reports/"
+           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2020/reports/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2021-images"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2021/images/"
+           :base-extension "jpg\\|gif\\|png"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2021/images/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2021-reports"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2021/reports/"
+           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2021/reports/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-files"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/files/"
+           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/files/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("salt-master"
+           :base-directory "~/Source/NSI/salt-master/"
+           :base-extension "org"
+           :publishing-directory "~/Source/NSI/salt-master/docs"
+           :publishing-function marty/publish
+           :exclude "docs"
+           :section-numbers nil
+           :with-toc nil
+           :auto-sitemap t
+           :sitemap-filename "filemap.org"
+           :sitemap-title "& Sitemap"
+           :headline-levels 7
+           :auto-preamble t
+           :recursive t)
+
+          ("NSI-Documentation" :components ("NSI-Documentation-content" "NSI-Documentation-images" "NSI-Documentation-TVA-ScanReports-2020-images" "NSI-Documentation-TVA-ScanReports-2020-reports" "NSI-Documentation-TVA-ScanReports-2021-images" "NSI-Documentation-TVA-ScanReports-2021-reports" "NSI-Documentation-TVA-ScanReports-files"))))
+
+#+END_SRC
+
+*** Settings
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+;;;;; Setting
+
+  (setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
+  (setq org-default-notes-file (concat org-directory "0mobile.org"))
+  (setq org-download-image-dir "~/Nextcloud/Notes/images/")
+  (setq org-id-locations-file "~/Nextcloud/Notes/org-id-locations")
+  (setq org-persp-startup-org-file "~/Nextcloud/Notes/org/0mobile.org")
+  (setq org-projectile-file "todo.org")
+  (setq org-fancy-priorities-list '("🅰" "🅱" "🅲" "🅳" "🅴"))
+  (setq org-clock-sound "~/Nextcloud/Music/sounds/shipsBell.wav")
+
+
+  (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h)
+
+#+END_SRC
+**** Clocking
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+  ;; clocking
+
+  (setq org-clock-into-drawer "CLOCKING")          ;; Where to put the clock in and out for tracked items
+  (setq org-clock-out-remove-zero-time-clocks t)
+
+#+END_SRC
+**** Logging and ID
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+  ;; Logging and ID
+
+  (setq org-log-done t)
+  (setq org-log-into-drawer t)
+  (setq org-icalendar-store-UID t)
+  (setq org-id-track-globally t)
+#+END_SRC
+*** symbols
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+  (setq-default prettify-symbols-alist '(
+                                         ("->"  .  "→")
+                                         ("->>" .  "↠")
+                                         ("<-"  .  "←")
+                                         ("<="  . "≤")
+                                         ("<|"  . "◁")
+                                         ("=>"  . "⇒")
+                                         (">="  . "≥")
+                                         ("|>"  . "▷")
+                                         ("[ ]" . "☐")
+                                         ("[-]" . "⊡")
+                                         ("[X]" . "☑")
+                                         ("lambda" . "λ")
+                                         ("#+BEGIN_EXAMPLE" . ">EG>")
+                                         ("#+BEGIN_SRC" . "†")
+                                         ("#+END_EXAMPLE" . "<EG<")
+                                         ("#+END_SRC" . "†")
+                                         ("#+begin_example" . ">EG>")
+                                         ("#+begin_src" . "†")
+                                         ("#+end_example" . "<EG<")
+                                         ("#+end_src" . "†")
+                                         ))
+#+END_SRC
+*** tags
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+  (setq org-tag-alist (quote
+                       ((:startgroup)
+                        ("@ASITS"     . ?A)
+                        ("@BillPay"   . ?B)
+                        ("@RedEarth"  . ?D)
+                        ("@Email"     . ?E)
+                        ("@Jazney"    . ?J)
+                        ("@Outside"   . ?o)
+                        ("@PhoneCall" . ?p)
+                        ("@Personal"  . ?P)
+                        ("@Rackspace" . ?R)
+                        ("@Reading"   . ?r)
+                        ("@errand"    . ?e)
+                        ("@home"      . ?h)
+                        ("@inside"    . ?i)
+                        ("@masons"    . ?M)
+                        ("@music"     . ?m)
+                        ("@office"    . ?O)
+                        ("@system"    . ?x)
+                        ("2637E20th")
+                        (:endgroup)
+                        ("CANCELLED"  . ?C)
+                        ("DRAFT"      . ?D)
+                        ("FLAGGED"    . ?F)
+                        ("HOLD"       . ?H)
+                        ("IDEA"       . ?I)
+                        ("NOTE"       . ?N)
+                        ("PROJECT"    . ?P)
+                        ("WAITING"    . ?w)
+                        ("WORK"       . ?W))))
+#+END_SRC
+
+*** Templates
+**** Capture
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+;;;;;; Capture
+
+  (setq org-capture-templates
+        '(("t" "Task" entry
+           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
+           (file "~/.spacemacs.d/templates/todo.orgcaptmpl"))
+          ("c" "Contacts" entry (file "~/Nextcloud/Notes/org/contacts.org")
+           (file "~/.spacemacs.d/templates/contact.orgcaptmpl"))
+          ("p" "Protocol" entry
+           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox"entry)
+           "** %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+          ("R" "Remember-mutt" entry
+           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Mail")
+           (file "~/.spacemacs.d/templates/org-templates/mail.orgcaptmpl"))
+          ("L" "Protocol Link" entry
+           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
+           "** %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
+          ("w" "Web site" entry
+           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
+           (file "~/.spacemacs.d/templates/org-templates/weblink.orgcaptmpl"))
+          ("s" "Simple" entry
+           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Popup")
+           "%[~/.emacs.d/.org-popup]" :immediate-finish t :prepend t)
+
+          ("m" "Email Workflow")
+          ("mf" "Follow Up" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
+           "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\n%a\n\n%i")
+          ("ma" "auto Follow Up" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
+           "* TODO Follow up with %:fromname on %:subject\n%a\n\n%i" :immediate-finish t)
+          ("mF" "Follow Up With Deadline" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
+           "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\nDEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n%a\n\n%i")
+          ("mr" "Read Later" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Read Later")
+           "* TODO Read  Later on %:subject\nSCHEDULED:%t\n%a\n\n%i":immediate-finish t)
+          ("mm" "Masons Follow Up" entry (file+olp "~/Nextcloud/Notes/org/Masons.org" "Follow Up")
+           "* TODO Follow up with %:fromname on %:subject %a\nSCHEDULED:%t\n\\n%i")
+          ("mR" "Workflow Rackspace")
+          ("mRf" "Follow Up" entry (file+olp "~/Nextcloud/Notes/org/Rackspace.org" "Follow Up")
+           "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\nDEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n%a\n\n%i")
+          ("mRr" "Read Later" entry (file+olp "~/Nextcloud/Notes/org/Rackspace.org" "Read Later")
+           "* TODO Read  Later with %:fromname on %:subject\nSCHEDULED:%t\n%a\n\n%i" :immediate-finish t)
+          ))
+  (setq org-protocol-default-template-key "t")
+#+END_SRC
+
+**** org-roam capture templates
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;;;;;; Org Roam Capture Templates
+
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1 )
+          ("t" "Tasks" entry "** TODO %? "
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+           :empty-lines-after 1 )
+          ("r" "Rackspace" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+           :empty-lines-after 1)
+          ("j" "Journal" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1)))
+
+#+END_SRC
+
+*** todo
+**** faces
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+  (setq org-todo-keyword-faces
+        '(("TODO"       . org-warning)
+          ("NEXT"       . (:foreground "#008080" :weight bold))
+          ("STARTED"    . (:foreground "#E35DBF" :weight bold))
+          ("BLOCKED"    . (:foreground "White"   :weight bold))
+          ("TODELEGATE" . (:foreground "White"   :weight bold))
+          ("DELEGATED"  . (:foreground "pink"    :weight bold))
+          ("CANCELED"   . (:foreground "white"   :weight bold))
+          ("TICKLE"     . (:foreground "White"   :weight bold))
+          ("DONE"       . (:foreground "green"   :weight bold))))
+#+END_SRC
+
+**** keywords
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+  (setq org-todo-keywords
+        '((sequence "TODO(t)"
+                    "NEXT(n!)"
+                    "STARTED(s!)"
+                    "BLOCKED(b@/!)"
+                    "TODELEGATE(g@/!)"
+                    "DELEGATED(D@/!)"
+                    "FOLLOWUP(f@/!)"
+                    "TICKLE(T!)"
+                    "|"
+                    "CANCELLED(c@)"
+                    "DONE(d@)")))
+#+END_SRC
+
+*** END org-mode
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+) ;; End (after! org
+#+END_SRC
+
+** org-super-agenda
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-super-agenda)
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+;;;;; org-super-agenda
+
+  (use-package! org-super-agenda
+    :commands (org-super-agenda-mode))
+  (after! org-agenda
+    (org-super-agenda-mode))
+
+  (setq org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-include-deadlines t
+        org-agenda-block-separator nil
+        org-agenda-tags-column 100 ;; from testing this seems to be a good value
+        org-agenda-compact-blocks t)
+
+  (setq org-agenda-custom-commands
+        '(("o" "Overview"
+           ((agenda "" ((org-super-agenda-groups
+                         '((:log t)  ; Automatically named "Log"
+                           (:name "Schedule"
+                            :time-grid t)
+                           (:name "Today"
+                            :scheduled today)
+                           (:habit t)
+                           (:name "Due today"
+                            :deadline today)
+                           (:name "Overdue"
+                            :deadline past)
+                           (:name "Due soon"
+                            :deadline future)
+                           (:name "Tickle"
+                            :deadline future)
+                           (:name "Unimportant"
+                            :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
+                                   :order 100)
+                            (:name "Waiting..."
+                             :todo "WAITING"
+                             :order 98)
+                            (:name "Scheduled earlier"
+                             :scheduled past))))))))
+          ("g" "group"
+           ((agenda "" ((org-agenda-spam 'week)
+                        (org-super-agenda-groups
+                         '((:auto-category t))
+                         )))))
+
+          ("u" "Super view"
+           ((agenda "" ((org-super-agenda-groups
+                         '((:name "Today"
+                            :time-grid t)))))
+            (todo "" ((org-agenda-overriding-header "Projects")
+                      (org-super-agenda-groups
+                       '((:name none  ; Disable super group header
+                          :children todo)
+                         (:discard (:anything t))))))))
+          ))
+#+END_SRC
+
+** TSfile Links
+
+This code is at the end of org-mode.el and is self contained of sorts.. ts files
+uses memacs file index to create a file of locations of files in my
+~/Nextcloud/Documents/File Cabinet. These are then referenced in org files using
+the files.org file to act as a database to allow for relocation of the files
+after reference
+
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
+;;;; TSfile Links
+
+(defvar memacs-root "~/Nextcloud/Notes/memacs/")
+(defvar memacs-file-pattern "files.org")
+
+;; by John Kitchin
+(defun my-handle-tsfile-link (querystring)
+  ;; get a list of hits
+  (let ((queryresults (split-string
+                       (s-trim
+                        (shell-command-to-string
+                         (concat
+                          "grep \""
+                          querystring
+                          "\" "
+                          (concat memacs-root memacs-file-pattern))))
+                       "\n" t)))
+    ;; check length of list (number of lines)
+    (cond
+     ((= 0 (length queryresults))
+      ;; edge case: empty query result
+      (message "Sorry, no results found for query: %s" querystring))
+     (t
+      (with-temp-buffer
+        (insert (if (= 1 (length queryresults))
+                    (car queryresults)
+                  (completing-read "Choose: " queryresults)))
+        (org-mode)
+        (goto-char (point-min))
+        (org-next-link)
+        (org-open-at-point "file:"))))))
+
+(after! org
+  (org-link-set-parameters
+   "tsfile"
+   :follow (lambda (path) (my-handle-tsfile-link path))
+   :help-echo "Opens the linked file with your default application")
+  )
+
+(defun marty/dired-copy-filename-as-tsfile-link ()
+  "Copy current file name with its basename as [[tsfile:<basename>]] custom org-mode link."
+  (interactive)
+  (dired-copy-filename-as-kill) ;; current file name to kill ring
+  (let* ((filename (current-kill 0))) ;; get topmost kill ring element
+    (kill-new (concat "[[tsfile:" filename "]]")) ;; write back new/modified kill ring element
+    )
+  )
+#+END_SRC
+** Dynamic todo's in agenda
+
+#+BEGIN_SRC emacs-lisp :tangle false
+
+;;;; Vulpea !!
+
+(defun vulpea-project-p ()
+  "Return non-nil if current buffer has any todo entry.
+TODO entries marked as done are ignored, meaning the this
+function returns nil if current buffer contains only completed
+tasks."
+  (seq-find                                 ; (3)
+   ;; (lambda (type)
+   ;;   (eq type 'done))
+   (lambda (type)
+     (eq type 'todo))
+   (org-element-map                         ; (2)
+       (org-element-parse-buffer 'headline) ; (1)
+       'headline
+     (lambda (h)
+       (org-element-property :todo-type h)))))
+
+(defun vulpea-project-update-tag ()
+  "Update PROJECT tag in the current buffer."
+  (when (and (not (active-minibuffer-window))
+             (vulpea-buffer-p))
+    (save-excursion
+      (goto-char (point-min))
+      (let* ((tags (vulpea-buffer-tags-get))
+             (original-tags tags))
+        (if (vulpea-project-p)
+            (setq tags (cons "project" tags))
+          (setq tags (remove "project" tags)))
+        (unless (eq original-tags tags)
+          (apply #'vulpea-buffer-tags-set (seq-uniq tags))
+          #'org-roam-db-sync)))))
+
+(defun vulpea-buffer-p ()
+  "Return non-nil if the currently visited buffer is a note."
+  (and buffer-file-name
+       (string-prefix-p
+        (expand-file-name (file-name-as-directory org-roam-directory))
+        (file-name-directory buffer-file-name))))
+
+(defun vulpea-project-files ()
+  "Return a list of note files containing 'project' tag." ;
+  (seq-uniq
+   (seq-map
+    #'car
+    (org-roam-db-query
+     [:select [nodes:file]
+      :from tags
+      :left-join nodes
+      :on (= tags:node-id nodes:id)
+      :where (like tag (quote "%\"project\"%"))]))))
+
+(defun vulpea-agenda-files-update (&rest _)
+  "Update the value of `org-agenda-files'."
+  (setq org-agenda-files
+        (append marty/org-agenda-files
+                (vulpea-project-files))))
+
+(add-hook 'find-file-hook #'vulpea-project-update-tag)
+(add-hook 'before-save-hook #'vulpea-project-update-tag)
+
+(advice-add 'org-agenda :before #'vulpea-agenda-files-update)
+
+;; functions borrowed from `vulpea' library
+;; https://github.com/d12frosted/vulpea/blob/6a735c34f1f64e1f70da77989e9ce8da7864e5ff/vulpea-buffer.el
+
+(defun vulpea-buffer-tags-get ()
+  "Return filetags value in current buffer."
+  (vulpea-buffer-prop-get-list "filetags" " "))
+
+(defun vulpea-buffer-tags-set (&rest tags)
+  "Set TAGS in current buffer.
+If filetags value is already set, replace it."
+  (vulpea-buffer-prop-set "filetags" (string-join tags " ")))
+
+(defun vulpea-buffer-tags-add (tag)
+  "Add a TAG to filetags in current buffer."
+  (let* ((tags (vulpea-buffer-tags-get))
+         (tags (append tags (list tag))))
+    (apply #'vulpea-buffer-tags-set tags)))
+
+(defun vulpea-buffer-tags-remove (tag)
+  "Remove a TAG from filetags in current buffer."
+  (let* ((tags (vulpea-buffer-tags-get))
+         (tags (delete tag tags)))
+    (apply #'vulpea-buffer-tags-set tags)))
+
+(defun vulpea-buffer-prop-set (name value)
+  "Set a file property called NAME to VALUE in buffer file.
+If the property is already set, replace its value."
+  (setq name (downcase name))
+  (org-with-point-at 1
+    (let ((case-fold-search t))
+      (if (re-search-forward (concat "^#\\+" name ":\\(.*\\)")
+                             (point-max) t)
+          (replace-match (concat "#+" name ": " value) 'fixedcase)
+        (while (and (not (eobp))
+                    (looking-at "^[#:]"))
+          (if (save-excursion (end-of-line) (eobp))
+              (progn
+                (end-of-line)
+                (insert "\n"))
+            (forward-line)
+            (beginning-of-line)))
+        (insert "#+" name ": " value "\n")))))
+
+(defun vulpea-buffer-prop-set-list (name values &optional separators)
+  "Set a file property called NAME to VALUES in current buffer.
+VALUES are quoted and combined into single string using
+`combine-and-quote-strings'.
+If SEPARATORS is non-nil, it should be a regular expression
+matching text that separates, but is not part of, the substrings.
+If nil it defaults to `split-string-default-separators', normally
+\"[ \f\t\n\r\v]+\", and OMIT-NULLS is forced to t.
+If the property is already set, replace its value."
+  (vulpea-buffer-prop-set
+   name (combine-and-quote-strings values separators)))
+
+(defun vulpea-buffer-prop-get (name)
+  "Get a buffer property called NAME as a string."
+  (org-with-point-at 1
+    (when (re-search-forward (concat "^#\\+" name ": \\(.*\\)")
+                             (point-max) t)
+      (buffer-substring-no-properties
+       (match-beginning 1)
+       (match-end 1)))))
+
+(defun vulpea-buffer-prop-get-list (name &optional separators)
+  "Get a buffer property NAME as a list using SEPARATORS.
+If SEPARATORS is non-nil, it should be a regular expression
+matching text that separates, but is not part of, the substrings.
+If nil it defaults to `split-string-default-separators', normally
+\"[ \f\t\n\r\v]+\", and OMIT-NULLS is forced to t."
+  (let ((value (vulpea-buffer-prop-get name)))
+    (when (and value (not (string-empty-p value)))
+      (split-string-and-unquote value separators))))
+#+END_SRC
+
+** LOAD ORG
+#+begin_src emacs-lisp
+;; ORG
+(load! "org-mode.el")
+#+end_src
+
+** org-pandoc
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-pandoc-import             :recipe (:host github
+                                                 :repo "tecosaur/org-pandoc-import"
+                                                 :files ("*.el" "filters" "preprocessors")))
+#+END_SRC
+
+*** code
 #+BEGIN_SRC emacs-lisp
+;; org-pandoc
+(use-package! org-pandoc-import
+  :after org)
+#+END_SRC
 
+** Org publish functions
 
-;;;; Calendar
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;;; publish functions
 
+(defun marty/publish (a b c)
+  (setq org-export-with-toc t)
+  (org-html-publish-to-html a b c)
+  (setq org-export-with-toc nil)
+  (org-ascii-publish-to-ascii a b c))
+#+END_SRC
 
+* CALENDAR
+** org-caldav
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-caldav)
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp
 ;;;;; org-caldav
 
-(use-package org-caldav
+(use-package! org-caldav
   :after org
-  :config (progn
-            (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
-            (setq org-icalendar-timezone "America/New York")
-            (setq org-icalendar-use-deadline t)
-            (setq org-caldav-calendars
-                  '((:calendar-id "personal"
-                     :files ("~/Nextcloud/Notes/org/Calendar.org")
-                     :inbox "~/Nextcloud/Notes/Calendars/personal-inbox.org"))
-                  )))
+  :init
+  ;; This is the sync on close function; it also prompts for save after syncing so
+  ;; no late changes get lost
+  (defun org-caldav-sync-at-close ()
+    (org-caldav-sync)
+    (save-some-buffers))
 
+  ;; This is the delayed sync function; it waits until emacs has been idle for
+  ;; "secs" seconds before syncing.  The delay is important because the caldav-sync
+  ;; can take five or ten seconds, which would be painful if it did that right at save.
+  ;; This way it just waits until you've been idle for a while to avoid disturbing
+  ;; the user.
+  (defvar org-caldav-sync-timer nil
+    "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+  (defun org-caldav-sync-with-delay (secs)
+    (when org-caldav-sync-timer
+      (cancel-timer org-caldav-sync-timer))
+    (setq org-caldav-sync-timer
+          (run-with-idle-timer
+           (* 1 secs) nil 'org-caldav-sync)))
 
-(use-package alert
-  :defer t)
+  (setq org-caldav-calendars
+        '((:calendar-id "personal"
+           :files ("~/Nextcloud/Notes/org/Calendar.org")
+           :inbox "~/Nextcloud/Notes/Calendars/personal-inbox.org"))
+        ))
+:config (progn
+          (setq org-icalendar-alarm-time 1)
+          (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
+          (setq org-icalendar-timezone "America/New York")
+          (setq org-icalendar-use-deadline t)
+          (setq org-icalendar-include-todo t)
+          ;; This ensures all org "deadlines" show up, and show up as due dates
+          (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
+          ;; This ensures "scheduled" org items show up, and show up as start times
+          (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
+          ;; Add the delayed save hook with a five minute idle timer
+          (add-hook 'after-save-hook
+                    (lambda ()
+                      (when (eq major-mode 'org-mode)
+                        (org-caldav-sync-with-delay 300))))
+          ;; Add the close emacs hook
+          (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close))
 #+END_SRC
+*** Function to open calendar
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    ;; (cfw:org-create-file-source "Google" "~/.cache/calendar/google.com" "Blue")
+    (cfw:org-create-file-source "Tatjana" "~/.cache/calendar/tatjana.org" "Pink")  ; other org source
+    ;; (cfw:org-create-file-source "Rackspace" "~/.cache/calendar/rackspace.org" "Red")  ; other org source
+    (cfw:org-create-file-source "Next-Personal" "~/Nextcloud/Notes/Calendars/personal.org" "Blue")  ; other org source
+    (cfw:org-create-file-source "Next-Birthdays" "~/Nextcloud/Notes/Calendars/contact_birthdays.org" "Brown")  ; other org source
+    (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
+    )))
+#+END_SRC
+
 ** org-roam
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-roam-ui                   :recipe (:host github
+                                                 :repo "org-roam/org-roam-ui"
+                                                 :files ("*.el" "out")))
+#+END_SRC
+
+*** code
 #+BEGIN_SRC emacs-lisp
-
-
 ;;;;; org-roam-ui
-
 (use-package! org-roam-ui
   :after org-roam)
 
 #+END_SRC
 
-* LOAD FUNCTIONS
+* FUNCTIONS
+**  Open File Functions
+*** Calendar Open
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;; Calendar Open
+
+(defun mb/open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")
+    (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
+#+END_SRC
+*** Config and other files
+
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;; Open file Functions
+
+(defun mb/calendar ()
+  (interactive) (find-file (concat org-directory "Calendar.org")))
+
+(defun mb/0mobile ()
+  (interactive) (find-file (concat org-directory "0mobile.org")))
+
+(defun mb/desktop ()
+  (interactive) (find-file (concat org-directory "desktop.org")))
+
+(defun mb/contacts ()
+  (interactive) (find-file (concat org-directory "contacts.org")))
+
+(defun mb/Tasks ()
+  (interactive) (find-file (concat org-directory "Tasks.org")))
+
+(defun mb/Habits ()
+  (interactive) (find-file (concat org-directory "Habits.org")))
+
+(defun mb/read-later ()
+  (interactive) (find-file (concat org-directory "read-later.org")))
+
+(defun mb/Someday ()
+  (interactive) (find-file (concat org-directory "Someday.org")))
+
+(defun mb/TipJar ()
+  (interactive) (find-file (concat org-directory "TipJar/index.org")))
+
+(defun mb/base-keybinding ()
+  (interactive) (find-file "~/.config/doom/keybindings.el"))
+
+(defun mb/base-config ()
+  (interactive) (find-file "~/.config/doom/config.el"))
+
+(defun mb/org-config ()
+  (interactive) (find-file "~/.config/doom/org-mode.el"))
+
+(defun mb/functions ()
+  (interactive) (find-file "~/.config/doom/functions.el"))
+
+(defun mb/packages ()
+  (interactive) (find-file "~/.config/doom/packages.el"))
+#+END_SRC
+
+** Roam Functions
+
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;; Roam Daily Functions
+
+(defun marty/org-roam-dailies-graphicslink ()
+  " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
+
+(defun marty/org-roam-dailies-title ()
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "%A, %B %d %Y" datim)))
+#+END_SRC
+** Mutt Functions
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+
+;;;;;; Open Mutt Message
+
+(defun mutt-open-message (message-id)
+  "In neomutt, open the email with the the given Message-ID"
+  (let*
+      ((message-id
+        (replace-regexp-in-string "^/*" "" message-id))
+       (mail-file
+        ;; notmuch
+        (replace-regexp-in-string
+         "\n$" "" (shell-command-to-string
+                   (format "notmuch search --output=files id:%s" message-id))))
+       (mail-box (replace-regexp-in-string "/home/marty/Mail" "" mail-file))
+       (mail-dir (replace-regexp-in-string "/\\(cur\\|new\\|tmp\\)/$" ""
+                                           (file-name-directory mail-box)))
+       (mutt-keystrokes
+        (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
+       (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-dir  mutt-keystrokes)))
+    ;; MU
+    ;;         (replace-regexp-in-string
+    ;;          "\n$" "" (shell-command-to-string
+    ;;                    (format "mu find -u i:%s --fields 'm'" message-id ))))
+    ;;        (mutt-keystrokes
+    ;;         (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
+    ;;         (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-file  mutt-keystrokes)))
+
+    (message "Launching neomutt for message %s" message-id)
+    (message " %s" mutt-command)
+    (call-process "setsid" nil nil nil
+                  "-f" "termite" "-e"
+                  mutt-command)))
+
+#+END_SRC
+
+** Load functions.el
 #+BEGIN_SRC emacs-lisp
 ;;;; Load Functions.el
 
 (load! "functions.el")
 
 #+END_SRC
-* LOAD MU4E
+* MU4E
+** mu4e functions
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;;; MU4E
+
+(defvar marty-mu4e/mu4e-compose-signed-p t)
+(defvar marty-mu4e/mu4e-compose-signed-and-crypted-p nil)
+
+(defun marty-mu4e/mu4e-compose-maybe-signed-and-crypted ()
+  "Maybe sign or encrypt+sign message.
+Message is signed or encrypted+signed when replying to a signed or encrypted
+message, respectively.
+Alternatively, message is signed or encrypted+signed if
+`ambrevar/mu4e-compose-signed-p' or `ambrevar/mu4e-compose-signed-and-crypted-p' is
+non-nil, respectively.
+This function is suitable for `mu4e-compose-mode-hook'."
+  (let ((msg mu4e-compose-parent-message))
+    (cond
+     ((or marty-mu4e/mu4e-compose-signed-and-crypted-p
+          (and msg (member 'encrypted (mu4e-message-field msg :flags))))
+      (mml-secure-message-sign-encrypt))
+     ((or marty-mu4e/mu4e-compose-signed-p
+          (and msg (member 'signed (mu4e-message-field msg :flags))))
+      (mml-secure-message-sign-pgpmime)))))
+
+;; Follow up quick key
+
+(defun marty/capture-mail-follow-up (msg)
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture "ma"))
+
+(defun marty/capture-mail-read-later (msg)
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture "mr"))
+
+;; End MU4E
+#+END_SRC
+
+** Load mu4e.el
+
 #+BEGIN_SRC emacs-lisp
-
-
 ;;;; Load MU4E.el
 
 (load! "mu4e.el")
@@ -248,21 +1415,23 @@ I have become quite attached to the dracula theme..
 #+END_SRC
 
 * MODULES
-** TREEMACS
-#+BEGIN_SRC emacs-lisp
-;;;; Treemacs
-
-(setq +treemacs-git-mode 'extended)
+** alert
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! alert)
 #+END_SRC
 
-** MAGIT
+*** code
 #+BEGIN_SRC emacs-lisp
-;;;; Magit
-
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+(use-package alert
+  :defer t)
 #+END_SRC
-
 ** Aggressive indent
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! aggressive-indent)
+#+END_SRC
+*** code
 #+BEGIN_SRC emacs-lisp
 ;;;;; aggressive indent
 
@@ -278,6 +1447,12 @@ I have become quite attached to the dracula theme..
 
 #+END_SRC
 ** auto insert
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! autoinsert)
+#+END_SRC
+
+*** code
 #+BEGIN_SRC emacs-lisp
 ;;;;; autoinsert
 
@@ -306,7 +1481,152 @@ I have become quite attached to the dracula theme..
             (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand])))
 
 #+END_SRC
-** TRAMP
+*** yas Expand Function
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;; Autoinsert yas expand
+
+(defun marty/autoinsert-yas-expand ()
+  (let ((template ( buffer-string )))
+    (delete-region (point-min) (point-max))
+    (yas-expand-snippet template)
+    (evil-insert-state)))
+#+END_SRC
+
+** I3 Window manager Config
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! i3wm-config-mode              :recipe (:host github
+                                                 :repo "Alexander-Miller/i3wm-Config-Mode"))
+#+END_SRC
+
+*** Code
+#+BEGIN_SRC emacs-lisp
+;;;;; i3 Window manager config
+
+(use-package! i3wm-config-mode
+  :defer t)
+
+#+END_SRC
+** khard
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! khardel)
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp
+;;;;; Khard
+
+(use-package! khardel
+  :defer t)
+
+#+END_SRC
+** magit
+*** package
+Built in!
+*** code
+#+BEGIN_SRC emacs-lisp
+;;;; Magit
+
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+#+END_SRC
+
+** outshine
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! outshine                      :recipe (:host github
+                                                 :repo "alphapapa/outshine"))
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp
+;;;;; Outshine
+
+(use-package! outshine
+  :defer t)
+
+(after! outshine
+  (map! :after outshine
+        :map emacs-lisp-mode-map
+        "TAB" #'outshine-cycle)
+  (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
+  (defvar outline-minor-mode-prefix "\M-#"))
+
+#+END_SRC
+** paperless
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! paperless)
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp
+;;;;; Paperless
+
+(use-package paperless
+  :init (require 'org-paperless)
+  :config (progn
+            (custom-set-variables
+             '(paperless-capture-directory "~/Nextcloud/Documents/INBOX/")
+             '(paperless-root-directory "~/Nextcloud/Documents"))))
+
+(after! paperless
+  (map! :leader
+        :prefix "a"
+        "X"  #'paperless)
+  (map! :after paperless
+        :localleader
+        :mode paperless-mode
+        "d"  #'paperless-display
+        "r"  #'paperless-rename
+        "R"  #'paperless-scan-directories
+        "f"  #'paperless-file
+        "X"  #'paperless-execute))
+
+#+END_SRC
+** saltstack
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! salt-mode)
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp
+;;;;; Salt Mode
+
+(use-package! salt-mode
+  :defer t
+  :config
+  (add-hook 'salt-mode-hook
+            (lambda ()
+              (flyspell-mode 1))))
+#+END_SRC
+** systemd mode
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! systemd)
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp
+;;;;; Systemd Mode
+
+(use-package! systemd
+  :defer t)
+
+(map! :map systemd-mode
+      :localleader
+      :prefix ("h" . "Help")
+      "d" #'systemd-doc-directives
+      "o" #'systemd-doc-open)
+
+#+END_SRC
+** tramp
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! counsel-tramp)
+#+END_SRC
+
 *** Counsel Tramp
 #+BEGIN_SRC emacs-lisp
 ;;;;; Counsel Tramp
@@ -333,12 +1653,12 @@ I have become quite attached to the dracula theme..
                 tramp-file-name-regexp))
 
   (add-hook 'counsel-tramp-pre-command-hook
-            '(lambda () (global-aggressive-indent-mode 0)
+            #'(lambda () (global-aggressive-indent-mode 0)
                (projectile-mode 0)
                (editorconfig-mode 0)))
 
   (add-hook 'counsel-tramp-quit-hook
-            '(lambda () (global-aggressive-indent-mode 1)
+            #'(lambda () (global-aggressive-indent-mode 1)
                (projectile-mode 1)
                (editorconfig-mode 1)))
 #+END_SRC
@@ -487,88 +1807,25 @@ I have become quite attached to the dracula theme..
           )))
 ;; End of  List of hosts
 #+END_SRC
-** I3 Window manager Config
+** treemacs
+*** package
+Built i
+*** code
 #+BEGIN_SRC emacs-lisp
-;;;;; i3 Window manager config
+;;;; Treemacs
 
-(use-package! i3wm-config-mode
-  :defer t)
-
+(setq +treemacs-git-mode 'extended)
 #+END_SRC
-** Khard
-#+BEGIN_SRC emacs-lisp
-;;;;; Khard
 
-(use-package! khardel
-  :defer t)
-
+** very large file
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! vlf                           :recipe (:host github
+                                                 :repo "m00natic/vlfi"
+                                                 :files ("*.el") ))
 #+END_SRC
-** Outshine
-#+BEGIN_SRC emacs-lisp
-;;;;; Outshine
 
-(use-package! outshine
-  :defer t)
-
-(after! outshine
-  (map! :after outshine
-        :map emacs-lisp-mode-map
-        "TAB" #'outshine-cycle)
-  (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
-  (defvar outline-minor-mode-prefix "\M-#"))
-
-#+END_SRC
-** Paperless
-#+BEGIN_SRC emacs-lisp
-;;;;; Paperless
-
-(use-package paperless
-  :init (require 'org-paperless)
-  :config (progn
-            (custom-set-variables
-             '(paperless-capture-directory "~/Nextcloud/Documents/INBOX/")
-             '(paperless-root-directory "~/Nextcloud/Documents"))))
-
-(after! paperless
-  (map! :leader
-        :prefix "a"
-        "X"  #'paperless)
-  (map! :after paperless
-        :localleader
-        :mode paperless-mode
-        "d"  #'paperless-display
-        "r"  #'paperless-rename
-        "R"  #'paperless-scan-directories
-        "f"  #'paperless-file
-        "X"  #'paperless-execute))
-
-#+END_SRC
-** Saltstack
-#+BEGIN_SRC emacs-lisp
-;;;;; Salt Mode
-
-(use-package! salt-mode
-  :defer t
-  :config
-  (add-hook 'salt-mode-hook
-            (lambda ()
-              (flyspell-mode 1))))
-#+END_SRC
-** systemd mode
-#+BEGIN_SRC emacs-lisp
-;;;;; Systemd Mode
-
-(use-package! systemd
-  :defer t)
-
-(map! :map systemd-mode
-      :localleader
-      :prefix ("h" . "Help")
-      "d" #'systemd-doc-directives
-      "o" #'systemd-doc-open)
-
-#+END_SRC
-** Very Large File
+*** code
 #+BEGIN_SRC emacs-lisp
 ;;;;; VLF
 
@@ -577,7 +1834,13 @@ I have become quite attached to the dracula theme..
 
 #+END_SRC
 
-** Wakatime
+** wakatime
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! wakatime-mode)
+#+END_SRC
+
+*** code
 #+BEGIN_SRC emacs-lisp
 ;;;;; Wakatime
 
@@ -588,7 +1851,10 @@ I have become quite attached to the dracula theme..
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
 
 #+END_SRC
-* CUSTOM FILE
+* CUSTOM
+
+#+END_SRC
+CUSTOM FILE
 
 Keep this at the end of the file to allow for override of any settings that are
 set before and customized in this file

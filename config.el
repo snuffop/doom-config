@@ -1,4 +1,4 @@
-;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; -*-
+;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -6,10 +6,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; Code:
 
-;;;; Global
-
+;; Global
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
 
@@ -29,30 +27,29 @@
 
 (display-time-mode 1)                             ; Enable time in the mode-line
 
-(unless (string-match-p "^Power N/A" (battery))   ; On laptops...
-  (display-battery-mode 1))                       ; it's nice to know how much power you have
+;; (unless (string-match-p "^Power N/A" (battery))   ; On laptops...
+;;   (display-battery-mode 1))                       ; it's nice to know how much power you have
 
 (global-subword-mode 1)
 
 ;; Remove the s/S from evil snipe
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
-;; company
 (setq company-idle-delay 0.5)
 
-;;;; Fonts
-
-;; (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14)
-;;       doom-unicode-font (font-spec :family "Symbola" :size 15)
-;;       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 18)
-;;       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
+;; Fonts
 
 (setq doom-font (font-spec :family "Source Code Pro" :size 15)
+      doom-unicode-font (font-spec :family "Symbola" :size 15)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
       doom-big-font (font-spec :family "Source Code Pro" :size 24))
+
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
+
+;; Faces
+
 (custom-set-faces!
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
@@ -62,63 +59,7 @@
   '(mode-line :family "DejaVu Sans Mono" :height 100)
   '(mode-line-inactive :family "DejaVu Sans Mono" :height 100))
 
-;;;; Theme
-
-(setq doom-theme 'doom-dracula )
-
-;;;; Spelling
-
-(after! spell-fu
-  (setq spell-fu-idle-delay 0.5)
-  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
-  )
-
-;;;; Line Numbers
-
-(setq display-line-numbers-type 'relative)
-
-;;;; Treemacs
-
-(setq +treemacs-git-mode 'extended)
-
-;;;; Magit
-
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-
-;;;; Load Org Mode
-
-(setq org-directory "~/Nextcloud/Notes/org/")
-(load! "org-mode.el")
-
-(use-package! org-pandoc-import
-  :after org)
-
-;;;; Calendar
-
-
-;;;;; org-caldav
-
-(use-package org-caldav
-  :after org
-  :config (progn
-            (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
-            (setq org-icalendar-timezone "America/New York")
-            (setq org-icalendar-use-deadline t)
-            (setq org-caldav-calendars
-                  '((:calendar-id "personal"
-                     :files ("~/Nextcloud/Notes/org/Calendar.org")
-                     :inbox "~/Nextcloud/Notes/Calendars/personal-inbox.org"))
-                  )))
-
-
-(use-package alert
-  :defer t)
-;;;;; org-roam-ui
-
-(use-package! org-roam-ui
-  :after org-roam)
-
-;;;; Mixed Pitch
+;; Mixed Pitch
 
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
   "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
@@ -148,6 +89,85 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
+;;;; Theme
+
+(setq doom-theme 'doom-dracula )
+
+;;;; Spelling
+
+(after! spell-fu
+  (setq spell-fu-idle-delay 0.5)
+  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+  )
+
+;;;; Line Numbers
+
+(setq display-line-numbers-type 'relative)
+
+;;;; Load Org Mode
+
+(setq org-directory "~/Nextcloud/Notes/org/")
+(setq org-roam-directory "~/Nextcloud/Notes/org/")
+
+;; ORG
+(load! "org-mode.el")
+
+;; org-pandoc
+(use-package! org-pandoc-import
+  :after org)
+
+;;;;; org-caldav
+
+(use-package! org-caldav
+  :after org
+  :init
+  ;; This is the sync on close function; it also prompts for save after syncing so
+  ;; no late changes get lost
+  (defun org-caldav-sync-at-close ()
+    (org-caldav-sync)
+    (save-some-buffers))
+
+  ;; This is the delayed sync function; it waits until emacs has been idle for
+  ;; "secs" seconds before syncing.  The delay is important because the caldav-sync
+  ;; can take five or ten seconds, which would be painful if it did that right at save.
+  ;; This way it just waits until you've been idle for a while to avoid disturbing
+  ;; the user.
+  (defvar org-caldav-sync-timer nil
+    "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+  (defun org-caldav-sync-with-delay (secs)
+    (when org-caldav-sync-timer
+      (cancel-timer org-caldav-sync-timer))
+    (setq org-caldav-sync-timer
+          (run-with-idle-timer
+           (* 1 secs) nil 'org-caldav-sync)))
+
+  (setq org-caldav-calendars
+        '((:calendar-id "personal"
+           :files ("~/Nextcloud/Notes/org/Calendar.org")
+           :inbox "~/Nextcloud/Notes/Calendars/personal-inbox.org"))
+        ))
+:config (progn
+          (setq org-icalendar-alarm-time 1)
+          (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
+          (setq org-icalendar-timezone "America/New York")
+          (setq org-icalendar-use-deadline t)
+          (setq org-icalendar-include-todo t)
+          ;; This ensures all org "deadlines" show up, and show up as due dates
+          (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
+          ;; This ensures "scheduled" org items show up, and show up as start times
+          (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
+          ;; Add the delayed save hook with a five minute idle timer
+          (add-hook 'after-save-hook
+                    (lambda ()
+                      (when (eq major-mode 'org-mode)
+                        (org-caldav-sync-with-delay 300))))
+          ;; Add the close emacs hook
+          (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close))
+
+;;;;; org-roam-ui
+(use-package! org-roam-ui
+  :after org-roam)
+
 ;;;; Load Functions.el
 
 (load! "functions.el")
@@ -162,7 +182,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (load! "keybindings.el")
 
-;;;; Modules
+(use-package alert
+  :defer t)
 
 ;;;;; aggressive indent
 
@@ -202,6 +223,74 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
             (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
             (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand])))
 
+;;;;; i3 Window manager config
+
+(use-package! i3wm-config-mode
+  :defer t)
+
+;;;;; Khard
+
+(use-package! khardel
+  :defer t)
+
+;;;; Magit
+
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+
+;;;;; Outshine
+
+(use-package! outshine
+  :defer t)
+
+(after! outshine
+  (map! :after outshine
+        :map emacs-lisp-mode-map
+        "TAB" #'outshine-cycle)
+  (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
+  (defvar outline-minor-mode-prefix "\M-#"))
+
+;;;;; Paperless
+
+(use-package paperless
+  :init (require 'org-paperless)
+  :config (progn
+            (custom-set-variables
+             '(paperless-capture-directory "~/Nextcloud/Documents/INBOX/")
+             '(paperless-root-directory "~/Nextcloud/Documents"))))
+
+(after! paperless
+  (map! :leader
+        :prefix "a"
+        "X"  #'paperless)
+  (map! :after paperless
+        :localleader
+        :mode paperless-mode
+        "d"  #'paperless-display
+        "r"  #'paperless-rename
+        "R"  #'paperless-scan-directories
+        "f"  #'paperless-file
+        "X"  #'paperless-execute))
+
+;;;;; Salt Mode
+
+(use-package! salt-mode
+  :defer t
+  :config
+  (add-hook 'salt-mode-hook
+            (lambda ()
+              (flyspell-mode 1))))
+
+;;;;; Systemd Mode
+
+(use-package! systemd
+  :defer t)
+
+(map! :map systemd-mode
+      :localleader
+      :prefix ("h" . "Help")
+      "d" #'systemd-doc-directives
+      "o" #'systemd-doc-open)
+
 ;;;;; Counsel Tramp
 
 (use-package! counsel-tramp
@@ -226,12 +315,12 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                 tramp-file-name-regexp))
 
   (add-hook 'counsel-tramp-pre-command-hook
-            '(lambda () (global-aggressive-indent-mode 0)
+            #'(lambda () (global-aggressive-indent-mode 0)
                (projectile-mode 0)
                (editorconfig-mode 0)))
 
   (add-hook 'counsel-tramp-quit-hook
-            '(lambda () (global-aggressive-indent-mode 1)
+            #'(lambda () (global-aggressive-indent-mode 1)
                (projectile-mode 1)
                (editorconfig-mode 1)))
 
@@ -376,74 +465,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
           /sshx:d-salt-master-1.iad3.nsi.rackspace.com|sudo:d-salt-master-1.iad3.nsi.rackspace.com:/
           /sshx:s-jenkins-uk-1.lon3.nsi.rackspace.com|sudo:s-jenkins-uk-1.lon3.nsi.rackspace.com:/
           )))
+;; End of  List of hosts
 
+;;;; Treemacs
 
-;;;;; i3 Window manager config
-
-(use-package! i3wm-config-mode
-  :defer t)
-
-;;;;; Khard
-
-(use-package! khardel
-  :defer t)
-
-;;;;; Outshine
-
-(use-package! outshine)
-
-(after! outshine
-  (map! :after outshine
-        :map emacs-lisp-mode-map
-        "TAB" #'outshine-cycle)
-  (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
-  (defvar outline-minor-mode-prefix "\M-#"))
-
-;;;;; Paperless
-
-(use-package paperless
-  :init (require 'org-paperless)
-  :config (progn
-            (custom-set-variables
-             '(paperless-capture-directory "~/Nextcloud/Documents/INBOX/")
-             '(paperless-root-directory "~/Nextcloud/Documents"))))
-
-(after! paperless
-  (map! :leader
-        :prefix "a"
-        "X"  #'paperless)
-  (map! :after paperless
-        :localleader
-        :mode paperless-mode
-        "d"  #'paperless-display
-        "r"  #'paperless-rename
-        "R"  #'paperless-scan-directories
-        "f"  #'paperless-file
-        "X"  #'paperless-execute))
-
-;;;;; Salt Mode
-
-(use-package! salt-mode
-  :defer t
-  :config
-  (add-hook 'salt-mode-hook
-            (lambda ()
-              (flyspell-mode 1))))
-;;;;; Systemd Mode
-
-
-(use-package! systemd
-  :defer t)
-
-(map! :map systemd-mode
-      :localleader
-      :prefix ("h" . "Help")
-      "d" #'systemd-doc-directives
-      "o" #'systemd-doc-open)
-
-;;;;; Saltstack
-
-(use-package! salt-mode)
+(setq +treemacs-git-mode 'extended)
 
 ;;;;; VLF
 
@@ -457,11 +483,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   :config
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
-
-;;;;; Web Socket
-
-(use-package! websocket
-  :after org-roam)
 
 ;;;; Custom
 

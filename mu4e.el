@@ -30,15 +30,15 @@
   ;;;;;; compose mode hook
 
   (add-hook 'mu4e-compose-mode-hook
-            '(lambda ()
-               "My Setting for Composing Messages"
-               (save-excursion (message-add-header "X-Mailer: mu4e/Linux"))
-               (save-excursion (message-add-header "X-PGP-KEY-Fingerprint: 7F6C A60C 06C2 4811 FA1C A2BC 2EBC 5E32 FEE3 0AD4"))
-               (save-excursion (message-add-header "X-PGP-Key-ID: 0x090F6CEA"))
-               (save-excursion (message-add-header "X-PGP-Key: https://keybase.io/mbuchaus/key.asc "))
-               (marty-mu4e/mu4e-compose-maybe-signed-and-crypted)
-               (set-fill-column 72)
-               (turn-on-auto-fill)))
+            #'(lambda ()
+                "My Setting for Composing Messages"
+                (save-excursion (message-add-header "X-Mailer: mu4e/Linux"))
+                (save-excursion (message-add-header "X-PGP-KEY-Fingerprint: 7F6C A60C 06C2 4811 FA1C A2BC 2EBC 5E32 FEE3 0AD4"))
+                (save-excursion (message-add-header "X-PGP-Key-ID: 0x090F6CEA"))
+                (save-excursion (message-add-header "X-PGP-Key: https://keybase.io/mbuchaus/key.asc "))
+                (marty-mu4e/mu4e-compose-maybe-signed-and-crypted)
+                (set-fill-column 72)
+                (turn-on-auto-fill)))
 
   ;;;;;; Encryption
 

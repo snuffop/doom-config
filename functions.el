@@ -1,4 +1,4 @@
-;;; functions.el --- Summary -*- lexical-binding: t; -*-
+;;; functions.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -7,6 +7,28 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;;; Functions
+
+;;;;;; publish functions
+
+(defun marty/publish (a b c)
+  (setq org-export-with-toc t)
+  (org-html-publish-to-html a b c)
+  (setq org-export-with-toc nil)
+  (org-ascii-publish-to-ascii a b c))
+
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    ;; (cfw:org-create-file-source "Google" "~/.cache/calendar/google.com" "Blue")
+    (cfw:org-create-file-source "Tatjana" "~/.cache/calendar/tatjana.org" "Pink")  ; other org source
+    ;; (cfw:org-create-file-source "Rackspace" "~/.cache/calendar/rackspace.org" "Red")  ; other org source
+    (cfw:org-create-file-source "Next-Personal" "~/Nextcloud/Notes/Calendars/personal.org" "Blue")  ; other org source
+    (cfw:org-create-file-source "Next-Birthdays" "~/Nextcloud/Notes/Calendars/contact_birthdays.org" "Brown")  ; other org source
+    (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
+    )))
+
 ;;;;; Calendar Open
 
 (defun mb/open-calendar ()
@@ -16,26 +38,6 @@
    (list
     (cfw:org-create-source "Green")
     (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
-
-;;;;; Roam Daily Functions
-
-(defun marty/org-roam-dailies-graphicslink ()
-  " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
-
-(defun marty/org-roam-dailies-title ()
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "%A, %B %d %Y" datim)))
-
 
 ;;;;; Open file Functions
 
@@ -81,23 +83,24 @@
 (defun mb/packages ()
   (interactive) (find-file "~/.config/doom/packages.el"))
 
-;;;;; Autoinsert yas expand
+;;;;; Roam Daily Functions
 
-(defun marty/autoinsert-yas-expand ()
-  (let ((template ( buffer-string )))
-    (delete-region (point-min) (point-max))
-    (yas-expand-snippet template)
-    (evil-insert-state)))
+(defun marty/org-roam-dailies-graphicslink ()
+  " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
 
-;;;;; Org Functions
-;;;;;; publish functions
-
-(defun marty/publish (a b c)
-  (setq org-export-with-toc t)
-  (org-html-publish-to-html a b c)
-  (setq org-export-with-toc nil)
-  (org-ascii-publish-to-ascii a b c))
-
+(defun marty/org-roam-dailies-title ()
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "%A, %B %d %Y" datim)))
 
 ;;;;;; Open Mutt Message
 
@@ -166,3 +169,11 @@ This function is suitable for `mu4e-compose-mode-hook'."
   (org-capture "mr"))
 
 ;; End MU4E
+
+;;;;; Autoinsert yas expand
+
+(defun marty/autoinsert-yas-expand ()
+  (let ((template ( buffer-string )))
+    (delete-region (point-min) (point-max))
+    (yas-expand-snippet template)
+    (evil-insert-state)))
