@@ -118,7 +118,7 @@
       (:prefix-map ("m" . "MY")
        :desc "0mobile"       "0" #'mb/0mobile
        :desc "Desktop"       "d" #'mb/desktop
-       :desc "contacts"      "c" #'mb/contacts
+       :desc "contacts"      "o" #'mb/contacts
        :desc "Tasks"         "g" #'mb/Tasks
        :desc "Habits"        "h" #'mb/Habits
        :desc "read later"    "l" #'mb/read-later
@@ -127,9 +127,7 @@
        (:prefix-map ("c" . "+config")
         :desc "keybindings"  "k"  #'mb/base-keybinding
         :desc "config"       "c"  #'mb/base-config
-        :desc "org"          "o"  #'mb/org-config
-        :desc "functions"    "f"  #'mb/functions
-        :desc "packages"     "p"  #'mb/packages)
+        :desc "org"          "o"  #'mb/org-config)
        (:prefix-map ("C" . "calendar")
         "c"  #' mb/open-calendar
         "C"  #' mb/calendar

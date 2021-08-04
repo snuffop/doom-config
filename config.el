@@ -172,6 +172,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (load! "functions.el")
 
+(with-eval-after-load "mm-decode"
+  (add-to-list 'mm-discouraged-alternatives "text/html")
+  (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+
 ;;;; Load MU4E.el
 
 (load! "mu4e.el")

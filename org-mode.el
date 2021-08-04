@@ -149,71 +149,71 @@
 
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h)
 
-;; clocking
+  ;; clocking
 
-(setq org-clock-into-drawer "CLOCKING")          ;; Where to put the clock in and out for tracked items
-(setq org-clock-out-remove-zero-time-clocks t)
+  (setq org-clock-into-drawer "CLOCKING")          ;; Where to put the clock in and out for tracked items
+  (setq org-clock-out-remove-zero-time-clocks t)
 
-;; Logging and ID
+  ;; Logging and ID
 
-(setq org-log-done t)
-(setq org-log-into-drawer t)
-(setq org-icalendar-store-UID t)
-(setq org-id-track-globally t)
+  (setq org-log-done t)
+  (setq org-log-into-drawer t)
+  (setq org-icalendar-store-UID t)
+  (setq org-id-track-globally t)
 
-(setq-default prettify-symbols-alist '(
-                                       ("->"  .  "→")
-                                       ("->>" .  "↠")
-                                       ("<-"  .  "←")
-                                       ("<="  . "≤")
-                                       ("<|"  . "◁")
-                                       ("=>"  . "⇒")
-                                       (">="  . "≥")
-                                       ("|>"  . "▷")
-                                       ("[ ]" . "☐")
-                                       ("[-]" . "⊡")
-                                       ("[X]" . "☑")
-                                       ("lambda" . "λ")
-                                       ("#+BEGIN_EXAMPLE" . ">EG>")
-                                       ("#+BEGIN_SRC" . "†")
-                                       ("#+END_EXAMPLE" . "<EG<")
-                                       ("#+END_SRC" . "†")
-                                       ("#+begin_example" . ">EG>")
-                                       ("#+begin_src" . "†")
-                                       ("#+end_example" . "<EG<")
-                                       ("#+end_src" . "†")
-                                       ))
+  (setq-default prettify-symbols-alist '(
+                                         ("->"  .  "→")
+                                         ("->>" .  "↠")
+                                         ("<-"  .  "←")
+                                         ("<="  . "≤")
+                                         ("<|"  . "◁")
+                                         ("=>"  . "⇒")
+                                         (">="  . "≥")
+                                         ("|>"  . "▷")
+                                         ("[ ]" . "☐")
+                                         ("[-]" . "⊡")
+                                         ("[X]" . "☑")
+                                         ("lambda" . "λ")
+                                         ("#+BEGIN_EXAMPLE" . ">EG>")
+                                         ("#+BEGIN_SRC" . "†")
+                                         ("#+END_EXAMPLE" . "<EG<")
+                                         ("#+END_SRC" . "†")
+                                         ("#+begin_example" . ">EG>")
+                                         ("#+begin_src" . "†")
+                                         ("#+end_example" . "<EG<")
+                                         ("#+end_src" . "†")
+                                         ))
 
-(setq org-tag-alist (quote
-                     ((:startgroup)
-                      ("@ASITS"     . ?A)
-                      ("@BillPay"   . ?B)
-                      ("@RedEarth"  . ?D)
-                      ("@Email"     . ?E)
-                      ("@Jazney"    . ?J)
-                      ("@Outside"   . ?o)
-                      ("@PhoneCall" . ?p)
-                      ("@Personal"  . ?P)
-                      ("@Rackspace" . ?R)
-                      ("@Reading"   . ?r)
-                      ("@errand"    . ?e)
-                      ("@home"      . ?h)
-                      ("@inside"    . ?i)
-                      ("@masons"    . ?M)
-                      ("@music"     . ?m)
-                      ("@office"    . ?O)
-                      ("@system"    . ?x)
-                      ("2637E20th")
-                      (:endgroup)
-                      ("CANCELLED"  . ?C)
-                      ("DRAFT"      . ?D)
-                      ("FLAGGED"    . ?F)
-                      ("HOLD"       . ?H)
-                      ("IDEA"       . ?I)
-                      ("NOTE"       . ?N)
-                      ("PROJECT"    . ?P)
-                      ("WAITING"    . ?w)
-                      ("WORK"       . ?W))))
+  (setq org-tag-alist (quote
+                       ((:startgroup)
+                        ("@ASITS"     . ?A)
+                        ("@BillPay"   . ?B)
+                        ("@RedEarth"  . ?D)
+                        ("@Email"     . ?E)
+                        ("@Jazney"    . ?J)
+                        ("@Outside"   . ?o)
+                        ("@PhoneCall" . ?p)
+                        ("@Personal"  . ?P)
+                        ("@Rackspace" . ?R)
+                        ("@Reading"   . ?r)
+                        ("@errand"    . ?e)
+                        ("@home"      . ?h)
+                        ("@inside"    . ?i)
+                        ("@masons"    . ?M)
+                        ("@music"     . ?m)
+                        ("@office"    . ?O)
+                        ("@system"    . ?x)
+                        ("2637E20th")
+                        (:endgroup)
+                        ("CANCELLED"  . ?C)
+                        ("DRAFT"      . ?D)
+                        ("FLAGGED"    . ?F)
+                        ("HOLD"       . ?H)
+                        ("IDEA"       . ?I)
+                        ("NOTE"       . ?N)
+                        ("PROJECT"    . ?P)
+                        ("WAITING"    . ?w)
+                        ("WORK"       . ?W))))
 
 ;;;;;; Capture
 
@@ -274,29 +274,29 @@
            :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
            :empty-lines-after 1)))
 
-(setq org-todo-keyword-faces
-      '(("TODO"       . org-warning)
-        ("NEXT"       . (:foreground "#008080" :weight bold))
-        ("STARTED"    . (:foreground "#E35DBF" :weight bold))
-        ("BLOCKED"    . (:foreground "White"   :weight bold))
-        ("TODELEGATE" . (:foreground "White"   :weight bold))
-        ("DELEGATED"  . (:foreground "pink"    :weight bold))
-        ("CANCELED"   . (:foreground "white"   :weight bold))
-        ("TICKLE"     . (:foreground "White"   :weight bold))
-        ("DONE"       . (:foreground "green"   :weight bold))))
+  (setq org-todo-keyword-faces
+        '(("TODO"       . org-warning)
+          ("NEXT"       . (:foreground "#008080" :weight bold))
+          ("STARTED"    . (:foreground "#E35DBF" :weight bold))
+          ("BLOCKED"    . (:foreground "White"   :weight bold))
+          ("TODELEGATE" . (:foreground "White"   :weight bold))
+          ("DELEGATED"  . (:foreground "pink"    :weight bold))
+          ("CANCELED"   . (:foreground "white"   :weight bold))
+          ("TICKLE"     . (:foreground "White"   :weight bold))
+          ("DONE"       . (:foreground "green"   :weight bold))))
 
-(setq org-todo-keywords
-      '((sequence "TODO(t)"
-                  "NEXT(n!)"
-                  "STARTED(s!)"
-                  "BLOCKED(b@/!)"
-                  "TODELEGATE(g@/!)"
-                  "DELEGATED(D@/!)"
-                  "FOLLOWUP(f@/!)"
-                  "TICKLE(T!)"
-                  "|"
-                  "CANCELLED(c@)"
-                  "DONE(d@)")))
+  (setq org-todo-keywords
+        '((sequence "TODO(t)"
+                    "NEXT(n!)"
+                    "STARTED(s!)"
+                    "BLOCKED(b@/!)"
+                    "TODELEGATE(g@/!)"
+                    "DELEGATED(D@/!)"
+                    "FOLLOWUP(f@/!)"
+                    "TICKLE(T!)"
+                    "|"
+                    "CANCELLED(c@)"
+                    "DONE(d@)")))
 
 ) ;; End (after! org
 

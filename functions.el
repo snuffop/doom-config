@@ -75,13 +75,7 @@
   (interactive) (find-file "~/.config/doom/config.el"))
 
 (defun mb/org-config ()
-  (interactive) (find-file "~/.config/doom/org-mode.el"))
-
-(defun mb/functions ()
-  (interactive) (find-file "~/.config/doom/functions.el"))
-
-(defun mb/packages ()
-  (interactive) (find-file "~/.config/doom/packages.el"))
+  (interactive) (find-file "~/.config/doom/config.org"))
 
 ;;;;; Roam Daily Functions
 
@@ -133,6 +127,71 @@
     (call-process "setsid" nil nil nil
                   "-f" "termite" "-e"
                   mutt-command)))
+
+;;;; PROT Functions
+
+(defvar prot-common-url-regexp
+  (concat
+   "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|"
+   "nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)"
+   "\\(//[-a-z0-9_.]+:[0-9]*\\)?"
+   (let ((chars "-a-z0-9_=#$@~%&*+\\/[:word:]")
+	       (punct "!?:;.,"))
+     (concat
+      "\\(?:"
+      ;; Match paired parentheses, e.g. in Wikipedia URLs:
+      ;; http://thread.gmane.org/47B4E3B2.3050402@gmail.com
+      "[" chars punct "]+" "(" "[" chars punct "]+" ")"
+      "\\(?:" "[" chars punct "]+" "[" chars "]" "\\)?"
+      "\\|"
+      "[" chars punct "]+" "[" chars "]"
+      "\\)"))
+   "\\)")
+  "Regular expression that matches URLs.
+Copy of variable `browse-url-button-regexp'.")
+
+
+(defun prot-diff-buffer-dwim (&optional arg)
+  "Diff buffer with its file's last saved state, or run `vc-diff'.
+With optional prefix ARG (\\[universal-argument]) enable
+highlighting of word-wise changes (local to the current buffer)."
+  (interactive "P")
+  (let ((buf))
+    (if (buffer-modified-p)
+        (progn
+          (diff-buffer-with-file (current-buffer))
+          (setq buf "*Diff*"))
+      (vc-diff)
+      (setq buf "*vc-diff*"))
+    (when arg
+      (with-current-buffer (get-buffer buf)
+        (unless diff-refine
+          (setq-local diff-refine 'font-lock))))))
+
+(defvar-local prot-diff--refine-diff-state 0
+  "Current state of `prot-diff-refine-dwim'.")
+
+;;;###autoload
+(defun prot-simple-rename-file-and-buffer (name)
+  "Apply NAME to current file and rename its buffer.
+Do not try to make a new directory or anything fancy."
+  (interactive
+   (list (read-string "Rename current file: " (buffer-file-name))))
+  (let ((file (buffer-file-name)))
+    (if (vc-registered file)
+        (vc-rename-file file name)
+      (rename-file file name))
+    (set-visited-file-name name t t)))
+
+
+;;;###autoload
+(defun prot-search-occur-urls ()
+  "Produce buttonised list of all URLs in the current buffer."
+  (interactive)
+  (let ((buf-name (format "*links in <%s>*" (buffer-name))))
+    (add-hook 'occur-hook #'goto-address-mode)
+    (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
+    (remove-hook 'occur-hook #'goto-address-mode)))
 
 ;;;;;; MU4E
 
