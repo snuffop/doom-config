@@ -145,24 +145,25 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
         '((:calendar-id "personal"
            :files ("~/Nextcloud/Notes/org/Calendar.org")
            :inbox "~/Nextcloud/Notes/Calendars/personal-inbox.org"))
-        ))
-:config (progn
-          (setq org-icalendar-alarm-time 1)
-          (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
-          (setq org-icalendar-timezone "America/New York")
-          (setq org-icalendar-use-deadline t)
-          (setq org-icalendar-include-todo t)
-          ;; This ensures all org "deadlines" show up, and show up as due dates
-          (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
-          ;; This ensures "scheduled" org items show up, and show up as start times
-          (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
-          ;; Add the delayed save hook with a five minute idle timer
-          (add-hook 'after-save-hook
-                    (lambda ()
-                      (when (eq major-mode 'org-mode)
-                        (org-caldav-sync-with-delay 300))))
-          ;; Add the close emacs hook
-          (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close))
+        )
+
+  :config (progn
+            (setq org-icalendar-alarm-time 1)
+            (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
+            (setq org-icalendar-timezone "America/New York")
+            (setq org-caldav-save-directory (concat user-emacs-directory ".local/cache/"))
+            (setq org-icalendar-use-deadline t)
+            (setq org-icalendar-include-todo t)
+            ;; This ensures all org "deadlines" show up, and show up as due dates
+            (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
+            ;; This ensures "scheduled" org items show up, and show up as start times
+            (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
+            ;; Add the delayed save hook with a five minute idle timer
+            (add-hook 'after-save-hook
+                      (lambda ()
+                        (when (eq major-mode 'org-mode)
+                          (org-caldav-sync-with-delay 300)))))
+  (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close))
 
 ;;;;; org-roam-ui
 (use-package! org-roam-ui

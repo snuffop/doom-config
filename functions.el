@@ -78,7 +78,6 @@
   (interactive) (find-file "~/.config/doom/config.org"))
 
 ;;;;; Roam Daily Functions
-
 (defun marty/org-roam-dailies-graphicslink ()
   " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
   (interactive)
@@ -95,6 +94,24 @@
          (day   (string-to-number (substring (buffer-name) 8 10)))
          (datim (encode-time 0 0 0 day month year)))
     (format-time-string "%A, %B %d %Y" datim)))
+
+(defun marty/org-roam-dailies-todo-schedule ()
+  " Set the Date for the todo's in the dailies template "
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
+
+(defun marty/org-roam-dailies-todo-deadline ()
+  " Set the Date for the todo's in the dailies template "
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
 
 ;;;;;; Open Mutt Message
 

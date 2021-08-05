@@ -6,5 +6,10 @@
 * Links
 ** `(marty/org-roam-dailies-graphicslink)`
 * Tasks
+** TODO EG&Pics - Daily
+`(marty/org-roam-dailies-todo-schedule)`  `(marty/org-roam-dailies-todo-deadline)`
+** TODO Blog Entry
+`(marty/org-roam-dailies-todo-schedule)`  ` (marty/org-roam-dailies-todo-deadline)`
+
 * Rackspace
 * Journal

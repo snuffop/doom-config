@@ -1,4 +1,4 @@
-;;;; Vulpea !!
+;; Vulpea !!
 
 (defun vulpea-project-p ()
   "Return non-nil if current buffer has any todo entry.
@@ -55,11 +55,13 @@ tasks."
   (setq org-agenda-files
         (append marty/org-agenda-files
                 (vulpea-project-files))))
-
-(add-hook 'find-file-hook #'vulpea-project-update-tag)
-(add-hook 'before-save-hook #'vulpea-project-update-tag)
-
-(advice-add 'org-agenda :before #'vulpea-agenda-files-update)
+(after! org
+  (add-hook 'find-file-hook #'vulpea-project-update-tag)
+  (add-hook 'before-save-hook #'vulpea-project-update-tag)
+  )
+(after! org-agenda
+  (advice-add 'org-agenda :before #'vulpea-agenda-files-update)
+  )
 
 ;; functions borrowed from `vulpea' library
 ;; https://github.com/d12frosted/vulpea/blob/6a735c34f1f64e1f70da77989e9ce8da7864e5ff/vulpea-buffer.el
