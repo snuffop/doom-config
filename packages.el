@@ -7,7 +7,7 @@
 ;;
 ;; Packages
 
-(package! mixed-pitch)
+;;(package! mixed-pitch)
 
 (package! org-projectile)
 

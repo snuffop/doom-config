@@ -22,13 +22,9 @@
       auto-save-default t                         ; Nobody likes to loose work, I certainly don't
       truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
-      ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
 
 (display-time-mode 1)                             ; Enable time in the mode-line
-
-;; (unless (string-match-p "^Power N/A" (battery))   ; On laptops...
-;;   (display-battery-mode 1))                       ; it's nice to know how much power you have
 
 (global-subword-mode 1)
 
@@ -61,33 +57,33 @@
 
 ;; Mixed Pitch
 
-(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
-  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
-(defun init-mixed-pitch-h ()
-  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
-Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
-  (when (memq major-mode mixed-pitch-modes)
-    (mixed-pitch-mode 1))
-  (dolist (hook mixed-pitch-modes)
-    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
-(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+;; (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+;;   "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
+;; (defun init-mixed-pitch-h ()
+;;   "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
+;; Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
+;;   (when (memq major-mode mixed-pitch-modes)
+;;     (mixed-pitch-mode 1))
+;;   (dolist (hook mixed-pitch-modes)
+;;     (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+;; (add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
 
-(autoload #'mixed-pitch-serif-mode "mixed-pitch"
-  "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
+;; (autoload #'mixed-pitch-serif-mode "mixed-pitch"
+;;   "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
 
-(after! mixed-pitch
-  (defface variable-pitch-serif
-    '((t (:family "serif")))
-    "A variable-pitch face with serifs."
-    :group 'basic-faces)
-  (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 27))
-  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
-  (defun mixed-pitch-serif-mode (&optional arg)
-    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
-    (interactive)
-    (let ((mixed-pitch-face 'variable-pitch-serif))
-      (mixed-pitch-mode (or arg 'toggle)))))
+;; (after! mixed-pitch
+;;   (defface variable-pitch-serif
+;;     '((t (:family "serif")))
+;;     "A variable-pitch face with serifs."
+;;     :group 'basic-faces)
+;;   (setq mixed-pitch-set-height t)
+;;   (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 27))
+;;   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
+;;   (defun mixed-pitch-serif-mode (&optional arg)
+;;     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
+;;     (interactive)
+;;     (let ((mixed-pitch-face 'variable-pitch-serif))
+;;       (mixed-pitch-mode (or arg 'toggle)))))
 
 ;;;; Theme
 
@@ -354,6 +350,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
           /sshx:macpro.home.snuffy.org|sudo:macpro.home.snuffy.org:/
           /sshx:nextcloud.home.snuffy.org:/
           /sshx:nexthost.home.snuffy.org:/
+          /sshx:kali:/
+          /sshx:kali|sudo:kali:/
           /sshx:ofmasons@l1.dabuke.com:/
           /sshx:radhits.net:/
           /sshx:radhits.net|sudo:radhits.net:/
