@@ -1902,12 +1902,13 @@ Built in!
 #+END_SRC
 ** treemacs
 *** package
-Built i
+Built in
 *** code
 #+BEGIN_SRC emacs-lisp
 ;;;; Treemacs
 
 (setq +treemacs-git-mode 'extended)
+
 #+END_SRC
 
 ** very large file
