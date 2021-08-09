@@ -7,7 +7,6 @@
 * TABLE OF CONTENTS :toc:
 - [[#about-this-config][ABOUT THIS CONFIG]]
   - [[#headers-of-files][Headers of Files]]
-  - [[#packages][Packages]]
   - [[#initel][init.el]]
 - [[#global-settings][GLOBAL SETTINGS]]
 - [[#company-settings][COMPANY SETTINGS]]
@@ -18,19 +17,18 @@
 - [[#spelling][SPELLING]]
 - [[#line-numbers][LINE NUMBERS]]
 - [[#org-mode][ORG-MODE]]
-  - [[#packages-1][Packages]]
+  - [[#packages][Packages]]
   - [[#config][Config]]
   - [[#org-super-agenda][org-super-agenda]]
   - [[#tsfile-links][TSfile Links]]
   - [[#load-org][LOAD ORG]]
   - [[#org-pandoc][org-pandoc]]
   - [[#org-publish-functions][Org publish functions]]
+  - [[#org-roam][org-roam]]
 - [[#calendar][CALENDAR]]
   - [[#org-caldav][org-caldav]]
-  - [[#org-roam][org-roam]]
 - [[#functions][FUNCTIONS]]
   - [[#open-file-functions][Open File Functions]]
-  - [[#roam-functions][Roam Functions]]
   - [[#mutt-functions][Mutt Functions]]
   - [[#prot-functions][PROT Functions]]
   - [[#load-functions-file][Load functions File]]
@@ -40,6 +38,9 @@
   - [[#start-mu4e][Start Mu4e]]
   - [[#load-mu4eel][Load mu4e.el]]
 - [[#keybinding][KEYBINDING]]
+  - [[#global-bindings][Global Bindings]]
+  - [[#leader-bindings][Leader Bindings]]
+  - [[#load-keybindingsel][Load keybindings.el]]
 - [[#modules][MODULES]]
   - [[#alert][alert]]
   - [[#aggressive-indent][Aggressive indent]]
@@ -79,7 +80,7 @@ the header of the config.el file followes
 Functions.el   pretty self explanatory
 
 #+BEGIN_SRC emacs-lisp :tangle functions.el
-;;; functions.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; functions.el --- Summary -*- lexical-binding: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -93,7 +94,7 @@ Functions.el   pretty self explanatory
 org-mode.el  Header file for the org-mode  config
 
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
-;;; org-mode.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; org-mode.el --- Summary -*- lexical-binding: t;  -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -107,7 +108,7 @@ org-mode.el  Header file for the org-mode  config
 
 *** packages.el
 #+BEGIN_SRC emacs-lisp :tangle packages.el
-;;; packages.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; packages.el --- Summary -*- lexical-binding: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -119,7 +120,7 @@ org-mode.el  Header file for the org-mode  config
 #+END_SRC
 *** mu4e.el
 #+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;;; mu4e.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; mu4e.el --- Summary -*- lexical-binding: t;  -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -129,7 +130,19 @@ org-mode.el  Header file for the org-mode  config
 ;; Code:
 
 #+END_SRC
-** Packages
+*** keybindings.el
+#+BEGIN_SRC emacs-lisp :tangle keybindings.el
+;;; $DOOMDIR/keybindings.el --- Summary -*- lexical-binding: t; -*-
+;;
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
+;; Created:  7 July 2021
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; Code:
+#+END_SRC
+
 ** init.el
 #+BEGIN_SRC emacs-lisp :tangle init.el
 ;;; init.el -*- lexical-binding: t; -*-
@@ -379,10 +392,10 @@ Set Default variables  and hooks to be seen globally
 #+BEGIN_SRC emacs-lisp
 ;; Fonts
 
-(setq doom-font (font-spec :family "Source Code Pro" :size 15)
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15)
       doom-unicode-font (font-spec :family "Symbola" :size 15)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
-      doom-big-font (font-spec :family "Source Code Pro" :size 24))
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
 
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -797,53 +810,53 @@ I have become quite attached to the dracula theme..
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; org-super-agenda
 
-;; (use-package! org-super-agenda
-;;   :after org-agenda
-;;   :commands (org-super-agenda-mode))
+(use-package! org-super-agenda
+  :after org-agenda
+  :commands (org-super-agenda-mode))
 
-;; (after! org-agenda
-;;   (org-super-agenda-mode))
+(after! org-agenda
+  (org-super-agenda-mode))
 
-;; (setq org-agenda-custom-commands
-;;       '(("o" "Overview"
-;;          ((agenda "" ((org-super-agenda-groups
-;;                        '((:log t)  ; Automatically named "Log"
-;;                          (:name "Schedule"
-;;                           :time-grid t)
-;;                          (:name "Today"
-;;                           :scheduled today)
-;;                          (:habit t)
-;;                          (:name "Due today"
-;;                           :deadline today)
-;;                          (:name "Overdue"
-;;                           :deadline past)
-;;                          (:name "Due soon"
-;;                           :deadline future)
-;;                          (:name "Tickle"
-;;                           :deadline future)
-;;                          (:name "Unimportant"
-;;                           :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
-;;                                  :order 100)
-;;                           (:name "Waiting..."
-;;                            :todo "WAITING"
-;;                            :order 98)
-;;                           (:name "Scheduled earlier"
-;;                            :scheduled past))))))))
-;;         ("g" "group"
-;;          ((agenda "" ((org-agenda-spam 'week)
-;;                       (org-super-agenda-groups
-;;                        '((:auto-category t))
-;;                        )))))
+(setq org-agenda-custom-commands
+      '(("o" "Overview"
+         ((agenda "" ((org-super-agenda-groups
+                       '((:log t)  ; Automatically named "Log"
+                         (:name "Schedule"
+                          :time-grid t)
+                         (:name "Today"
+                          :scheduled today)
+                         (:habit t)
+                         (:name "Due today"
+                          :deadline today)
+                         (:name "Overdue"
+                          :deadline past)
+                         (:name "Due soon"
+                          :deadline future)
+                         (:name "Tickle"
+                          :deadline future)
+                         (:name "Unimportant"
+                          :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
+                                 :order 100)
+                          (:name "Waiting..."
+                           :todo "WAITING"
+                           :order 98)
+                          (:name "Scheduled earlier"
+                           :scheduled past))))))))
+        ("g" "group"
+         ((agenda "" ((org-agenda-spam 'week)
+                      (org-super-agenda-groups
+                       '((:auto-category t))
+                       )))))
 
-;;         ("u" "Super view"
-;;          ((agenda "" ((org-super-agenda-groups
-;;                        '((:name "Today"
-;;                           :time-grid t)))))
-;;           (todo "" ((org-agenda-overriding-header "Projects")
-;;                     (org-super-agenda-groups
-;;                      '((:name none  ; Disable super group header
-;;                         :children todo)
-;;                        (:discard (:anything t))))))))))
+        ("u" "Super view"
+         ((agenda "" ((org-super-agenda-groups
+                       '((:name "Today"
+                          :time-grid t)))))
+          (todo "" ((org-agenda-overriding-header "Projects")
+                    (org-super-agenda-groups
+                     '((:name none  ; Disable super group header
+                        :children todo)
+                       (:discard (:anything t))))))))))
 #+END_SRC
 
 
@@ -937,6 +950,63 @@ after reference
   (org-ascii-publish-to-ascii a b c))
 #+END_SRC
 
+** org-roam
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-roam-ui                   :recipe (:host github
+                                                 :repo "org-roam/org-roam-ui"
+                                                 :files ("*.el" "out")))
+#+END_SRC
+
+*** code
+**** Base
+#+BEGIN_SRC emacs-lisp
+;;;;; org-roam-ui
+(use-package! org-roam-ui
+  :after org-roam)
+
+#+END_SRC
+
+**** Roam Functions
+
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;; Roam Daily Functions
+(defun marty/org-roam-dailies-graphicslink ()
+  " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
+
+(defun marty/org-roam-dailies-title ()
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "%A, %B %d %Y" datim)))
+
+(defun marty/org-roam-dailies-todo-schedule ()
+  " Set the Date for the todo's in the dailies template "
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
+
+(defun marty/org-roam-dailies-todo-deadline ()
+  " Set the Date for the todo's in the dailies template "
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
+#+END_SRC
+
 * CALENDAR
 ** org-caldav
 *** package
@@ -1017,22 +1087,6 @@ after reference
     )))
 #+END_SRC
 
-** org-roam
-*** package
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-(package! org-roam-ui                   :recipe (:host github
-                                                 :repo "org-roam/org-roam-ui"
-                                                 :files ("*.el" "out")))
-#+END_SRC
-
-*** code
-#+BEGIN_SRC emacs-lisp
-;;;;; org-roam-ui
-(use-package! org-roam-ui
-  :after org-roam)
-
-#+END_SRC
-
 * FUNCTIONS
 ** Open File Functions
 *** Calendar Open
@@ -1087,46 +1141,6 @@ after reference
 
 (defun mb/org-config ()
   (interactive) (find-file "~/.config/doom/config.org"))
-#+END_SRC
-
-** Roam Functions
-
-#+BEGIN_SRC emacs-lisp :tangle functions.el
-;;;;; Roam Daily Functions
-(defun marty/org-roam-dailies-graphicslink ()
-  " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
-
-(defun marty/org-roam-dailies-title ()
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "%A, %B %d %Y" datim)))
-
-(defun marty/org-roam-dailies-todo-schedule ()
-  " Set the Date for the todo's in the dailies template "
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
-
-(defun marty/org-roam-dailies-todo-deadline ()
-  " Set the Date for the todo's in the dailies template "
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
 #+END_SRC
 
 ** Mutt Functions
@@ -1765,13 +1779,164 @@ This function is suitable for `mu4e-compose-mode-hook'."
 
 #+END_SRC
 * KEYBINDING
+** Global Bindings
+#+BEGIN_SRC emacs-lisp :tangle keybindings.el
+;;;; Global keybindings
+
+(define-key! dired-mode-map
+  (kbd "C-t") #'marty/dired-copy-filename-as-tsfile-link)
+
+(define-key! help-map
+  "h"    #'helpful-at-point)
+
+(map!
+ ;; :n "C-:"    #'+spell/correct
+ :n "C-,"    #'+spell/next-error)
+#+END_SRC
+
+** Leader Bindings
+
+#+BEGIN_SRC emacs-lisp :tangle keybindings.el
+;;;;; Leader Keybindings
+
+(map! :leader
+      "TAB"  #'evil-switch-to-windows-last-buffer
+      "SPC"  #'execute-extended-command
+      ;;; <leader> a --- Application
+      (:prefix-map ("a" . "Application")
+       "m"  #'=mu4e
+       "r"  #'ranger
+       ;; ORG
+       (:prefix-map ("o" . "org")
+        "/" #'org-occur-in-agenda-files
+        "a" #'org-agenda-list
+        "t" #'org-todo-list
+        "l" #'org-store-link
+        "m" #'org-tags-view
+        "o" #'org-agenda
+        "s" #'org-search-view
+        "t" #'org-todo-list
+        (:prefix-map ("C" . "clock/contacts")
+         "c"  #'org-clock-cancel
+         "g"  #'org-clock-goto
+         "i"  #'org-clock-in
+         "j"  #'org-clock-jump-to-current-clock
+         "o"  #'org-clock-out
+         "r"  #'org-resolve-clocks
+         "I"  #'org-clock-in-last
+         (:prefix-map ("t" . "org-timer")
+          "t"  #'org-timer-set-timer
+          "p"  #'org-timer-pause-or-continue
+          "q"  #'org-timer-stop)))
+       ;; Tools
+       (:prefix-map ("t" . "tools")
+        (:when (featurep! :tools pass)
+         (:prefix-map ("p" . "pass")
+          "/"  #'ivy-pass
+          "c"  #'password-store-edit
+          "d"  #'password-store-remove
+          "g"  #'password-store-generate
+          "i"  #'password-store-insert
+          "r"  #'password-store-rename
+          "w"  #'password-store-url
+          "y"  #'password-store-copy
+          "D"  #'password-store-clear
+          "I"  #'password-store-init
+          (:prefix-map ("o" . "otp")
+           "a" #'password-store-otp-append
+           "i" #'password-store-otp-insert
+           "y" #'password-store-otp-token-copy
+           "A" #'password-store-otp-append-from-image
+           "Y" #'password-store-otp-uri-copy)))
+        (:prefix-map ("t" . "Tramp")
+         "C"  #'tramp-cleanup-all-connections
+         "B"  #'tramp-cleanup-all-buffers
+         "c"  #'tramp-cleanup-this-connection
+         "t"  #'counsel-tramp
+         "q"  #'counsel-tramp-quit)))
+
+      ;;; <leader> l --- workspace / Layout
+      (:when (featurep! :ui workspaces)
+       (:prefix-map ("l" . "workspace")
+        :desc "Display tab bar"           "SPC" #'+workspace/display
+        :desc "Cycle tab bar"             "TAB" #'+workspace/cycle
+        :desc "Switch workspace"          "."   #'+workspace/switch-to
+        :desc "Switch to last workspace"  "`"   #'+workspace/other
+        :desc "Move workspace left"       "<"   #'+workspace/swap-left
+        :desc "Move workspace right"      ">"   #'+workspace/swap-right
+        :desc "New workspace"             "n"   #'+workspace/new
+        :desc "Create named workspace"    "N"   #'+workspace/new-named
+        :desc "open workspace from file"  "o"   #'+workspace/load
+        :desc "Save workspace to file"    "s"   #'+workspace/save
+        :desc "Delete session"            "x"   #'+workspace/kill-session
+        :desc "Delete this workspace"     "d"   #'+workspace/delete
+        :desc "Rename workspace"          "r"   #'+workspace/rename
+        :desc "Switch workspace"          "l"   #'+workspace/switch-to
+        :desc "Restore last session"      "R"   #'+workspace/restore-last-session
+        :desc "Next workspace"            "]"   #'+workspace/switch-right
+        :desc "Previous workspace"        "["   #'+workspace/switch-left
+        :desc "Switch to 1st workspace"   "1"   #'+workspace/switch-to-0
+        :desc "Switch to 2nd workspace"   "2"   #'+workspace/switch-to-1
+        :desc "Switch to 3rd workspace"   "3"   #'+workspace/switch-to-2
+        :desc "Switch to 4th workspace"   "4"   #'+workspace/switch-to-3
+        :desc "Switch to 5th workspace"   "5"   #'+workspace/switch-to-4
+        :desc "Switch to 6th workspace"   "6"   #'+workspace/switch-to-5
+        :desc "Switch to 7th workspace"   "7"   #'+workspace/switch-to-6
+        :desc "Switch to 8th workspace"   "8"   #'+workspace/switch-to-7
+        :desc "Switch to 9th workspace"   "9"   #'+workspace/switch-to-8
+        :desc "Switch to final workspace" "0"   #'+workspace/switch-to-final))
+      )
+
+#+END_SRC
+*** Leader o Open
+#+BEGIN_SRC emacs-lisp :tangle keybindings.el
+;;;;; <leader> o --- open
+(map! :leader
+      :prefix "o"
+      (:prefix-map ("m" . "MY")
+       :desc "0mobile"       "0" #'mb/0mobile
+       :desc "Desktop"       "d" #'mb/desktop
+       :desc "contacts"      "o" #'mb/contacts
+       :desc "Tasks"         "g" #'mb/Tasks
+       :desc "Habits"        "h" #'mb/Habits
+       :desc "read later"    "l" #'mb/read-later
+       :desc "Someday"       "s" #'mb/Someday
+       :desc "Tip Jar"       "t" #'mb/TipJar
+       (:prefix-map ("c" . "+config")
+        :desc "keybindings"  "k"  #'mb/base-keybinding
+        :desc "config"       "c"  #'mb/base-config
+        :desc "org"          "o"  #'mb/org-config)
+       (:prefix-map ("C" . "calendar")
+        "c"  #' mb/open-calendar
+        "C"  #' mb/calendar
+        "s"  #' org-caldav-sync)))
+#+END_SRC
+
+*** Mode Maps
+
+#+BEGIN_SRC emacs-lisp :tangle keybindings.el
+;;;;; Mode Maps
+;;;;;; Override org mode map
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :prefix "m"
+      "j"  #'org-roam-dailies-capture-today
+      "s"  #'org-roam-db-sync
+      :prefix "md"
+      "p"  #'org-roam-dailies-goto-previous-note
+      "n"  #'org-roam-dailies-goto-next-note
+      )
+#+END_SRC
+
+** Load keybindings.el
 #+BEGIN_SRC emacs-lisp
 ;;;; Leader keys and keybindings
 
 (setq doom-localleader-key ",")
 
 (load! "keybindings.el")
-
 #+END_SRC
 
 * MODULES

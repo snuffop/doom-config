@@ -10,8 +10,6 @@
 
 ;;;; Global keybindings
 
-
-
 (define-key! dired-mode-map
   (kbd "C-t") #'marty/dired-copy-filename-as-tsfile-link)
 
@@ -133,8 +131,6 @@
         "C"  #' mb/calendar
         "s"  #' org-caldav-sync)))
 
-
-;;;;;
 ;;;;; Mode Maps
 ;;;;;; Override org mode map
 

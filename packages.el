@@ -1,4 +1,4 @@
-;;; packages.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; packages.el --- Summary -*- lexical-binding: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -15,11 +15,11 @@
                                                  :repo "tecosaur/org-pandoc-import"
                                                  :files ("*.el" "filters" "preprocessors")))
 
-(package! org-caldav)
-
 (package! org-roam-ui                   :recipe (:host github
                                                  :repo "org-roam/org-roam-ui"
                                                  :files ("*.el" "out")))
+
+(package! org-caldav)
 
 (package! alert)
 

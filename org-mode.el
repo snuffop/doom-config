@@ -1,4 +1,4 @@
-;;; org-mode.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; org-mode.el --- Summary -*- lexical-binding: t;  -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -307,53 +307,53 @@
 
 ;; org-super-agenda
 
-;; (use-package! org-super-agenda
-;;   :after org-agenda
-;;   :commands (org-super-agenda-mode))
+(use-package! org-super-agenda
+  :after org-agenda
+  :commands (org-super-agenda-mode))
 
-;; (after! org-agenda
-;;   (org-super-agenda-mode))
+(after! org-agenda
+  (org-super-agenda-mode))
 
-;; (setq org-agenda-custom-commands
-;;       '(("o" "Overview"
-;;          ((agenda "" ((org-super-agenda-groups
-;;                        '((:log t)  ; Automatically named "Log"
-;;                          (:name "Schedule"
-;;                           :time-grid t)
-;;                          (:name "Today"
-;;                           :scheduled today)
-;;                          (:habit t)
-;;                          (:name "Due today"
-;;                           :deadline today)
-;;                          (:name "Overdue"
-;;                           :deadline past)
-;;                          (:name "Due soon"
-;;                           :deadline future)
-;;                          (:name "Tickle"
-;;                           :deadline future)
-;;                          (:name "Unimportant"
-;;                           :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
-;;                                  :order 100)
-;;                           (:name "Waiting..."
-;;                            :todo "WAITING"
-;;                            :order 98)
-;;                           (:name "Scheduled earlier"
-;;                            :scheduled past))))))))
-;;         ("g" "group"
-;;          ((agenda "" ((org-agenda-spam 'week)
-;;                       (org-super-agenda-groups
-;;                        '((:auto-category t))
-;;                        )))))
+(setq org-agenda-custom-commands
+      '(("o" "Overview"
+         ((agenda "" ((org-super-agenda-groups
+                       '((:log t)  ; Automatically named "Log"
+                         (:name "Schedule"
+                          :time-grid t)
+                         (:name "Today"
+                          :scheduled today)
+                         (:habit t)
+                         (:name "Due today"
+                          :deadline today)
+                         (:name "Overdue"
+                          :deadline past)
+                         (:name "Due soon"
+                          :deadline future)
+                         (:name "Tickle"
+                          :deadline future)
+                         (:name "Unimportant"
+                          :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
+                                 :order 100)
+                          (:name "Waiting..."
+                           :todo "WAITING"
+                           :order 98)
+                          (:name "Scheduled earlier"
+                           :scheduled past))))))))
+        ("g" "group"
+         ((agenda "" ((org-agenda-spam 'week)
+                      (org-super-agenda-groups
+                       '((:auto-category t))
+                       )))))
 
-;;         ("u" "Super view"
-;;          ((agenda "" ((org-super-agenda-groups
-;;                        '((:name "Today"
-;;                           :time-grid t)))))
-;;           (todo "" ((org-agenda-overriding-header "Projects")
-;;                     (org-super-agenda-groups
-;;                      '((:name none  ; Disable super group header
-;;                         :children todo)
-;;                        (:discard (:anything t))))))))))
+        ("u" "Super view"
+         ((agenda "" ((org-super-agenda-groups
+                       '((:name "Today"
+                          :time-grid t)))))
+          (todo "" ((org-agenda-overriding-header "Projects")
+                    (org-super-agenda-groups
+                     '((:name none  ; Disable super group header
+                        :children todo)
+                       (:discard (:anything t))))))))))
 
 ;; TSfile Links
 

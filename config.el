@@ -35,10 +35,10 @@
 
 ;; Fonts
 
-(setq doom-font (font-spec :family "Source Code Pro" :size 15)
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15)
       doom-unicode-font (font-spec :family "Symbola" :size 15)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
-      doom-big-font (font-spec :family "Source Code Pro" :size 24))
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
 
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -82,6 +82,10 @@
 ;; org-pandoc
 (use-package! org-pandoc-import
   :after org)
+
+;;;;; org-roam-ui
+(use-package! org-roam-ui
+  :after org-roam)
 
 ;;;;; org-caldav
 
@@ -131,10 +135,6 @@
                         (when (eq major-mode 'org-mode)
                           (org-caldav-sync-with-delay 300)))))
   (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close))
-
-;;;;; org-roam-ui
-(use-package! org-roam-ui
-  :after org-roam)
 
 ;;;; Load Functions.el
 
