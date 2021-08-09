@@ -14,16 +14,14 @@
 - [[#fonts-and-faces][FONTS and FACES]]
   - [[#fonts][Fonts]]
   - [[#faces][Faces]]
-  - [[#mixed-pitch][Mixed Pitch]]
 - [[#theme][THEME]]
 - [[#spelling][SPELLING]]
 - [[#line-numbers][LINE NUMBERS]]
 - [[#org-mode][ORG-MODE]]
   - [[#packages-1][Packages]]
-  - [[#code][code]]
+  - [[#config][Config]]
   - [[#org-super-agenda][org-super-agenda]]
   - [[#tsfile-links][TSfile Links]]
-  - [[#dynamic-todos-in-agenda][Dynamic todo's in agenda]]
   - [[#load-org][LOAD ORG]]
   - [[#org-pandoc][org-pandoc]]
   - [[#org-publish-functions][Org publish functions]]
@@ -136,20 +134,6 @@ org-mode.el  Header file for the org-mode  config
 #+BEGIN_SRC emacs-lisp :tangle init.el
 ;;; init.el -*- lexical-binding: t; -*-
 
-;; This file controls what Doom modules are enabled and what order they load
-;; in. Remember to run 'doom sync' after modifying it!
-
-;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
-;;      documentation. There you'll find a "Module Index" link where you'll find
-;;      a comprehensive list of Doom's modules and what flags they support.
-
-;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
-;;      'C-c c k' for non-vim users) to view its documentation. This works on
-;;      flags as well (those symbols that start with a plus).
-;;
-;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
-;;      directory (for easy access to its source code).
-
 (doom! :input
        ;;chinese
        ;;japanese
@@ -160,10 +144,9 @@ org-mode.el  Header file for the org-mode  config
         +childframe)
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       ;;(ivy               ; a search engine for love and life
+       ;; (ivy               ; a search engine for love and life
        ;; +prescient
        ;; +fuzzy
-       ;; +icons)
        (vertico
         +icons)
 
@@ -314,7 +297,7 @@ org-mode.el  Header file for the org-mode  config
         +roam2)
        (php               ; perl's insecure younger brother
         +lsp)
-       ;;plantuml          ; diagrams for confusing people more
+       plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        python            ; beautiful is better than ugly
        qt                ; the 'cutest' gui framework ever
@@ -330,7 +313,7 @@ org-mode.el  Header file for the org-mode  config
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
-       ;;terra             ; Earth and Moon in alignment for performance.
+       terra             ; Earth and Moon in alignment for performance.
        web               ; the tubes
        yaml              ; JSON, but readable
        ;;zig               ; C, but simpler
@@ -418,46 +401,6 @@ Set Default variables  and hooks to be seen globally
   '(mode-line :family "DejaVu Sans Mono" :height 100)
   '(mode-line-inactive :family "DejaVu Sans Mono" :height 100))
 #+END_SRC
-
-** Mixed Pitch
-*** package
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-;;(package! mixed-pitch)
-#+END_SRC
-
-*** code
-#+BEGIN_SRC emacs-lisp
-;; Mixed Pitch
-
-;; (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
-;;   "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
-;; (defun init-mixed-pitch-h ()
-;;   "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
-;; Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
-;;   (when (memq major-mode mixed-pitch-modes)
-;;     (mixed-pitch-mode 1))
-;;   (dolist (hook mixed-pitch-modes)
-;;     (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
-;; (add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
-
-;; (autoload #'mixed-pitch-serif-mode "mixed-pitch"
-;;   "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
-
-;; (after! mixed-pitch
-;;   (defface variable-pitch-serif
-;;     '((t (:family "serif")))
-;;     "A variable-pitch face with serifs."
-;;     :group 'basic-faces)
-;;   (setq mixed-pitch-set-height t)
-;;   (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 27))
-;;   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
-;;   (defun mixed-pitch-serif-mode (&optional arg)
-;;     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
-;;     (interactive)
-;;     (let ((mixed-pitch-face 'variable-pitch-serif))
-;;       (mixed-pitch-mode (or arg 'toggle)))))
-#+END_SRC
-
 * THEME
 
 I have become quite attached to the dracula theme..
@@ -494,20 +437,20 @@ I have become quite attached to the dracula theme..
 
 (setq org-directory "~/Nextcloud/Notes/org/")
 (setq org-roam-directory "~/Nextcloud/Notes/org/")
-
+(setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
 #+end_src
 ** Packages
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! org-projectile)
 #+END_SRC
 
-** code
+** Config
+
 *** Mail/Mutt
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; Mail/Mutt
 
 (org-add-link-type "message" 'mutt-open-message)
-
 #+END_SRC
 *** org agenda
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
@@ -525,11 +468,13 @@ I have become quite attached to the dracula theme..
                                "~/.cache/calendar/tatjana.org"))
 (after! org-agenda
 
-  (setq org-agenda-files marty/org-agenda-files)
+  (setq org-agenda-block-separator nil)
   (setq org-agenda-compact-blocks t)
+  (setq org-agenda-files marty/org-agenda-files)
   (setq org-agenda-include-deadlines t)
   (setq org-agenda-start-on-weekday 1)
   (setq org-agenda-start-with-log-mode t)
+  (setq org-agenda-tags-column 100) ;; from testing this seems to be a good value
   (setq org-agenda-window-setup 'current-window)
   (setq org-deadline-warning-days 14)
 
@@ -546,7 +491,6 @@ I have become quite attached to the dracula theme..
               (when (file-exists-p file)
                 (push file org-agenda-files)))
           (org-projectile-todo-files)))
-
 #+END_SRC
 
 *** org-roam
@@ -650,7 +594,6 @@ I have become quite attached to the dracula theme..
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;;;;; Setting
 
-(setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
 (setq org-default-notes-file (concat org-directory "0mobile.org"))
 (setq org-download-image-dir "~/Nextcloud/Notes/images/")
 (setq org-id-locations-file "~/Nextcloud/Notes/org-id-locations")
@@ -854,59 +797,55 @@ I have become quite attached to the dracula theme..
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; org-super-agenda
 
-(use-package! org-super-agenda
-  :commands (org-super-agenda-mode))
-(after! org-agenda
-  (org-super-agenda-mode))
+;; (use-package! org-super-agenda
+;;   :after org-agenda
+;;   :commands (org-super-agenda-mode))
 
-(setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-block-separator nil
-      org-agenda-tags-column 100 ;; from testing this seems to be a good value
-      org-agenda-compact-blocks t)
+;; (after! org-agenda
+;;   (org-super-agenda-mode))
 
-(setq org-agenda-custom-commands
-      '(("o" "Overview"
-         ((agenda "" ((org-super-agenda-groups
-                       '((:log t)  ; Automatically named "Log"
-                         (:name "Schedule"
-                          :time-grid t)
-                         (:name "Today"
-                          :scheduled today)
-                         (:habit t)
-                         (:name "Due today"
-                          :deadline today)
-                         (:name "Overdue"
-                          :deadline past)
-                         (:name "Due soon"
-                          :deadline future)
-                         (:name "Tickle"
-                          :deadline future)
-                         (:name "Unimportant"
-                          :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
-                                 :order 100)
-                          (:name "Waiting..."
-                           :todo "WAITING"
-                           :order 98)
-                          (:name "Scheduled earlier"
-                           :scheduled past))))))))
-        ("g" "group"
-         ((agenda "" ((org-agenda-spam 'week)
-                      (org-super-agenda-groups
-                       '((:auto-category t))
-                       )))))
+;; (setq org-agenda-custom-commands
+;;       '(("o" "Overview"
+;;          ((agenda "" ((org-super-agenda-groups
+;;                        '((:log t)  ; Automatically named "Log"
+;;                          (:name "Schedule"
+;;                           :time-grid t)
+;;                          (:name "Today"
+;;                           :scheduled today)
+;;                          (:habit t)
+;;                          (:name "Due today"
+;;                           :deadline today)
+;;                          (:name "Overdue"
+;;                           :deadline past)
+;;                          (:name "Due soon"
+;;                           :deadline future)
+;;                          (:name "Tickle"
+;;                           :deadline future)
+;;                          (:name "Unimportant"
+;;                           :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
+;;                                  :order 100)
+;;                           (:name "Waiting..."
+;;                            :todo "WAITING"
+;;                            :order 98)
+;;                           (:name "Scheduled earlier"
+;;                            :scheduled past))))))))
+;;         ("g" "group"
+;;          ((agenda "" ((org-agenda-spam 'week)
+;;                       (org-super-agenda-groups
+;;                        '((:auto-category t))
+;;                        )))))
 
-        ("u" "Super view"
-         ((agenda "" ((org-super-agenda-groups
-                       '((:name "Today"
-                          :time-grid t)))))
-          (todo "" ((org-agenda-overriding-header "Projects")
-                    (org-super-agenda-groups
-                     '((:name none  ; Disable super group header
-                        :children todo)
-                       (:discard (:anything t))))))))))
+;;         ("u" "Super view"
+;;          ((agenda "" ((org-super-agenda-groups
+;;                        '((:name "Today"
+;;                           :time-grid t)))))
+;;           (todo "" ((org-agenda-overriding-header "Projects")
+;;                     (org-super-agenda-groups
+;;                      '((:name none  ; Disable super group header
+;;                         :children todo)
+;;                        (:discard (:anything t))))))))))
 #+END_SRC
+
 
 ** TSfile Links
 
@@ -966,158 +905,11 @@ after reference
     )
   )
 #+END_SRC
-** Dynamic todo's in agenda
-
-#+BEGIN_SRC emacs-lisp :tangle false
-;; Vulpea !!
-
-(defun vulpea-project-p ()
-  "Return non-nil if current buffer has any todo entry.
-TODO entries marked as done are ignored, meaning the this
-function returns nil if current buffer contains only completed
-tasks."
-  (seq-find                                 ; (3)
-   ;; (lambda (type)
-   ;;   (eq type 'done))
-   (lambda (type)
-     (eq type 'todo))
-   (org-element-map                         ; (2)
-       (org-element-parse-buffer 'headline) ; (1)
-       'headline
-     (lambda (h)
-       (org-element-property :todo-type h)))))
-
-(defun vulpea-project-update-tag ()
-  "Update PROJECT tag in the current buffer."
-  (when (and (not (active-minibuffer-window))
-             (vulpea-buffer-p))
-    (save-excursion
-      (goto-char (point-min))
-      (let* ((tags (vulpea-buffer-tags-get))
-             (original-tags tags))
-        (if (vulpea-project-p)
-            (setq tags (cons "project" tags))
-          (setq tags (remove "project" tags)))
-        (unless (eq original-tags tags)
-          (apply #'vulpea-buffer-tags-set (seq-uniq tags))
-          #'org-roam-db-sync)))))
-
-(defun vulpea-buffer-p ()
-  "Return non-nil if the currently visited buffer is a note."
-  (and buffer-file-name
-       (string-prefix-p
-        (expand-file-name (file-name-as-directory org-roam-directory))
-        (file-name-directory buffer-file-name))))
-
-(defun vulpea-project-files ()
-  "Return a list of note files containing 'project' tag." ;
-  (seq-uniq
-   (seq-map
-    #'car
-    (org-roam-db-query
-     [:select [nodes:file]
-      :from tags
-      :left-join nodes
-      :on (= tags:node-id nodes:id)
-      :where (like tag (quote "%\"project\"%"))]))))
-
-(defun vulpea-agenda-files-update (&rest _)
-  "Update the value of `org-agenda-files'."
-  (setq org-agenda-files
-        (append marty/org-agenda-files
-                (vulpea-project-files))))
-(after! org
-  (add-hook 'find-file-hook #'vulpea-project-update-tag)
-  (add-hook 'before-save-hook #'vulpea-project-update-tag)
-  )
-(after! org-agenda
-  (advice-add 'org-agenda :before #'vulpea-agenda-files-update)
-  )
-
-;; functions borrowed from `vulpea' library
-;; https://github.com/d12frosted/vulpea/blob/6a735c34f1f64e1f70da77989e9ce8da7864e5ff/vulpea-buffer.el
-
-(defun vulpea-buffer-tags-get ()
-  "Return filetags value in current buffer."
-  (vulpea-buffer-prop-get-list "filetags" " "))
-
-(defun vulpea-buffer-tags-set (&rest tags)
-  "Set TAGS in current buffer.
-If filetags value is already set, replace it."
-  (vulpea-buffer-prop-set "filetags" (string-join tags " ")))
-
-(defun vulpea-buffer-tags-add (tag)
-  "Add a TAG to filetags in current buffer."
-  (let* ((tags (vulpea-buffer-tags-get))
-         (tags (append tags (list tag))))
-    (apply #'vulpea-buffer-tags-set tags)))
-
-(defun vulpea-buffer-tags-remove (tag)
-  "Remove a TAG from filetags in current buffer."
-  (let* ((tags (vulpea-buffer-tags-get))
-         (tags (delete tag tags)))
-    (apply #'vulpea-buffer-tags-set tags)))
-
-(defun vulpea-buffer-prop-set (name value)
-  "Set a file property called NAME to VALUE in buffer file.
-If the property is already set, replace its value."
-  (setq name (downcase name))
-  (org-with-point-at 1
-    (let ((case-fold-search t))
-      (if (re-search-forward (concat "^#\\+" name ":\\(.*\\)")
-                             (point-max) t)
-          (replace-match (concat "#+" name ": " value) 'fixedcase)
-        (while (and (not (eobp))
-                    (looking-at "^[#:]"))
-          (if (save-excursion (end-of-line) (eobp))
-              (progn
-                (end-of-line)
-                (insert "\n"))
-            (forward-line)
-            (beginning-of-line)))
-        (insert "#+" name ": " value "\n")))))
-
-(defun vulpea-buffer-prop-set-list (name values &optional separators)
-  "Set a file property called NAME to VALUES in current buffer.
-VALUES are quoted and combined into single string using
-`combine-and-quote-strings'.
-If SEPARATORS is non-nil, it should be a regular expression
-matching text that separates, but is not part of, the substrings.
-If nil it defaults to `split-string-default-separators', normally
-\"[ \f\t\n\r\v]+\", and OMIT-NULLS is forced to t.
-If the property is already set, replace its value."
-  (vulpea-buffer-prop-set
-   name (combine-and-quote-strings values separators)))
-
-(defun vulpea-buffer-prop-get (name)
-  "Get a buffer property called NAME as a string."
-  (org-with-point-at 1
-    (when (re-search-forward (concat "^#\\+" name ": \\(.*\\)")
-                             (point-max) t)
-      (buffer-substring-no-properties
-       (match-beginning 1)
-       (match-end 1)))))
-
-(defun vulpea-buffer-prop-get-list (name &optional separators)
-  "Get a buffer property NAME as a list using SEPARATORS.
-If SEPARATORS is non-nil, it should be a regular expression
-matching text that separates, but is not part of, the substrings.
-If nil it defaults to `split-string-default-separators', normally
-\"[ \f\t\n\r\v]+\", and OMIT-NULLS is forced to t."
-  (let ((value (vulpea-buffer-prop-get name)))
-    (when (and value (not (string-empty-p value)))
-      (split-string-and-unquote value separators))))
-#+END_SRC
-
-#+RESULTS:
-: vulpea-buffer-prop-get-list
-
 ** LOAD ORG
 #+begin_src emacs-lisp
 ;; ORG
 (load! "org-mode.el")
 #+end_src
-
 ** org-pandoc
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
@@ -1520,7 +1312,7 @@ This function is suitable for `mu4e-compose-mode-hook'."
 
 (add-to-list 'mu4e-view-actions '("ytag message" . mu4e-action-retag-message) t)
 #+END_SRC
-****  Header Settings
+**** Header Settings
 #+BEGIN_SRC emacs-lisp :tangle mu4e.el
 ;; Header
 
@@ -1696,6 +1488,9 @@ This function is suitable for `mu4e-compose-mode-hook'."
 (setq mml-secure-openpgp-sign-with-sender  t)
 #+END_SRC
 
+*** contacts add
+
+#+END_SRC
 *** Contexts
 #+BEGIN_SRC emacs-lisp :tangle mu4e.el
 ;; Contexts

@@ -7,8 +7,6 @@
 ;;
 ;; Packages
 
-;;(package! mixed-pitch)
-
 (package! org-projectile)
 
 (package! org-super-agenda)

@@ -1,12 +1,14 @@
-* %(org-contacts-template-name)
-  :PROPERTIES:
-  :EMAIL: %(org-contacts-template-email)
-  :PHONE:
-  :ALIAS:
-  :NICKNAME:
-  :IGNORE:
-  :ICON:
-  :NOTE:
-  :ADDRESS:
-  :BIRTHDAY:
-  :END:
+** %(org-contacts-template-name)
+   :PROPERTIES:
+   :TYPE: person
+   :EMAIL: %(org-contacts-template-email)
+   :PHONE: %(org-contacts-template-phone)
+   :ALIAS:
+   :NICKNAME:
+   :IGNORE:
+   :ICON:
+   :NOTE:
+   :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+   :BIRTHDAY: %^{yyyy-mm-dd}
+   :CREATED:
+   :END:

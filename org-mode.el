@@ -26,11 +26,13 @@
                                "~/.cache/calendar/tatjana.org"))
 (after! org-agenda
 
-  (setq org-agenda-files marty/org-agenda-files)
+  (setq org-agenda-block-separator nil)
   (setq org-agenda-compact-blocks t)
+  (setq org-agenda-files marty/org-agenda-files)
   (setq org-agenda-include-deadlines t)
   (setq org-agenda-start-on-weekday 1)
   (setq org-agenda-start-with-log-mode t)
+  (setq org-agenda-tags-column 100) ;; from testing this seems to be a good value
   (setq org-agenda-window-setup 'current-window)
   (setq org-deadline-warning-days 14)
 
@@ -137,7 +139,6 @@
 
 ;;;;; Setting
 
-(setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
 (setq org-default-notes-file (concat org-directory "0mobile.org"))
 (setq org-download-image-dir "~/Nextcloud/Notes/images/")
 (setq org-id-locations-file "~/Nextcloud/Notes/org-id-locations")
@@ -306,58 +307,53 @@
 
 ;; org-super-agenda
 
-(use-package! org-super-agenda
-  :commands (org-super-agenda-mode))
-(after! org-agenda
-  (org-super-agenda-mode))
+;; (use-package! org-super-agenda
+;;   :after org-agenda
+;;   :commands (org-super-agenda-mode))
 
-(setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-block-separator nil
-      org-agenda-tags-column 100 ;; from testing this seems to be a good value
-      org-agenda-compact-blocks t)
+;; (after! org-agenda
+;;   (org-super-agenda-mode))
 
-(setq org-agenda-custom-commands
-      '(("o" "Overview"
-         ((agenda "" ((org-super-agenda-groups
-                       '((:log t)  ; Automatically named "Log"
-                         (:name "Schedule"
-                          :time-grid t)
-                         (:name "Today"
-                          :scheduled today)
-                         (:habit t)
-                         (:name "Due today"
-                          :deadline today)
-                         (:name "Overdue"
-                          :deadline past)
-                         (:name "Due soon"
-                          :deadline future)
-                         (:name "Tickle"
-                          :deadline future)
-                         (:name "Unimportant"
-                          :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
-                                 :order 100)
-                          (:name "Waiting..."
-                           :todo "WAITING"
-                           :order 98)
-                          (:name "Scheduled earlier"
-                           :scheduled past))))))))
-        ("g" "group"
-         ((agenda "" ((org-agenda-spam 'week)
-                      (org-super-agenda-groups
-                       '((:auto-category t))
-                       )))))
+;; (setq org-agenda-custom-commands
+;;       '(("o" "Overview"
+;;          ((agenda "" ((org-super-agenda-groups
+;;                        '((:log t)  ; Automatically named "Log"
+;;                          (:name "Schedule"
+;;                           :time-grid t)
+;;                          (:name "Today"
+;;                           :scheduled today)
+;;                          (:habit t)
+;;                          (:name "Due today"
+;;                           :deadline today)
+;;                          (:name "Overdue"
+;;                           :deadline past)
+;;                          (:name "Due soon"
+;;                           :deadline future)
+;;                          (:name "Tickle"
+;;                           :deadline future)
+;;                          (:name "Unimportant"
+;;                           :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
+;;                                  :order 100)
+;;                           (:name "Waiting..."
+;;                            :todo "WAITING"
+;;                            :order 98)
+;;                           (:name "Scheduled earlier"
+;;                            :scheduled past))))))))
+;;         ("g" "group"
+;;          ((agenda "" ((org-agenda-spam 'week)
+;;                       (org-super-agenda-groups
+;;                        '((:auto-category t))
+;;                        )))))
 
-        ("u" "Super view"
-         ((agenda "" ((org-super-agenda-groups
-                       '((:name "Today"
-                          :time-grid t)))))
-          (todo "" ((org-agenda-overriding-header "Projects")
-                    (org-super-agenda-groups
-                     '((:name none  ; Disable super group header
-                        :children todo)
-                       (:discard (:anything t))))))))))
+;;         ("u" "Super view"
+;;          ((agenda "" ((org-super-agenda-groups
+;;                        '((:name "Today"
+;;                           :time-grid t)))))
+;;           (todo "" ((org-agenda-overriding-header "Projects")
+;;                     (org-super-agenda-groups
+;;                      '((:name none  ; Disable super group header
+;;                         :children todo)
+;;                        (:discard (:anything t))))))))))
 
 ;; TSfile Links
 
