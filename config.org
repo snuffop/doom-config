@@ -2407,12 +2407,17 @@ Built in
 ;;;;; Wakatime
 
 (use-package! wakatime-mode
-  :hook (doom-first-buffer . #'global-wakatime-mode)
+  :ensure t
+  ;; :hook (doom-first-buffer . #'global-wakatime-mode)
   :config
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
 
+(global-wakatime-mode)
+
 #+END_SRC
+
+
 * CUSTOM
 
 #+END_SRC
