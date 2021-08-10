@@ -1,4 +1,4 @@
-;;; org-mode.el --- Summary -*- lexical-binding: t;  -*-
+;;; org-mode.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -222,21 +222,21 @@
 (setq org-capture-templates
       '(("t" "Task" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
-         (file "~/.spacemacs.d/templates/todo.orgcaptmpl"))
-        ("c" "Contacts" entry (file "~/Nextcloud/Notes/org/contacts.org")
-         (file "~/.spacemacs.d/templates/contact.orgcaptmpl"))
+         (file "~/.config/doom/templates/todo.orgcaptmpl"))
+        ("c" "Contacts" entry (file-olp "~/Nextcloud/Notes/org/contacts.org" "General")
+         (file "~/.config/doom/templates/contact.orgcaptmpl"))
         ("p" "Protocol" entry
-         (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox"entry)
+         (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox" entry)
          "** %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
         ("R" "Remember-mutt" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Mail")
-         (file "~/.spacemacs.d/templates/org-templates/mail.orgcaptmpl"))
+         (file "~/.config/doom/templates/org-templates/mail.orgcaptmpl"))
         ("L" "Protocol Link" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
          "** %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
         ("w" "Web site" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
-         (file "~/.spacemacs.d/templates/org-templates/weblink.orgcaptmpl"))
+         (file "~/.config/doom/templates/org-templates/weblink.orgcaptmpl"))
         ("s" "Simple" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Popup")
          "%[~/.emacs.d/.org-popup]" :immediate-finish t :prepend t)

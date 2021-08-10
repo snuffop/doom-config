@@ -12,7 +12,6 @@
 - [[#company-settings][COMPANY SETTINGS]]
 - [[#fonts-and-faces][FONTS and FACES]]
   - [[#fonts][Fonts]]
-  - [[#faces][Faces]]
 - [[#theme][THEME]]
 - [[#spelling][SPELLING]]
 - [[#line-numbers][LINE NUMBERS]]
@@ -37,6 +36,7 @@
   - [[#experimental-test-from-henric-to-prefer-text-over-html-and-rich][Experimental test from Henric to prefer text over html and rich]]
   - [[#start-mu4e][Start Mu4e]]
   - [[#load-mu4eel][Load mu4e.el]]
+  - [[#mu4e-column-faces][mu4e column faces]]
 - [[#keybinding][KEYBINDING]]
   - [[#global-bindings][Global Bindings]]
   - [[#leader-bindings][Leader Bindings]]
@@ -94,7 +94,7 @@ Functions.el   pretty self explanatory
 org-mode.el  Header file for the org-mode  config
 
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
-;;; org-mode.el --- Summary -*- lexical-binding: t;  -*-
+;;; org-mode.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -120,7 +120,7 @@ org-mode.el  Header file for the org-mode  config
 #+END_SRC
 *** mu4e.el
 #+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;;; mu4e.el --- Summary -*- lexical-binding: t;  -*-
+;;; mu4e.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -209,7 +209,6 @@ org-mode.el  Header file for the org-mode  config
 
        :emacs
        (dired             ; making dired pretty [functional]
-        +ranger
         +icons)
        electric          ; smarter, keyword-based electric-indent
        (ibuffer         ; interactive buffer management
@@ -360,19 +359,20 @@ Set Default variables  and hooks to be seen globally
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
 
-;; Allow for reading the local variables file
-(setq-default enable-local-variables t
-              delete-by-moving-to-trash t
-              window-combination-resize t
-              x-stretch-cursor t)
+(setq-default enable-local-variables t)            ; Allow for reading the local variables file
+(setq-default delete-by-moving-to-trash t)
+(setq-default window-combination-resize t)
+(setq-default x-stretch-cursor t)
 
-(setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
-      evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-      auto-save-default t                         ; Nobody likes to loose work, I certainly don't
-      truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
-      password-cache-expiry nil                   ; I can trust my computers ... can't I?
-      scroll-margin 2)                            ; It's nice to maintain a little margin
+(setq undo-limit 80000000)                         ; Raise undo-limit to 80Mb
+(setq evil-want-fine-undo t)                       ; By default while in insert all changes are one big blob. Be more granular
+(setq auto-save-default t)                         ; Nobody likes to loose work, I certainly don't
+(setq truncate-string-ellipsis "…")                ; Unicode ellispis are nicer than "...", and also save /precious/ space
+(setq password-cache-expiry nil)                   ; I can trust my computers ... can't I?
+(setq scroll-margin 2)                             ; It's nice to maintain a little margin
+(setq confirm-kill-emacs nil)                      ; Stop hounding me and quit
 
+(setq display-time-24hr-format t)
 (display-time-mode 1)                             ; Enable time in the mode-line
 
 (global-subword-mode 1)
@@ -392,19 +392,20 @@ Set Default variables  and hooks to be seen globally
 #+BEGIN_SRC emacs-lisp
 ;; Fonts
 
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15)
+(setq doom-font (font-spec :family "FiraCode Nerd Font" :size 15)
       doom-unicode-font (font-spec :family "Symbola" :size 15)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
-      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
+      doom-big-font (font-spec :family "Firacode Nerd Font" :size 24))
 
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
 #+END_SRC
-** Faces
+
+Faces adjustments
+
 #+BEGIN_SRC emacs-lisp
 ;; Faces
-
 (custom-set-faces!
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
@@ -414,6 +415,21 @@ Set Default variables  and hooks to be seen globally
   '(mode-line :family "DejaVu Sans Mono" :height 100)
   '(mode-line-inactive :family "DejaVu Sans Mono" :height 100))
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! mixed-pitch)
+#+END_SRC
+
+Allow mixed fonts in a buffer. This is particularly useful for Org mode, so I
+can mix source and prose blocks in the same document. I also manually enable
+solaire-mode in Org mode as a workaround for font scaling not working properly.
+
+#+BEGIN_SRC emacs-lisp
+
+(add-hook! 'org-mode-hook #'mixed-pitch-mode)
+
+#+END_SRC
+
 * THEME
 
 I have become quite attached to the dracula theme..
@@ -697,26 +713,27 @@ I have become quite attached to the dracula theme..
 *** Templates
 **** Capture
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
+
 ;;;;;; Capture Templates
 
 (setq org-capture-templates
       '(("t" "Task" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
-         (file "~/.spacemacs.d/templates/todo.orgcaptmpl"))
-        ("c" "Contacts" entry (file "~/Nextcloud/Notes/org/contacts.org")
-         (file "~/.spacemacs.d/templates/contact.orgcaptmpl"))
+         (file "~/.config/doom/templates/todo.orgcaptmpl"))
+        ("c" "Contacts" entry (file-olp "~/Nextcloud/Notes/org/contacts.org" "General")
+         (file "~/.config/doom/templates/contact.orgcaptmpl"))
         ("p" "Protocol" entry
-         (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox"entry)
+         (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox" entry)
          "** %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
         ("R" "Remember-mutt" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Mail")
-         (file "~/.spacemacs.d/templates/org-templates/mail.orgcaptmpl"))
+         (file "~/.config/doom/templates/org-templates/mail.orgcaptmpl"))
         ("L" "Protocol Link" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
          "** %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
         ("w" "Web site" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
-         (file "~/.spacemacs.d/templates/org-templates/weblink.orgcaptmpl"))
+         (file "~/.config/doom/templates/org-templates/weblink.orgcaptmpl"))
         ("s" "Simple" entry
          (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Popup")
          "%[~/.emacs.d/.org-popup]" :immediate-finish t :prepend t)
@@ -742,6 +759,10 @@ I have become quite attached to the dracula theme..
 (setq org-protocol-default-template-key "t")
 #+END_SRC
 
+#+RESULTS:
+: t
+
+
 **** org-roam capture templates
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; Org Roam Capture Templates
@@ -762,7 +783,7 @@ I have become quite attached to the dracula theme..
 
 #+END_SRC
 
-*** todo
+*** To Do Settings
 **** faces
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; Todo Faces
@@ -1778,6 +1799,18 @@ This function is suitable for `mu4e-compose-mode-hook'."
 (load! "mu4e.el")
 
 #+END_SRC
+** mu4e column faces
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! mu4e-column-faces)
+#+END_SRC
+*** Code
+#+BEGIN_SRC emacs-lisp
+(use-package! mu4e-column-faces
+  :after mu4e
+  :config (mu4e-column-faces-mode))
+#+END_SRC
+
 * KEYBINDING
 ** Global Bindings
 #+BEGIN_SRC emacs-lisp :tangle keybindings.el

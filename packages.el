@@ -7,6 +7,8 @@
 ;;
 ;; Packages
 
+(package! mixed-pitch)
+
 (package! org-projectile)
 
 (package! org-super-agenda)
@@ -20,6 +22,8 @@
                                                  :files ("*.el" "out")))
 
 (package! org-caldav)
+
+(package! mu4e-column-faces)
 
 (package! alert)
 

@@ -11,19 +11,20 @@
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
 
-;; Allow for reading the local variables file
-(setq-default enable-local-variables t
-              delete-by-moving-to-trash t
-              window-combination-resize t
-              x-stretch-cursor t)
+(setq-default enable-local-variables t)            ; Allow for reading the local variables file
+(setq-default delete-by-moving-to-trash t)
+(setq-default window-combination-resize t)
+(setq-default x-stretch-cursor t)
 
-(setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
-      evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-      auto-save-default t                         ; Nobody likes to loose work, I certainly don't
-      truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
-      password-cache-expiry nil                   ; I can trust my computers ... can't I?
-      scroll-margin 2)                            ; It's nice to maintain a little margin
+(setq undo-limit 80000000)                         ; Raise undo-limit to 80Mb
+(setq evil-want-fine-undo t)                       ; By default while in insert all changes are one big blob. Be more granular
+(setq auto-save-default t)                         ; Nobody likes to loose work, I certainly don't
+(setq truncate-string-ellipsis "…")                ; Unicode ellispis are nicer than "...", and also save /precious/ space
+(setq password-cache-expiry nil)                   ; I can trust my computers ... can't I?
+(setq scroll-margin 2)                             ; It's nice to maintain a little margin
+(setq confirm-kill-emacs nil)                      ; Stop hounding me and quit
 
+(setq display-time-24hr-format t)
 (display-time-mode 1)                             ; Enable time in the mode-line
 
 (global-subword-mode 1)
@@ -35,17 +36,16 @@
 
 ;; Fonts
 
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15)
+(setq doom-font (font-spec :family "FiraCode Nerd Font" :size 15)
       doom-unicode-font (font-spec :family "Symbola" :size 15)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
-      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
+      doom-big-font (font-spec :family "Firacode Nerd Font" :size 24))
 
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
 
 ;; Faces
-
 (custom-set-faces!
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
@@ -54,6 +54,8 @@
 (custom-set-faces!
   '(mode-line :family "DejaVu Sans Mono" :height 100)
   '(mode-line-inactive :family "DejaVu Sans Mono" :height 100))
+
+(add-hook! 'org-mode-hook #'mixed-pitch-mode)
 
 ;;;; Theme
 
@@ -147,6 +149,10 @@
 ;;;; Load MU4E.el
 
 (load! "mu4e.el")
+
+(use-package! mu4e-column-faces
+  :after mu4e
+  :config (mu4e-column-faces-mode))
 
 ;;;; Leader keys and keybindings
 
