@@ -186,7 +186,7 @@
           (auto-insert-mode 1))
   :config (progn
             (define-auto-insert "\\.html?$" "default.html")
-            (define-auto-insert "\\.org" ["default.org" marty/autoinsert-yas-expand])
+            ;; (define-auto-insert "\\.org" ["default.org" marty/autoinsert-yas-expand]) ;; disabled in favor of roam capture templates
             (define-auto-insert "\\.sh" ["default.sh" marty/autoinsert-yas-expand])
             (define-auto-insert "\\.el" ["default.el" marty/autoinsert-yas-expand])
             (define-auto-insert "Blorg/snuffy-org/.+\\.org?$" ["snuffy-org.org" marty/autoinsert-yas-expand])
@@ -461,12 +461,10 @@
 
 (use-package! wakatime-mode
   :ensure t
-  ;; :hook (doom-first-buffer . #'global-wakatime-mode)
+  :hook (doom-first-buffer . #'global-wakatime-mode)
   :config
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
-
-(global-wakatime-mode)
 
 ;;;; Custom
 

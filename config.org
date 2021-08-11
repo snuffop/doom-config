@@ -711,7 +711,6 @@ I have become quite attached to the dracula theme..
 #+END_SRC
 
 *** Templates
-**** Capture
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 
 ;;;;;; Capture Templates
@@ -762,26 +761,6 @@ I have become quite attached to the dracula theme..
 #+RESULTS:
 : t
 
-
-**** org-roam capture templates
-#+BEGIN_SRC emacs-lisp :tangle org-mode.el
-;; Org Roam Capture Templates
-
-(setq org-roam-dailies-capture-templates
-      '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
-         :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-         :empty-lines-after 1 )
-        ("t" "Tasks" entry "** TODO %? "
-         :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
-         :empty-lines-after 1 )
-        ("r" "Rackspace" entry "** %<%H:%M> %?"
-         :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
-         :empty-lines-after 1)
-        ("j" "Journal" entry "** %<%H:%M> %?"
-         :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-         :empty-lines-after 1)))
-
-#+END_SRC
 
 *** To Do Settings
 **** faces
@@ -988,6 +967,40 @@ after reference
 
 #+END_SRC
 
+**** org-roam capture templates
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;; Org Roam Capture Templates
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1 )
+          ("t" "Tasks" entry "** TODO %? "
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+           :empty-lines-after 1 )
+          ("r" "Rackspace" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+           :empty-lines-after 1)
+          ("j" "Journal" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1)))
+
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
+           :if-new (file+head "${slug}.org" (file "~/.config/doom/templates/roam-templates/default-caputre-file.org"))
+           :unnarrowed t)
+          ("t" "tipjar" plain
+           (file "~/.config/doom/templates/roam-tempmlates/tipjar-entry.org")
+           :if-new (file+head "TipJar/${slug}.org" (file "~/.config/doom/templates/roam-templates/tipjar-file.org"))
+           :unnarrowed t)
+          )))
+#+END_SRC
+
+#+RESULTS:
+| d | default | plain | (file ~/.config/doom/templates/roam-templates/default-capture-entry.org) | :if-new | (file+head ${slug}.org (file ~/.config/doom/templates/roam-templates/default-caputre-file.org)) | :unnarrowed | t |
+| t | tipjar  | plain | (file ~/.config/doom/templates/roam-tempmlates/tipjar-entry.org)         | :if-new | (file+head TipJar/${slug}.org (file ~/.config/doom/templates/roam-templates/tipjar-file.org))   | :unnarrowed | t |
+
 **** Roam Functions
 
 #+BEGIN_SRC emacs-lisp :tangle functions.el
@@ -1171,7 +1184,7 @@ after reference
 ;;;;;; Open Mutt Message
 
 (defun mutt-open-message (message-id)
-  "In neomutt, open the email with the the given Message-ID"
+  "In neomutt, open the nmail with the the given Message-ID"
   (let*
       ((message-id
         (replace-regexp-in-string "^/*" "" message-id))
@@ -2023,7 +2036,7 @@ This function is suitable for `mu4e-compose-mode-hook'."
           (auto-insert-mode 1))
   :config (progn
             (define-auto-insert "\\.html?$" "default.html")
-            (define-auto-insert "\\.org" ["default.org" marty/autoinsert-yas-expand])
+            ;; (define-auto-insert "\\.org" ["default.org" marty/autoinsert-yas-expand]) ;; disabled in favor of roam capture templates
             (define-auto-insert "\\.sh" ["default.sh" marty/autoinsert-yas-expand])
             (define-auto-insert "\\.el" ["default.el" marty/autoinsert-yas-expand])
             (define-auto-insert "Blorg/snuffy-org/.+\\.org?$" ["snuffy-org.org" marty/autoinsert-yas-expand])
@@ -2408,14 +2421,16 @@ Built in
 
 (use-package! wakatime-mode
   :ensure t
-  ;; :hook (doom-first-buffer . #'global-wakatime-mode)
+  :hook (doom-first-buffer . #'global-wakatime-mode)
   :config
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
 
-(global-wakatime-mode)
 
 #+END_SRC
+
+#+RESULTS:
+| wakatime-mode |
 
 * CUSTOM
 

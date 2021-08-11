@@ -261,22 +261,6 @@
 
 (setq org-protocol-default-template-key "t")
 
-;; Org Roam Capture Templates
-
-(setq org-roam-dailies-capture-templates
-      '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
-         :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-         :empty-lines-after 1 )
-        ("t" "Tasks" entry "** TODO %? "
-         :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
-         :empty-lines-after 1 )
-        ("r" "Rackspace" entry "** %<%H:%M> %?"
-         :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
-         :empty-lines-after 1)
-        ("j" "Journal" entry "** %<%H:%M> %?"
-         :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-         :empty-lines-after 1)))
-
 ;; Todo Faces
 (setq org-todo-keyword-faces
       '(("TODO"       . org-warning)
@@ -403,3 +387,30 @@
     (kill-new (concat "[[tsfile:" filename "]]")) ;; write back new/modified kill ring element
     )
   )
+
+;; Org Roam Capture Templates
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1 )
+          ("t" "Tasks" entry "** TODO %? "
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+           :empty-lines-after 1 )
+          ("r" "Rackspace" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+           :empty-lines-after 1)
+          ("j" "Journal" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1)))
+
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
+           :if-new (file+head "${slug}.org" (file "~/.config/doom/templates/roam-templates/default-caputre-file.org"))
+           :unnarrowed t)
+          ("t" "tipjar" plain
+           (file "~/.config/doom/templates/roam-tempmlates/tipjar-entry.org")
+           :if-new (file+head "TipJar/${slug}.org" (file "~/.config/doom/templates/roam-templates/tipjar-file.org"))
+           :unnarrowed t)
+          )))

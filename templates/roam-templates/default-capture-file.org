@@ -1,0 +1,7 @@
+#+TITLE: ${title}
+#+AUTHOR:%n
+#+DATE:%u
+#+STARTUP: overview
+#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org
+
+%?

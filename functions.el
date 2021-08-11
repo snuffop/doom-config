@@ -116,7 +116,7 @@
 ;;;;;; Open Mutt Message
 
 (defun mutt-open-message (message-id)
-  "In neomutt, open the email with the the given Message-ID"
+  "In neomutt, open the nmail with the the given Message-ID"
   (let*
       ((message-id
         (replace-regexp-in-string "^/*" "" message-id))
