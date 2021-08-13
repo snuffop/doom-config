@@ -161,9 +161,6 @@
 
 (load! "keybindings.el")
 
-(use-package alert
-  :defer t)
-
 ;;;;; aggressive indent
 
 (use-package! aggressive-indent
@@ -175,6 +172,13 @@
   (add-hook 'hy-mode-hook #'aggressive-indent-mode))
 
 (global-aggressive-indent-mode 1)
+
+(use-package alert
+  :defer t)
+
+(use-package! all-the-icons-completion)
+(all-the-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
 
 ;;;;; autoinsert
 
@@ -461,7 +465,7 @@
 
 (use-package! wakatime-mode
   :ensure t
-  :hook (doom-first-buffer . #'global-wakatime-mode)
+  :hook (doom-first-buffer . 'global-wakatime-mode)
   :config
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))

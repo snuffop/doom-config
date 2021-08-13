@@ -42,8 +42,9 @@
   - [[#leader-bindings][Leader Bindings]]
   - [[#load-keybindingsel][Load keybindings.el]]
 - [[#modules][MODULES]]
-  - [[#alert][alert]]
   - [[#aggressive-indent][Aggressive indent]]
+  - [[#alert][alert]]
+  - [[#all-the-icons-completion][all the icons completion]]
   - [[#auto-insert][auto insert]]
   - [[#i3-window-manager-config][I3 Window manager Config]]
   - [[#khard][khard]]
@@ -859,7 +860,6 @@ I have become quite attached to the dracula theme..
                        (:discard (:anything t))))))))))
 #+END_SRC
 
-
 ** TSfile Links
 
 This code is at the end of org-mode.el and is self contained of sorts.. ts files
@@ -988,18 +988,17 @@ after reference
   (setq org-roam-capture-templates
         '(("d" "default" plain
            (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" (file "~/.config/doom/templates/roam-templates/default-caputre-file.org"))
+           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+AUTHOR:%n\n#+DATE:%u\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n%?")
            :unnarrowed t)
           ("t" "tipjar" plain
-           (file "~/.config/doom/templates/roam-tempmlates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" (file "~/.config/doom/templates/roam-templates/tipjar-file.org"))
+           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
+           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+AUTHOR: %n\n#+DATE:%U\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n#+filetags: tipjar\n")
            :unnarrowed t)
           )))
 #+END_SRC
 
 #+RESULTS:
-| d | default | plain | (file ~/.config/doom/templates/roam-templates/default-capture-entry.org) | :if-new | (file+head ${slug}.org (file ~/.config/doom/templates/roam-templates/default-caputre-file.org)) | :unnarrowed | t |
-| t | tipjar  | plain | (file ~/.config/doom/templates/roam-tempmlates/tipjar-entry.org)         | :if-new | (file+head TipJar/${slug}.org (file ~/.config/doom/templates/roam-templates/tipjar-file.org))   | :unnarrowed | t |
+| d | default | plain | (file ~/.config/doom/templates/roam-templates/default-capture-entry.org) | :if-new | (file+head ${slug}.org #+TITLE: ${title} |
 
 **** Roam Functions
 
@@ -1987,17 +1986,6 @@ This function is suitable for `mu4e-compose-mode-hook'."
 #+END_SRC
 
 * MODULES
-** alert
-*** package
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-(package! alert)
-#+END_SRC
-
-*** code
-#+BEGIN_SRC emacs-lisp
-(use-package alert
-  :defer t)
-#+END_SRC
 ** Aggressive indent
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
@@ -2018,6 +2006,30 @@ This function is suitable for `mu4e-compose-mode-hook'."
 (global-aggressive-indent-mode 1)
 
 #+END_SRC
+** alert
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! alert)
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp
+(use-package alert
+  :defer t)
+#+END_SRC
+** all the icons completion
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! all-the-icons-completion)
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp
+(use-package! all-the-icons-completion)
+(all-the-icons-completion-mode)
+(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+#+END_SRC
+
 ** auto insert
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
@@ -2421,7 +2433,7 @@ Built in
 
 (use-package! wakatime-mode
   :ensure t
-  :hook (doom-first-buffer . #'global-wakatime-mode)
+  :hook (doom-first-buffer . 'global-wakatime-mode)
   :config
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))

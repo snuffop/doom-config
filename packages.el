@@ -25,9 +25,11 @@
 
 (package! mu4e-column-faces)
 
+(package! aggressive-indent)
+
 (package! alert)
 
-(package! aggressive-indent)
+(package! all-the-icons-completion)
 
 (package! autoinsert)
 
