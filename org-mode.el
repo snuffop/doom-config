@@ -1,8 +1,7 @@
-;;; org-mode.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; org-mode.el --- Summary -*- lexical-binding: t -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;; Created:  7 July 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -49,15 +48,6 @@
               (when (file-exists-p file)
                 (push file org-agenda-files)))
           (org-projectile-todo-files)))
-
-;;;;; Org Roam
-
-  (setq +org-roam-open-buffer-on-find-file nil)
-  (set-popup-rules!
-    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
-      ("^\\*org-roam: " ; node dedicated org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
 
 ;;;;; Publish Alist
 
@@ -160,6 +150,20 @@
 (setq org-log-into-drawer t)
 (setq org-icalendar-store-UID t)
 (setq org-id-track-globally t)
+
+;; Refile targets
+
+(setq myroamfiles (directory-files "~/Nextcloud/Notes/org/" t "org$"))
+(setq myroamdailiesfiles (directory-files "~/Nextcloud/Notes/org/daily/" t "org$"))
+
+(setq org-refile-targets '((nil :maxlevel . 3)
+                           (org-agenda-files :maxlevel . 5)
+                           (myroamfiles :maxlevel . 5)
+                           (myroamdailiesfiles :maxlevel . 2)))
+
+(setq org-refile-use-outline-path 'file)
+(setq org-outline-path-complete-in-steps nil)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
 
 ;; symbols
 (setq-default prettify-symbols-alist '(
@@ -296,48 +300,97 @@
   :commands (org-super-agenda-mode))
 
 (after! org-agenda
-  (org-super-agenda-mode))
+  (org-super-agenda-mode)
 
-(setq org-agenda-custom-commands
-      '(("o" "Overview"
-         ((agenda "" ((org-super-agenda-groups
-                       '((:log t)  ; Automatically named "Log"
-                         (:name "Schedule"
-                          :time-grid t)
-                         (:name "Today"
-                          :scheduled today)
-                         (:habit t)
-                         (:name "Due today"
-                          :deadline today)
-                         (:name "Overdue"
-                          :deadline past)
-                         (:name "Due soon"
-                          :deadline future)
-                         (:name "Tickle"
-                          :deadline future)
-                         (:name "Unimportant"
-                          :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
-                                 :order 100)
-                          (:name "Waiting..."
-                           :todo "WAITING"
-                           :order 98)
-                          (:name "Scheduled earlier"
-                           :scheduled past))))))))
-        ("g" "group"
-         ((agenda "" ((org-agenda-spam 'week)
+  (setq org-agenda-custom-commands
+        '(("o" "Overview"
+           ((agenda "" ((org-super-agenda-groups
+                         '((:log t)  ; Automatically named "Log"
+                           (:name "Schedule"
+                            :time-grid t)
+                           (:name "Today"
+                            :scheduled today)
+                           (:habit t)
+                           (:name "Due today"
+                            :deadline today)
+                           (:name "Overdue"
+                            :deadline past)
+                           (:name "Due soon"
+                            :deadline future)
+                           (:name "Tickle"
+                            :deadline future)
+                           (:name "Unimportant"
+                            :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
+                                   :order 100)
+                            (:name "Waiting..."
+                             :todo "WAITING"
+                             :order 98)
+                            (:name "Scheduled earlier"
+                             :scheduled past))))))))
+          ("g" "group"
+           ((agenda "" ((org-agenda-spam 'week)
+                        (org-super-agenda-groups
+                         '((:auto-category t))
+                         )))))
+
+          ("u" "Super view"
+           ((agenda "" ((org-super-agenda-groups
+                         '((:name "Today"
+                            :time-grid t)))))
+            (todo "" ((org-agenda-overriding-header "Projects")
                       (org-super-agenda-groups
-                       '((:auto-category t))
-                       )))))
+                       '((:name none  ; Disable super group header
+                          :children todo)
+                         (:discard (:anything t)))))))))))
 
-        ("u" "Super view"
-         ((agenda "" ((org-super-agenda-groups
-                       '((:name "Today"
-                          :time-grid t)))))
-          (todo "" ((org-agenda-overriding-header "Projects")
-                    (org-super-agenda-groups
-                     '((:name none  ; Disable super group header
-                        :children todo)
-                       (:discard (:anything t))))))))))
+;; org-pandoc
+(use-package! org-pandoc-import
+  :after org)
+
+;;;;; org-roam-ui
+(use-package! org-roam-ui
+  :after org-roam)
+
+;; Org Roam Capture Templates
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1 )
+          ("t" "Tasks" entry "** TODO %? "
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+           :empty-lines-after 1 )
+          ("r" "Rackspace" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+           :empty-lines-after 1)
+          ("j" "Journal" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1)))
+
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
+           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+AUTHOR:%n\n#+DATE:%u\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n%?")
+           :unnarrowed t)
+          ("t" "tipjar" plain
+           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
+           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+AUTHOR: %n\n#+DATE:%U\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n#+filetags: tipjar\n")
+           :unnarrowed t)
+          )))
+
+(after! org-roam
+  (add-hook 'find-file-hook #'roam-extra:update-todo-tag)
+  (add-hook 'before-save-hook #'roam-extra:update-todo-tag)
+  (advice-add 'org-agenda :before #'roam-extra:update-todo-files))
+
+;;;;; Org Roam
+(after! org-roam
+  (setq +org-roam-open-buffer-on-find-file nil)
+  (set-popup-rules!
+    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+      ("^\\*org-roam: " ; node dedicated org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2))))
 
 ;; TSfile Links
 
@@ -387,86 +440,3 @@
     (kill-new (concat "[[tsfile:" filename "]]")) ;; write back new/modified kill ring element
     )
   )
-
-;; Org Roam Capture Templates
-(after! org-roam
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-           :empty-lines-after 1 )
-          ("t" "Tasks" entry "** TODO %? "
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
-           :empty-lines-after 1 )
-          ("r" "Rackspace" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
-           :empty-lines-after 1)
-          ("j" "Journal" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-           :empty-lines-after 1)))
-
-  (setq org-roam-capture-templates
-        '(("d" "default" plain
-           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+AUTHOR:%n\n#+DATE:%u\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n%?")
-           :unnarrowed t)
-          ("t" "tipjar" plain
-           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+AUTHOR: %n\n#+DATE:%U\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n#+filetags: tipjar\n")
-           :unnarrowed t)
-          )))
-
-(defun roam-extra:get-filetags ()
-  (split-string (or (org-roam-get-keyword "filetags") "")))
-
-(defun roam-extra:add-filetag (tag)
-  (let* ((new-tags (cons tag (roam-extra:get-filetags)))
-         (new-tags-str (combine-and-quote-strings new-tags)))
-    (org-roam-set-keyword "filetags" new-tags-str)))
-
-(defun roam-extra:del-filetag (tag)
-  (let* ((new-tags (seq-difference (roam-extra:get-filetags) `(,tag)))
-         (new-tags-str (combine-and-quote-strings new-tags)))
-    (org-roam-set-keyword "filetags" new-tags-str)))
-
-(defun roam-extra:todo-p ()
-  "Return non-nil if current buffer has any TODO entry.
-
-TODO entries marked as done are ignored, meaning the this
-function returns nil if current buffer contains only completed
-tasks."
-  (org-element-map
-      (org-element-parse-buffer 'headline)
-      'headline
-    (lambda (h)
-      (eq (org-element-property :todo-type h)
-          'todo))
-    nil 'first-match))
-
-(defun roam-extra:update-todo-tag ()
-  "Update TODO tag in the current buffer."
-  (when (and (not (active-minibuffer-window))
-             (org-roam-file-p))
-    (org-with-point-at 1
-      (let* ((tags (roam-extra:get-filetags))
-             (is-todo (roam-extra:todo-p)))
-        (cond ((and is-todo (not (seq-contains-p tags "todo")))
-               (roam-extra:add-filetag "todo"))
-              ((and (not is-todo) (seq-contains-p tags "todo"))
-               (roam-extra:del-filetag "todo")))))))
-
-(defun roam-extra:todo-files ()
-  "Return a list of roam files containing todo tag."
-  (org-roam-db-sync)
-  (let ((todo-nodes (seq-filter (lambda (n)
-                                  (seq-contains-p (org-roam-node-tags n) "todo"))
-                                (org-roam-node-list))))
-    (seq-uniq (seq-map #'org-roam-node-file todo-nodes))))
-
-(defun roam-extra:update-todo-files (&rest _)
-  "Update the value of `org-agenda-files'."
-  (setq org-agenda-files (roam-extra:todo-files)))
-
-(after! org-roam
-  (add-hook 'find-file-hook #'roam-extra:update-todo-tag)
-  (add-hook 'before-save-hook #'roam-extra:update-todo-tag)
-  (advice-add 'org-agenda :before #'roam-extra:update-todo-files))

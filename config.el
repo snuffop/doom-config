@@ -1,8 +1,7 @@
-;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;; Created:  7 July 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -80,14 +79,6 @@
 
 ;; ORG
 (load! "org-mode.el")
-
-;; org-pandoc
-(use-package! org-pandoc-import
-  :after org)
-
-;;;;; org-roam-ui
-(use-package! org-roam-ui
-  :after org-roam)
 
 ;;;;; org-caldav
 

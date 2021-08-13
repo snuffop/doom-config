@@ -1,4 +1,4 @@
-;;; mu4e.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; mu4e.el --- Summary -*- lexical-binding: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.

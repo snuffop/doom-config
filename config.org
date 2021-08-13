@@ -19,11 +19,11 @@
   - [[#packages][Packages]]
   - [[#config][Config]]
   - [[#org-super-agenda][org-super-agenda]]
+  - [[#org-pandoc][org-pandoc]]
+  - [[#0rg-publish-functions][0rg publish functions]]
+  - [[#org-roam][org-roam]]
   - [[#tsfile-links][TSfile Links]]
   - [[#load-org][LOAD ORG]]
-  - [[#org-pandoc][org-pandoc]]
-  - [[#org-publish-functions][Org publish functions]]
-  - [[#org-roam][org-roam]]
 - [[#calendar][CALENDAR]]
   - [[#org-caldav][org-caldav]]
 - [[#functions][FUNCTIONS]]
@@ -66,11 +66,10 @@ This is my personal config of Doom Emacs. making heavy use of EVIL everywhere
 the header of the config.el file followes
 
 #+BEGIN_SRC emacs-lisp
-;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;; Created:  7 July 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -85,7 +84,6 @@ Functions.el   pretty self explanatory
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;; Created:  7 July 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -95,11 +93,10 @@ Functions.el   pretty self explanatory
 org-mode.el  Header file for the org-mode  config
 
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
-;;; org-mode.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; org-mode.el --- Summary -*- lexical-binding: t -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;; Created:  7 July 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -121,7 +118,7 @@ org-mode.el  Header file for the org-mode  config
 #+END_SRC
 *** mu4e.el
 #+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;;; mu4e.el --- Summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; mu4e.el --- Summary -*- lexical-binding: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -137,7 +134,6 @@ org-mode.el  Header file for the org-mode  config
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;; Created:  7 July 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -475,7 +471,6 @@ I have become quite attached to the dracula theme..
 #+END_SRC
 
 ** Config
-
 *** Mail/Mutt
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; Mail/Mutt
@@ -521,18 +516,6 @@ I have become quite attached to the dracula theme..
               (when (file-exists-p file)
                 (push file org-agenda-files)))
           (org-projectile-todo-files)))
-#+END_SRC
-
-*** org-roam
-#+BEGIN_SRC emacs-lisp :tangle org-mode.el
-;;;;; Org Roam
-
-  (setq +org-roam-open-buffer-on-find-file nil)
-  (set-popup-rules!
-    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
-      ("^\\*org-roam: " ; node dedicated org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
 #+END_SRC
 
 *** publish-alist
@@ -650,6 +633,26 @@ I have become quite attached to the dracula theme..
 (setq org-icalendar-store-UID t)
 (setq org-id-track-globally t)
 #+END_SRC
+**** Refile Targets
+
+Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-entries-nodes-between-org-files-and-org-roam-notes/1484][org-roam discourse]] and adapted to my flow
+
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;; Refile targets
+
+(setq myroamfiles (directory-files "~/Nextcloud/Notes/org/" t "org$"))
+(setq myroamdailiesfiles (directory-files "~/Nextcloud/Notes/org/daily/" t "org$"))
+
+(setq org-refile-targets '((nil :maxlevel . 3)
+                           (org-agenda-files :maxlevel . 5)
+                           (myroamfiles :maxlevel . 5)
+                           (myroamdailiesfiles :maxlevel . 2)))
+
+(setq org-refile-use-outline-path 'file)
+(setq org-outline-path-complete-in-steps nil)
+(setq org-refile-allow-creating-parent-nodes 'confirm)
+#+END_SRC
+
 *** symbols
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; symbols
@@ -762,7 +765,6 @@ I have become quite attached to the dracula theme..
 #+RESULTS:
 : t
 
-
 *** To Do Settings
 **** faces
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
@@ -816,48 +818,243 @@ I have become quite attached to the dracula theme..
   :commands (org-super-agenda-mode))
 
 (after! org-agenda
-  (org-super-agenda-mode))
+  (org-super-agenda-mode)
 
-(setq org-agenda-custom-commands
-      '(("o" "Overview"
-         ((agenda "" ((org-super-agenda-groups
-                       '((:log t)  ; Automatically named "Log"
-                         (:name "Schedule"
-                          :time-grid t)
-                         (:name "Today"
-                          :scheduled today)
-                         (:habit t)
-                         (:name "Due today"
-                          :deadline today)
-                         (:name "Overdue"
-                          :deadline past)
-                         (:name "Due soon"
-                          :deadline future)
-                         (:name "Tickle"
-                          :deadline future)
-                         (:name "Unimportant"
-                          :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
-                                 :order 100)
-                          (:name "Waiting..."
-                           :todo "WAITING"
-                           :order 98)
-                          (:name "Scheduled earlier"
-                           :scheduled past))))))))
-        ("g" "group"
-         ((agenda "" ((org-agenda-spam 'week)
+  (setq org-agenda-custom-commands
+        '(("o" "Overview"
+           ((agenda "" ((org-super-agenda-groups
+                         '((:log t)  ; Automatically named "Log"
+                           (:name "Schedule"
+                            :time-grid t)
+                           (:name "Today"
+                            :scheduled today)
+                           (:habit t)
+                           (:name "Due today"
+                            :deadline today)
+                           (:name "Overdue"
+                            :deadline past)
+                           (:name "Due soon"
+                            :deadline future)
+                           (:name "Tickle"
+                            :deadline future)
+                           (:name "Unimportant"
+                            :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
+                                   :order 100)
+                            (:name "Waiting..."
+                             :todo "WAITING"
+                             :order 98)
+                            (:name "Scheduled earlier"
+                             :scheduled past))))))))
+          ("g" "group"
+           ((agenda "" ((org-agenda-spam 'week)
+                        (org-super-agenda-groups
+                         '((:auto-category t))
+                         )))))
+
+          ("u" "Super view"
+           ((agenda "" ((org-super-agenda-groups
+                         '((:name "Today"
+                            :time-grid t)))))
+            (todo "" ((org-agenda-overriding-header "Projects")
                       (org-super-agenda-groups
-                       '((:auto-category t))
-                       )))))
+                       '((:name none  ; Disable super group header
+                          :children todo)
+                         (:discard (:anything t)))))))))))
+#+END_SRC
 
-        ("u" "Super view"
-         ((agenda "" ((org-super-agenda-groups
-                       '((:name "Today"
-                          :time-grid t)))))
-          (todo "" ((org-agenda-overriding-header "Projects")
-                    (org-super-agenda-groups
-                     '((:name none  ; Disable super group header
-                        :children todo)
-                       (:discard (:anything t))))))))))
+** org-pandoc
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-pandoc-import             :recipe (:host github
+                                                 :repo "tecosaur/org-pandoc-import"
+                                                 :files ("*.el" "filters" "preprocessors")))
+#+END_SRC
+
+*** code
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;; org-pandoc
+(use-package! org-pandoc-import
+  :after org)
+#+END_SRC
+
+** 0rg publish functions
+
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;;; publish functions
+
+(defun marty/publish (a b c)
+  (setq org-export-with-toc t)
+  (org-html-publish-to-html a b c)
+  (setq org-export-with-toc nil)
+  (org-ascii-publish-to-ascii a b c))
+#+END_SRC
+
+** org-roam
+*** org-roam-ui
+**** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-roam-ui                   :recipe (:host github
+                                                 :repo "org-roam/org-roam-ui"
+                                                 :files ("*.el" "out")))
+#+END_SRC
+
+**** code
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;;;;; org-roam-ui
+(use-package! org-roam-ui
+  :after org-roam)
+
+#+END_SRC
+
+*** org-roam capture templates
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;; Org Roam Capture Templates
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1 )
+          ("t" "Tasks" entry "** TODO %? "
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+           :empty-lines-after 1 )
+          ("r" "Rackspace" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+           :empty-lines-after 1)
+          ("j" "Journal" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1)))
+
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
+           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+AUTHOR:%n\n#+DATE:%u\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n%?")
+           :unnarrowed t)
+          ("t" "tipjar" plain
+           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
+           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+AUTHOR: %n\n#+DATE:%U\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n#+filetags: tipjar\n")
+           :unnarrowed t)
+          )))
+#+END_SRC
+
+*** Roam Functions
+
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;; Roam Daily Functions
+(defun marty/org-roam-dailies-graphicslink ()
+  " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
+
+(defun marty/org-roam-dailies-title ()
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "%A, %B %d %Y" datim)))
+
+(defun marty/org-roam-dailies-todo-schedule ()
+  " Set the Date for the todo's in the dailies template "
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
+
+(defun marty/org-roam-dailies-todo-deadline ()
+  " Set the Date for the todo's in the dailies template "
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
+#+END_SRC
+
+*** Roam Extra (TODO)
+**** Functions
+Well now this is working well
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+
+(after! org-roam
+  (defun roam-extra:get-filetags ()
+    (split-string (or (org-roam-get-keyword "filetags") "")))
+
+  (defun roam-extra:add-filetag (tag)
+    (let* ((new-tags (cons tag (roam-extra:get-filetags)))
+           (new-tags-str (combine-and-quote-strings new-tags)))
+      (org-roam-set-keyword "filetags" new-tags-str)))
+
+  (defun roam-extra:del-filetag (tag)
+    (let* ((new-tags (seq-difference (roam-extra:get-filetags) `(,tag)))
+           (new-tags-str (combine-and-quote-strings new-tags)))
+      (org-roam-set-keyword "filetags" new-tags-str)))
+
+  (defun roam-extra:todo-p ()
+    "Return non-nil if current buffer has any TODO entry.
+
+TODO entries marked as done are ignored, meaning the this
+function returns nil if current buffer contains only completed
+tasks."
+    (org-element-map
+        (org-element-parse-buffer 'headline)
+        'headline
+      (lambda (h)
+        (eq (org-element-property :todo-type h)
+            'todo))
+      nil 'first-match))
+
+  (defun roam-extra:update-todo-tag ()
+    "Update TODO tag in the current buffer."
+    (when (and (not (active-minibuffer-window))
+               (org-roam-file-p))
+      (org-with-point-at 1
+        (let* ((tags (roam-extra:get-filetags))
+               (is-todo (roam-extra:todo-p)))
+          (cond ((and is-todo (not (seq-contains-p tags "todo")))
+                 (roam-extra:add-filetag "todo"))
+                ((and (not is-todo) (seq-contains-p tags "todo"))
+                 (roam-extra:del-filetag "todo")))))))
+
+  (defun roam-extra:todo-files ()
+    "Return a list of roam files containing todo tag."
+    (org-roam-db-sync)
+    (let ((todo-nodes (seq-filter (lambda (n)
+                                    (seq-contains-p (org-roam-node-tags n) "todo"))
+                                  (org-roam-node-list))))
+      (seq-uniq (seq-map #'org-roam-node-file todo-nodes))))
+
+  (defun roam-extra:update-todo-files (&rest _)
+    "Update the value of `org-agenda-files'."
+    (setq org-agenda-files (roam-extra:todo-files))))
+#+END_SRC
+
+#+RESULTS:
+: roam-extra:update-todo-files
+
+**** Hooks and advise
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+(after! org-roam
+  (add-hook 'find-file-hook #'roam-extra:update-todo-tag)
+  (add-hook 'before-save-hook #'roam-extra:update-todo-tag)
+  (advice-add 'org-agenda :before #'roam-extra:update-todo-files))
+#+END_SRC
+
+*** Popup Rules
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;;;;; Org Roam
+(after! org-roam
+  (setq +org-roam-open-buffer-on-find-file nil)
+  (set-popup-rules!
+    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+      ("^\\*org-roam: " ; node dedicated org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2))))
 #+END_SRC
 
 ** TSfile Links
@@ -923,185 +1120,6 @@ after reference
 ;; ORG
 (load! "org-mode.el")
 #+end_src
-** org-pandoc
-*** package
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-(package! org-pandoc-import             :recipe (:host github
-                                                 :repo "tecosaur/org-pandoc-import"
-                                                 :files ("*.el" "filters" "preprocessors")))
-#+END_SRC
-
-*** code
-#+BEGIN_SRC emacs-lisp
-;; org-pandoc
-(use-package! org-pandoc-import
-  :after org)
-#+END_SRC
-
-** Org publish functions
-
-#+BEGIN_SRC emacs-lisp :tangle functions.el
-;;;;;; publish functions
-
-(defun marty/publish (a b c)
-  (setq org-export-with-toc t)
-  (org-html-publish-to-html a b c)
-  (setq org-export-with-toc nil)
-  (org-ascii-publish-to-ascii a b c))
-#+END_SRC
-
-** org-roam
-*** package
-#+BEGIN_SRC emacs-lisp :tangle packages.el
-(package! org-roam-ui                   :recipe (:host github
-                                                 :repo "org-roam/org-roam-ui"
-                                                 :files ("*.el" "out")))
-#+END_SRC
-
-*** code
-**** Base
-#+BEGIN_SRC emacs-lisp
-;;;;; org-roam-ui
-(use-package! org-roam-ui
-  :after org-roam)
-
-#+END_SRC
-
-**** org-roam capture templates
-#+BEGIN_SRC emacs-lisp :tangle org-mode.el
-;; Org Roam Capture Templates
-(after! org-roam
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-           :empty-lines-after 1 )
-          ("t" "Tasks" entry "** TODO %? "
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
-           :empty-lines-after 1 )
-          ("r" "Rackspace" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
-           :empty-lines-after 1)
-          ("j" "Journal" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-           :empty-lines-after 1)))
-
-  (setq org-roam-capture-templates
-        '(("d" "default" plain
-           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+AUTHOR:%n\n#+DATE:%u\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n%?")
-           :unnarrowed t)
-          ("t" "tipjar" plain
-           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+AUTHOR: %n\n#+DATE:%U\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n#+filetags: tipjar\n")
-           :unnarrowed t)
-          )))
-#+END_SRC
-
-#+RESULTS:
-| d | default | plain | (file ~/.config/doom/templates/roam-templates/default-capture-entry.org) | :if-new | (file+head ${slug}.org #+TITLE: ${title} |
-
-**** Roam Functions
-
-#+BEGIN_SRC emacs-lisp :tangle functions.el
-;;;;; Roam Daily Functions
-(defun marty/org-roam-dailies-graphicslink ()
-  " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
-
-(defun marty/org-roam-dailies-title ()
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "%A, %B %d %Y" datim)))
-
-(defun marty/org-roam-dailies-todo-schedule ()
-  " Set the Date for the todo's in the dailies template "
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
-
-(defun marty/org-roam-dailies-todo-deadline ()
-  " Set the Date for the todo's in the dailies template "
-  (interactive)
-  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-         (month (string-to-number (substring (buffer-name) 5 7)))
-         (day   (string-to-number (substring (buffer-name) 8 10)))
-         (datim (encode-time 0 0 0 day month year)))
-    (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
-#+END_SRC
-
-**** Roam Extra (TODO)
-#+BEGIN_SRC emacs-lisp :tangle org-mode.el
-
-(defun roam-extra:get-filetags ()
-  (split-string (or (org-roam-get-keyword "filetags") "")))
-
-(defun roam-extra:add-filetag (tag)
-  (let* ((new-tags (cons tag (roam-extra:get-filetags)))
-         (new-tags-str (combine-and-quote-strings new-tags)))
-    (org-roam-set-keyword "filetags" new-tags-str)))
-
-(defun roam-extra:del-filetag (tag)
-  (let* ((new-tags (seq-difference (roam-extra:get-filetags) `(,tag)))
-         (new-tags-str (combine-and-quote-strings new-tags)))
-    (org-roam-set-keyword "filetags" new-tags-str)))
-
-(defun roam-extra:todo-p ()
-  "Return non-nil if current buffer has any TODO entry.
-
-TODO entries marked as done are ignored, meaning the this
-function returns nil if current buffer contains only completed
-tasks."
-  (org-element-map
-      (org-element-parse-buffer 'headline)
-      'headline
-    (lambda (h)
-      (eq (org-element-property :todo-type h)
-          'todo))
-    nil 'first-match))
-
-(defun roam-extra:update-todo-tag ()
-  "Update TODO tag in the current buffer."
-  (when (and (not (active-minibuffer-window))
-             (org-roam-file-p))
-    (org-with-point-at 1
-      (let* ((tags (roam-extra:get-filetags))
-             (is-todo (roam-extra:todo-p)))
-        (cond ((and is-todo (not (seq-contains-p tags "todo")))
-               (roam-extra:add-filetag "todo"))
-              ((and (not is-todo) (seq-contains-p tags "todo"))
-               (roam-extra:del-filetag "todo")))))))
-
-(defun roam-extra:todo-files ()
-  "Return a list of roam files containing todo tag."
-  (org-roam-db-sync)
-  (let ((todo-nodes (seq-filter (lambda (n)
-                                  (seq-contains-p (org-roam-node-tags n) "todo"))
-                                (org-roam-node-list))))
-    (seq-uniq (seq-map #'org-roam-node-file todo-nodes))))
-
-(defun roam-extra:update-todo-files (&rest _)
-  "Update the value of `org-agenda-files'."
-  (setq org-agenda-files (roam-extra:todo-files)))
-
-(after! org-roam
-  (add-hook 'find-file-hook #'roam-extra:update-todo-tag)
-  (add-hook 'before-save-hook #'roam-extra:update-todo-tag)
-  (advice-add 'org-agenda :before #'roam-extra:update-todo-files))
-#+END_SRC
-
-#+RESULTS:
-
 * CALENDAR
 ** org-caldav
 *** package
