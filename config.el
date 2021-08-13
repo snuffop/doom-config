@@ -456,10 +456,12 @@
 
 (use-package! wakatime-mode
   :ensure t
-  :hook (doom-first-buffer . 'global-wakatime-mode)
+  ;; :hook (doom-first-buffer . 'global-wakatime-mode)
   :config
   (setq wakatime-cli-path "/usr/bin/wakatime")
   (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
+
+(global-wakatime-mode)
 
 ;;;; Custom
 
