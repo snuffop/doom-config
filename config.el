@@ -453,15 +453,16 @@
   :defer-incrementally  vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 
 ;;;;; Wakatime
+(defun marty/startWakatime ()
+  (interactive)
+  (global-wakatime-mode)
+  (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
 
 (use-package! wakatime-mode
   :ensure t
-  ;; :hook (doom-first-buffer . 'global-wakatime-mode)
   :config
-  (setq wakatime-cli-path "/usr/bin/wakatime")
-  (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey")))
-
-(global-wakatime-mode)
+  (add-hook 'doom-first-buffer-hook  #'marty/startWakatime)
+  (setq wakatime-cli-path "/usr/bin/wakatime"))
 
 ;;;; Custom
 

@@ -392,6 +392,16 @@
       ("^\\*org-roam: " ; node dedicated org-roam buffer
        :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2))))
 
+(use-package! org-transclusion
+  :defer
+  :after org
+  :init
+  (map!
+   :map global-map "<f12>" #'org-transclusion-add
+   :leader
+   :prefix "n"
+   :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
+
 ;; TSfile Links
 
 (defvar memacs-root "~/Nextcloud/Notes/memacs/")

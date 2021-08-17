@@ -21,6 +21,11 @@
                                                  :repo "org-roam/org-roam-ui"
                                                  :files ("*.el" "out")))
 
+(package! org-transclusion              :recipe (:host github
+                                                 :repo "nobiot/org-transclusion"
+                                                 :branch "main"
+                                                 :files ("*.el")))
+
 (package! org-caldav)
 
 (package! mu4e-column-faces)
