@@ -77,6 +77,51 @@
 (setq org-roam-directory "~/Nextcloud/Notes/org/")
 (setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
 
+(defun marty/add-other-auto-props-to-org-roam-properties ()
+  ;; if the file already exists, don't do anything, otherwise...
+  (unless (file-exists-p (buffer-file-name))
+    ;; if there's also a CREATION_TIME property, don't modify it
+    (unless (org-find-property "CREATION_TIME")
+      ;; otherwise, add a Unix epoch timestamp for CREATION_TIME prop
+      ;; (this is what "%s" does - see http://doc.endlessparentheses.com/Fun/format-time-string )
+      (org-roam-add-property
+       (format-time-string "%s"
+                           (nth 5
+                                (file-attributes (buffer-file-name))))
+       "CREATION_TIME"))
+    (unless (org-find-property "ORG_CREATION_TIME")
+      (org-roam-add-property
+       (format-time-string "[%Y-%m-%d %a %H:%M:%S]"
+                           (nth 5
+                                (file-attributes (buffer-file-name))))
+       "ORG_CREATION_TIME"))
+    ;; similarly for AUTHOR and MAIL properties
+    (unless (org-find-property "AUTHOR")
+      (org-roam-add-property user-full-name "AUTHOR"))
+    (unless (org-find-property "MAIL")
+      (org-roam-add-property user-mail-address "MAIL"))
+    ;; also add the latitude and longitude
+    (unless (org-find-property "LAT_LONG")
+      ;; recheck location:
+      (marty/get-lat-long-from-ipinfo)
+      (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG"))))
+
+;; hook to be run whenever an org-roam capture completes
+(add-hook 'org-roam-capture-new-node-hook #'marty/add-other-auto-props-to-org-roam-properties)
+
+;; function to find latitude & longitude
+;;                      (requires curl to be installed on system)
+(setq calendar-latitude 0)
+(setq calendar-longitude 0)
+(defun marty/get-lat-long-from-ipinfo ()
+  (let*
+      ((latlong (substring
+                 (shell-command-to-string "curl -s 'https://ipinfo.io/loc'")
+                   0 -1))
+       (latlong-list (split-string latlong ",")))
+    (setq calendar-latitude (string-to-number (car latlong-list)))
+    (setq calendar-longitude (string-to-number (cadr latlong-list)))))
+
 ;; ORG
 (load! "org-mode.el")
 
@@ -268,9 +313,9 @@
 ;;;;; Counsel Tramp
 
 (use-package! counsel-tramp
-  :after 'tramp )
+  :after 'tramp
+  :config (progn
 
-(after! counsel-tramp
 
   (defadvice projectile-project-root (around ignore-remote first activate)
     (unless (file-remote-p default-directory) ad-do-it))
@@ -286,7 +331,7 @@
   (setq vc-ignore-dir-regexp
         (format "\\(%s\\)\\|\\(%s\\)"
                 vc-ignore-dir-regexp
-                tramp-file-name-regexp))
+                tramp-file-name-regexp)))
 
   (add-hook 'counsel-tramp-pre-command-hook
             #'(lambda () (global-aggressive-indent-mode 0)
@@ -446,6 +491,12 @@
 ;;;; Treemacs
 
 (setq +treemacs-git-mode 'extended)
+
+(use-package! tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 ;;;;; VLF
 

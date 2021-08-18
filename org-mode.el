@@ -370,11 +370,11 @@
   (setq org-roam-capture-templates
         '(("d" "default" plain
            (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+AUTHOR:%n\n#+DATE:%u\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n%?")
+           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n")
            :unnarrowed t)
           ("t" "tipjar" plain
            (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+AUTHOR: %n\n#+DATE:%U\n#+STARTUP: overview\n#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org\n#+filetags: tipjar\n")
+           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n")
            :unnarrowed t)
           )))
 
