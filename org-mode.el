@@ -402,6 +402,10 @@
    :prefix "n"
    :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
 
+;; Always necessary
+(after! org
+  (org-edna-mode))
+
 ;; TSfile Links
 
 (defvar memacs-root "~/Nextcloud/Notes/memacs/")

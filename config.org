@@ -17,12 +17,13 @@
 - [[#line-numbers][LINE NUMBERS]]
 - [[#org-mode][ORG-MODE]]
   - [[#packages][Packages]]
-  - [[#config][Config]]
+  - [[#config-][Config <]]
   - [[#org-super-agenda][org-super-agenda]]
   - [[#org-pandoc][org-pandoc]]
   - [[#0rg-publish-functions][0rg publish functions]]
   - [[#org-roam][org-roam]]
   - [[#org-transclusion][org-transclusion]]
+  - [[#org-edna][org-edna]]
   - [[#tsfile-links][TSfile Links]]
   - [[#load-org][LOAD ORG]]
 - [[#calendar][CALENDAR]]
@@ -472,7 +473,7 @@ I have become quite attached to the dracula theme..
 (package! org-projectile)
 #+END_SRC
 
-** Config
+** Config <
 *** Mail/Mutt
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; Mail/Mutt
@@ -1135,6 +1136,18 @@ tasks."
 #+RESULTS:
 : org-transclusion-mode
 
+** org-edna
+http://www.nongnu.org/org-edna-el
+*** package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-edna)
+#+END_SRC
+*** Code
+#+BEGIN_SRC emacs-lisp :tangle org-mode.el
+;; Always necessary
+(after! org
+  (org-edna-mode))
+#+END_SRC
 
 ** TSfile Links
 

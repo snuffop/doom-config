@@ -26,6 +26,8 @@
                                                  :branch "main"
                                                  :files ("*.el")))
 
+(package! org-edna)
+
 (package! org-caldav)
 
 (package! mu4e-column-faces)
