@@ -167,26 +167,26 @@
 
 ;; symbols
 (setq-default prettify-symbols-alist '(
-                                       ("->"  .  "→")
-                                       ("->>" .  "↠")
-                                       ("<-"  .  "←")
-                                       ("<="  . "≤")
-                                       ("<|"  . "◁")
-                                       ("=>"  . "⇒")
-                                       (">="  . "≥")
-                                       ("|>"  . "▷")
-                                       ("[ ]" . "☐")
-                                       ("[-]" . "⊡")
-                                       ("[X]" . "☑")
-                                       ("lambda" . "λ")
+                                       ("->"              . "→")
+                                       ("->>"             . "↠")
+                                       ("<-"              . "←")
+                                       ("<="              . "≤")
+                                       ("<|"              . "◁")
+                                       ("=>"              . "⇒")
+                                       (">="              . "≥")
+                                       ("|>"              . "▷")
+                                       ("[ ]"             . "☐")
+                                       ("[-]"             . "⊡")
+                                       ("[X]"             . "☑")
+                                       ("lambda"          . "λ")
                                        ("#+BEGIN_EXAMPLE" . ">EG>")
-                                       ("#+BEGIN_SRC" . "†")
-                                       ("#+END_EXAMPLE" . "<EG<")
-                                       ("#+END_SRC" . "†")
+                                       ("#+BEGIN_SRC"     . "†")
+                                       ("#+END_EXAMPLE"   . "<EG<")
+                                       ("#+END_SRC"       . "†")
                                        ("#+begin_example" . ">EG>")
-                                       ("#+begin_src" . "†")
-                                       ("#+end_example" . "<EG<")
-                                       ("#+end_src" . "†")
+                                       ("#+begin_src"     . "†")
+                                       ("#+end_example"   . "<EG<")
+                                       ("#+end_src"       . "†")
                                        ))
 
 ;; Tag List
@@ -246,20 +246,27 @@
          "%[~/.emacs.d/.org-popup]" :immediate-finish t :prepend t)
 
         ("m" "Email Workflow")
-        ("mf" "Follow Up" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
+        ("mf" "Follow Up" entry
+         (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
          "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\n%a\n\n%i")
-        ("ma" "auto Follow Up" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
+        ("ma" "auto Follow Up" entry
+         (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
          "* TODO Follow up with %:fromname on %:subject\n%a\n\n%i" :immediate-finish t)
-        ("mF" "Follow Up With Deadline" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
+        ("mF" "Follow Up With Deadline" entry
+         (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
          "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\nDEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n%a\n\n%i")
-        ("mr" "Read Later" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Read Later")
+        ("mr" "Read Later" entry
+         (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Read Later")
          "* TODO Read  Later on %:subject\nSCHEDULED:%t\n%a\n\n%i":immediate-finish t)
-        ("mm" "Masons Follow Up" entry (file+olp "~/Nextcloud/Notes/org/Masons.org" "Follow Up")
+        ("mm" "Masons Follow Up" entry
+         (file+olp "~/Nextcloud/Notes/org/Masons.org" "Follow Up")
          "* TODO Follow up with %:fromname on %:subject %a\nSCHEDULED:%t\n\\n%i")
         ("mR" "Workflow Rackspace")
-        ("mRf" "Follow Up" entry (file+olp "~/Nextcloud/Notes/org/Rackspace.org" "Follow Up")
+        ("mRf" "Follow Up" entry
+         (file+olp "~/Nextcloud/Notes/org/Rackspace.org" "Follow Up")
          "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\nDEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n%a\n\n%i")
-        ("mRr" "Read Later" entry (file+olp "~/Nextcloud/Notes/org/Rackspace.org" "Read Later")
+        ("mRr" "Read Later" entry
+         (file+olp "~/Nextcloud/Notes/org/Rackspace.org" "Read Later")
          "* TODO Read  Later with %:fromname on %:subject\nSCHEDULED:%t\n%a\n\n%i" :immediate-finish t)
         ))
 
