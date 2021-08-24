@@ -1,1 +1,22 @@
-* "%Y-%m-%d %H:%M"  %?
+* ${title} contact info
+:PROPERTIES:
+:TYPE: person
+:NICKNAME:
+:ICON:
+:TITLE:
+:EMAIL:
+:URL:
+:MOBILE:
+:HOMEPHONE:
+:WORKPHONE:
+:PHONE:
+:COMPANY:
+:ADDRESS:
+:ZIPCODE:
+:CITY:
+:STATE:
+:COUNTRY: United States of America
+:PHOTOGRAPH:
+:BIRTHDAY:
+:CREATED: %U
+:END:

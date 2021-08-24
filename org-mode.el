@@ -361,7 +361,7 @@
 ;; Org Roam Capture Templates
 (after! org-roam
   (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
+        '(("d" "default" entry "* %?"
            :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
            :empty-lines-after 1 )
           ("t" "Tasks" entry "** TODO %? "

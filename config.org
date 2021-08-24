@@ -468,6 +468,10 @@ I have become quite attached to the dracula theme..
 (setq org-roam-directory "~/Nextcloud/Notes/org/")
 (setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
 #+end_src
+
+#+RESULTS:
+| ~/Nextcloud/Notes/org/contacts.org |
+
 ** Packages
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! org-projectile)
@@ -921,7 +925,7 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
 ;; Org Roam Capture Templates
 (after! org-roam
   (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry "** %<%H:%M> Starting Notes %?"
+        '(("d" "default" entry "* %?"
            :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
            :empty-lines-after 1 )
           ("t" "Tasks" entry "** TODO %? "
