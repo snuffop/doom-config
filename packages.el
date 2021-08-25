@@ -28,7 +28,8 @@
 
 (package! org-edna)
 
-(package! org-caldav)
+(when (string= (system-name) "archovo.home.snuffy.org")
+  (package! org-caldav))
 
 (package! mu4e-column-faces)
 
@@ -55,9 +56,6 @@
 (package! systemd)
 
 (package! counsel-tramp)
-
-(package! tree-sitter)
-(package! tree-sitter-langs)
 
 (package! vlf                           :recipe (:host github
                                                  :repo "m00natic/vlfi"
