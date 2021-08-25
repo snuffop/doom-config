@@ -200,7 +200,7 @@
           (mu4e-maildir-shortcuts . ((:maildir "/Dabuke/Archive"              :key ?a)
                                      (:maildir "/Dabuke/Drafts"               :key ?d)
                                      (:maildir "/Dabuke/INBOX"                :key ?i)
-                                     (:maildir "/Dabuke/Spam"                 :key ?S)
+                                     (:maildir "/Dabuke/INBOX.Spam"           :key ?S)
                                      (:maildir "/Dabuke/Junk"                 :key ?j)
                                      (:maildir "/Dabuke/Lists.Doom"           :key ?D)
                                      (:maildir "/Dabuke/Lists.Emacs"          :key ?e)

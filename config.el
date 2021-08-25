@@ -11,7 +11,7 @@
 (setq user-mail-address "marty@dabuke.com")
 
 (setq-default enable-local-variables t)            ; Allow for reading the local variables file
-(setq-default delete-by-moving-to-trash t)
+;; (setq-default delete-by-moving-to-trash t)
 (setq-default window-combination-resize t)
 (setq-default x-stretch-cursor t)
 

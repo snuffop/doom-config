@@ -166,6 +166,7 @@
 (setq org-refile-allow-creating-parent-nodes 'confirm)
 
 ;; symbols
+(setq prettify-symbols-unprettify-at-point 'right-edge)
 (setq-default prettify-symbols-alist '(
                                        ("->"              . "→")
                                        ("->>"             . "↠")
@@ -187,6 +188,9 @@
                                        ("#+begin_src"     . "†")
                                        ("#+end_example"   . "<EG<")
                                        ("#+end_src"       . "†")
+                                       ("[ ]"             . "☐")
+                                       ("[X]"             . "☑")
+                                       ("[-]"             . "❍")
                                        ))
 
 ;; Tag List

@@ -358,7 +358,7 @@ Set Default variables  and hooks to be seen globally
 (setq user-mail-address "marty@dabuke.com")
 
 (setq-default enable-local-variables t)            ; Allow for reading the local variables file
-(setq-default delete-by-moving-to-trash t)
+;; (setq-default delete-by-moving-to-trash t)
 (setq-default window-combination-resize t)
 (setq-default x-stretch-cursor t)
 
@@ -661,6 +661,7 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
 *** symbols
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; symbols
+(setq prettify-symbols-unprettify-at-point 'right-edge)
 (setq-default prettify-symbols-alist '(
                                        ("->"              . "→")
                                        ("->>"             . "↠")
@@ -682,8 +683,12 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
                                        ("#+begin_src"     . "†")
                                        ("#+end_example"   . "<EG<")
                                        ("#+end_src"       . "†")
+                                       ("[ ]"             . "☐")
+                                       ("[X]"             . "☑")
+                                       ("[-]"             . "❍")
                                        ))
 #+END_SRC
+
 *** tags
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; Tag List
@@ -1752,7 +1757,7 @@ This function is suitable for `mu4e-compose-mode-hook'."
           (mu4e-maildir-shortcuts . ((:maildir "/Dabuke/Archive"              :key ?a)
                                      (:maildir "/Dabuke/Drafts"               :key ?d)
                                      (:maildir "/Dabuke/INBOX"                :key ?i)
-                                     (:maildir "/Dabuke/Spam"                 :key ?S)
+                                     (:maildir "/Dabuke/INBOX.Spam"           :key ?S)
                                      (:maildir "/Dabuke/Junk"                 :key ?j)
                                      (:maildir "/Dabuke/Lists.Doom"           :key ?D)
                                      (:maildir "/Dabuke/Lists.Emacs"          :key ?e)
