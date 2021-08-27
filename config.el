@@ -198,6 +198,15 @@
 
 (load! "keybindings.el")
 
+(defun marty/startActivityWatchMode ()
+  (interactive)
+  (global-activity-watch-mode))
+
+(use-package! activity-watch-mode
+  :ensure t
+  :config
+  (add-hook 'doom-first-buffer-hook #'marty/startActivityWatchMode))
+
 ;;;;; aggressive indent
 
 (use-package! aggressive-indent
@@ -314,20 +323,18 @@
 ;;;;; Counsel Tramp
 
 (use-package! counsel-tramp
-  :after 'tramp
+  :after tramp
   :config (progn
-
-
   (defadvice projectile-project-root (around ignore-remote first activate)
     (unless (file-remote-p default-directory) ad-do-it))
 
   (defvar disable-tramp-backups '(all))
   (setenv "SHELL" "/bin/bash")
 
-  (setq tramp-default-method "scp")
+  (setq tramp-default-method "sshx")
   (setq remote-file-name-inhibit-cache nil)
   (setq tramp-completion-reread-directory-timeout nil)
-  (setq helm-tramp-control-master t)
+  (setq counsel-tramp-control-master t)
 
   (setq vc-ignore-dir-regexp
         (format "\\(%s\\)\\|\\(%s\\)"
@@ -345,7 +352,7 @@
                (editorconfig-mode 1)))
 
 ;;;;;; List of Hosts
-
+(after! tramp
   (setq counsel-tramp-custom-connections
         '(
           /sshx:appgate:/home/marty
@@ -486,7 +493,7 @@
           /sshx:a-zabbix-proxy-1.syd2.nsi.rackspace.com|sudo:a-zabbix-proxy-1.syd2.nsi.rackspace.com:/
           /sshx:d-salt-master-1.iad3.nsi.rackspace.com|sudo:d-salt-master-1.iad3.nsi.rackspace.com:/
           /sshx:s-jenkins-uk-1.lon3.nsi.rackspace.com|sudo:s-jenkins-uk-1.lon3.nsi.rackspace.com:/
-          )))
+          ))))
 ;; End of  List of hosts
 
 ;;;; Treemacs

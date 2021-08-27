@@ -33,6 +33,9 @@
 
 (package! mu4e-column-faces)
 
+(package! activity-watch-mode             :recipe (:host github
+                                                   :repo "pauldub/activity-watch-mode"))
+
 (package! aggressive-indent)
 
 (package! alert)
