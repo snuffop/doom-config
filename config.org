@@ -921,7 +921,6 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
 ;;;;; org-roam-ui
 (use-package! org-roam-ui
   :after org-roam)
-
 #+END_SRC
 
 *** org-roam capture templates
