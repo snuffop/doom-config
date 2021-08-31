@@ -52,6 +52,9 @@
 (package! outshine                      :recipe (:host github
                                                  :repo "alphapapa/outshine"))
 
+(package! org-onenote                   :recipe (:host github
+                                                 :repo "ifree/org-onenote"))
+
 (package! paperless)
 
 (package! salt-mode)

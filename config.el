@@ -31,6 +31,23 @@
 ;; Remove the s/S from evil snipe
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
+;;; World clock
+  (setq zoneinfo-style-world-list
+        '(("America/Los_Angeles" "Los Angeles")
+          ("America/Chicago" "Chicago")
+          ("America/New_York" "New York")
+          ("Europe/Lisbon" "Lisbon")
+          ("Europe/Brussels" "Brussels")
+          ("Asia/Shanghai" "Shanghai")
+          ("Asia/Tokyo" "Tokyo")))
+
+  ;; All of the following variables are for Emacs 28
+  (setq world-clock-list t)
+  (setq world-clock-time-format "%R %z  %A %d %B")
+  (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
+  (setq world-clock-timer-enable t)
+  (setq world-clock-timer-second 60)
+
 (setq company-idle-delay 0.5)
 
 ;; Fonts
@@ -277,6 +294,11 @@
         "TAB" #'outshine-cycle)
   (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
+
+(use-package! org-onenote
+  :defer t
+  :config
+  (setq org-onenote-section-map '(("Marty @ Work"))))
 
 ;;;;; Paperless
 

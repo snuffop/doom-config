@@ -8,6 +8,7 @@
   - [[#headers-of-files][Headers of Files]]
   - [[#initel][init.el]]
 - [[#global-settings][GLOBAL SETTINGS]]
+  - [[#time--date][TIME & DATE]]
 - [[#company-settings][COMPANY SETTINGS]]
 - [[#fonts-and-faces][FONTS and FACES]]
   - [[#fonts][Fonts]]
@@ -52,6 +53,7 @@
   - [[#khard][khard]]
   - [[#magit][magit]]
   - [[#outshine][outshine]]
+  - [[#org-onenote][org-onenote]]
   - [[#paperless][paperless]]
   - [[#saltstack][saltstack]]
   - [[#systemd-mode][systemd mode]]
@@ -351,7 +353,7 @@ org-mode.el  Header file for the org-mode  config
 
 * GLOBAL SETTINGS
 
-Set Default variables  and hooks to be seen globally
+Set Default variables  and hooks set globally
 
 #+BEGIN_SRC emacs-lisp
 ;; Global
@@ -380,6 +382,28 @@ Set Default variables  and hooks to be seen globally
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
 #+END_SRC
+** TIME & DATE
+*** World Clock
+#+BEGIN_SRC emacs-lisp
+;;; World clock
+  (setq zoneinfo-style-world-list
+        '(("America/Los_Angeles" "Los Angeles")
+          ("America/Chicago" "Chicago")
+          ("America/New_York" "New York")
+          ("Europe/Lisbon" "Lisbon")
+          ("Europe/Brussels" "Brussels")
+          ("Asia/Shanghai" "Shanghai")
+          ("Asia/Tokyo" "Tokyo")))
+
+  ;; All of the following variables are for Emacs 28
+  (setq world-clock-list t)
+  (setq world-clock-time-format "%R %z  %A %d %B")
+  (setq world-clock-buffer-name "*world-clock*") ; Placement handled by `display-buffer-alist'
+  (setq world-clock-timer-enable t)
+  (setq world-clock-timer-second 60)
+
+#+END_SRC
+
 * COMPANY SETTINGS
 #+BEGIN_SRC emacs-lisp
 
@@ -2298,7 +2322,6 @@ This function is suitable for `mu4e-compose-mode-hook'."
 
 (use-package! i3wm-config-mode
   :defer t)
-
 #+END_SRC
 ** khard
 *** package
@@ -2346,6 +2369,21 @@ Built in!
   (defvar outline-minor-mode-prefix "\M-#"))
 
 #+END_SRC
+** org-onenote
+*** Package
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(package! org-onenote                   :recipe (:host github
+                                                 :repo "ifree/org-onenote"))
+#+END_SRC
+*** code
+#+BEGIN_SRC emacs-lisp
+(use-package! org-onenote
+  :defer t
+  :config
+  (setq org-onenote-section-map '(("Marty @ Work"))))
+#+END_SRC
+
+
 ** paperless
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
