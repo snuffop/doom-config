@@ -44,6 +44,11 @@
 
 (package! autoinsert)
 
+(package! browse-kill-ring)
+
+(package! eva                           :recipe (:host github :repo "meedstrom/eva"
+                                                 :files (:defaults "assets"  "renv" "*.R" "*.gnuplot")))
+
 (package! i3wm-config-mode              :recipe (:host github
                                                  :repo "Alexander-Miller/i3wm-Config-Mode"))
 

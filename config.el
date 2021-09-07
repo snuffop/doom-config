@@ -220,7 +220,6 @@
   (global-activity-watch-mode))
 
 (use-package! activity-watch-mode
-  :ensure t
   :config
   (add-hook 'doom-first-buffer-hook #'marty/startActivityWatchMode))
 
@@ -268,6 +267,115 @@
             (define-auto-insert "masons/[^/].+\\.org?$" ["masonsMeetingMinuets.org" marty/autoinsert-yas-expand])
             (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
             (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand])))
+
+(use-package! browse-kill-ring
+  :config
+  (progn
+    (defadvice yank-pop (around kill-ring-browse-maybe (arg))
+      "If last action was not a yank, run `browse-kill-ring' instead."
+      (interactive "p")
+      (if (not (eq last-command 'yank))
+         (browse-kill-ring)
+        (barf-if-buffer-read-only)
+        ad-do-it))
+    (ad-activate 'yank-pop)))
+
+(use-package eva
+  :init
+  (setq eva-va-name "Alfred")
+  (setq eva-user-name "Marty")
+  (setq eva-user-birthday "1970-03-16")
+  (setq eva-user-short-title "sir") ;; don't like titles? put in your name again
+  (setq eva-idle-log-path         "~/Nextcloud/Notes/self-data/idle.tsv")
+  (setq eva-buffer-focus-log-path "~/Nextcloud/Notes/self-data/buffer-focus.tsv")
+  (setq eva-buffer-info-path      "~/Nextcloud/Notes/self-data/Self_data/buffer-info.tsv")
+  (setq eva-main-ledger-path      "~/Nextcloud/Documents/File Cabinet/Personl/ledger")
+
+  ;; Prevent annoying ESS prompt.
+  (setq ess-ask-for-ess-directory nil)
+
+  :config
+
+  ;; These are used by `eva-present-diary'; org-journal not needed.
+  (setq org-journal-dir "~/Nextcloud/Notes/org/daily/")
+  (setq org-journal-file-format "%Y-%m-%d.org")
+
+  (require 'eva-builtin)
+
+  (add-hook 'eva-after-load-vars-hook #'eva-check-dangling-clock)
+  (add-hook 'eva-after-load-vars-hook #'eva-check-org-vars)
+
+  ;; HINT: Though not likely you'll want to, you can use the same object
+  ;; multiple times in the queue, you'll just have to assign the output of
+  ;; an (eva-item-create) to an external variable and refer to it.
+  (setq eva-items
+        (list
+         (eva-item-create :fn #'eva-greet
+                          :min-hours-wait 1)
+
+         (eva-item-create :fn #'eva-query-mood
+                          :dataset "~/Nextcloud/Notes/self-data/mood.tsv"
+                          :min-hours-wait 1)
+
+         (eva-item-create :fn #'eva-present-diary
+                          :max-successes-per-day 1)
+
+         (eva-item-create :fn #'eva-query-weight
+                          :dataset "~/Nextcloud/Notes/self-data/weight.tsv"
+                          :max-entries-per-day 1)
+
+         (eva-item-create :fn #'eva-plot-weight
+                          :max-entries-per-day 1)
+
+         (eva-item-create :fn #'eva-query-sleep
+                          :dataset "~/Nextcloud/Notes/self-data/sleep.tsv"
+                          :min-hours-wait 5
+                          :lookup-posted-time t)
+
+         (eva-item-create :fn #'eva-present-ledger-report)
+
+         (eva-item-create :fn #'eva-present-org-agenda)
+
+         (eva-item-create :fn #'eva-query-ingredients
+                          :dataset "~/Nextcloud/Notes/self-data/ingredients.tsv"
+                          :min-hours-wait 5)
+
+         (eva-item-create :fn #'eva-query-cold-shower
+                          :dataset "~/Nextcloud/Notes/self-data/cold.tsv"
+                          :max-entries-per-day 1)
+
+         (eva-item-create :fn #'eva-query-activity
+                          :dataset "~/Nextcloud/Notes/self-data/activities.tsv"
+                          :min-hours-wait 1)
+
+         ;; you can inline define the functions too
+         (eva-item-create
+          :fn (eva-defun my-bye ()
+                (message (eva-emit "All done for now."))
+                (bury-buffer (eva-buffer-chat)))
+          :min-hours-wait 0)))
+
+  ;; Add hotkeys
+
+  (transient-replace-suffix 'eva-dispatch '(0)
+    '["General actions"
+      ("q" "Quit the chat" bury-buffer)
+      ("l" "View Ledger report" eva-present-ledger-report)
+      ("f" "View Ledger file" eva-present-ledger-file)
+      ("a" "View Org agenda" org-agenda-list)])
+
+  (define-key eva-chat-mode-map (kbd "l") #'eva-present-ledger-report)
+  (define-key eva-chat-mode-map (kbd "f") #'eva-present-ledger-file)
+  (define-key eva-chat-mode-map (kbd "a") #'org-agenda-list)
+
+  ;; Activities
+  (setq eva-activity-list
+        (list (eva-activity-create :name "sleep")
+              (eva-activity-create :name "studying")
+              (eva-activity-create :name "coding")
+              (eva-activity-create :name "unknown")))
+
+  (eva-mode))
 
 ;;;;; i3 Window manager config
 
@@ -321,6 +429,12 @@
         "R"  #'paperless-scan-directories
         "f"  #'paperless-file
         "X"  #'paperless-execute))
+
+;; Remove .git ~/ seen as a project root
+
+(after! projectile
+  (setq projectile-project-root-files-bottom-up
+        (remove ".git" projectile-project-root-files-bottom-up)))
 
 ;;;;; Salt Mode
 

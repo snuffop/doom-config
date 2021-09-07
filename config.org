@@ -8,6 +8,7 @@
   - [[#headers-of-files][Headers of Files]]
   - [[#initel][init.el]]
 - [[#global-settings][GLOBAL SETTINGS]]
+  - [[#base][Base]]
   - [[#time--date][TIME & DATE]]
 - [[#company-settings][COMPANY SETTINGS]]
 - [[#fonts-and-faces][FONTS and FACES]]
@@ -49,12 +50,15 @@
   - [[#alert][alert]]
   - [[#all-the-icons-completion][all the icons completion]]
   - [[#auto-insert][auto insert]]
+  - [[#browse-kill-ring][browse kill ring]]
+  - [[#eva-personal-assistant][Eva Personal assistant]]
   - [[#i3-window-manager-config][I3 Window manager Config]]
   - [[#khard][khard]]
   - [[#magit][magit]]
   - [[#outshine][outshine]]
   - [[#org-onenote][org-onenote]]
   - [[#paperless][paperless]]
+  - [[#projectile][Projectile]]
   - [[#saltstack][saltstack]]
   - [[#systemd-mode][systemd mode]]
   - [[#tramp][tramp]]
@@ -352,7 +356,7 @@ org-mode.el  Header file for the org-mode  config
 #+END_SRC
 
 * GLOBAL SETTINGS
-
+** Base
 Set Default variables  and hooks set globally
 
 #+BEGIN_SRC emacs-lisp
@@ -382,6 +386,7 @@ Set Default variables  and hooks set globally
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
 #+END_SRC
+
 ** TIME & DATE
 *** World Clock
 #+BEGIN_SRC emacs-lisp
@@ -1759,261 +1764,239 @@ This function is suitable for `mu4e-compose-mode-hook'."
 ;; Contexts
 
 (setq mu4e-compose-context-policy 'ask-if-none)
-  (setq mu4e-context-policy 'ask-if-none)
-  (setq mu4e-contexts
-        `(
-#+END_SRC
+(setq mu4e-context-policy 'ask-if-none)
+(setq mu4e-contexts
+      `(
+;;; Dabuke
+        ,(make-mu4e-context
+          :name "Dabuke"
+          :enter-func (lambda () (mu4e-message "Switch to the Dabuke context"))
+          :leave-func (lambda () (mu4e-message "Leaving Dabuke context"))
+          :vars '((user-mail-address      . "marty@dabuke.com")
+                  (mu4e-get-mail-command  . "mbsync Dabuke")
+                  (mu4e-refile-folder     . "/Dabuke/Archive")
+                  (mu4e-trash-folder      . "/Dabuke/Trash")
+                  (mu4e-drafts-folder     . "/Dabuke/Drafts")
+                  (mu4e-sent-folder       . "/Dabuke/Sent")
+                  (user-full-name         . "Marty Buchaus")
+                  (mu4e-maildir-shortcuts . ((:maildir "/Dabuke/Archive"              :key ?a)
+                                             (:maildir "/Dabuke/Drafts"               :key ?d)
+                                             (:maildir "/Dabuke/INBOX"                :key ?i)
+                                             (:maildir "/Dabuke/INBOX.Spam"           :key ?S)
+                                             (:maildir "/Dabuke/Junk"                 :key ?j)
+                                             (:maildir "/Dabuke/Lists.CraigsList"     :key ?c)
+                                             (:maildir "/Dabuke/Lists.Doom"           :key ?D)
+                                             (:maildir "/Dabuke/Lists.Emacs"          :key ?e)
+                                             (:maildir "/Dabuke/Lists.Linode"         :key ?l)
+                                             (:maildir "/Dabuke/Lists.Mutt"           :key ?M)
+                                             (:maildir "/Dabuke/Lists.Root"           :key ?r)
+                                             (:maildir "/Dabuke/Lists.Spacemacs"      :key ?m)
+                                             (:maildir "/Dabuke/Lists.nextcloud"      :key ?N)
+                                             (:maildir "/Dabuke/Lists.ofmasons"       :key ?O)
+                                             (:maildir "/Dabuke/Lists.passwordstore"  :key ?W)
+                                             (:maildir "/Dabuke/Lists.qutebrowser"    :key ?q)
+                                             (:maildir "/Dabuke/Queue"                :key ?Q)
+                                             (:maildir "/Dabuke/SBL"                  :key ?b)
+                                             (:maildir "/Dabuke/Sent"                 :key ?s)
+                                             (:maildir "/Dabuke/TrainGood"            :key ?G)
+                                             (:maildir "/Dabuke/TrainSpam"            :key ?B)
+                                             (:maildir "/Dabuke/Trash"                :key ?T)
+                                             (:maildir "/Dabuke/zillow"               :key ?z)))
+                  (message-sendmail-extra-arguments . ("--account=Dabuke"))
+                  (mu4e-compose-signature .
+                                          (concat
+                                           "William Marty Buchaus Jr\n"
+                                           "A person is smart. People are dumb, panicky, dangerous animals and you know it. -k MIB\n"
+                                           "Meet on the level Act by the Plumb and Part upon the Square  AF&AM 832\n"
+                                           "https://snuffy.org\n"))))
 
-**** Dabuke
-#+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;; Dabuke
-,(make-mu4e-context
-  :name "Dabuke"
-  :enter-func (lambda () (mu4e-message "Switch to the Dabuke context"))
-  :leave-func (lambda () (mu4e-message "Leaving Dabuke context"))
-  :vars '((user-mail-address      . "marty@dabuke.com")
-          (mu4e-get-mail-command  . "mbsync Dabuke")
-          (mu4e-refile-folder     . "/Dabuke/Archive")
-          (mu4e-trash-folder      . "/Dabuke/Trash")
-          (mu4e-drafts-folder     . "/Dabuke/Drafts")
-          (mu4e-sent-folder       . "/Dabuke/Sent")
-          (user-full-name         . "Marty Buchaus")
-          (mu4e-maildir-shortcuts . ((:maildir "/Dabuke/Archive"              :key ?a)
-                                     (:maildir "/Dabuke/Drafts"               :key ?d)
-                                     (:maildir "/Dabuke/INBOX"                :key ?i)
-                                     (:maildir "/Dabuke/INBOX.Spam"           :key ?S)
-                                     (:maildir "/Dabuke/Junk"                 :key ?j)
-                                     (:maildir "/Dabuke/Lists.Doom"           :key ?D)
-                                     (:maildir "/Dabuke/Lists.Emacs"          :key ?e)
-                                     (:maildir "/Dabuke/Lists.Linode"         :key ?l)
-                                     (:maildir "/Dabuke/Lists.Mutt"           :key ?M)
-                                     (:maildir "/Dabuke/Lists.Root"           :key ?r)
-                                     (:maildir "/Dabuke/Lists.Spacemacs"      :key ?m)
-                                     (:maildir "/Dabuke/Lists.nextcloud"      :key ?N)
-                                     (:maildir "/Dabuke/Lists.ofmasons"       :key ?O)
-                                     (:maildir "/Dabuke/Lists.passwordstore"  :key ?W)
-                                     (:maildir "/Dabuke/Lists.qutebrowser"    :key ?q)
-                                     (:maildir "/Dabuke/Queue"                :key ?Q)
-                                     (:maildir "/Dabuke/SBL"                  :key ?b)
-                                     (:maildir "/Dabuke/Sent"                 :key ?s)
-                                     (:maildir "/Dabuke/TrainGood"            :key ?G)
-                                     (:maildir "/Dabuke/TrainSpam"            :key ?B)
-                                     (:maildir "/Dabuke/Trash"                :key ?T)
-                                     (:maildir "/Dabuke/zillow"               :key ?z)))
-          (message-sendmail-extra-arguments . ("--account=Dabuke"))
-          (mu4e-compose-signature .
-                                  (concat
-                                   "William Marty Buchaus Jr\n"
-                                   "A person is smart. People are dumb, panicky, dangerous animals and you know it. -k MIB\n"
-                                   "Meet on the level Act by the Plumb and Part upon the Square  AF&AM 832\n"
-                                   "https://snuffy.org\n"))))
-#+END_SRC
+;;; Lets Earn Money
+        ,(make-mu4e-context
+          :name "letsEarnMoney"
+          :enter-func (lambda () (mu4e-message "Switch to the letsEarnMoney context"))
+          :leave-func (lambda () (mu4e-message "Leaving letsEarnMoney context"))
+          :vars '((user-mail-address      . "marty@letsearnmoney.com")
+                  (mu4e-get-mail-command  . "mbsync letsEarnMoney")
+                  (mu4e-refile-folder     . "/letsEarnMoney/Archive")
+                  (mu4e-trash-folder      . "/letsEarnMoney/Trash")
+                  (mu4e-drafts-folder     . "/letsEarnMoney/Drafts")
+                  (mu4e-sent-folder       . "/letsEarnMoney/Sent")
+                  (user-full-name         . "Marty Buchaus")
+                  (mu4e-maildir-shortcuts . ((:maildir "/letsEarnMoney/Archive"              :key ?a)
+                                             (:maildir "/letsEarnMoney/Drafts"               :key ?d)
+                                             (:maildir "/letsEarnMoney/INBOX"                :key ?i)
+                                             (:maildir "/letsEarnMoney/Junk"                 :key ?j)
+                                             (:maildir "/letsEarnMoney/Queue"                :key ?Q)
+                                             (:maildir "/letsEarnMoney/SBL"                  :key ?b)
+                                             (:maildir "/letsEarnMoney/Sent"                 :key ?s)
+                                             (:maildir "/letsEarnMoney/Spam"                 :key ?S)
+                                             (:maildir "/letsEarnMoney/TrainGood"            :key ?G)
+                                             (:maildir "/letsEarnMoney/TrainSpam"            :key ?B)
+                                             (:maildir "/letsEarnMoney/Trash"                :key ?T)))
+                  (message-sendmail-extra-arguments . ("--account=letsEarnMoney"))
+                  (mu4e-compose-signature .
+                                          (concat
+                                           "William Marty Buchaus Jr\n"
+                                           "https://www.letsearnmoney.com\n"))))
 
-**** Lets Earn Money
-#+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;; Lets Earn Money
-,(make-mu4e-context
-  :name "letsEarnMoney"
-  :enter-func (lambda () (mu4e-message "Switch to the letsEarnMoney context"))
-  :leave-func (lambda () (mu4e-message "Leaving letsEarnMoney context"))
-  :vars '((user-mail-address      . "marty@letsearnmoney.com")
-          (mu4e-get-mail-command  . "mbsync letsEarnMoney")
-          (mu4e-refile-folder     . "/letsEarnMoney/Archive")
-          (mu4e-trash-folder      . "/letsEarnMoney/Trash")
-          (mu4e-drafts-folder     . "/letsEarnMoney/Drafts")
-          (mu4e-sent-folder       . "/letsEarnMoney/Sent")
-          (user-full-name         . "Marty Buchaus")
-          (mu4e-maildir-shortcuts . ((:maildir "/letsEarnMoney/Archive"              :key ?a)
-                                     (:maildir "/letsEarnMoney/Drafts"               :key ?d)
-                                     (:maildir "/letsEarnMoney/INBOX"                :key ?i)
-                                     (:maildir "/letsEarnMoney/Junk"                 :key ?j)
-                                     (:maildir "/letsEarnMoney/Queue"                :key ?Q)
-                                     (:maildir "/letsEarnMoney/SBL"                  :key ?b)
-                                     (:maildir "/letsEarnMoney/Sent"                 :key ?s)
-                                     (:maildir "/letsEarnMoney/Spam"                 :key ?S)
-                                     (:maildir "/letsEarnMoney/TrainGood"            :key ?G)
-                                     (:maildir "/letsEarnMoney/TrainSpam"            :key ?B)
-                                     (:maildir "/letsEarnMoney/Trash"                :key ?T)))
-          (message-sendmail-extra-arguments . ("--account=letsEarnMoney"))
-          (mu4e-compose-signature .
-                                  (concat
-                                   "William Marty Buchaus Jr\n"
-                                   "https://www.letsearnmoney.com\n"))))
-#+END_SRC
+;;; OFMasons
+        ,(make-mu4e-context
+          :name "OFMasons"
+          :enter-func (lambda () (mu4e-message "Switch to the OFMasons context"))
+          :leave-func (lambda () (mu4e-message "Leaving OFMasons context"))
+          :vars '((user-mail-address      . "marty@ofmasons.com")
+                  (mu4e-get-mail-command  . "mbsync OFMasons")
+                  (mu4e-refile-folder     . "/OFMasons/Archive")
+                  (mu4e-trash-folder      . "/OFMasons/Trash")
+                  (mu4e-drafts-folder     . "/OFMasons/Drafts")
+                  (mu4e-sent-folder       . "/OFMasons/Sent")
+                  (user-full-name         . "Marty Buchaus")
+                  (mu4e-maildir-shortcuts . ((:maildir "/OFMasons/Archive"              :key ?a)
+                                             (:maildir "/OFMasons/Drafts"               :key ?d)
+                                             (:maildir "/OFMasons/INBOX"                :key ?i)
+                                             (:maildir "/OFMasons/Junk"                 :key ?j)
+                                             (:maildir "/OFMasons/Queue"                :key ?Q)
+                                             (:maildir "/OFMasons/SBL"                  :key ?b)
+                                             (:maildir "/OFMasons/Sent"                 :key ?s)
+                                             (:maildir "/OFMasons/Spam"                 :key ?S)
+                                             (:maildir "/OFMasons/TrainGood"            :key ?G)
+                                             (:maildir "/OFMasons/TrainSpam"            :key ?B)
+                                             (:maildir "/OFMasons/Trash"                :key ?T)))
+                  (message-sendmail-extra-arguments . ("--account=OFMasons"))
+                  (mu4e-compose-signature .
+                                          (concat
+                                           "William Marty Buchaus Jr\n"
+                                           "Meet on the level Act by the Plumb and Part upon the Square  AF&AM 832\n"
+                                           "https://www.ofmasons.com\n"))))
 
-**** Oak Forest Masons
-#+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;; OFMasons
-,(make-mu4e-context
-  :name "OFMasons"
-  :enter-func (lambda () (mu4e-message "Switch to the OFMasons context"))
-  :leave-func (lambda () (mu4e-message "Leaving OFMasons context"))
-  :vars '((user-mail-address      . "marty@ofmasons.com")
-          (mu4e-get-mail-command  . "mbsync OFMasons")
-          (mu4e-refile-folder     . "/OFMasons/Archive")
-          (mu4e-trash-folder      . "/OFMasons/Trash")
-          (mu4e-drafts-folder     . "/OFMasons/Drafts")
-          (mu4e-sent-folder       . "/OFMasons/Sent")
-          (user-full-name         . "Marty Buchaus")
-          (mu4e-maildir-shortcuts . ((:maildir "/OFMasons/Archive"              :key ?a)
-                                     (:maildir "/OFMasons/Drafts"               :key ?d)
-                                     (:maildir "/OFMasons/INBOX"                :key ?i)
-                                     (:maildir "/OFMasons/Junk"                 :key ?j)
-                                     (:maildir "/OFMasons/Queue"                :key ?Q)
-                                     (:maildir "/OFMasons/SBL"                  :key ?b)
-                                     (:maildir "/OFMasons/Sent"                 :key ?s)
-                                     (:maildir "/OFMasons/Spam"                 :key ?S)
-                                     (:maildir "/OFMasons/TrainGood"            :key ?G)
-                                     (:maildir "/OFMasons/TrainSpam"            :key ?B)
-                                     (:maildir "/OFMasons/Trash"                :key ?T)))
-          (message-sendmail-extra-arguments . ("--account=OFMasons"))
-          (mu4e-compose-signature .
-                                  (concat
-                                   "William Marty Buchaus Jr\n"
-                                   "Meet on the level Act by the Plumb and Part upon the Square  AF&AM 832\n"
-                                   "https://www.ofmasons.com\n"))))
-#+END_SRC
-**** RadHits
-#+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;; Radhits
-,(make-mu4e-context
-  :name "TRadhits"
-  :enter-func (lambda () (mu4e-message "Switch to the Rad Hits context"))
-  :leave-func (lambda () (mu4e-message "Leaving Rad Hits context"))
-  :vars '((user-mail-address       . "marty@radhits.net")
-          (mu4e-get-mail-command   . "mbsync Radhits")
-          (mu4e-trash-folder       . "/Radhits/Trash")
-          (mu4e-refile-folder      . "/Radhits/Archive")
-          (mu4e-drafts-folder      . "/Radhits/Drafts")
-          (mu4e-sent-folder        . "/Radhits/Sent")
-          (user-full-name          . "Marty Buchaus")
-          (mu4e-maildir-shortcuts  . ((:maildir "/Radhits/INBOX"    :key ?i)
-                                      (:maildir "/Radhits/Archive"  :key ?a)
-                                      (:maildir "/Radhits/Trash"    :key ?T)
-                                      (:maildir "/Radhits/Sent"     :key ?s)))
-          (message-sendmail-extra-arguments . ("--account=Radhits"))
-          (mu4e-compose-signature .
-                                  (concat
-                                   "Marty Buchaus\n"
-                                   "Meet on the Level Act by the Plumb and Part upon the Square\n"
-                                   "mobile: 210-763-4052\n"))))
-#+END_SRC
-**** Red Earth Group
-#+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;; RedEarth Group Inc
-,(make-mu4e-context
-  :name "ERedEarthgroupinc"
-  :enter-func (lambda () (mu4e-message "Switch to the Red Earth Group context"))
-  :leave-func (lambda () (mu4e-message "Leaving Red Earth Group context"))
-  :vars '((user-mail-address       . "marty@redearthgroupinc.com")
-          (mu4e-get-mail-command   . "mbsync RedEarth")
-          (mu4e-trash-folder       . "/RedEarth/Trash")
-          (mu4e-refile-folder      . "/RedEarth/Archive")
-          (mu4e-drafts-folder      . "/RedEarth/Drafts")
-          (mu4e-sent-folder        . "/RedEarth/Sent")
-          (user-full-name          . "Marty Buchaus")
-          (mu4e-maildir-shortcuts  . ((:maildir "/RedEarth/INBOX"      :key ?i)
-                                      (:maildir "/RedEarth/Archive"    :key ?a)
-                                      (:maildir "/RedEarth/Drafts"     :key ?d)
-                                      (:maildir "/RedEarth/Trash"      :key ?T)
-                                      (:maildir "/REdEarth/TrainGood"  :key ?G)
-                                      (:maildir "/REdEarth/TrainSpam"  :key ?B)
-                                      (:maildir "/REdEarth/JUnk"       :key ?S)
-                                      (:maildir "/RedEarth/Sent"       :key ?s)))
-          (message-sendmail-extra-arguments . ("--account=RedEarth"))
-          (mu4e-compose-signature .
-                                  (concat
-                                   "Marty Buchaus\n"
-                                   "Meet on the Level Act by the Plumb and Part upon the Square\n"
-                                   "mobile: 210-763-4052\n"))))
-#+END_SRC
-**** Red Earth Construction Florida
-#+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;; RE Construction FL
-,(make-mu4e-context
-  :name "FREconstructionfl"
-  :enter-func (lambda () (mu4e-message "Switch to the Red Earth Construction FL context"))
-  :leave-func (lambda () (mu4e-message "Leaving Red Earth Construction FL context"))
-  :vars '((user-mail-address       . "marty@reconstructionfl.com")
-          (mu4e-get-mail-command   . "mbsync reconstructionfl")
-          (mu4e-trash-folder       . "/reconstructionfl/Trash")
-          (mu4e-refile-folder      . "/reconstructionfl/Archive")
-          (mu4e-drafts-folder      . "/reconstructionfl/Drafts")
-          (mu4e-sent-folder        . "/reconstructionfl/Sent")
-          (user-full-name          . "Marty Buchaus")
-          (mu4e-maildir-shortcuts  . ((:maildir "/reconstructionfl/INBOX"      :key ?i)
-                                      (:maildir "/reconstructionfl/Archive"    :key ?a)
-                                      (:maildir "/reconstructionfl/Drafts"     :key ?d)
-                                      (:maildir "/reconstructionfl/TrainGood"  :key ?G)
-                                      (:maildir "/reconstructionfl/TrainSpam"  :key ?B)
-                                      (:maildir "/reconstructionfl/JUnk"       :key ?S)
-                                      (:maildir "/reconstructionfl/Trash"      :key ?T)
-                                      (:maildir "/reconstructionfl/Sent"       :key ?s)))
-          (message-sendmail-extra-arguments . ("--account=ReConstructionFL"))
-          (mu4e-compose-signature .
-                                  (concat
-                                   "Marty Buchaus\n"
-                                   "Meet on the Level Act by the Plumb and Part upon the Square\n"
-                                   "mobile: 210-763-4052\n"))))
-#+END_SRC
-**** Google
-#+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;; Google
-,(make-mu4e-context
-  :name "Gmail"
-  :enter-func (lambda () (mu4e-message "Switch to the Gmail context"))
-  :leave-func (lambda () (mu4e-message "Leaving Gmail context"))
-  :vars '((user-mail-address       . "snuffop@gmail.com")
-          (mu4e-get-mail-command   . "mbsync Google")
-          (mu4e-trash-folder       . "/Google/Trash")
-          (mu4e-drafts-folder      . "/Google/Drafts")
-          (mu4e-sent-folder        . "/Google/Sent")
-          (mu4e-refile-folder      . "/Dabuke/Archive")
-          (user-full-name          . "Marty Buchaus")
-          (mu4e-maildir-shortcuts  . ((:maildir "/Google/Drafts"            :key ?d)
-                                      (:maildir "/Google/INBOX"             :key ?i)
-                                      (:maildir "/Google/MMS-SMS"           :key ?M)
-                                      (:maildir "/Google/Sent"              :key ?s)
-                                      (:maildir "/Google/Trash"             :key ?T)
-                                      (:maildir "/Google/Unwanted"          :key ?U)
-                                      (:maildir "/Google/[Gmail]/.All Mail" :key ?a)
-                                      (:maildir "/Google/[Gmail]/.Spam"     :key ?S)
-                                      (:maildir "/Google/queue"             :key ?Q)))
-          (message-sendmail-extra-arguments . ("--account=Google"))
-          (mu4e-compose-signature .
-                                  (concat
-                                   "Marty Buchaus\n"
-                                   "Meet on the Level Act by the Plumb and Part upon the Square\n"))))
-#+END_SRC
-**** Real House Hunters
-#+BEGIN_SRC emacs-lisp :tangle mu4e.el
-;; Real House Hunters
-,(make-mu4e-context
-  :name "HH"
-  :enter-func (lambda () (mu4e-message "Switch to the RHH context"))
-  :leave-func (lambda () (mu4e-message "Leaving RHH context"))
-  :vars '((user-mail-address      . "wbuchaus@realhousehunters.com")
-          (mu4e-get-mail-command  . "mbsync RHH")
-          (mu4e-refile-folder     . "/RHH/Archive")
-          (mu4e-trash-folder      . "/RHH/Trash")
-          (mu4e-drafts-folder     . "/RHH/Drafts")
-          (mu4e-sent-folder       . "/RHH/Sent")
-          (user-full-name         . "Marty Buchaus")
-          (mu4e-maildir-shortcuts . ((:maildir "/RHH/INBOX"   :key ?i)
-                                     (:maildir "/RHH/Trash"   :key ?T)
-                                     (:maildir "/RHH/Drafts"  :key ?d)
-                                     (:maildir "/RHH/Archive" :key ?a)
-                                     (:maildir "/RHH/Sent"    :key ?s)))
-          (message-sendmail-extra-arguments . ("--account=RHH"))
-          (mu4e-compose-signature .
-                                  (concat
-                                   "Marty Buchaus\n"
-                                   "Real House Hunters / Jazney Inc\n"))))
-#+END_SRC
-**** End Contexts
-#+BEGIN_SRC emacs-lisp :tangle mu4e.el
-) ;; End List
-) ;; End Contexts
+;;; Radhits
+        ,(make-mu4e-context
+          :name "TRadhits"
+          :enter-func (lambda () (mu4e-message "Switch to the Rad Hits context"))
+          :leave-func (lambda () (mu4e-message "Leaving Rad Hits context"))
+          :vars '((user-mail-address       . "marty@radhits.net")
+                  (mu4e-get-mail-command   . "mbsync Radhits")
+                  (mu4e-trash-folder       . "/Radhits/Trash")
+                  (mu4e-refile-folder      . "/Radhits/Archive")
+                  (mu4e-drafts-folder      . "/Radhits/Drafts")
+                  (mu4e-sent-folder        . "/Radhits/Sent")
+                  (user-full-name          . "Marty Buchaus")
+                  (mu4e-maildir-shortcuts  . ((:maildir "/Radhits/INBOX"    :key ?i)
+                                              (:maildir "/Radhits/Archive"  :key ?a)
+                                              (:maildir "/Radhits/Trash"    :key ?T)
+                                              (:maildir "/Radhits/Sent"     :key ?s)))
+                  (message-sendmail-extra-arguments . ("--account=Radhits"))
+                  (mu4e-compose-signature .
+                                          (concat
+                                           "Marty Buchaus\n"
+                                           "Meet on the Level Act by the Plumb and Part upon the Square\n"
+                                           "mobile: 210-763-4052\n"))))
+
+;;; RedEarth Group Inc
+        ,(make-mu4e-context
+          :name "ERedEarthgroupinc"
+          :enter-func (lambda () (mu4e-message "Switch to the Red Earth Group context"))
+          :leave-func (lambda () (mu4e-message "Leaving Red Earth Group context"))
+          :vars '((user-mail-address       . "marty@redearthgroupinc.com")
+                  (mu4e-get-mail-command   . "mbsync RedEarth")
+                  (mu4e-trash-folder       . "/RedEarth/Trash")
+                  (mu4e-refile-folder      . "/RedEarth/Archive")
+                  (mu4e-drafts-folder      . "/RedEarth/Drafts")
+                  (mu4e-sent-folder        . "/RedEarth/Sent")
+                  (user-full-name          . "Marty Buchaus")
+                  (mu4e-maildir-shortcuts  . ((:maildir "/RedEarth/INBOX"      :key ?i)
+                                              (:maildir "/RedEarth/Archive"    :key ?a)
+                                              (:maildir "/RedEarth/Drafts"     :key ?d)
+                                              (:maildir "/RedEarth/Trash"      :key ?T)
+                                              (:maildir "/REdEarth/TrainGood"  :key ?G)
+                                              (:maildir "/REdEarth/TrainSpam"  :key ?B)
+                                              (:maildir "/REdEarth/JUnk"       :key ?S)
+                                              (:maildir "/RedEarth/Sent"       :key ?s)))
+                  (message-sendmail-extra-arguments . ("--account=RedEarth"))
+                  (mu4e-compose-signature .
+                                          (concat
+                                           "Marty Buchaus\n"
+                                           "Meet on the Level Act by the Plumb and Part upon the Square\n"
+                                           "mobile: 210-763-4052\n"))))
+
+        ;; RE Construction FL
+        ,(make-mu4e-context
+          :name "FREconstructionfl"
+          :enter-func (lambda () (mu4e-message "Switch to the Red Earth Construction FL context"))
+          :leave-func (lambda () (mu4e-message "Leaving Red Earth Construction FL context"))
+          :vars '((user-mail-address       . "marty@reconstructionfl.com")
+                  (mu4e-get-mail-command   . "mbsync reconstructionfl")
+                  (mu4e-trash-folder       . "/reconstructionfl/Trash")
+                  (mu4e-refile-folder      . "/reconstructionfl/Archive")
+                  (mu4e-drafts-folder      . "/reconstructionfl/Drafts")
+                  (mu4e-sent-folder        . "/reconstructionfl/Sent")
+                  (user-full-name          . "Marty Buchaus")
+                  (mu4e-maildir-shortcuts  . ((:maildir "/reconstructionfl/INBOX"      :key ?i)
+                                              (:maildir "/reconstructionfl/Archive"    :key ?a)
+                                              (:maildir "/reconstructionfl/Drafts"     :key ?d)
+                                              (:maildir "/reconstructionfl/TrainGood"  :key ?G)
+                                              (:maildir "/reconstructionfl/TrainSpam"  :key ?B)
+                                              (:maildir "/reconstructionfl/JUnk"       :key ?S)
+                                              (:maildir "/reconstructionfl/Trash"      :key ?T)
+                                              (:maildir "/reconstructionfl/Sent"       :key ?s)))
+                  (message-sendmail-extra-arguments . ("--account=ReConstructionFL"))
+                  (mu4e-compose-signature .
+                                          (concat
+                                           "Marty Buchaus\n"
+                                           "Meet on the Level Act by the Plumb and Part upon the Square\n"
+                                           "mobile: 210-763-4052\n"))))
+
+        ;; Google
+        ,(make-mu4e-context
+          :name "Gmail"
+          :enter-func (lambda () (mu4e-message "Switch to the Gmail context"))
+          :leave-func (lambda () (mu4e-message "Leaving Gmail context"))
+          :vars '((user-mail-address       . "snuffop@gmail.com")
+                  (mu4e-get-mail-command   . "mbsync Google")
+                  (mu4e-trash-folder       . "/Google/Trash")
+                  (mu4e-drafts-folder      . "/Google/Drafts")
+                  (mu4e-sent-folder        . "/Google/Sent")
+                  (mu4e-refile-folder      . "/Dabuke/Archive")
+                  (user-full-name          . "Marty Buchaus")
+                  (mu4e-maildir-shortcuts  . ((:maildir "/Google/Drafts"            :key ?d)
+                                              (:maildir "/Google/INBOX"             :key ?i)
+                                              (:maildir "/Google/MMS-SMS"           :key ?M)
+                                              (:maildir "/Google/Sent"              :key ?s)
+                                              (:maildir "/Google/Trash"             :key ?T)
+                                              (:maildir "/Google/Unwanted"          :key ?U)
+                                              (:maildir "/Google/[Gmail]/.All Mail" :key ?a)
+                                              (:maildir "/Google/[Gmail]/.Spam"     :key ?S)
+                                              (:maildir "/Google/queue"             :key ?Q)))
+                  (message-sendmail-extra-arguments . ("--account=Google"))
+                  (mu4e-compose-signature .
+                                          (concat
+                                           "Marty Buchaus\n"
+                                           "Meet on the Level Act by the Plumb and Part upon the Square\n"))))
+
+        ;; Real House Hunters
+        ,(make-mu4e-context
+          :name "HH"
+          :enter-func (lambda () (mu4e-message "Switch to the RHH context"))
+          :leave-func (lambda () (mu4e-message "Leaving RHH context"))
+          :vars '((user-mail-address      . "wbuchaus@realhousehunters.com")
+                  (mu4e-get-mail-command  . "mbsync RHH")
+                  (mu4e-refile-folder     . "/RHH/Archive")
+                  (mu4e-trash-folder      . "/RHH/Trash")
+                  (mu4e-drafts-folder     . "/RHH/Drafts")
+                  (mu4e-sent-folder       . "/RHH/Sent")
+                  (user-full-name         . "Marty Buchaus")
+                  (mu4e-maildir-shortcuts . ((:maildir "/RHH/INBOX"   :key ?i)
+                                             (:maildir "/RHH/Trash"   :key ?T)
+                                             (:maildir "/RHH/Drafts"  :key ?d)
+                                             (:maildir "/RHH/Archive" :key ?a)
+                                             (:maildir "/RHH/Sent"    :key ?s)))
+                  (message-sendmail-extra-arguments . ("--account=RHH"))
+                  (mu4e-compose-signature .
+                                          (concat
+                                           "Marty Buchaus\n"
+                                           "Real House Hunters / Jazney Inc\n"))))
+        ) ;; End Lists
+      ) ;; End Contexts
 #+END_SRC
 *** End mu4e.el  after wrap
 #+BEGIN_SRC emacs-lisp :tangle mu4e.el
@@ -2051,9 +2034,11 @@ This function is suitable for `mu4e-compose-mode-hook'."
   "h"    #'helpful-at-point)
 
 (map!
- ;; :n "C-:"    #'+spell/correct
+ :n "C-:"    #'+spell/correct
  :n "C-,"    #'+spell/next-error)
 #+END_SRC
+
+#+RESULTS:
 
 ** Leader Bindings
 
@@ -2214,7 +2199,6 @@ This function is suitable for `mu4e-compose-mode-hook'."
   (global-activity-watch-mode))
 
 (use-package! activity-watch-mode
-  :ensure t
   :config
   (add-hook 'doom-first-buffer-hook #'marty/startActivityWatchMode))
 #+END_SRC
@@ -2309,6 +2293,137 @@ This function is suitable for `mu4e-compose-mode-hook'."
     (evil-insert-state)))
 #+END_SRC
 
+** browse kill ring
+*** package
+#+begin_src emacs-lisp :tangle packages.el
+(package! browse-kill-ring)
+#+end_src
+
+*** code
+#+begin_src emacs-lisp
+(use-package! browse-kill-ring
+  :config
+  (progn
+    (defadvice yank-pop (around kill-ring-browse-maybe (arg))
+      "If last action was not a yank, run `browse-kill-ring' instead."
+      (interactive "p")
+      (if (not (eq last-command 'yank))
+         (browse-kill-ring)
+        (barf-if-buffer-read-only)
+        ad-do-it))
+    (ad-activate 'yank-pop)))
+#+end_src
+
+** Eva Personal assistant
+*** package
+#+begin_src emacs-lisp :tangle packages.el
+(package! eva                           :recipe (:host github :repo "meedstrom/eva"
+                                                 :files (:defaults "assets"  "renv" "*.R" "*.gnuplot")))
+
+#+end_src
+
+#+RESULTS:
+| eva | :modules | ((:private . config) (:private . modules)) | :recipe | (:host github :repo meedstrom/eva :files (:defaults assets renv *.R *.gnuplot)) |
+*** code
+#+begin_src emacs-lisp
+(use-package eva
+  :init
+  (setq eva-va-name "Alfred")
+  (setq eva-user-name "Marty")
+  (setq eva-user-birthday "1970-03-16")
+  (setq eva-user-short-title "sir") ;; don't like titles? put in your name again
+  (setq eva-idle-log-path         "~/Nextcloud/Notes/self-data/idle.tsv")
+  (setq eva-buffer-focus-log-path "~/Nextcloud/Notes/self-data/buffer-focus.tsv")
+  (setq eva-buffer-info-path      "~/Nextcloud/Notes/self-data/Self_data/buffer-info.tsv")
+  (setq eva-main-ledger-path      "~/Nextcloud/Documents/File Cabinet/Personl/ledger")
+
+  ;; Prevent annoying ESS prompt.
+  (setq ess-ask-for-ess-directory nil)
+
+  :config
+
+  ;; These are used by `eva-present-diary'; org-journal not needed.
+  (setq org-journal-dir "~/Nextcloud/Notes/org/daily/")
+  (setq org-journal-file-format "%Y-%m-%d.org")
+
+  (require 'eva-builtin)
+
+  (add-hook 'eva-after-load-vars-hook #'eva-check-dangling-clock)
+  (add-hook 'eva-after-load-vars-hook #'eva-check-org-vars)
+
+  ;; HINT: Though not likely you'll want to, you can use the same object
+  ;; multiple times in the queue, you'll just have to assign the output of
+  ;; an (eva-item-create) to an external variable and refer to it.
+  (setq eva-items
+        (list
+         (eva-item-create :fn #'eva-greet
+                          :min-hours-wait 1)
+
+         (eva-item-create :fn #'eva-query-mood
+                          :dataset "~/Nextcloud/Notes/self-data/mood.tsv"
+                          :min-hours-wait 1)
+
+         (eva-item-create :fn #'eva-present-diary
+                          :max-successes-per-day 1)
+
+         (eva-item-create :fn #'eva-query-weight
+                          :dataset "~/Nextcloud/Notes/self-data/weight.tsv"
+                          :max-entries-per-day 1)
+
+         (eva-item-create :fn #'eva-plot-weight
+                          :max-entries-per-day 1)
+
+         (eva-item-create :fn #'eva-query-sleep
+                          :dataset "~/Nextcloud/Notes/self-data/sleep.tsv"
+                          :min-hours-wait 5
+                          :lookup-posted-time t)
+
+         (eva-item-create :fn #'eva-present-ledger-report)
+
+         (eva-item-create :fn #'eva-present-org-agenda)
+
+         (eva-item-create :fn #'eva-query-ingredients
+                          :dataset "~/Nextcloud/Notes/self-data/ingredients.tsv"
+                          :min-hours-wait 5)
+
+         (eva-item-create :fn #'eva-query-cold-shower
+                          :dataset "~/Nextcloud/Notes/self-data/cold.tsv"
+                          :max-entries-per-day 1)
+
+         (eva-item-create :fn #'eva-query-activity
+                          :dataset "~/Nextcloud/Notes/self-data/activities.tsv"
+                          :min-hours-wait 1)
+
+         ;; you can inline define the functions too
+         (eva-item-create
+          :fn (eva-defun my-bye ()
+                (message (eva-emit "All done for now."))
+                (bury-buffer (eva-buffer-chat)))
+          :min-hours-wait 0)))
+
+  ;; Add hotkeys
+
+  (transient-replace-suffix 'eva-dispatch '(0)
+    '["General actions"
+      ("q" "Quit the chat" bury-buffer)
+      ("l" "View Ledger report" eva-present-ledger-report)
+      ("f" "View Ledger file" eva-present-ledger-file)
+      ("a" "View Org agenda" org-agenda-list)])
+
+  (define-key eva-chat-mode-map (kbd "l") #'eva-present-ledger-report)
+  (define-key eva-chat-mode-map (kbd "f") #'eva-present-ledger-file)
+  (define-key eva-chat-mode-map (kbd "a") #'org-agenda-list)
+
+  ;; Activities
+  (setq eva-activity-list
+        (list (eva-activity-create :name "sleep")
+              (eva-activity-create :name "studying")
+              (eva-activity-create :name "coding")
+              (eva-activity-create :name "unknown")))
+
+  (eva-mode))
+#+end_src
+
 ** I3 Window manager Config
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
@@ -2383,7 +2498,6 @@ Built in!
   (setq org-onenote-section-map '(("Marty @ Work"))))
 #+END_SRC
 
-
 ** paperless
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
@@ -2415,6 +2529,16 @@ Built in!
         "X"  #'paperless-execute))
 
 #+END_SRC
+** Projectile
+#+begin_src emacs-lisp
+
+;; Remove .git ~/ seen as a project root
+
+(after! projectile
+  (setq projectile-project-root-files-bottom-up
+        (remove ".git" projectile-project-root-files-bottom-up)))
+#+end_src
+
 ** saltstack
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
