@@ -1,4 +1,4 @@
-personal_ws-1.1 en 28
+personal_ws-1.1 en 34
 Ansible
 Araujo
 Atherton
@@ -7,12 +7,14 @@ Buchaus
 Cahill
 Epley
 Granville
+Jazney
 Juliano
 Kruspe
 Ledesma
 MailGun
 Mori
 Nana
+NaturalGas
 Pickens
 Rackspace
 Snedden
@@ -23,7 +25,11 @@ Venegas
 Vertico
 Xterra
 config
+craigslist
 dabuke
 https
 nexpose
 snuffy
+systemd
+treemacs
+wakatime

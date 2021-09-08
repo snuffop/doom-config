@@ -16,7 +16,7 @@
   "h"    #'helpful-at-point)
 
 (map!
- :n "C-:"    #'+spell/correct
+ ;;:n "C-:"    #'+spell/correct
  :n "C-,"    #'+spell/next-error)
 
 ;;;;; Leader Keybindings
