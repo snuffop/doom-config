@@ -1,11 +1,3 @@
-;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; -*-
-;;
-;; Author: Marty Buchaus <marty@dabuke.com>
-;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-
 ;; Global
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
@@ -175,6 +167,7 @@
           )
 
     :config (progn
+              (setq org-caldav-debug-level 0)
               (setq org-icalendar-alarm-time 1)
               (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
               (setq org-icalendar-timezone "America/New York")
@@ -191,7 +184,8 @@
                         (lambda ()
                           (when (eq major-mode 'org-mode)
                             (org-caldav-sync-with-delay 300)))))
-    (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close)))
+    ;; (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close)
+    ))
 
 ;;;; Load Functions.el
 
@@ -289,6 +283,8 @@
 
 (use-package! khardel
   :defer t)
+
+(setq ledger-post-amount-alignment-column 69)
 
 ;;;; Magit
 

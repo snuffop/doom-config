@@ -103,6 +103,16 @@ tasks."
     "Update the value of `org-agenda-files'."
     (setq org-agenda-files (roam-extra:todo-files))))
 
+;;;;; Calendar Open
+
+(defun mb/open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")
+    (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
+
 (defun my-open-calendar ()
   (interactive)
   (cfw:open-calendar-buffer
@@ -115,16 +125,6 @@ tasks."
     (cfw:org-create-file-source "Next-Birthdays" "~/Nextcloud/Notes/Calendars/contact_birthdays.org" "Brown")  ; other org source
     (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
     )))
-
-;;;;; Calendar Open
-
-(defun mb/open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:org-create-source "Green")
-    (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
 
 ;;;;; Open file Functions
 

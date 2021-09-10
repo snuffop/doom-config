@@ -4,8 +4,6 @@
 #+STARTUP: overview
 
 * TABLE OF CONTENTS :toc:
-- [[#about-this-config][ABOUT THIS CONFIG]]
-  - [[#headers-of-files][Headers of Files]]
   - [[#initel][init.el]]
 - [[#global-settings][GLOBAL SETTINGS]]
   - [[#base][Base]]
@@ -53,6 +51,7 @@
   - [[#browse-kill-ring][browse kill ring]]
   - [[#i3-window-manager-config][I3 Window manager Config]]
   - [[#khard][khard]]
+  - [[#ledger][Ledger]]
   - [[#magit][magit]]
   - [[#outshine][outshine]]
   - [[#org-onenote][org-onenote]]
@@ -64,23 +63,6 @@
   - [[#very-large-file][very large file]]
   - [[#wakatime][wakatime]]
 - [[#custom][CUSTOM]]
-
-* ABOUT THIS CONFIG
-This is my personal config of Doom Emacs. making heavy use of EVIL everywhere
-** Headers of Files
-*** config.el
-the header of the config.el file followes
-
-#+BEGIN_SRC emacs-lisp
-;; $DOOMDIR/config.el --- Summary -*- lexical-binding: t; -*-
-;;
-;; Author: Marty Buchaus <marty@dabuke.com>
-;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-
-#+END_SRC
 
 *** functions.el
 Functions.el   pretty self explanatory
@@ -175,8 +157,8 @@ org-mode.el  Header file for the org-mode  config
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ;;indent-guides     ; highlighted indent columns
-       (ligatures         ; ligatures and symbols to make your code pretty again
-        +extras)
+       ligatures         ; ligatures and symbols to make your code pretty again
+       ;;  +extra)
        ;;minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink cursor line after big motions
@@ -191,8 +173,8 @@ org-mode.el  Header file for the org-mode  config
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
-       ;; (window-select     ; visually switch windows
-       ;;  +numbers)
+       (window-select     ; visually switch windows
+        +numbers)
        workspaces        ; tab emulation, persistence & separate workspaces
        ;;zen               ; distraction-free coding or writing
 
@@ -253,7 +235,7 @@ org-mode.el  Header file for the org-mode  config
         +auth)
        pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
-       ;;rgb               ; creating color strings
+       rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
@@ -261,12 +243,14 @@ org-mode.el  Header file for the org-mode  config
 
        :os
        ;; (:if IS-MAC macos)  ; improve compatibility with macOS
-       tty               ; improve the terminal Emacs experience
+       (tty               ; improve the terminal Emacs experience
+        +osc)
 
        :lang
        ;;agda              ; types of types of types of types...
        ;;beancount         ; mind the GAAP
-       ;;cc                ; C > C++ == 1
+       (cc                ; C > C++ == 1
+        +lsp)
        ;;clojure           ; java with a lisp
        common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
@@ -284,7 +268,8 @@ org-mode.el  Header file for the org-mode  config
        ;;fsharp            ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
-       (go +lsp)         ; the hipster dialect
+       (go                 ; the hipster dialect
+         +lsp)
        (haskell +dante)  ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
@@ -314,7 +299,8 @@ org-mode.el  Header file for the org-mode  config
         +lsp)
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       python            ; beautiful is better than ugly
+       (python            ; beautiful is better than ugly
+        +lsp)
        qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
@@ -324,13 +310,15 @@ org-mode.el  Header file for the org-mode  config
        ;; rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
-       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       (sh                ; she sells {ba,z,fi}sh shells on the C xor
+        +lsp)
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        terra             ; Earth and Moon in alignment for performance.
        web               ; the tubes
-       yaml              ; JSON, but readable
+       (yaml              ; JSON, but readable
+        +lsp)
        ;;zig               ; C, but simpler
 
        :email
@@ -1299,6 +1287,7 @@ after reference
           )
 
     :config (progn
+              (setq org-caldav-debug-level 0)
               (setq org-icalendar-alarm-time 1)
               (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
               (setq org-icalendar-timezone "America/New York")
@@ -1315,12 +1304,24 @@ after reference
                         (lambda ()
                           (when (eq major-mode 'org-mode)
                             (org-caldav-sync-with-delay 300)))))
-    (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close)))
+    ;; (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close)
+    ))
 #+END_SRC
 
-#+RESULTS:
-: t
+* FUNCTIONS
+** Open File Functions
+*** Calendar Open
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+;;;;; Calendar Open
 
+(defun mb/open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")
+    (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
+#+END_SRC
 
 *** Function to open calendar
 #+BEGIN_SRC emacs-lisp :tangle functions.el
@@ -1339,20 +1340,6 @@ after reference
     )))
 #+END_SRC
 
-* FUNCTIONS
-** Open File Functions
-*** Calendar Open
-#+BEGIN_SRC emacs-lisp :tangle functions.el
-;;;;; Calendar Open
-
-(defun mb/open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:org-create-source "Green")
-    (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
-#+END_SRC
 *** Config and other files
 
 #+BEGIN_SRC emacs-lisp :tangle functions.el
@@ -1500,7 +1487,6 @@ Do not try to make a new directory or anything fancy."
     (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
     (remove-hook 'occur-hook #'goto-address-mode)))
 #+END_SRC
-
 
 ** Load functions File
 #+BEGIN_SRC emacs-lisp
@@ -2340,6 +2326,11 @@ This function is suitable for `mu4e-compose-mode-hook'."
   :defer t)
 
 #+END_SRC
+** Ledger
+#+begin_src emacs-lisp
+(setq ledger-post-amount-alignment-column 69)
+#+end_src
+
 ** magit
 *** package
 Built in!
