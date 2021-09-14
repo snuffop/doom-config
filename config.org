@@ -1,4 +1,4 @@
-#+TITLE:  Marty Buchaus Doom Emacs Config
+j#+TITLE:  Marty Buchaus Doom Emacs Config
 #+AUTHOR: Marty Buchaus
 #+EMAIL:  marty@dabuke.com
 #+STARTUP: overview
@@ -6,17 +6,18 @@
 * TABLE OF CONTENTS :toc:
   - [[#initel][init.el]]
 - [[#global-settings][GLOBAL SETTINGS]]
-  - [[#base][Base]]
+  - [[#base][BASE]]
   - [[#time--date][TIME & DATE]]
-- [[#company-settings][COMPANY SETTINGS]]
-- [[#fonts-and-faces][FONTS and FACES]]
-  - [[#fonts][Fonts]]
-- [[#theme][THEME]]
-- [[#spelling][SPELLING]]
-- [[#line-numbers][LINE NUMBERS]]
+  - [[#company-settings][COMPANY SETTINGS]]
+  - [[#fonts-and-faces][FONTS and FACES]]
+  - [[#theme][THEME]]
+  - [[#marginalia][MARGINALIA]]
+  - [[#mode-line][MODE-LINE]]
+  - [[#spelling][SPELLING]]
+  - [[#line-numbers][LINE NUMBERS]]
 - [[#org-mode][ORG-MODE]]
   - [[#packages][Packages]]
-  - [[#config-][Config <]]
+  - [[#org-mode-config][Org-mode Config]]
   - [[#org-super-agenda][org-super-agenda]]
   - [[#org-pandoc][org-pandoc]]
   - [[#0rg-publish-functions][0rg publish functions]]
@@ -38,6 +39,7 @@
   - [[#start-mu4e][Start Mu4e]]
   - [[#load-mu4eel][Load mu4e.el]]
   - [[#mu4e-column-faces][mu4e column faces]]
+  - [[#mu4e-marker-icons][mu4e marker icons]]
 - [[#keybinding][KEYBINDING]]
   - [[#global-bindings][Global Bindings]]
   - [[#leader-bindings][Leader Bindings]]
@@ -49,12 +51,15 @@
   - [[#all-the-icons-completion][all the icons completion]]
   - [[#auto-insert][auto insert]]
   - [[#browse-kill-ring][browse kill ring]]
+  - [[#elpher][Elpher]]
   - [[#i3-window-manager-config][I3 Window manager Config]]
+  - [[#info-pages][Info Pages]]
   - [[#khard][khard]]
   - [[#ledger][Ledger]]
   - [[#magit][magit]]
   - [[#outshine][outshine]]
   - [[#org-onenote][org-onenote]]
+  - [[#org-pretty-table][org-pretty-table]]
   - [[#paperless][paperless]]
   - [[#salt-stack][salt stack]]
   - [[#systemd-mode][systemd mode]]
@@ -342,7 +347,7 @@ org-mode.el  Header file for the org-mode  config
 #+END_SRC
 
 * GLOBAL SETTINGS
-** Base
+** BASE
 Set Default variables  and hooks set globally
 
 #+BEGIN_SRC emacs-lisp
@@ -395,14 +400,14 @@ Set Default variables  and hooks set globally
 
 #+END_SRC
 
-* COMPANY SETTINGS
+** COMPANY SETTINGS
 #+BEGIN_SRC emacs-lisp
 
 (setq company-idle-delay 0.5)
 
 #+END_SRC
-* FONTS and FACES
-** Fonts
+** FONTS and FACES
+*** Fonts
 #+BEGIN_SRC emacs-lisp
 ;; Fonts
 
@@ -416,7 +421,7 @@ Set Default variables  and hooks set globally
         doom-themes-enable-italic t))
 #+END_SRC
 
-Faces adjustments
+*** Faces adjustments
 
 #+BEGIN_SRC emacs-lisp
 ;; Faces
@@ -433,7 +438,7 @@ Faces adjustments
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! mixed-pitch)
 #+END_SRC
-
+*** Hooks
 Allow mixed fonts in a buffer. This is particularly useful for Org mode, so I
 can mix source and prose blocks in the same document. I also manually enable
 solaire-mode in Org mode as a workaround for font scaling not working properly.
@@ -444,7 +449,7 @@ solaire-mode in Org mode as a workaround for font scaling not working properly.
 
 #+END_SRC
 
-* THEME
+** THEME
 
 I have become quite attached to the dracula theme..
 
@@ -454,8 +459,70 @@ I have become quite attached to the dracula theme..
 (setq doom-theme 'doom-dracula )
 
 #+END_SRC
+** MARGINALIA
+Marginalia is part of the Vertico stack, and is responsible for all the fancy faces and extra information.
+*** Files
+The doom module out of the box includes a number of customizations, but the below from Teco gives a much better experience for files.
+#+begin_src emacs-lisp
+(after! marginalia
 
-* SPELLING
+  (setq marginalia-censor-variables nil)
+
+  (defun +marginalia-annotate-file-colorful (cand)
+    "Annotate file CAND with its size, modification time and other attrs.
+These annotations are skipped for remote paths."
+    (if (or (marginalia--remote-p cand)
+            (when-let (win (active-minibuffer-window))
+              (with-current-buffer (window-buffer win)
+                (marginalia--remote-p (minibuffer-contents-no-properties)))))
+        (marginalia--fields ("*Remote*" :face 'marginalia-documentation))
+      (when-let (attrs (file-attributes (substitute-in-file-name
+                                         (marginalia--full-candidate cand))
+                                        'integer))
+        (marginalia--fields
+         ((marginalia--file-owner attrs)
+          :width 12 :face 'marginalia-file-owner)
+         ((marginalia--file-modes attrs))
+         ((+marginalia-file-size-colorful (file-attribute-size attrs))
+          :width 7)
+         ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+          :width 12)))))
+
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color))))
+
+  (setcdr (assq 'file marginalia-annotator-registry) '(+marginalia-annotate-file-colorful builtin none)))
+#+end_src
+
+** MODE-LINE
+#+begin_src emacs-lisp
+(after! doom-modeline
+  (setq all-the-icons-scale-factor 1.1
+        auto-revert-check-vc-info t
+        doom-modeline-major-mode-icon (display-graphic-p)
+        doom-modeline-major-mode-color-icon (display-graphic-p)
+        doom-modeline-buffer-file-name-style 'relative-to-project
+        doom-modeline-vcs-max-length 60)
+  (remove-hook 'doom-modeline-mode-hook #'size-indication-mode)
+  (doom-modeline-def-modeline 'main
+    '(bar workspace-name window-number modals persp-name buffer-info matches remote-host github debug)
+    '(vcs github mu4e grip gnus checker misc-info repl lsp " ")))
+#+end_src
+
+** SPELLING
 
 #+BEGIN_SRC emacs-lisp
 ;;;; Spelling
@@ -467,11 +534,19 @@ I have become quite attached to the dracula theme..
 
 #+END_SRC
 
-* LINE NUMBERS
+** LINE NUMBERS
 #+BEGIN_SRC emacs-lisp
 ;;;; Line Numbers
 
 (setq display-line-numbers-type 'relative)
+
+;; remove numbers from these modes
+;;
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 #+END_SRC
 
 * ORG-MODE
@@ -491,7 +566,7 @@ I have become quite attached to the dracula theme..
 (package! org-projectile)
 #+END_SRC
 
-** Config <
+** Org-mode Config 
 *** Mail/Mutt
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; Mail/Mutt
@@ -959,21 +1034,21 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
   (setq org-roam-capture-templates
         '(("d" "default" plain
            (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n")
+           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
            :unnarrowed t)
           ("t" "tipjar" plain
            (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n")
+           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
            :unnarrowed t)
           ("p" "People" plain
            (file "~/.config/doom/templates/roam-templates/people-entry.org")
-           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+filetags: people\n")
+           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n$+category: people\n#+filetags: people\n")
            :unnarrowed t)
           )))
 #+END_SRC
 
 *** Roam Functions
-
+**** dailies graphics link and dates
 #+BEGIN_SRC emacs-lisp :tangle functions.el
 ;;;;; Roam Daily Functions
 (defun marty/org-roam-dailies-graphicslink ()
@@ -1010,6 +1085,57 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
          (day   (string-to-number (substring (buffer-name) 8 10)))
          (datim (encode-time 0 0 0 day month year)))
     (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
+
+#+END_SRC
+
+**** cool functions  systemcrafters
+5 Org Roam Hacks for Better Productivity in Emacs
+https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
+
+#+BEGIN_SRC emacs-lisp :tangle functions.el
+
+(after! org
+;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
+
+(defun org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+       (apply #'org-roam-node-insert args)))
+
+
+(defun marty/org-roam-capture-inbox ()
+  (interactive)
+  (org-roam-capture- :node (org-roam-node-create)
+                     :templates '(("i" "Inbox" plain "** %?"
+                                   :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
+
+;; Move Todo's to dailies when done
+(defun marty/org-roam-copy-todo-to-today ()
+  (interactive)
+  (let ((org-refile-keep nil) ;; Set this to t to copy the original!
+        (org-roam-dailies-capture-templates
+         '(("t" "tasks" entry "%?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
+        (org-after-refile-insert-hook #'save-buffer)
+        today-file
+        pos)
+    (save-window-excursion
+      (org-roam-dailies--capture (current-time) t)
+      (setq today-file (buffer-file-name))
+      (setq pos (point)))
+
+    ;; Only refile if the target file is different than the current file
+    (unless (equal (file-truename today-file)
+                   (file-truename (buffer-file-name)))
+      (org-refile nil nil (list "Tasks" today-file nil pos)))))
+
+(add-to-list 'org-after-todo-state-change-hook
+             (lambda ()
+               (when (equal org-state "DONE")
+                 (marty/org-roam-copy-todo-to-today))))
+)
 #+END_SRC
 
 *** Roam Extra (TODO)
@@ -1069,9 +1195,6 @@ tasks."
     "Update the value of `org-agenda-files'."
     (setq org-agenda-files (roam-extra:todo-files))))
 #+END_SRC
-
-#+RESULTS:
-: roam-extra:update-todo-files
 
 **** Hooks and advise
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
@@ -1143,6 +1266,19 @@ tasks."
       ("^\\*org-roam: " ; node dedicated org-roam buffer
        :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2))))
 #+END_SRC
+*** org-roam-keybinding
+#+begin_src emacs-lisp :tangle keybindings.el
+(map! (:map org-mode-map
+       :localleader
+       :prefix "m"
+       "b" #'marty/org-roam-capture-inbox
+       "i" #'org-roam-node-insert-immediate
+       "p" #'marty/org-roam-find-project))
+
+(map! :leader
+      :prefix "n"
+      "b" #'marty/org-roam-capture-inbox)
+#+end_src
 
 ** org-transclusion
 *** Package
@@ -1496,6 +1632,7 @@ Do not try to make a new directory or anything fancy."
 
 #+END_SRC
 * MU4E
+Tangle mu4e config to mu4e.el and include in config.el yet all tangled from this file.
 ** mu4e functions
 #+BEGIN_SRC emacs-lisp :tangle functions.el
 ;;;;;; MU4E
@@ -1544,6 +1681,7 @@ This function is suitable for `mu4e-compose-mode-hook'."
 #+END_SRC
 
 ** Start Mu4e
+Start the after sub section of the config
 *** After Wrap
 #+BEGIN_SRC emacs-lisp :tangle mu4e.el
 (after! mu4e
@@ -1598,8 +1736,8 @@ This function is suitable for `mu4e-compose-mode-hook'."
 ;; fields
 
 (setq mu4e-headers-fields '(
-                            (:date . 18)    ;; alternatively, use :human-date
                             (:flags . 7)
+                            (:date . 18)    ;; alternatively, use :human-date
                             (:from-or-to . 40)
                             (:full-mailing-list . 40)
                             (:tags . 15)           ;;  X-label
@@ -1739,10 +1877,6 @@ This function is suitable for `mu4e-compose-mode-hook'."
 (setq mml-secure-openpgp-encrypt-to-self t)
 (setq mml-secure-openpgp-sign-with-sender  t)
 #+END_SRC
-
-*** contacts add
-
-#+END_SRC
 *** Contexts
 #+BEGIN_SRC emacs-lisp :tangle mu4e.el
 ;; Contexts
@@ -1769,8 +1903,8 @@ This function is suitable for `mu4e-compose-mode-hook'."
                                              (:maildir "/Dabuke/INBOX.Spam"           :key ?S)
                                              (:maildir "/Dabuke/Junk"                 :key ?j)
                                              (:maildir "/Dabuke/Lists.CraigsList"     :key ?c)
-                                             (:maildir "/Dabuke/Lists.Doom"           :key ?D)
                                              (:maildir "/Dabuke/Lists.Emacs"          :key ?e)
+                                             (:maildir "/Dabuke/Lists.Github"         :key ?g)
                                              (:maildir "/Dabuke/Lists.Linode"         :key ?l)
                                              (:maildir "/Dabuke/Lists.Mutt"           :key ?M)
                                              (:maildir "/Dabuke/Lists.Root"           :key ?r)
@@ -2005,6 +2139,17 @@ This function is suitable for `mu4e-compose-mode-hook'."
   :after mu4e
   :config (mu4e-column-faces-mode))
 #+END_SRC
+** mu4e marker icons
+*** package
+#+begin_src emacs-lisp :tangle packages.el
+(package! mu4e-marker-icons)
+#+end_src
+*** Code
+#+begin_src emacs-lisp
+(use-package! mu4e-marker-icons
+  :after mu4e
+  :init (mu4e-marker-icons-mode 1))
+#+end_src
 
 * KEYBINDING
 ** Global Bindings
@@ -2219,6 +2364,8 @@ This function is suitable for `mu4e-compose-mode-hook'."
   :defer t)
 #+END_SRC
 ** all the icons completion
+Add icons to completion candidates using the built in completion metadata functions.
+https://github.com/iyefrat/all-the-icons-completion
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! all-the-icons-completion)
@@ -2278,6 +2425,12 @@ This function is suitable for `mu4e-compose-mode-hook'."
 #+END_SRC
 
 ** browse kill ring
+Are you tired of using the endless keystrokes of C-y M-y M-y M-y ... to get at
+that bit of text you killed thirty-seven kills ago? Ever wish you could just
+look through everything you've killed recently to find out if you killed that
+piece of text that you think you killed, but you're not quite sure? If so, then
+browse-kill-ring is the Emacs extension for you.
+https://github.com/browse-kill-ring/browse-kill-ring
 *** package
 #+begin_src emacs-lisp :tangle packages.el
 (package! browse-kill-ring)
@@ -2292,10 +2445,30 @@ This function is suitable for `mu4e-compose-mode-hook'."
       "If last action was not a yank, run `browse-kill-ring' instead."
       (interactive "p")
       (if (not (eq last-command 'yank))
-         (browse-kill-ring)
+          (browse-kill-ring)
         (barf-if-buffer-read-only)
         ad-do-it))
-    (ad-activate 'yank-pop)))
+    (ad-activate 'yank-pop))
+
+  (map! :leader
+      ;;; <leader> k --- Application
+        (:prefix-map ("k" . "Kill Ring")
+         "k"  #'browse-kill-ring
+         "i"  #'browse-kill-ring-append-insert))
+
+  )
+#+end_src
+
+** Elpher
+Elpher aims to provide a full-featured combination gopher and gemini
+client for GNU Emacs.  https://github.com/emacsmirror/elpher
+*** Package
+#+begin_src emacs-lisp :tangle packages.el
+(package! elpher)
+#+end_src
+*** Code
+#+begin_src emacs-lisp
+(use-package! elpher)
 #+end_src
 
 ** I3 Window manager Config
@@ -2312,6 +2485,19 @@ This function is suitable for `mu4e-compose-mode-hook'."
 (use-package! i3wm-config-mode
   :defer t)
 #+END_SRC
+** Info Pages
+*** Package
+#+begin_src emacs-lisp :tangle packages.el
+(package! info-colors)
+#+end_src
+*** Code
+#+begin_src emacs-lisp
+(use-package! info-colors
+  :after info
+  :commands (info-colors-fontify-node)
+  :hook (Info-selection . info-colors-fontify-node))
+#+end_src
+
 ** khard
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
@@ -2376,6 +2562,19 @@ Built in!
   :config
   (setq org-onenote-section-map '(("Marty @ Work"))))
 #+END_SRC
+** org-pretty-table
+Taken from [[https://github.com/elken/.doom.d#keybindings][elken's Config]] with the [[https://github.com/Fuco1/org-pretty-table][Source link]]
+*** Package
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-pretty-table              :recipe (:host github
+                                                 :repo "Fuco1/org-pretty-table"))
+#+end_src
+*** Code
+#+begin_src emacs-lisp
+(use-package! org-pretty-table
+  :after org
+  :hook (org-mode . org-pretty-table-mode))
+#+end_src
 
 ** paperless
 *** package
@@ -2688,10 +2887,6 @@ Built in
 : t
 
 * CUSTOM
-
-#+END_SRC
-CUSTOM FILE
-
 Keep this at the end of the file to allow for override of any settings that are
 set before and customized in this file
 

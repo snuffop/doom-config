@@ -381,15 +381,15 @@
   (setq org-roam-capture-templates
         '(("d" "default" plain
            (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n")
+           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
            :unnarrowed t)
           ("t" "tipjar" plain
            (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n")
+           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
            :unnarrowed t)
           ("p" "People" plain
            (file "~/.config/doom/templates/roam-templates/people-entry.org")
-           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+filetags: people\n")
+           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n$+category: people\n#+filetags: people\n")
            :unnarrowed t)
           )))
 

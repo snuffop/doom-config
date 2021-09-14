@@ -33,6 +33,8 @@
 
 (package! mu4e-column-faces)
 
+(package! mu4e-marker-icons)
+
 (package! activity-watch-mode             :recipe (:host github
                                                    :repo "pauldub/activity-watch-mode"))
 
@@ -46,8 +48,12 @@
 
 (package! browse-kill-ring)
 
+(package! elpher)
+
 (package! i3wm-config-mode              :recipe (:host github
                                                  :repo "Alexander-Miller/i3wm-Config-Mode"))
+
+(package! info-colors)
 
 (package! khardel)
 
@@ -56,6 +62,9 @@
 
 (package! org-onenote                   :recipe (:host github
                                                  :repo "ifree/org-onenote"))
+
+(package! org-pretty-table              :recipe (:host github
+                                                 :repo "Fuco1/org-pretty-table"))
 
 (package! paperless)
 

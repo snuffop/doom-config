@@ -51,6 +51,49 @@
          (datim (encode-time 0 0 0 day month year)))
     (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
 
+(after! org
+;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
+
+(defun org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+       (apply #'org-roam-node-insert args)))
+
+
+(defun marty/org-roam-capture-inbox ()
+  (interactive)
+  (org-roam-capture- :node (org-roam-node-create)
+                     :templates '(("i" "Inbox" plain "** %?"
+                                   :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
+
+;; Move Todo's to dailies when done
+(defun marty/org-roam-copy-todo-to-today ()
+  (interactive)
+  (let ((org-refile-keep nil) ;; Set this to t to copy the original!
+        (org-roam-dailies-capture-templates
+         '(("t" "tasks" entry "%?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
+        (org-after-refile-insert-hook #'save-buffer)
+        today-file
+        pos)
+    (save-window-excursion
+      (org-roam-dailies--capture (current-time) t)
+      (setq today-file (buffer-file-name))
+      (setq pos (point)))
+
+    ;; Only refile if the target file is different than the current file
+    (unless (equal (file-truename today-file)
+                   (file-truename (buffer-file-name)))
+      (org-refile nil nil (list "Tasks" today-file nil pos)))))
+
+(add-to-list 'org-after-todo-state-change-hook
+             (lambda ()
+               (when (equal org-state "DONE")
+                 (marty/org-roam-copy-todo-to-today))))
+)
+
 (after! org-roam
   (defun roam-extra:get-filetags ()
     (split-string (or (org-roam-get-keyword "filetags") "")))

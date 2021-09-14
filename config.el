@@ -69,6 +69,60 @@
 
 (setq doom-theme 'doom-dracula )
 
+(after! marginalia
+
+  (setq marginalia-censor-variables nil)
+
+  (defun +marginalia-annotate-file-colorful (cand)
+    "Annotate file CAND with its size, modification time and other attrs.
+These annotations are skipped for remote paths."
+    (if (or (marginalia--remote-p cand)
+            (when-let (win (active-minibuffer-window))
+              (with-current-buffer (window-buffer win)
+                (marginalia--remote-p (minibuffer-contents-no-properties)))))
+        (marginalia--fields ("*Remote*" :face 'marginalia-documentation))
+      (when-let (attrs (file-attributes (substitute-in-file-name
+                                         (marginalia--full-candidate cand))
+                                        'integer))
+        (marginalia--fields
+         ((marginalia--file-owner attrs)
+          :width 12 :face 'marginalia-file-owner)
+         ((marginalia--file-modes attrs))
+         ((+marginalia-file-size-colorful (file-attribute-size attrs))
+          :width 7)
+         ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+          :width 12)))))
+
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color))))
+
+  (setcdr (assq 'file marginalia-annotator-registry) '(+marginalia-annotate-file-colorful builtin none)))
+
+(after! doom-modeline
+  (setq all-the-icons-scale-factor 1.1
+        auto-revert-check-vc-info t
+        doom-modeline-major-mode-icon (display-graphic-p)
+        doom-modeline-major-mode-color-icon (display-graphic-p)
+        doom-modeline-buffer-file-name-style 'relative-to-project
+        doom-modeline-vcs-max-length 60)
+  (remove-hook 'doom-modeline-mode-hook #'size-indication-mode)
+  (doom-modeline-def-modeline 'main
+    '(bar workspace-name window-number modals persp-name buffer-info matches remote-host github debug)
+    '(vcs github mu4e grip gnus checker misc-info repl lsp " ")))
+
 ;;;; Spelling
 
 (after! spell-fu
@@ -79,6 +133,14 @@
 ;;;; Line Numbers
 
 (setq display-line-numbers-type 'relative)
+
+;; remove numbers from these modes
+;;
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;;;; Load Org Mode
 
@@ -203,6 +265,10 @@
   :after mu4e
   :config (mu4e-column-faces-mode))
 
+(use-package! mu4e-marker-icons
+  :after mu4e
+  :init (mu4e-marker-icons-mode 1))
+
 ;;;; Leader keys and keybindings
 
 (setq doom-localleader-key ",")
@@ -269,15 +335,30 @@
       "If last action was not a yank, run `browse-kill-ring' instead."
       (interactive "p")
       (if (not (eq last-command 'yank))
-         (browse-kill-ring)
+          (browse-kill-ring)
         (barf-if-buffer-read-only)
         ad-do-it))
-    (ad-activate 'yank-pop)))
+    (ad-activate 'yank-pop))
+
+  (map! :leader
+      ;;; <leader> k --- Application
+        (:prefix-map ("k" . "Kill Ring")
+         "k"  #'browse-kill-ring
+         "i"  #'browse-kill-ring-append-insert))
+
+  )
+
+(use-package! elpher)
 
 ;;;;; i3 Window manager config
 
 (use-package! i3wm-config-mode
   :defer t)
+
+(use-package! info-colors
+  :after info
+  :commands (info-colors-fontify-node)
+  :hook (Info-selection . info-colors-fontify-node))
 
 ;;;;; Khard
 
@@ -306,6 +387,10 @@
   :defer t
   :config
   (setq org-onenote-section-map '(("Marty @ Work"))))
+
+(use-package! org-pretty-table
+  :after org
+  :hook (org-mode . org-pretty-table-mode))
 
 ;;;;; Paperless
 

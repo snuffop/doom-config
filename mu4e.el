@@ -47,8 +47,8 @@
 ;; fields
 
 (setq mu4e-headers-fields '(
-                            (:date . 18)    ;; alternatively, use :human-date
                             (:flags . 7)
+                            (:date . 18)    ;; alternatively, use :human-date
                             (:from-or-to . 40)
                             (:full-mailing-list . 40)
                             (:tags . 15)           ;;  X-label
@@ -202,8 +202,8 @@
                                              (:maildir "/Dabuke/INBOX.Spam"           :key ?S)
                                              (:maildir "/Dabuke/Junk"                 :key ?j)
                                              (:maildir "/Dabuke/Lists.CraigsList"     :key ?c)
-                                             (:maildir "/Dabuke/Lists.Doom"           :key ?D)
                                              (:maildir "/Dabuke/Lists.Emacs"          :key ?e)
+                                             (:maildir "/Dabuke/Lists.Github"         :key ?g)
                                              (:maildir "/Dabuke/Lists.Linode"         :key ?l)
                                              (:maildir "/Dabuke/Lists.Mutt"           :key ?M)
                                              (:maildir "/Dabuke/Lists.Root"           :key ?r)

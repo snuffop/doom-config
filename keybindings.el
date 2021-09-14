@@ -7,6 +7,17 @@
 ;;
 ;;; Code:
 
+(map! (:map org-mode-map
+       :localleader
+       :prefix "m"
+       "b" #'marty/org-roam-capture-inbox
+       "i" #'org-roam-node-insert-immediate
+       "p" #'marty/org-roam-find-project))
+
+(map! :leader
+      :prefix "n"
+      "b" #'marty/org-roam-capture-inbox)
+
 ;;;; Global keybindings
 
 (define-key! dired-mode-map
