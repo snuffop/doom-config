@@ -10,6 +10,7 @@
 (map! (:map org-mode-map
        :localleader
        :prefix "m"
+       "a" #'marty/org-roam-move-todo-to-today
        "b" #'marty/org-roam-capture-inbox
        "i" #'org-roam-node-insert-immediate
        "p" #'marty/org-roam-find-project))

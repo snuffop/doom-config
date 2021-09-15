@@ -1,9 +1,10 @@
-j#+TITLE:  Marty Buchaus Doom Emacs Config
+#+TITLE:  Marty Buchaus Doom Emacs Config
 #+AUTHOR: Marty Buchaus
 #+EMAIL:  marty@dabuke.com
 #+STARTUP: overview
 
 * TABLE OF CONTENTS :toc:
+- [[#files][FILES]]
   - [[#initel][init.el]]
 - [[#global-settings][GLOBAL SETTINGS]]
   - [[#base][BASE]]
@@ -15,6 +16,7 @@ j#+TITLE:  Marty Buchaus Doom Emacs Config
   - [[#mode-line][MODE-LINE]]
   - [[#spelling][SPELLING]]
   - [[#line-numbers][LINE NUMBERS]]
+  - [[#add-evil][Add EVIL]]
 - [[#org-mode][ORG-MODE]]
   - [[#packages][Packages]]
   - [[#org-mode-config][Org-mode Config]]
@@ -69,6 +71,7 @@ j#+TITLE:  Marty Buchaus Doom Emacs Config
   - [[#wakatime][wakatime]]
 - [[#custom][CUSTOM]]
 
+* FILES
 *** functions.el
 Functions.el   pretty self explanatory
 
@@ -232,7 +235,8 @@ org-mode.el  Header file for the org-mode  config
        (lookup              ; navigate your code and its documentation
         +dictionary
         +docsets)
-       lsp
+       (lsp
+        +eglot)
        (magit             ; a git porcelain for Emacs
         +forge)
        make              ; run make tasks from Emacs
@@ -548,6 +552,19 @@ These annotations are skipped for remote paths."
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 #+END_SRC
+** Add EVIL
+#+begin_src emacs-lisp
+(defun marty/set-patching-macro-registers ()
+  (interactive)
+  (evil-set-register ?e [?0 ?i ?* ?* ?* ?* ?* ?* ?  escape ?0])
+  (evil-set-register ?b [?0 ?o escape ?0 ?i ?# ?+ ?e ?n ?d ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0] )
+  (evil-set-register ?t [?0 ?O ?i backspace ?# ?+ ?b ?e ?g ?i ?n ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0]))
+#+end_src
+
+#+RESULTS:
+: marty/set-patching-macro-registers
+
+
 
 * ORG-MODE
 #+begin_src emacs-lisp
@@ -1112,12 +1129,12 @@ https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
                                    :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
 
 ;; Move Todo's to dailies when done
-(defun marty/org-roam-copy-todo-to-today ()
+(defun marty/org-roam-move-todo-to-today ()
   (interactive)
   (let ((org-refile-keep nil) ;; Set this to t to copy the original!
         (org-roam-dailies-capture-templates
          '(("t" "tasks" entry "%?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
+            :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
         (org-after-refile-insert-hook #'save-buffer)
         today-file
         pos)
@@ -1131,10 +1148,11 @@ https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
                    (file-truename (buffer-file-name)))
       (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
-(add-to-list 'org-after-todo-state-change-hook
-             (lambda ()
-               (when (equal org-state "DONE")
-                 (marty/org-roam-copy-todo-to-today))))
+;; disable auto move.. Instead setup keybind to act as refile
+;; (add-to-list 'org-after-todo-state-change-hook
+;;              (lambda ()
+;;                (when (equal org-state "DONE")
+;;                  (marty/org-roam-copy-todo-to-today))))
 )
 #+END_SRC
 
@@ -1271,6 +1289,7 @@ tasks."
 (map! (:map org-mode-map
        :localleader
        :prefix "m"
+       "a" #'marty/org-roam-move-todo-to-today
        "b" #'marty/org-roam-capture-inbox
        "i" #'org-roam-node-insert-immediate
        "p" #'marty/org-roam-find-project))

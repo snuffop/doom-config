@@ -142,6 +142,12 @@ These annotations are skipped for remote paths."
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
+(defun marty/set-patching-macro-registers ()
+  (interactive)
+  (evil-set-register ?e [?0 ?i ?* ?* ?* ?* ?* ?* ?  escape ?0])
+  (evil-set-register ?b [?0 ?o escape ?0 ?i ?# ?+ ?e ?n ?d ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0] )
+  (evil-set-register ?t [?0 ?O ?i backspace ?# ?+ ?b ?e ?g ?i ?n ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0]))
+
 ;;;; Load Org Mode
 
 (setq org-directory "~/Nextcloud/Notes/org/")

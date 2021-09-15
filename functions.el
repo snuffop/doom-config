@@ -69,12 +69,12 @@
                                    :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
 
 ;; Move Todo's to dailies when done
-(defun marty/org-roam-copy-todo-to-today ()
+(defun marty/org-roam-move-todo-to-today ()
   (interactive)
   (let ((org-refile-keep nil) ;; Set this to t to copy the original!
         (org-roam-dailies-capture-templates
          '(("t" "tasks" entry "%?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
+            :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
         (org-after-refile-insert-hook #'save-buffer)
         today-file
         pos)
@@ -88,10 +88,11 @@
                    (file-truename (buffer-file-name)))
       (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
-(add-to-list 'org-after-todo-state-change-hook
-             (lambda ()
-               (when (equal org-state "DONE")
-                 (marty/org-roam-copy-todo-to-today))))
+;; disable auto move.. Instead setup keybind to act as refile
+;; (add-to-list 'org-after-todo-state-change-hook
+;;              (lambda ()
+;;                (when (equal org-state "DONE")
+;;                  (marty/org-roam-copy-todo-to-today))))
 )
 
 (after! org-roam
