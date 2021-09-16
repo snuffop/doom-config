@@ -12,11 +12,10 @@
   - [[#company-settings][COMPANY SETTINGS]]
   - [[#fonts-and-faces][FONTS and FACES]]
   - [[#theme][THEME]]
-  - [[#marginalia][MARGINALIA]]
   - [[#mode-line][MODE-LINE]]
   - [[#spelling][SPELLING]]
   - [[#line-numbers][LINE NUMBERS]]
-  - [[#add-evil][Add EVIL]]
+  - [[#add-evil][ADD EVIL]]
 - [[#org-mode][ORG-MODE]]
   - [[#packages][Packages]]
   - [[#org-mode-config][Org-mode Config]]
@@ -220,7 +219,7 @@ org-mode.el  Header file for the org-mode  config
        (syntax           ; tasing you for every semicolon you forget
         +childframe)
        (spell
-        +aspell)         ; tasing you for misspelling mispelling
+        +enchant)         ; tasing you for misspelling mispelling
        grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -235,8 +234,7 @@ org-mode.el  Header file for the org-mode  config
        (lookup              ; navigate your code and its documentation
         +dictionary
         +docsets)
-       (lsp
-        +eglot)
+       lsp
        (magit             ; a git porcelain for Emacs
         +forge)
        make              ; run make tasks from Emacs
@@ -337,7 +335,7 @@ org-mode.el  Header file for the org-mode  config
 
        :app
        calendar
-       ;;emms
+       emms
        everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        ;;(rss +org)        ; emacs as an RSS reader
@@ -420,9 +418,6 @@ Set Default variables  and hooks set globally
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
       doom-big-font (font-spec :family "Firacode Nerd Font" :size 24))
 
-(after! doom-themes
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t))
 #+END_SRC
 
 *** Faces adjustments
@@ -462,55 +457,10 @@ I have become quite attached to the dracula theme..
 
 (setq doom-theme 'doom-dracula )
 
+(after! doom-themes
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t))
 #+END_SRC
-** MARGINALIA
-Marginalia is part of the Vertico stack, and is responsible for all the fancy faces and extra information.
-*** Files
-The doom module out of the box includes a number of customizations, but the below from Teco gives a much better experience for files.
-#+begin_src emacs-lisp
-(after! marginalia
-
-  (setq marginalia-censor-variables nil)
-
-  (defun +marginalia-annotate-file-colorful (cand)
-    "Annotate file CAND with its size, modification time and other attrs.
-These annotations are skipped for remote paths."
-    (if (or (marginalia--remote-p cand)
-            (when-let (win (active-minibuffer-window))
-              (with-current-buffer (window-buffer win)
-                (marginalia--remote-p (minibuffer-contents-no-properties)))))
-        (marginalia--fields ("*Remote*" :face 'marginalia-documentation))
-      (when-let (attrs (file-attributes (substitute-in-file-name
-                                         (marginalia--full-candidate cand))
-                                        'integer))
-        (marginalia--fields
-         ((marginalia--file-owner attrs)
-          :width 12 :face 'marginalia-file-owner)
-         ((marginalia--file-modes attrs))
-         ((+marginalia-file-size-colorful (file-attribute-size attrs))
-          :width 7)
-         ((+marginalia--time-colorful (file-attribute-modification-time attrs))
-          :width 12)))))
-
-  (defun +marginalia--time-colorful (time)
-    (let* ((seconds (float-time (time-subtract (current-time) time)))
-           (color (doom-blend
-                   (face-attribute 'marginalia-date :foreground nil t)
-                   (face-attribute 'marginalia-documentation :foreground nil t)
-                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
-      ;; 1 - log(3 + 1/(days + 1)) % grey
-      (propertize (marginalia--time time) 'face (list :foreground color))))
-
-  (defun +marginalia-file-size-colorful (size)
-    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
-           (color (if (< size-index 10000000) ; 10m
-                      (doom-blend 'orange 'green size-index)
-                    (doom-blend 'red 'orange (- size-index 1)))))
-      (propertize (file-size-human-readable size) 'face (list :foreground color))))
-
-  (setcdr (assq 'file marginalia-annotator-registry) '(+marginalia-annotate-file-colorful builtin none)))
-#+end_src
-
 ** MODE-LINE
 #+begin_src emacs-lisp
 (after! doom-modeline
@@ -552,9 +502,12 @@ These annotations are skipped for remote paths."
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 #+END_SRC
-** Add EVIL
+** ADD EVIL
+
 #+begin_src emacs-lisp
+
 (defun marty/set-patching-macro-registers ()
+ "Evil keyboard macros for patching,  running docker containers"
   (interactive)
   (evil-set-register ?e [?0 ?i ?* ?* ?* ?* ?* ?* ?  escape ?0])
   (evil-set-register ?b [?0 ?o escape ?0 ?i ?# ?+ ?e ?n ?d ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0] )
@@ -563,8 +516,6 @@ These annotations are skipped for remote paths."
 
 #+RESULTS:
 : marty/set-patching-macro-registers
-
-
 
 * ORG-MODE
 #+begin_src emacs-lisp
@@ -1045,7 +996,7 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
            :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
            :empty-lines-after 1)
           ("j" "Journal" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :if-new (file+olp+head "%<%Y-%m-%d>.org" ("Journal") )
            :empty-lines-after 1)))
 
   (setq org-roam-capture-templates
@@ -1059,10 +1010,11 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
            :unnarrowed t)
           ("p" "People" plain
            (file "~/.config/doom/templates/roam-templates/people-entry.org")
-           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n$+category: people\n#+filetags: people\n")
+           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: people\n")
            :unnarrowed t)
           )))
 #+END_SRC
+
 
 *** Roam Functions
 **** dailies graphics link and dates
@@ -1501,40 +1453,56 @@ after reference
 ;;;;; Open file Functions
 
 (defun mb/calendar ()
-  (interactive) (find-file (concat org-directory "Calendar.org")))
+  "Open My Calendar.org file"
+  (interactive)
+  (find-file (concat org-directory "Calendar.org")))
 
 (defun mb/0mobile ()
-  (interactive) (find-file (concat org-directory "0mobile.org")))
+  "Open my default inbox org file"
+  (interactive)
+  (find-file (concat org-directory "0mobile.org")))
 
 (defun mb/desktop ()
-  (interactive) (find-file (concat org-directory "desktop.org")))
+  "Open my desktop file for non inbox and better than scratch
+buffer stuff"
+  (interactive)
+  (find-file (concat org-directory "desktop.org")))
 
 (defun mb/contacts ()
-  (interactive) (find-file (concat org-directory "contacts.org")))
+  "Open my contacts.org file"
+  (interactive)
+  (find-file (concat org-directory "contacts.org")))
 
 (defun mb/Tasks ()
-  (interactive) (find-file (concat org-directory "Tasks.org")))
+  "OMG open tasks.org file"
+  (interactive)
+  (find-file (concat org-directory "Tasks.org")))
 
 (defun mb/Habits ()
-  (interactive) (find-file (concat org-directory "Habits.org")))
+  "Open habits org file"
+  (interactive)
+  (find-file (concat org-directory "Habits.org")))
 
 (defun mb/read-later ()
-  (interactive) (find-file (concat org-directory "read-later.org")))
+  "Open the read later file that is shared with qutebrowser
+function"
+  (interactive)
+  (find-file (concat org-directory "read-later.org")))
 
 (defun mb/Someday ()
-  (interactive) (find-file (concat org-directory "Someday.org")))
+  "Open someday.org file"
+  (interactive)
+  (find-file (concat org-directory "Someday.org")))
 
 (defun mb/TipJar ()
-  (interactive) (find-file (concat org-directory "TipJar/index.org")))
-
-(defun mb/base-keybinding ()
-  (interactive) (find-file "~/.config/doom/keybindings.el"))
-
-(defun mb/base-config ()
-  (interactive) (find-file "~/.config/doom/config.el"))
+  "Open tipjar index --- may be obsolete due to roam"
+  (interactive)
+  (find-file (concat org-directory "TipJar/index.org")))
 
 (defun mb/org-config ()
-  (interactive) (find-file "~/.config/doom/config.org"))
+  "Open config.org file"
+  (interactive)
+  (find-file "~/.config/doom/config.org"))
 #+END_SRC
 
 ** Mutt Functions
@@ -2437,6 +2405,8 @@ https://github.com/iyefrat/all-the-icons-completion
 ;;;;; Autoinsert yas expand
 
 (defun marty/autoinsert-yas-expand ()
+  "This is used by the autoinsert package to grab and expand
+templates into newly created files"
   (let ((template ( buffer-string )))
     (delete-region (point-min) (point-max))
     (yas-expand-snippet template)

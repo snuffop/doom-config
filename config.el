@@ -49,10 +49,6 @@
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
       doom-big-font (font-spec :family "Firacode Nerd Font" :size 24))
 
-(after! doom-themes
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t))
-
 ;; Faces
 (custom-set-faces!
   '(font-lock-comment-face :slant italic)
@@ -69,47 +65,9 @@
 
 (setq doom-theme 'doom-dracula )
 
-(after! marginalia
-
-  (setq marginalia-censor-variables nil)
-
-  (defun +marginalia-annotate-file-colorful (cand)
-    "Annotate file CAND with its size, modification time and other attrs.
-These annotations are skipped for remote paths."
-    (if (or (marginalia--remote-p cand)
-            (when-let (win (active-minibuffer-window))
-              (with-current-buffer (window-buffer win)
-                (marginalia--remote-p (minibuffer-contents-no-properties)))))
-        (marginalia--fields ("*Remote*" :face 'marginalia-documentation))
-      (when-let (attrs (file-attributes (substitute-in-file-name
-                                         (marginalia--full-candidate cand))
-                                        'integer))
-        (marginalia--fields
-         ((marginalia--file-owner attrs)
-          :width 12 :face 'marginalia-file-owner)
-         ((marginalia--file-modes attrs))
-         ((+marginalia-file-size-colorful (file-attribute-size attrs))
-          :width 7)
-         ((+marginalia--time-colorful (file-attribute-modification-time attrs))
-          :width 12)))))
-
-  (defun +marginalia--time-colorful (time)
-    (let* ((seconds (float-time (time-subtract (current-time) time)))
-           (color (doom-blend
-                   (face-attribute 'marginalia-date :foreground nil t)
-                   (face-attribute 'marginalia-documentation :foreground nil t)
-                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
-      ;; 1 - log(3 + 1/(days + 1)) % grey
-      (propertize (marginalia--time time) 'face (list :foreground color))))
-
-  (defun +marginalia-file-size-colorful (size)
-    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
-           (color (if (< size-index 10000000) ; 10m
-                      (doom-blend 'orange 'green size-index)
-                    (doom-blend 'red 'orange (- size-index 1)))))
-      (propertize (file-size-human-readable size) 'face (list :foreground color))))
-
-  (setcdr (assq 'file marginalia-annotator-registry) '(+marginalia-annotate-file-colorful builtin none)))
+(after! doom-themes
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t))
 
 (after! doom-modeline
   (setq all-the-icons-scale-factor 1.1
@@ -143,6 +101,7 @@ These annotations are skipped for remote paths."
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (defun marty/set-patching-macro-registers ()
+ "Evil keyboard macros for patching,  running docker containers"
   (interactive)
   (evil-set-register ?e [?0 ?i ?* ?* ?* ?* ?* ?* ?  escape ?0])
   (evil-set-register ?b [?0 ?o escape ?0 ?i ?# ?+ ?e ?n ?d ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0] )

@@ -375,7 +375,7 @@
            :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
            :empty-lines-after 1)
           ("j" "Journal" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :if-new (file+olp+head "%<%Y-%m-%d>.org" ("Journal") )
            :empty-lines-after 1)))
 
   (setq org-roam-capture-templates
@@ -389,7 +389,7 @@
            :unnarrowed t)
           ("p" "People" plain
            (file "~/.config/doom/templates/roam-templates/people-entry.org")
-           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n$+category: people\n#+filetags: people\n")
+           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: people\n")
            :unnarrowed t)
           )))
 

@@ -173,40 +173,56 @@ tasks."
 ;;;;; Open file Functions
 
 (defun mb/calendar ()
-  (interactive) (find-file (concat org-directory "Calendar.org")))
+  "Open My Calendar.org file"
+  (interactive)
+  (find-file (concat org-directory "Calendar.org")))
 
 (defun mb/0mobile ()
-  (interactive) (find-file (concat org-directory "0mobile.org")))
+  "Open my default inbox org file"
+  (interactive)
+  (find-file (concat org-directory "0mobile.org")))
 
 (defun mb/desktop ()
-  (interactive) (find-file (concat org-directory "desktop.org")))
+  "Open my desktop file for non inbox and better than scratch
+buffer stuff"
+  (interactive)
+  (find-file (concat org-directory "desktop.org")))
 
 (defun mb/contacts ()
-  (interactive) (find-file (concat org-directory "contacts.org")))
+  "Open my contacts.org file"
+  (interactive)
+  (find-file (concat org-directory "contacts.org")))
 
 (defun mb/Tasks ()
-  (interactive) (find-file (concat org-directory "Tasks.org")))
+  "OMG open tasks.org file"
+  (interactive)
+  (find-file (concat org-directory "Tasks.org")))
 
 (defun mb/Habits ()
-  (interactive) (find-file (concat org-directory "Habits.org")))
+  "Open habits org file"
+  (interactive)
+  (find-file (concat org-directory "Habits.org")))
 
 (defun mb/read-later ()
-  (interactive) (find-file (concat org-directory "read-later.org")))
+  "Open the read later file that is shared with qutebrowser
+function"
+  (interactive)
+  (find-file (concat org-directory "read-later.org")))
 
 (defun mb/Someday ()
-  (interactive) (find-file (concat org-directory "Someday.org")))
+  "Open someday.org file"
+  (interactive)
+  (find-file (concat org-directory "Someday.org")))
 
 (defun mb/TipJar ()
-  (interactive) (find-file (concat org-directory "TipJar/index.org")))
-
-(defun mb/base-keybinding ()
-  (interactive) (find-file "~/.config/doom/keybindings.el"))
-
-(defun mb/base-config ()
-  (interactive) (find-file "~/.config/doom/config.el"))
+  "Open tipjar index --- may be obsolete due to roam"
+  (interactive)
+  (find-file (concat org-directory "TipJar/index.org")))
 
 (defun mb/org-config ()
-  (interactive) (find-file "~/.config/doom/config.org"))
+  "Open config.org file"
+  (interactive)
+  (find-file "~/.config/doom/config.org"))
 
 ;;;;;; Open Mutt Message
 
@@ -344,6 +360,8 @@ This function is suitable for `mu4e-compose-mode-hook'."
 ;;;;; Autoinsert yas expand
 
 (defun marty/autoinsert-yas-expand ()
+  "This is used by the autoinsert package to grab and expand
+templates into newly created files"
   (let ((template ( buffer-string )))
     (delete-region (point-min) (point-max))
     (yas-expand-snippet template)

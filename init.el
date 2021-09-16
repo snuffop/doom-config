@@ -80,7 +80,7 @@
        (syntax           ; tasing you for every semicolon you forget
         +childframe)
        (spell
-        +aspell)         ; tasing you for misspelling mispelling
+        +enchant)         ; tasing you for misspelling mispelling
        grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -95,8 +95,7 @@
        (lookup              ; navigate your code and its documentation
         +dictionary
         +docsets)
-       (lsp
-        +eglot)
+       lsp
        (magit             ; a git porcelain for Emacs
         +forge)
        make              ; run make tasks from Emacs
@@ -197,7 +196,7 @@
 
        :app
        calendar
-       ;;emms
+       emms
        everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        ;;(rss +org)        ; emacs as an RSS reader
