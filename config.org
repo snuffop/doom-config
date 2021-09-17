@@ -53,6 +53,7 @@
   - [[#auto-insert][auto insert]]
   - [[#browse-kill-ring][browse kill ring]]
   - [[#dashboard][Dashboard]]
+  - [[#dired][DIRED]]
   - [[#elpher][Elpher]]
   - [[#i3-window-manager-config][I3 Window manager Config]]
   - [[#info-pages][Info Pages]]
@@ -2147,9 +2148,6 @@ Start the after sub section of the config
 #+BEGIN_SRC emacs-lisp :tangle keybindings.el
 ;;;; Global keybindings
 
-(define-key! dired-mode-map
-  (kbd "C-t") #'marty/dired-copy-filename-as-tsfile-link)
-
 (define-key! help-map
   "h"    #'helpful-at-point)
 
@@ -2476,6 +2474,85 @@ https://github.com/browse-kill-ring/browse-kill-ring
   (dashboard-setup-startup-hook)
   (dashboard-modify-heading-icons '((recents . "file-text")
 			      (bookmarks . "book"))))
+#+end_src
+
+** DIRED
+Dired is the file manager within Emacs.  Below, I setup keybindings for image previews (peep-dired).  Doom Emacs does not use 'SPC d' for any of its keybindings, so I've chosen the format of 'SPC d' plus 'key'.
+
+*** Code
+#+BEGIN_SRC emacs-lisp :tangle keybindings.el
+;;;; Dired keybindings
+
+;;;  TS file trigger keybinding
+(define-key! dired-mode-map
+  (kbd "C-t") #'marty/dired-copy-filename-as-tsfile-link)
+
+;;; Map Leader D
+;;;
+(map! :leader
+      (:prefix ("d" . "dired")
+       :desc "Open dired" "d"                   #'dired
+       :desc "Dired jump to current" "j"        #'dired-jump)
+      (:after dired
+       (:map dired-mode-map
+        :desc "Peep-dired image previews" "d p" #'peep-dired
+        :desc "Create TSfile link" "d t"        #'marty/dired-copy-filename-as-tsfile-link
+        :desc "Dired view file" "d v"           #'dired-view-file)))
+;; Make 'h' and 'l' go back and forward in dired. Much faster to navigate the directory structure!
+(evil-define-key 'normal dired-mode-map
+  (kbd "M-RET") 'dired-display-file
+  (kbd "h") 'dired-up-directory
+  (kbd "l") 'dired-view-file
+  (kbd "m") 'dired-mark
+  (kbd "t") 'dired-toggle-marks
+  (kbd "u") 'dired-unmark
+  (kbd "C") 'dired-do-copy
+  (kbd "D") 'dired-do-delete
+  (kbd "J") 'dired-goto-file
+  (kbd "M") 'dired-chmod
+  (kbd "O") 'dired-chown
+  (kbd "P") 'dired-do-print
+  (kbd "R") 'dired-rename
+  (kbd "T") 'dired-do-touch
+  (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
+  (kbd "+") 'dired-create-directory
+  (kbd "-") 'dired-up-directory
+  (kbd "% l") 'dired-downcase
+  (kbd "% u") 'dired-upcase
+  (kbd "; d") 'epa-dired-do-decrypt
+  (kbd "; e") 'epa-dired-do-encrypt)
+;; If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
+(evil-define-key 'normal peep-dired-mode-map
+  (kbd "j") 'peep-dired-next-file
+  (kbd "k") 'peep-dired-prev-file)
+#+end_src
+
+*** Dired Hooks and settings
+#+begin_src emacs-lisp
+;; Dired Settings
+(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+;; Get file icons in dired
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+;; With dired-open plugin, you can launch external programs for certain extensions
+;; For example, I set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
+(setq dired-open-extensions '(("gif" . "sxiv")
+                              ("jpg" . "sxiv")
+                              ("png" . "sxiv")
+                              ("mkv" . "mpv")
+                              ("mp4" . "mpv")))
+#+END_SRC
+*** Functions
+**** Org-mode Functions
+TSFiles link  from dired to store in org files for later reference
+
+#+begin_src emacs-lisp :tangle org-mode.el
+(after! org
+  (defun marty/dired-copy-filename-as-tsfile-link ()
+    "Copy current file name with its basename as [[tsfile:<basename>]] custom org-mode link."
+    (interactive)
+    (dired-copy-filename-as-kill) ;; current file name to kill ring
+    (let* ((filename (current-kill 0))) ;; get topmost kill ring element
+      (kill-new (concat "[[tsfile:" filename "]]"))))) ;; write back new/modified kill ring element
 #+end_src
 
 

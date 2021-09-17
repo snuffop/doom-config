@@ -469,3 +469,11 @@
     (kill-new (concat "[[tsfile:" filename "]]")) ;; write back new/modified kill ring element
     )
   )
+
+(after! org
+  (defun marty/dired-copy-filename-as-tsfile-link ()
+    "Copy current file name with its basename as [[tsfile:<basename>]] custom org-mode link."
+    (interactive)
+    (dired-copy-filename-as-kill) ;; current file name to kill ring
+    (let* ((filename (current-kill 0))) ;; get topmost kill ring element
+      (kill-new (concat "[[tsfile:" filename "]]"))))) ;; write back new/modified kill ring element
