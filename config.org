@@ -70,8 +70,6 @@
   - [[#treemacs][treemacs]]
   - [[#very-large-file][very large file]]
   - [[#wakatime][wakatime]]
-- [[#temp][TEMP]]
-  - [[#treesitter][Treesitter]]
 - [[#custom][CUSTOM]]
 
 * FILES
@@ -223,8 +221,8 @@ org-mode.el  Header file for the org-mode  config
        :checkers
        (syntax           ; tasing you for every semicolon you forget
         +childframe)
-       (spell
-        +enchant)         ; tasing you for misspelling mispelling
+       (spell          ; tasing you for misspelling mispelling
+        +enchant)
        grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -2982,55 +2980,6 @@ Built in
 
 #+RESULTS:
 : t
-
-* TEMP
-** Treesitter
-*** Package
-#+begin_src emacs-lisp :tangle packages.el
-
-(package! tree-sitter
-  :pin "4d9871d23999fe5f8de821e23c9ec576df2b2738")
-
-(package! tree-sitter-langs
-  :pin "fa47b55f7bd11bd2b17ab48deb03ed23000bb974")
-
-(when (featurep! :editor evil +everywhere)
-  (package! evil-textobj-tree-sitter
-    :pin "eedc1f54611e4403ea228b33056388a8539a2b3e"))
-#+end_src
-*** Code
-#+begin_src emacs-lisp
-(use-package! tree-sitter
-  :when (bound-and-true-p module-file-suffix)
-  :hook (prog-mode . turn-on-tree-sitter-mode)
-  :hook (tree-sitter-after-on . tree-sitter-hl-mode)
-  :config
-  (require 'tree-sitter-langs)
-
-  ;; This makes every node a link to a section of code
-  (setq tree-sitter-debug-jump-buttons t
-        ;; and this highlights the entire sub tree in your code
-        tree-sitter-debug-highlight-jump-region t))
-
-(when (featurep! :editor evil +everywhere)
-  (use-package! evil-textobj-tree-sitter
-    :after tree-sitter
-    :config
-    (map!
-     :textobj "f" nil nil
-     :textobj "f" (evil-textobj-tree-sitter-get-textobj "function.inner") (evil-textobj-tree-sitter-get-textobj "function.outer") ;; redef
-
-     :textobj "C" (evil-textobj-tree-sitter-get-textobj "class.inner") (evil-textobj-tree-sitter-get-textobj "class.outer")
-
-     :textobj "c" nil nil
-     :textobj "c" nil (evil-textobj-tree-sitter-get-textobj "comment.outer")
-
-     :textobj "i" nil nil
-     :textobj "i" (evil-textobj-tree-sitter-get-textobj "conditional.inner") (evil-textobj-tree-sitter-get-textobj "conditional.outer")
-
-     :textobj "l" nil nil
-     :textobj "l" (evil-textobj-tree-sitter-get-textobj "loop.inner") (evil-textobj-tree-sitter-get-textobj "loop.outer"))))
-#+end_src
 
 * CUSTOM
 Keep this at the end of the file to allow for override of any settings that are
