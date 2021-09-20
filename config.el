@@ -44,10 +44,10 @@
 
 ;; Fonts
 
-(setq doom-font (font-spec :family "FiraCode Nerd Font" :size 15)
+(setq doom-font (font-spec :family "FiraCode Nerd Font Mono" :size 15)
       doom-unicode-font (font-spec :family "Symbola" :size 15)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
-      doom-big-font (font-spec :family "Firacode Nerd Font" :size 24))
+      doom-big-font (font-spec :family "FiraCode Nerd Font Mono" :size 24))
 
 ;; Faces
 (custom-set-faces!
@@ -56,8 +56,8 @@
 (setq global-prettify-symbols-mode t)
 
 (custom-set-faces!
-  '(mode-line :family "DejaVu Sans Mono" :height 100)
-  '(mode-line-inactive :family "DejaVu Sans Mono" :height 100))
+  '(mode-line :family "FiraCode Nerd Font Mono" :height 100)
+  '(mode-line-inactive :family "FiraCode Nerd Font Mono" :height 100))
 
 (add-hook! 'org-mode-hook #'mixed-pitch-mode)
 
