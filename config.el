@@ -23,6 +23,18 @@
 ;; Remove the s/S from evil snipe
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
+;; Git projects should be marked as projects in top-down fashion,
+;; (after! projectile
+  ;; (setq projectile-project-root-files-bottom-up
+  ;;       (delete ".git" projectile-project-root-files-bottom-up))
+  ;; (add-to-list 'projectile-project-root-files ".git")
+
+  (setq projectile-project-root-files-functions
+        '(projectile-root-local
+          projectile-root-top-down     ; First look for projects in top-down order
+          projectile-root-bottom-up)) ; Then in bottom-up order
+;;)
+
 ;;; World clock
   (setq zoneinfo-style-world-list
         '(("America/Los_Angeles" "Los Angeles")
@@ -83,10 +95,9 @@
 
 ;;;; Spelling
 
-(after! spell-fu
-  (setq spell-fu-idle-delay 0.5)
-  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
-  )
+(after! flyspell
+  (setq flyspell-lazy-idle-seconds 2)
+  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir)))
 
 ;;;; Line Numbers
 
@@ -412,11 +423,7 @@
 ;;;;; Salt Mode
 
 (use-package! salt-mode
-  :defer t
-  :config
-  (add-hook 'salt-mode-hook
-            (lambda ()
-              (flyspell-mode 1))))
+  :defer t)
 
 ;;;;; Systemd Mode
 

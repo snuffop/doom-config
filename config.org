@@ -196,8 +196,7 @@ org-mode.el  Header file for the org-mode  config
        lispy             ; vim for lisp, for people who don't like vim
        ;;multiple-cursors  ; editing in many places at once
        ;;objed             ; text object editing for the innocent
-       (parinfer          ; turn lisp into python, sort of
-        +rust)
+       ;;parinfer          ; turn lisp into python, sort of
        ;;rotate-text       ; cycle region at point between text candidates
        snippets          ; my elves. They type so I don't have to
        word-wrap         ; soft wrapping with language-aware indent
@@ -222,7 +221,7 @@ org-mode.el  Header file for the org-mode  config
        (syntax           ; tasing you for every semicolon you forget
         +childframe)
        (spell          ; tasing you for misspelling mispelling
-        +enchant)
+        +flyspell)
        grammar           ; tasing grammar mistake every you make
 
        :tools
@@ -279,7 +278,7 @@ org-mode.el  Header file for the org-mode  config
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
        (go                 ; the hipster dialect
-         +lsp)
+        +lsp)
        (haskell +dante)  ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
@@ -375,7 +374,21 @@ Set Default variables  and hooks set globally
 ;; Remove the s/S from evil snipe
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
+;; Git projects should be marked as projects in top-down fashion,
+;; (after! projectile
+  ;; (setq projectile-project-root-files-bottom-up
+  ;;       (delete ".git" projectile-project-root-files-bottom-up))
+  ;; (add-to-list 'projectile-project-root-files ".git")
+
+  (setq projectile-project-root-files-functions
+        '(projectile-root-local
+          projectile-root-top-down     ; First look for projects in top-down order
+          projectile-root-bottom-up)) ; Then in bottom-up order
+;;)
 #+END_SRC
+
+#+RESULTS:
+| projectile-root-local | projectile-root-top-down | projectile-root-bottom-up |
 
 ** TIME & DATE
 *** World Clock
@@ -478,11 +491,9 @@ I have become quite attached to the dracula theme..
 #+BEGIN_SRC emacs-lisp
 ;;;; Spelling
 
-(after! spell-fu
-  (setq spell-fu-idle-delay 0.5)
-  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
-  )
-
+(after! flyspell
+  (setq flyspell-lazy-idle-seconds 2)
+  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir)))
 #+END_SRC
 
 ** LINE NUMBERS
@@ -529,9 +540,10 @@ I have become quite attached to the dracula theme..
 ** Packages
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 (package! org-projectile)
+
 #+END_SRC
 
-** Org-mode Config 
+** Org-mode Config
 *** Mail/Mutt
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
 ;; Mail/Mutt
@@ -2707,11 +2719,7 @@ Taken from [[https://github.com/elken/.doom.d#keybindings][elken's Config]] with
 ;;;;; Salt Mode
 
 (use-package! salt-mode
-  :defer t
-  :config
-  (add-hook 'salt-mode-hook
-            (lambda ()
-              (flyspell-mode 1))))
+  :defer t)
 #+END_SRC
 ** systemd mode
 *** package
