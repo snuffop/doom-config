@@ -1,3 +1,0 @@
-[submodule "modules/private/spacemacs"]
-	path = modules/private/spacemacs
-	url = git@github.com:snuffop/spacemacs_module_for_doom.git

@@ -23,17 +23,9 @@
 ;; Remove the s/S from evil snipe
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
-;; Git projects should be marked as projects in top-down fashion,
 ;; (after! projectile
-  ;; (setq projectile-project-root-files-bottom-up
-  ;;       (delete ".git" projectile-project-root-files-bottom-up))
-  ;; (add-to-list 'projectile-project-root-files ".git")
-
-  (setq projectile-project-root-files-functions
-        '(projectile-root-local
-          projectile-root-top-down     ; First look for projects in top-down order
-          projectile-root-bottom-up)) ; Then in bottom-up order
-;;)
+;;   (setq projectile-project-search-path '("~/Source"))
+;;   (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
 
 ;;; World clock
   (setq zoneinfo-style-world-list
@@ -435,6 +427,9 @@
       :prefix ("h" . "Help")
       "d" #'systemd-doc-directives
       "o" #'systemd-doc-open)
+
+(use-package! telega
+  :commands (telega))
 
 ;;;;; Counsel Tramp
 

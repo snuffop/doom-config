@@ -74,6 +74,11 @@
 
 (package! systemd)
 
+(package! telega                        :recipe (:host github
+                                                 :repo "zevlg/telega.el"
+                                                 :branch "master"
+                                                 :files (:defaults "contrib" "etc" "server" "Makefile")))
+
 (package! counsel-tramp)
 
 (package! vlf                           :recipe (:host github

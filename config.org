@@ -66,6 +66,7 @@
   - [[#paperless][paperless]]
   - [[#salt-stack][salt stack]]
   - [[#systemd-mode][systemd mode]]
+  - [[#telga][Telga]]
   - [[#tramp][tramp]]
   - [[#treemacs][treemacs]]
   - [[#very-large-file][very large file]]
@@ -374,21 +375,13 @@ Set Default variables  and hooks set globally
 ;; Remove the s/S from evil snipe
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 
-;; Git projects should be marked as projects in top-down fashion,
 ;; (after! projectile
-  ;; (setq projectile-project-root-files-bottom-up
-  ;;       (delete ".git" projectile-project-root-files-bottom-up))
-  ;; (add-to-list 'projectile-project-root-files ".git")
-
-  (setq projectile-project-root-files-functions
-        '(projectile-root-local
-          projectile-root-top-down     ; First look for projects in top-down order
-          projectile-root-bottom-up)) ; Then in bottom-up order
-;;)
+;;   (setq projectile-project-search-path '("~/Source"))
+;;   (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
 #+END_SRC
 
 #+RESULTS:
-| projectile-root-local | projectile-root-top-down | projectile-root-bottom-up |
+| .ccls-root | .projectile | .project |
 
 ** TIME & DATE
 *** World Clock
@@ -1023,7 +1016,6 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
            :unnarrowed t)
           )))
 #+END_SRC
-
 
 *** Roam Functions
 **** dailies graphics link and dates
@@ -2559,7 +2551,6 @@ TSFiles link  from dired to store in org files for later reference
       (kill-new (concat "[[tsfile:" filename "]]"))))) ;; write back new/modified kill ring element
 #+end_src
 
-
 ** Elpher
 Elpher aims to provide a full-featured combination gopher and gemini
 client for GNU Emacs.  https://github.com/emacsmirror/elpher
@@ -2741,6 +2732,20 @@ Taken from [[https://github.com/elken/.doom.d#keybindings][elken's Config]] with
       "o" #'systemd-doc-open)
 
 #+END_SRC
+** Telga
+*** package
+#+begin_src emacs-lisp :tangle packages.el
+(package! telega                        :recipe (:host github
+                                                 :repo "zevlg/telega.el"
+                                                 :branch "master"
+                                                 :files (:defaults "contrib" "etc" "server" "Makefile")))
+#+end_src
+*** Code
+#+begin_src emacs-lisp
+(use-package! telega
+  :commands (telega))
+#+end_src
+
 ** tramp
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el
