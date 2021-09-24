@@ -5,9 +5,15 @@
 
 * TABLE OF CONTENTS :toc:
 - [[#files][FILES]]
+  - [[#base][Base]]
+  - [[#functionsel][functions.el]]
+  - [[#org-modeel][org-mode.el]]
+  - [[#packagesel][packages.el]]
+  - [[#mu4eel][mu4e.el]]
+  - [[#keybindingsel][keybindings.el]]
   - [[#initel][init.el]]
 - [[#global-settings][GLOBAL SETTINGS]]
-  - [[#base][BASE]]
+  - [[#base-1][BASE]]
   - [[#time--date][TIME & DATE]]
   - [[#company-settings][COMPANY SETTINGS]]
   - [[#fonts-and-faces][FONTS and FACES]]
@@ -66,7 +72,6 @@
   - [[#paperless][paperless]]
   - [[#salt-stack][salt stack]]
   - [[#systemd-mode][systemd mode]]
-  - [[#telga][Telga]]
   - [[#tramp][tramp]]
   - [[#treemacs][treemacs]]
   - [[#very-large-file][very large file]]
@@ -74,7 +79,19 @@
 - [[#custom][CUSTOM]]
 
 * FILES
-*** functions.el
+** Base
+#+begin_src emacs-lisp
+;;; config.el --- Summary -*- lexical-binding: t; -*-
+;;
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;;; Code
+#+end_src
+
+** functions.el
 Functions.el   pretty self explanatory
 
 #+BEGIN_SRC emacs-lisp :tangle functions.el
@@ -87,7 +104,7 @@ Functions.el   pretty self explanatory
 ;;
 ;;;; Functions
 #+END_SRC
-*** org-mode.el
+** org-mode.el
 org-mode.el  Header file for the org-mode  config
 
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
@@ -102,7 +119,7 @@ org-mode.el  Header file for the org-mode  config
 
 #+END_SRC
 
-*** packages.el
+** packages.el
 #+BEGIN_SRC emacs-lisp :tangle packages.el
 ;;; packages.el --- Summary -*- lexical-binding: t; -*-
 ;;
@@ -114,7 +131,7 @@ org-mode.el  Header file for the org-mode  config
 ;; Packages
 
 #+END_SRC
-*** mu4e.el
+** mu4e.el
 #+BEGIN_SRC emacs-lisp :tangle mu4e.el
 ;;; mu4e.el --- Summary -*- lexical-binding: t; -*-
 ;;
@@ -126,7 +143,7 @@ org-mode.el  Header file for the org-mode  config
 ;; Code:
 
 #+END_SRC
-*** keybindings.el
+** keybindings.el
 #+BEGIN_SRC emacs-lisp :tangle keybindings.el
 ;;; $DOOMDIR/keybindings.el --- Summary -*- lexical-binding: t; -*-
 ;;
@@ -310,7 +327,8 @@ org-mode.el  Header file for the org-mode  config
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python            ; beautiful is better than ugly
-        +lsp)
+        +lsp
+        +pyright)
        qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
@@ -765,6 +783,7 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
                       ("@Personal"  . ?P)
                       ("@Rackspace" . ?R)
                       ("@Reading"   . ?r)
+                      ("@Shopping"  . ?s)
                       ("@errand"    . ?e)
                       ("@home"      . ?h)
                       ("@inside"    . ?i)
@@ -784,6 +803,7 @@ Found this nice code bit  at the [[https://org-roam.discourse.group/t/refile-ent
                       ("WAITING"    . ?w)
                       ("WORK"       . ?W))))
 #+END_SRC
+
 
 *** Templates
 #+BEGIN_SRC emacs-lisp :tangle org-mode.el
@@ -2732,20 +2752,6 @@ Taken from [[https://github.com/elken/.doom.d#keybindings][elken's Config]] with
       "o" #'systemd-doc-open)
 
 #+END_SRC
-** Telga
-*** package
-#+begin_src emacs-lisp :tangle packages.el
-(package! telega                        :recipe (:host github
-                                                 :repo "zevlg/telega.el"
-                                                 :branch "master"
-                                                 :files (:defaults "contrib" "etc" "server" "Makefile")))
-#+end_src
-*** Code
-#+begin_src emacs-lisp
-(use-package! telega
-  :commands (telega))
-#+end_src
-
 ** tramp
 *** package
 #+BEGIN_SRC emacs-lisp :tangle packages.el

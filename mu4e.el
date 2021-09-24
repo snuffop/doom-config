@@ -5,11 +5,11 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Code:
+;;; Code:
 
 (after! mu4e
 
-;; Header Actions
+;;;; Header Actions
 
 (add-to-list 'mu4e-headers-actions
              '("follow up" . marty/capture-mail-follow-up) t)
@@ -22,11 +22,11 @@
 
 (add-to-list 'mu4e-view-actions '("ytag message" . mu4e-action-retag-message) t)
 
-;; Header
+;;;; Header
 
 (setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
 
-;; Info
+;;;; Info
 
 (add-to-list 'mu4e-header-info-custom
              '(:full-mailing-list .
@@ -44,7 +44,7 @@
                  :function (lambda (msg)
                              (or (mu4e-message-field msg :X-Label) "")))))
 
-;; fields
+;;;; fields
 
 (setq mu4e-headers-fields '(
                             (:flags . 7)
@@ -71,7 +71,7 @@
                          :decryption
                          :attachments))
 
-;; (config)
+;;;; (config)
 
 (setq mu4e-action-tags-header "X-Label")
 (setq mu4e-attachment-dir "/home/marty/Downloads/Mail")
@@ -80,19 +80,19 @@
 (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
 (setq mu4e-update-interval  300)
 
-;; Set from Context  these are default
+;;;;; Set from Context  these are default
 
 (setq mu4e-drafts-folder nil)                      ;; set from context
 (setq mu4e-get-mail-command nil)                   ;; set from context
 (setq mu4e-sent-folder nil)                        ;; set from context
 (setq mu4e-trash-folder nil)                       ;; set from context
 
-;; PGP
+;;;;; PGP
 
 (setq mml-secure-openpgp-encrypt-to-self t)
 (setq mml-secure-openpgp-sign-with-sender t)
 
-;; Send Mail
+;;;;; Send Mail
 
 (setq message-send-mail-function 'message-send-mail-with-sendmail)
 (setq message-sendmail-extra-arguments '("--read-envelope-from"))
@@ -101,13 +101,48 @@
 (setq send-mail-function #'smtpmail-send-it)
 (setq sendmail-program "/usr/bin/msmtp")
 
-;; VIEW Email
+;;;;; VIEW Email
 
 (setq mu4e-headers-include-related t)
 (setq mu4e-headers-precise-alignment t)
 (setq mu4e-thread-folding-default-view 'unfolded)
 
-;; bookmarks
+
+;;;;; Compose
+
+(setq mu4e-compose-dont-reply-to-self t)
+(setq mu4e-compose-signature nil)        ;; Pulled from Contexts so Null as default
+
+;;;;; compose mode hook
+
+(add-hook 'mu4e-compose-mode-hook
+          #'(lambda ()
+              "My Setting for Composing Messages"
+              (save-excursion (message-add-header "X-Mailer: mu4e/Linux"))
+              (save-excursion (message-add-header "X-PGP-KEY-Fingerprint: 7F6C A60C 06C2 4811 FA1C A2BC 2EBC 5E32 FEE3 0AD4"))
+              (save-excursion (message-add-header "X-PGP-Key-ID: 0x090F6CEA"))
+              (save-excursion (message-add-header "X-PGP-Key: https://keybase.io/mbuchaus/key.asc "))
+              (marty-mu4e/mu4e-compose-maybe-signed-and-crypted)
+              (set-fill-column 72)
+              (turn-on-auto-fill)))
+
+
+(setq mu4e-compose-hidden-headers '("^Face:"
+                                    "^X-Face:"
+                                    "^Openpgp:"
+                                    "^X-Draft-From:"
+                                    "^X-Mailer:"
+                                    "^User-agent:"))
+
+;;;;; Encryption
+
+(setq epg-user-id "0x090F6CEA")
+(setq mu4e-decryption-policy t)
+(setq mu4e-compose-crypto-reply-plain-policy 'sign)
+(setq mml-secure-openpgp-encrypt-to-self t)
+(setq mml-secure-openpgp-sign-with-sender  t)
+
+;;;; bookmarks
 
 (setq mu4e-bookmarks
       '(
@@ -143,48 +178,13 @@
          :query "flag:attach"
          :key ?A)
         ))
-
-;; Compose
-
-(setq mu4e-compose-dont-reply-to-self t)
-(setq mu4e-compose-signature nil)        ;; Pulled from Contexts so Null as default
-
-;; compose mode hook
-
-(add-hook 'mu4e-compose-mode-hook
-          #'(lambda ()
-              "My Setting for Composing Messages"
-              (save-excursion (message-add-header "X-Mailer: mu4e/Linux"))
-              (save-excursion (message-add-header "X-PGP-KEY-Fingerprint: 7F6C A60C 06C2 4811 FA1C A2BC 2EBC 5E32 FEE3 0AD4"))
-              (save-excursion (message-add-header "X-PGP-Key-ID: 0x090F6CEA"))
-              (save-excursion (message-add-header "X-PGP-Key: https://keybase.io/mbuchaus/key.asc "))
-              (marty-mu4e/mu4e-compose-maybe-signed-and-crypted)
-              (set-fill-column 72)
-              (turn-on-auto-fill)))
-
-
-(setq mu4e-compose-hidden-headers '("^Face:"
-                                    "^X-Face:"
-                                    "^Openpgp:"
-                                    "^X-Draft-From:"
-                                    "^X-Mailer:"
-                                    "^User-agent:"))
-
-;; Encryption
-
-(setq epg-user-id "0x090F6CEA")
-(setq mu4e-decryption-policy t)
-(setq mu4e-compose-crypto-reply-plain-policy 'sign)
-(setq mml-secure-openpgp-encrypt-to-self t)
-(setq mml-secure-openpgp-sign-with-sender  t)
-
-;; Contexts
+;;;; Contexts
 
 (setq mu4e-compose-context-policy 'ask-if-none)
 (setq mu4e-context-policy 'ask-if-none)
 (setq mu4e-contexts
       `(
-;;; Dabuke
+;;;;; Dabuke
         ,(make-mu4e-context
           :name "Dabuke"
           :enter-func (lambda () (mu4e-message "Switch to the Dabuke context"))
@@ -227,7 +227,7 @@
                                            "Meet on the level Act by the Plumb and Part upon the Square  AF&AM 832\n"
                                            "https://snuffy.org\n"))))
 
-;;; Lets Earn Money
+;;;;; Lets Earn Money
         ,(make-mu4e-context
           :name "letsEarnMoney"
           :enter-func (lambda () (mu4e-message "Switch to the letsEarnMoney context"))
@@ -256,7 +256,7 @@
                                            "William Marty Buchaus Jr\n"
                                            "https://www.letsearnmoney.com\n"))))
 
-;;; OFMasons
+;;;;; OFMasons
         ,(make-mu4e-context
           :name "OFMasons"
           :enter-func (lambda () (mu4e-message "Switch to the OFMasons context"))
@@ -286,7 +286,7 @@
                                            "Meet on the level Act by the Plumb and Part upon the Square  AF&AM 832\n"
                                            "https://www.ofmasons.com\n"))))
 
-;;; Radhits
+;;;;; Radhits
         ,(make-mu4e-context
           :name "TRadhits"
           :enter-func (lambda () (mu4e-message "Switch to the Rad Hits context"))
@@ -309,7 +309,7 @@
                                            "Meet on the Level Act by the Plumb and Part upon the Square\n"
                                            "mobile: 210-763-4052\n"))))
 
-;;; RedEarth Group Inc
+;;;;; RedEarth Group Inc
         ,(make-mu4e-context
           :name "ERedEarthgroupinc"
           :enter-func (lambda () (mu4e-message "Switch to the Red Earth Group context"))
@@ -336,7 +336,7 @@
                                            "Meet on the Level Act by the Plumb and Part upon the Square\n"
                                            "mobile: 210-763-4052\n"))))
 
-        ;; RE Construction FL
+;;;;; RE Construction FL
         ,(make-mu4e-context
           :name "FREconstructionfl"
           :enter-func (lambda () (mu4e-message "Switch to the Red Earth Construction FL context"))
@@ -363,7 +363,7 @@
                                            "Meet on the Level Act by the Plumb and Part upon the Square\n"
                                            "mobile: 210-763-4052\n"))))
 
-        ;; Google
+;;;;; Google
         ,(make-mu4e-context
           :name "Gmail"
           :enter-func (lambda () (mu4e-message "Switch to the Gmail context"))
@@ -390,7 +390,7 @@
                                            "Marty Buchaus\n"
                                            "Meet on the Level Act by the Plumb and Part upon the Square\n"))))
 
-        ;; Real House Hunters
+;;;;; Real House Hunters
         ,(make-mu4e-context
           :name "HH"
           :enter-func (lambda () (mu4e-message "Switch to the RHH context"))
@@ -414,5 +414,17 @@
                                            "Real House Hunters / Jazney Inc\n"))))
         ) ;; End Lists
       ) ;; End Contexts
-
+;;;; END of after mu4e
 ) ;;end after mu4e
+;;; Modules
+;;;; mu4e-column-faces
+
+(use-package! mu4e-column-faces
+  :after mu4e
+  :config (mu4e-column-faces-mode))
+
+;;;; mu4e-marker-icons
+
+(use-package! mu4e-marker-icons
+  :after mu4e
+  :init (mu4e-marker-icons-mode 1))

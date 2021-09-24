@@ -7,17 +7,8 @@
 ;;
 ;;; Code:
 
-(map! (:map org-mode-map
-       :localleader
-       :prefix "m"
-       "a" #'marty/org-roam-move-todo-to-today
-       "b" #'marty/org-roam-capture-inbox
-       "i" #'org-roam-node-insert-immediate
-       "p" #'marty/org-roam-find-project))
+(setq doom-localleader-key ",")
 
-(map! :leader
-      :prefix "n"
-      "b" #'marty/org-roam-capture-inbox)
 
 ;;;; Global keybindings
 
@@ -118,7 +109,14 @@
         :desc "Switch to final workspace" "0"   #'+workspace/switch-to-final))
       )
 
-;;;;; <leader> o --- open
+;;;;;; <leader n --- notes
+
+(map! :leader
+      :prefix "n"
+      "b" #'marty/org-roam-capture-inbox)
+
+;;;;;; <leader> o --- open
+
 (map! :leader
       :prefix "o"
       (:prefix-map ("m" . "MY")
@@ -139,61 +137,67 @@
         "C"  #' mb/calendar
         "s"  #' org-caldav-sync)))
 
-;;;;; Mode Maps
-;;;;;; Override org mode map
+
+
+;;;; Mode Maps
+;;;;; Override org mode map
 
 (map! :after org
       :map org-mode-map
       :localleader
       :prefix "m"
+      "a"  #'marty/org-roam-move-todo-to-today
+      "b"  #'marty/org-roam-capture-inbox
+      "i"  #'org-roam-node-insert-immediate
       "j"  #'org-roam-dailies-capture-today
+      "p"  #'marty/org-roam-find-project
       "s"  #'org-roam-db-sync
       :prefix "md"
       "p"  #'org-roam-dailies-goto-previous-note
       "n"  #'org-roam-dailies-goto-next-note
       )
 
-;;;; Dired keybindings
+ ;;;; Dired keybindings
+ ;;;;;  TS file trigger keybinding
+;; (define-key! dired-mode-map
+;;   (kbd "C-t") #'marty/dired-copy-filename-as-tsfile-link)
 
-;;;  TS file trigger keybinding
-(define-key! dired-mode-map
-  (kbd "C-t") #'marty/dired-copy-filename-as-tsfile-link)
+ ;;;;; Map Leader D
 
-;;; Map Leader D
-;;;
-(map! :leader
-      (:prefix ("d" . "dired")
-       :desc "Open dired" "d"                   #'dired
-       :desc "Dired jump to current" "j"        #'dired-jump)
-      (:after dired
-       (:map dired-mode-map
-        :desc "Peep-dired image previews" "d p" #'peep-dired
-        :desc "Create TSfile link" "d t"        #'marty/dired-copy-filename-as-tsfile-link
-        :desc "Dired view file" "d v"           #'dired-view-file)))
+;; (map! :leader
+;;       (:prefix ("d" . "dired")
+;;        :desc "Open dired" "d"                   #'dired
+;;        :desc "Dired jump to current" "j"        #'dired-jump)
+;;       (:after dired
+;;        (:map dired-mode-map
+;;         :desc "Peep-dired image previews" "d p" #'peep-dired
+;;         :desc "Create TSfile link" "d t"        #'marty/dired-copy-filename-as-tsfile-link
+;; :desc "Dired view file" "d v"           #'dired-view-file)))
 ;; Make 'h' and 'l' go back and forward in dired. Much faster to navigate the directory structure!
-(evil-define-key 'normal dired-mode-map
-  (kbd "M-RET") 'dired-display-file
-  (kbd "h") 'dired-up-directory
-  (kbd "l") 'dired-view-file
-  (kbd "m") 'dired-mark
-  (kbd "t") 'dired-toggle-marks
-  (kbd "u") 'dired-unmark
-  (kbd "C") 'dired-do-copy
-  (kbd "D") 'dired-do-delete
-  (kbd "J") 'dired-goto-file
-  (kbd "M") 'dired-chmod
-  (kbd "O") 'dired-chown
-  (kbd "P") 'dired-do-print
-  (kbd "R") 'dired-rename
-  (kbd "T") 'dired-do-touch
-  (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
-  (kbd "+") 'dired-create-directory
-  (kbd "-") 'dired-up-directory
-  (kbd "% l") 'dired-downcase
-  (kbd "% u") 'dired-upcase
-  (kbd "; d") 'epa-dired-do-decrypt
-  (kbd "; e") 'epa-dired-do-encrypt)
-;; If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
-(evil-define-key 'normal peep-dired-mode-map
-  (kbd "j") 'peep-dired-next-file
-  (kbd "k") 'peep-dired-prev-file)
+;;
+;; (evil-define-key 'normal dired-mode-map
+;;   (kbd "M-RET") 'dired-display-file
+;;   (kbd "h") 'dired-up-directory
+;;   (kbd "l") 'dired-view-file
+;;   (kbd "m") 'dired-mark
+;;   (kbd "t") 'dired-toggle-marks
+;;   (kbd "u") 'dired-unmark
+;;   (kbd "C") 'dired-do-copy
+;;   (kbd "D") 'dired-do-delete
+;;   (kbd "J") 'dired-goto-file
+;;   (kbd "M") 'dired-chmod
+;;   (kbd "O") 'dired-chown
+;;   (kbd "P") 'dired-do-print
+;;   (kbd "R") 'dired-rename
+;;   (kbd "T") 'dired-do-touch
+;;   (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
+;;   (kbd "+") 'dired-create-directory
+;;   (kbd "-") 'dired-up-directory
+;;   (kbd "% l") 'dired-downcase
+;;   (kbd "% u") 'dired-upcase
+;;   (kbd "; d") 'epa-dired-do-decrypt
+;;   (kbd "; e") 'epa-dired-do-encrypt)
+;; ;; If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
+;; (evil-define-key 'normal peep-dired-mode-map
+;;   (kbd "j") 'peep-dired-next-file
+;;  (kbd "k") 'peep-dired-prev-file)
