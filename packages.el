@@ -7,6 +7,8 @@
 ;;
 ;;; Packages
 
+(package! evil-snipe :disable t)
+
 (package! aggressive-indent)
 (package! alert)
 (package! all-the-icons-completion)
@@ -44,6 +46,9 @@
                                                  :files ("*.el" "filters" "preprocessors")))
 (package! org-pretty-table              :recipe (:host github
                                                  :repo "Fuco1/org-pretty-table"))
+(package! mu4e-thread-folding           :recipe (:host github
+                                                 :repo "rougier/mu4e-thread-folding"
+                                                 :files ("*.el") ))
 (package! org-roam-ui                   :recipe (:host github
                                                  :repo "org-roam/org-roam-ui"
                                                  :files ("*.el" "out")))
@@ -56,4 +61,3 @@
 (package! vlf                           :recipe (:host github
                                                  :repo "m00natic/vlfi"
                                                  :files ("*.el") ))
-

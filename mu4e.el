@@ -44,16 +44,21 @@
                  :function (lambda (msg)
                              (or (mu4e-message-field msg :X-Label) "")))))
 
-;;;; fields
+(add-to-list 'mu4e-header-info-custom
+             '(:empty . (:name "Empty"
+                         :shortname ""
+                         :function (lambda (msg) "  "))))
 
+;;;; fields
 (setq mu4e-headers-fields '(
+                            (:empty . 2)
+                            (:human-date . 18)    ;; alternatively, use :human-date
                             (:flags . 7)
-                            (:date . 18)    ;; alternatively, use :human-date
+                            (:size . 10)
                             (:from-or-to . 40)
                             (:full-mailing-list . 40)
                             (:tags . 15)           ;;  X-label
-                            (:size . 10)
-                            (:thread-subject)))    ;;  :subject or thread-subject
+                            (:subject . nil)))    ;;  :subject or thread-subject
 
 (setq mu4e-view-fields '(:date
                          :from
@@ -428,3 +433,51 @@
 (use-package! mu4e-marker-icons
   :after mu4e
   :init (mu4e-marker-icons-mode 1))
+
+;;;; mu4e-thread-folding
+
+(use-package! mu4e-thread-folding
+  :after mu4e
+  :config
+  (setq mu4e-thread-folding-load 'folded)
+  (define-key mu4e-headers-mode-map (kbd "<tab>")     'mu4e-headers-toggle-at-point)
+  (define-key mu4e-headers-mode-map (kbd "<left>")    'mu4e-headers-fold-at-point)
+  (define-key mu4e-headers-mode-map (kbd "<S-left>")  'mu4e-headers-fold-all)
+  (define-key mu4e-headers-mode-map (kbd "<right>")   'mu4e-headers-unfold-at-point)
+  (define-key mu4e-headers-mode-map (kbd "<S-right>") 'mu4e-headers-unfold-all))
+
+;;(mu4e-thread-folding-mode 1)
+
+;;; Functions
+
+(defvar marty-mu4e/mu4e-compose-signed-p t)
+(defvar marty-mu4e/mu4e-compose-signed-and-crypted-p nil)
+
+(defun marty-mu4e/mu4e-compose-maybe-signed-and-crypted ()
+  "Maybe sign or encrypt+sign message.
+Message is signed or encrypted+signed when replying to a signed or encrypted
+message, respectively.
+Alternatively, message is signed or encrypted+signed if
+`ambrevar/mu4e-compose-signed-p' or `ambrevar/mu4e-compose-signed-and-crypted-p' is
+non-nil, respectively.
+This function is suitable for `mu4e-compose-mode-hook'."
+  (let ((msg mu4e-compose-parent-message))
+    (cond
+     ((or marty-mu4e/mu4e-compose-signed-and-crypted-p
+          (and msg (member 'encrypted (mu4e-message-field msg :flags))))
+      (mml-secure-message-sign-encrypt))
+     ((or marty-mu4e/mu4e-compose-signed-p
+          (and msg (member 'signed (mu4e-message-field msg :flags))))
+      (mml-secure-message-sign-pgpmime)))))
+
+;; Follow up quick key
+
+(defun marty/capture-mail-follow-up (msg)
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture "ma"))
+
+(defun marty/capture-mail-read-later (msg)
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture "mr"))

@@ -5,12 +5,11 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; Code:
+;;; CODE:
 
 (setq doom-localleader-key ",")
 
-
-;;;; Global keybindings
+;;;; GLOBAL KEYBINDINGS
 
 (define-key! help-map
   "h"    #'helpful-at-point)
@@ -19,7 +18,7 @@
  ;;:n "C-:"    #'+spell/correct
  :n "C-,"    #'+spell/next-error)
 
-;;;;; Leader Keybindings
+;;;; LEADER KEYBINDINGS
 
 (map! :leader
       "TAB"  #'evil-switch-to-windows-last-buffer
@@ -76,8 +75,7 @@
          "c"  #'tramp-cleanup-this-connection
          "t"  #'counsel-tramp
          "q"  #'counsel-tramp-quit)))
-
-      ;;; <leader> l --- workspace / Layout
+;;;;; <leader> l --- workspace / Layout
       (:when (featurep! :ui workspaces)
        (:prefix-map ("l" . "workspace")
         :desc "Display tab bar"           "SPC" #'+workspace/display
@@ -106,41 +104,41 @@
         :desc "Switch to 7th workspace"   "7"   #'+workspace/switch-to-6
         :desc "Switch to 8th workspace"   "8"   #'+workspace/switch-to-7
         :desc "Switch to 9th workspace"   "9"   #'+workspace/switch-to-8
-        :desc "Switch to final workspace" "0"   #'+workspace/switch-to-final))
-      )
+        :desc "Switch to final workspace" "0"   #'+workspace/switch-to-final)))
 
-;;;;;; <leader n --- notes
+;;;;; <leader n --- notes
 
 (map! :leader
       :prefix "n"
       "b" #'marty/org-roam-capture-inbox)
 
-;;;;;; <leader> o --- open
+;;;;; <leader> o --- open
 
 (map! :leader
       :prefix "o"
       (:prefix-map ("m" . "MY")
-       :desc "0mobile"       "0" #'mb/0mobile
-       :desc "Desktop"       "d" #'mb/desktop
-       :desc "contacts"      "o" #'mb/contacts
-       :desc "Tasks"         "g" #'mb/Tasks
-       :desc "Habits"        "h" #'mb/Habits
-       :desc "read later"    "l" #'mb/read-later
-       :desc "Someday"       "s" #'mb/Someday
-       :desc "Tip Jar"       "t" #'mb/TipJar
+       :desc "0mobile"       "0" #'(lambda () (interactive) (find-file (concat org-directory "0mobile.org")))
+       :desc "Desktop"       "d" #'(lambda () (interactive) (find-file (concat org-directory "desktop.org")))
+       :desc "contacts"      "o" #'(lambda () (interactive) (find-file (concat org-directory "contacts.org")))
+       :desc "Tasks"         "g" #'(lambda () (interactive) (find-file (concat org-directory "Tasks.org")))
+       :desc "Habits"        "h" #'(lambda () (interactive) (find-file (concat org-directory "Habits.org")))
+       :desc "read later"    "l" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
+       :desc "Someday"       "s" #'(lambda () (interactive) (find-file (concat org-directory "Someday.org")))
+       :desc "Tip Jar"       "t" #'(lambda () (interactive) (find-file (concat org-directory "TipJar.org")))
        (:prefix-map ("c" . "+config")
-        :desc "keybindings"  "k"  #'mb/base-keybinding
-        :desc "config"       "c"  #'mb/base-config
-        :desc "org"          "o"  #'mb/org-config)
-       (:prefix-map ("C" . "calendar")
-        "c"  #' mb/open-calendar
-        "C"  #' mb/calendar
-        "s"  #' org-caldav-sync)))
+        :desc "keybindings"  "k"  #'(lambda () (interactive) (find-file (concat doom-private-dir "keybindings.el")))
+        :desc "config"       "c"  #'(lambda () (interactive) (find-file (concat doom-private-dir "config.el")))
+        :desc "org"          "o"  #'(lambda () (interactive) (find-file (concat doom-private-dir "org-mode.el")))
+        :desc "init"         "i"  #'(lambda () (interactive) (find-file (concat doom-private-dir "init.el")))
+        :desc "packages"     "p"  #'(lambda () (interactive) (find-file (concat doom-private-dir "packages.el")))
+        :desc "mu4e"         "m"  #'(lambda () (interactive) (find-file (concat doom-private-dir "mu4e.el")))
+        (:prefix-map ("C" . "calendar")
+         "c"  #' mb/open-calendar
+         "C"  #'(lambda () (interactive) (find-file (concat org-directory "Calendar.org"))
+                  "s"  #' org-caldav-sync)))))
 
-
-
-;;;; Mode Maps
-;;;;; Override org mode map
+;;;; MODE MAPS
+;;;;; OVERRIDE ORG MODE MAP
 
 (map! :after org
       :map org-mode-map
@@ -157,47 +155,45 @@
       "n"  #'org-roam-dailies-goto-next-note
       )
 
- ;;;; Dired keybindings
- ;;;;;  TS file trigger keybinding
-;; (define-key! dired-mode-map
-;;   (kbd "C-t") #'marty/dired-copy-filename-as-tsfile-link)
+;;;; DIRED KEYBINDINGS
+;;;;;  TS FILE TRIGGER KEYBINDING
+(define-key! dired-mode-map
+  (kbd "C-t") #'marty/dired-copy-filename-as-tsfile-link)
 
- ;;;;; Map Leader D
-
-;; (map! :leader
-;;       (:prefix ("d" . "dired")
-;;        :desc "Open dired" "d"                   #'dired
-;;        :desc "Dired jump to current" "j"        #'dired-jump)
-;;       (:after dired
-;;        (:map dired-mode-map
-;;         :desc "Peep-dired image previews" "d p" #'peep-dired
-;;         :desc "Create TSfile link" "d t"        #'marty/dired-copy-filename-as-tsfile-link
-;; :desc "Dired view file" "d v"           #'dired-view-file)))
+(map! :leader
+      (:prefix ("d" . "dired")
+       :desc "Open dired" "d"                   #'dired
+       :desc "Dired jump to current" "j"        #'dired-jump)
+      (:after dired
+       (:map dired-mode-map
+        :desc "Peep-dired image previews" "d p" #'peep-dired
+        :desc "Create TSfile link" "d t"        #'marty/dired-copy-filename-as-tsfile-link
+        :desc "Dired view file" "d v"           #'dired-view-file)))
 ;; Make 'h' and 'l' go back and forward in dired. Much faster to navigate the directory structure!
-;;
-;; (evil-define-key 'normal dired-mode-map
-;;   (kbd "M-RET") 'dired-display-file
-;;   (kbd "h") 'dired-up-directory
-;;   (kbd "l") 'dired-view-file
-;;   (kbd "m") 'dired-mark
-;;   (kbd "t") 'dired-toggle-marks
-;;   (kbd "u") 'dired-unmark
-;;   (kbd "C") 'dired-do-copy
-;;   (kbd "D") 'dired-do-delete
-;;   (kbd "J") 'dired-goto-file
-;;   (kbd "M") 'dired-chmod
-;;   (kbd "O") 'dired-chown
-;;   (kbd "P") 'dired-do-print
-;;   (kbd "R") 'dired-rename
-;;   (kbd "T") 'dired-do-touch
-;;   (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
-;;   (kbd "+") 'dired-create-directory
-;;   (kbd "-") 'dired-up-directory
-;;   (kbd "% l") 'dired-downcase
-;;   (kbd "% u") 'dired-upcase
-;;   (kbd "; d") 'epa-dired-do-decrypt
-;;   (kbd "; e") 'epa-dired-do-encrypt)
-;; ;; If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
-;; (evil-define-key 'normal peep-dired-mode-map
-;;   (kbd "j") 'peep-dired-next-file
-;;  (kbd "k") 'peep-dired-prev-file)
+
+(evil-define-key 'normal dired-mode-map
+  (kbd "M-RET") 'dired-display-file
+  (kbd "h") 'dired-up-directory
+  (kbd "l") 'dired-view-file
+  (kbd "m") 'dired-mark
+  (kbd "t") 'dired-toggle-marks
+  (kbd "u") 'dired-unmark
+  (kbd "C") 'dired-do-copy
+  (kbd "D") 'dired-do-delete
+  (kbd "J") 'dired-goto-file
+  (kbd "M") 'dired-chmod
+  (kbd "O") 'dired-chown
+  (kbd "P") 'dired-do-print
+  (kbd "R") 'dired-rename
+  (kbd "T") 'dired-do-touch
+  (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
+  (kbd "+") 'dired-create-directory
+  (kbd "-") 'dired-up-directory
+  (kbd "% l") 'dired-downcase
+  (kbd "% u") 'dired-upcase
+  (kbd "; d") 'epa-dired-do-decrypt
+  (kbd "; e") 'epa-dired-do-encrypt)
+;; If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
+(evil-define-key 'normal peep-dired-mode-map
+  (kbd "j") 'peep-dired-next-file
+  (kbd "k") 'peep-dired-prev-file)

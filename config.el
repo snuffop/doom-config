@@ -5,13 +5,13 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; Code
+;;; CODE
 ;;;; GLOBAL
-(setq user-full-name "marty buchaus")
+
+(setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
 
 (setq-default enable-local-variables t)            ; allow for reading the local variables file
-;; (setq-default delete-by-moving-to-trash t)
 (setq-default window-combination-resize t)
 (setq-default x-stretch-cursor t)
 
@@ -28,58 +28,58 @@
 
 (global-subword-mode 1)
 
-;; remove the s/s from evil snipe
-(remove-hook 'doom-first-input-hook #'evil-snipe-mode)
+(after! projectile
+  (setq projectile-project-search-path '("~/source")))
+;;  (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
 
-;; (after! projectile
-;;   (setq projectile-project-search-path '("~/source"))
-;;   (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
-
-;;;;; company
+;;;;; COMPANY
 
 (setq company-idle-delay 0.5)
 
-;;;; ui
-;;;;; fonts
+;;;;; EVIL-SETTINGS
+
+(setq! evil-want-Y-yank-to-eol nil)
+
+;;;; UI
+;;;;; FONTS
 
 (setq doom-font (font-spec :family "firacode nerd font mono" :size 15)
       doom-unicode-font (font-spec :family "symbola" :size 15)
       doom-variable-pitch-font (font-spec :family "ubuntu" :size 15)
       doom-big-font (font-spec :family "firacode nerd font mono" :size 24))
 
-;;;;; faces
+;;;;; FACES
 (custom-set-faces!
- '(font-lock-comment-face :slant italic)
- '(font-lock-keyword-face :slant italic))
+  '(font-lock-comment-face :slant italic)
+  '(font-lock-keyword-face :slant italic))
 (setq global-prettify-symbols-mode t)
 
 (custom-set-faces!
- '(mode-line :family "firacode nerd font mono" :height 100)
- '(mode-line-inactive :family "firacode nerd font mono" :height 100))
+  '(mode-line :family "firacode nerd font mono" :height 100)
+  '(mode-line-inactive :family "firacode nerd font mono" :height 100))
 
 (add-hook! 'org-mode-hook #'mixed-pitch-mode)
 
-;;;;; theme
-
+;;;;; THEME
 (setq doom-theme 'doom-dracula )
 
 (after! doom-themes
-        (setq doom-themes-enable-bold t
-              doom-themes-enable-italic t))
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t))
 
 (after! doom-modeline
-        (setq all-the-icons-scale-factor 1.1
-              auto-revert-check-vc-info t
-              doom-modeline-major-mode-icon (display-graphic-p)
-              doom-modeline-major-mode-color-icon (display-graphic-p)
-              doom-modeline-buffer-file-name-style 'relative-to-project
-              doom-modeline-vcs-max-length 60)
-        (remove-hook 'doom-modeline-mode-hook #'size-indication-mode)
-        (doom-modeline-def-modeline 'main
-                                    '(bar workspace-name window-number modals persp-name buffer-info matches remote-host github debug)
-                                    '(vcs github mu4e grip gnus checker misc-info repl lsp " ")))
+  (setq all-the-icons-scale-factor 1.1
+        auto-revert-check-vc-info t
+        doom-modeline-major-mode-icon (display-graphic-p)
+        doom-modeline-major-mode-color-icon (display-graphic-p)
+        doom-modeline-buffer-file-name-style 'relative-to-project
+        doom-modeline-vcs-max-length 60)
+  (remove-hook 'doom-modeline-mode-hook #'size-indication-mode)
+  (doom-modeline-def-modeline 'main
+    '(bar workspace-name window-number modals persp-name buffer-info matches remote-host github debug)
+    '(vcs github mu4e grip gnus checker misc-info repl lsp " ")))
 
-;;;;; line numbers
+;;;;; LINE NUMBERS
 
 (setq display-line-numbers-type 'relative)
 
@@ -89,7 +89,9 @@
                 term-mode-hook
                 shell-mode-hook
                 eshell-mode-hook))
-        (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+;;;;; REGISTERS
 
 (defun marty/set-patching-macro-registers ()
   "evil keyboard macros for patching,  running docker containers"
@@ -98,7 +100,7 @@
   (evil-set-register ?b [?0 ?o escape ?0 ?i ?# ?+ ?e ?n ?d ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0] )
   (evil-set-register ?t [?0 ?o ?i backspace ?# ?+ ?b ?e ?g ?i ?n ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0]))
 
-;;;; spelling
+;;;; SPELLING
 
 (after! flyspell
         (setq flyspell-lazy-idle-seconds 2)
@@ -108,6 +110,17 @@
 
 (load! "keybindings.el")
 
+;;;; DIRED
+(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+;; get file icons in dired
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+;; with dired-open plugin, you can launch external programs for certain extensions
+;; for example, i set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
+(setq dired-open-extensions '(("gif" . "sxiv")
+                              ("jpg" . "sxiv")
+                              ("png" . "sxiv")
+                              ("mkv" . "mpv")
+                              ("mp4" . "mpv")))
 ;;;; ORG MODE
 
 (load! "org-mode.el")
@@ -121,7 +134,7 @@
 (load! "mu4e.el")
 
 ;;; MODULES
-;;;; activity watch mode
+;;;; ACTIVITY WATCH MODE
 
 (defun marty/startactivitywatchmode ()
   (interactive)
@@ -131,7 +144,7 @@
   :config
   (add-hook 'doom-first-buffer-hook #'marty/startactivitywatchmode))
 
-;;;; aggressive indent
+;;;; AGGRESSIVE INDENT
 
 (use-package! aggressive-indent
   :defer t
@@ -150,7 +163,7 @@
 (all-the-icons-completion-mode)
 (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
 
-;;;; autoinsert
+;;;; AUTOINSERT
 
 (use-package! autoinsert
   :init (progn
@@ -166,16 +179,27 @@
             (define-auto-insert "blorg/snuffy-org/.+\\.org?$" ["snuffy-org.org" marty/autoinsert-yas-expand])
             (define-auto-insert "sites/snuffy.org/.+\\.org?$" ["snuffy-org-posts.org" marty/autoinsert-yas-expand])
             (define-auto-insert "salt-master.+\\.org?$" ["salt-master.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/[^/]+\\.org?$" ["nsi-documentation.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/.+/[^/]+\\.org?$" ["nsi-documentation.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/tipjar/[^/]+\\.org?$" ["nsi-documentation-tipjar.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/tva/[^/]+\\.org?$" ["nsi-documentation-tva.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/tva/scanreports/.+[^/]+\\.org?$" ["nsi-documentation-tva-scanreport.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "nsi-documentation/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "nsi-documentation/.+/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "nsi-documentation/tipjar/[^/]+\\.org?$" ["NSI-Documentation-tipjar.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "nsi-documentation/tva/[^/]+\\.org?$" ["NSI-Documentation-TVA.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "nsi-documentation/tva/scanreports/.+[^/]+\\.org?$" ["NSI-Documentation-TVA-scanreport.org" marty/autoinsert-yas-expand])
             (define-auto-insert "nsi-documentation/patching/.+[^/]+\\.org?$" ["nsi-documentation-patching-notes.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "masons/[^/].+\\.org?$" ["masonsmeetingminuets.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "daily/[^/].+\\.org?$" ["defaultroamdaily.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultjournal.org" marty/autoinsert-yas-expand])))
+            (define-auto-insert "masons/[^/].+\\.org?$" ["masonsMeetingMinuets.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand])))
 
+;;;;; FUNCTIONS
+
+(defun marty/autoinsert-yas-expand ()
+  "This is used by the autoinsert package to grab and expand
+templates into newly created files"
+  (let ((template ( buffer-string )))
+    (delete-region (point-min) (point-max))
+    (yas-expand-snippet template)
+    (evil-insert-state)))
+
+;;;; BROWSE-KILL-RING
 (use-package! browse-kill-ring
   :config
   (progn
@@ -196,6 +220,8 @@
 
   )
 
+;;;; DASHBOARD
+
 (use-package dashboard
   :init      ;; tweak dashboard config before loading it
   (setq dashboard-set-heading-icons t)
@@ -214,47 +240,37 @@
   (dashboard-modify-heading-icons '((recents . "file-text")
                                     (bookmarks . "book"))))
 
-;; dired settings
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-;; get file icons in dired
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-;; with dired-open plugin, you can launch external programs for certain extensions
-;; for example, i set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
-(setq dired-open-extensions '(("gif" . "sxiv")
-                              ("jpg" . "sxiv")
-                              ("png" . "sxiv")
-                              ("mkv" . "mpv")
-                              ("mp4" . "mpv")))
+;;;; ELPHER
 
 (use-package! elpher)
 
-;;;; i3 window manager config
+;;;; I3 WINDOW MANAGER CONFIG
 
 (use-package! i3wm-config-mode
   :defer t)
 
-;;;; khard
+;;;; KHARD
 
 (use-package! khardel
   :defer t)
 
 (setq ledger-post-amount-alignment-column 69)
 
-;;;; magit
+;;;; MAGIT
 
 (setq magit-revision-show-gravatars '("^author:     " . "^commit:     "))
 
-;;;; outshine
+;;;; OUTSHINE
 
 (use-package! outshine
   :config
   (map! :after outshine
         :map emacs-lisp-mode-map
-        "tab" #'outshine-cycle)
+        "TAB" #'outshine-cycle)
   (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
-  (defvar outline-minor-mode-prefix "\m-#"))
+  (defvar outline-minor-mode-prefix "\M-#"))
 
-;;;; paperless
+;;;; PAPERLESS
 
 (use-package paperless
   :init (require 'org-paperless)
@@ -276,12 +292,12 @@
         "f"  #'paperless-file
         "x"  #'paperless-execute))
 
-;;;; salt mode
+;;;; SALT MODE
 
 (use-package! salt-mode
   :defer t)
 
-;;;; systemd mode
+;;;; SYSTEMD MODE
 
 (use-package! systemd
   :defer t)
@@ -292,7 +308,7 @@
       "d" #'systemd-doc-directives
       "o" #'systemd-doc-open)
 
-;;;; counsel tramp
+;;;; COUNSEL TRAMP
 
 (use-package! counsel-tramp
   :after tramp
@@ -468,42 +484,41 @@
             ))))
 ;; end of  list of hosts
 
-;;;; treemacs
+;;;; TREEMACS
 
 (setq +treemacs-git-mode 'extended)
 
-;;;; vlf
+;;;; VLF
 
 (use-package! vlf-setup
   :defer-incrementally  vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 
-;;;; wakatime
+;;;; WAKATIME
 (defun marty/startwakatime ()
   (interactive)
-  (setq wakatime-api-key (auth-source-pass-get 'secret "application/wakatime/apikey"))
+  (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey"))
   (global-wakatime-mode))
 
 (use-package! wakatime-mode
-  :ensure t
   :config
   (add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
   (setq wakatime-cli-path "/usr/bin/wakatime"))
 
-;;; temp / fixup
-;;;; xterm set-window-title
+;;; TEMP / FIXUP
+;;;; XTERM SET-WINDOW-TITLE
 
 (setq xterm-set-window-title t)
 (defadvice! fix-xterm-set-window-title (&optional terminal)
   :before-while #'xterm-set-window-title
   (not (display-graphic-p terminal)))
 
-;;;; mmdecode
+;;;; MMDECODE
 
 (with-eval-after-load "mm-decode"
   (add-to-list 'mm-discouraged-alternatives "text/html")
   (add-to-list 'mm-discouraged-alternatives "text/richtext"))
 
-;;; custom
+;;; CUSTOM
 
 (setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
 (when (file-exists-p custom-file)
