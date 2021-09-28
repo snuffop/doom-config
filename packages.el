@@ -19,9 +19,11 @@
 (package! elpher)
 (package! info-colors)
 (package! khardel)
+(package! khalel)
 (package! mixed-pitch)
 (package! mu4e-column-faces)
 (package! mu4e-marker-icons)
+(package! mutt-mode)
 (package! org-caldav)
 (package! org-edna)
 (package! org-projectile)
@@ -32,9 +34,8 @@
 (package! wakatime-mode)
 
 ;;;;  IF
-(when (string= (system-name) "archovo.home.snuffy.org"))
+;;(when (string= (system-name) "archovo.home.snuffy.org"))
 
-;;;; Report Packages
 (package! activity-watch-mode           :recipe (:host github
                                                  :repo "pauldub/activity-watch-mode"))
 (package! i3wm-config-mode              :recipe (:host github
@@ -46,9 +47,6 @@
                                                  :files ("*.el" "filters" "preprocessors")))
 (package! org-pretty-table              :recipe (:host github
                                                  :repo "Fuco1/org-pretty-table"))
-(package! mu4e-thread-folding           :recipe (:host github
-                                                 :repo "rougier/mu4e-thread-folding"
-                                                 :files ("*.el") ))
 (package! org-roam-ui                   :recipe (:host github
                                                  :repo "org-roam/org-roam-ui"
                                                  :files ("*.el" "out")))

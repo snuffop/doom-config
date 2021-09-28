@@ -246,19 +246,36 @@ templates into newly created files"
 
 ;;;; I3 WINDOW MANAGER CONFIG
 
-(use-package! i3wm-config-mode
-  :defer t)
+(use-package! i3wm-config-mode)
 
 ;;;; KHARD
 
-(use-package! khardel
-  :defer t)
+(use-package! khardel)
+
+;;;; KHALEL
+
+(use-package! khalel
+  :config
+  (progn
+    (setq khalel-khal-command "/usr/bin/khal")
+    (setq khalel-vdirsyncer-command "vdirsyncer")
+    (setq khalel-default-calendar "private")
+    (setq khalel-capture-key "e")
+    (setq khalel-import-org-file (concat org-directory "Calendar.org"))
+    (setq khalel-import-org-file-confirm-overwrite nil)
+    ))
+
+;;;; LEDGER
 
 (setq ledger-post-amount-alignment-column 69)
 
 ;;;; MAGIT
 
 (setq magit-revision-show-gravatars '("^author:     " . "^commit:     "))
+
+;;;; MUTT-MODE
+
+(use-package! mutt-mode)
 
 ;;;; OUTSHINE
 
@@ -294,13 +311,11 @@ templates into newly created files"
 
 ;;;; SALT MODE
 
-(use-package! salt-mode
-  :defer t)
+(use-package! salt-mode)
 
 ;;;; SYSTEMD MODE
 
-(use-package! systemd
-  :defer t)
+(use-package! systemd)
 
 (map! :map systemd-mode
       :localleader
