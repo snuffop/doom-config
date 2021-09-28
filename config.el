@@ -259,10 +259,12 @@ templates into newly created files"
   (progn
     (setq khalel-khal-command "/usr/bin/khal")
     (setq khalel-vdirsyncer-command "vdirsyncer")
-    (setq khalel-default-calendar "private")
+    (setq khalel-default-calendar "personal")
     (setq khalel-capture-key "e")
     (setq khalel-import-org-file (concat org-directory "Calendar.org"))
+    (setq khalel-import-time-delta "365d")
     (setq khalel-import-org-file-confirm-overwrite nil)
+    (khalel-add-capture-template)
     ))
 
 ;;;; LEDGER

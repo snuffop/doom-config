@@ -24,7 +24,6 @@
 (package! mu4e-column-faces)
 (package! mu4e-marker-icons)
 (package! mutt-mode)
-(package! org-caldav)
 (package! org-edna)
 (package! org-projectile)
 (package! org-super-agenda)
@@ -40,8 +39,6 @@
                                                  :repo "pauldub/activity-watch-mode"))
 (package! i3wm-config-mode              :recipe (:host github
                                                  :repo "Alexander-Miller/i3wm-Config-Mode"))
-(package! org-onenote                   :recipe (:host github
-                                                 :repo "ifree/org-onenote"))
 (package! org-pandoc-import             :recipe (:host github
                                                  :repo "tecosaur/org-pandoc-import"
                                                  :files ("*.el" "filters" "preprocessors")))
