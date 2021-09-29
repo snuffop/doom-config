@@ -67,24 +67,22 @@
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
 
+;;;;; MODELINE
+
 (after! doom-modeline
   (setq all-the-icons-scale-factor 1.1
         auto-revert-check-vc-info t
         doom-modeline-major-mode-icon (display-graphic-p)
         doom-modeline-major-mode-color-icon (display-graphic-p)
         doom-modeline-buffer-file-name-style 'relative-to-project
-        doom-modeline-vcs-max-length 60)
-  (remove-hook 'doom-modeline-mode-hook #'size-indication-mode)
-  (doom-modeline-def-modeline 'main
-    '(bar workspace-name window-number modals persp-name buffer-info matches remote-host github debug)
-    '(vcs github mu4e grip gnus checker misc-info repl lsp " ")))
+        doom-modeline-vcs-max-length 60))
 
 ;;;;; LINE NUMBERS
 
 (setq display-line-numbers-type 'relative)
 
 ;; remove numbers from these modes
-;;
+
 (dolist (mode '(org-mode-hook
                 term-mode-hook
                 shell-mode-hook
@@ -92,6 +90,9 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;;;;; REGISTERS
+;; These registers are manually added by calling this function for Rackspace
+;; Patching
+;;
 
 (defun marty/set-patching-macro-registers ()
   "evil keyboard macros for patching,  running docker containers"
@@ -240,12 +241,25 @@ templates into newly created files"
   (dashboard-modify-heading-icons '((recents . "file-text")
                                     (bookmarks . "book"))))
 
+;;;; EBUKU
+;;
+;; Add the E-buku management mode for buku
+
+(use-package! ebuku
+  :init
+  (evil-collection-ebuku-setup)
+  :config
+  (map! :leader
+        :prefix "a"
+        "b" #'ebuku))
+
+
 ;;;; ELPHER
 
 (use-package! elpher)
 
 ;;;; I3 WINDOW MANAGER CONFIG
-
+;; Syntax highlighting for i3 config
 (use-package! i3wm-config-mode)
 
 ;;;; KHARD
@@ -260,10 +274,10 @@ templates into newly created files"
     (setq khalel-khal-command "/usr/bin/khal")
     (setq khalel-vdirsyncer-command "vdirsyncer")
     (setq khalel-default-calendar "personal")
-    (setq khalel-capture-key "e")
     (setq khalel-import-org-file (concat org-directory "Calendar.org"))
     (setq khalel-import-time-delta "365d")
     (setq khalel-import-org-file-confirm-overwrite nil)
+    (setq khalel-capture-key "e")
     (khalel-add-capture-template)
     ))
 

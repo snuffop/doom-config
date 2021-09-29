@@ -1,6 +1,6 @@
 #+TITLE: Daily Notes for `(marty/org-roam-dailies-title)`
 #+STARTUP: content
-#+filetags: 2021 daily
+#+filetags: :2021:daily:
 
 * Status () {}
 * Links
