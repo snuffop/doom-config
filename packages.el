@@ -31,6 +31,7 @@
 (package! paperless)
 (package! salt-mode)
 (package! systemd)
+(package! telega)
 (package! wakatime-mode)
 
 ;;;;  IF
@@ -57,3 +58,6 @@
 (package! vlf                           :recipe (:host github
                                                  :repo "m00natic/vlfi"
                                                  :files ("*.el") ))
+(package! notdeft                       :recipe (:host github
+                                                 :repo "hasu/notdeft"
+                                                 :files ("*.el" "xapian")))

@@ -26,7 +26,6 @@
       ;;; <leader> a --- Application
       (:prefix-map ("a" . "Application")
        "m"  #'=mu4e
-       "r"  #'ranger
        ;; ORG
        (:prefix-map ("o" . "org")
         "/" #'org-occur-in-agenda-files
@@ -50,31 +49,30 @@
           "p"  #'org-timer-pause-or-continue
           "q"  #'org-timer-stop)))
        ;; Tools
-       (:prefix-map ("t" . "tools")
-        (:when (featurep! :tools pass)
-         (:prefix-map ("p" . "pass")
-          "/"  #'ivy-pass
-          "c"  #'password-store-edit
-          "d"  #'password-store-remove
-          "g"  #'password-store-generate
-          "i"  #'password-store-insert
-          "r"  #'password-store-rename
-          "w"  #'password-store-url
-          "y"  #'password-store-copy
-          "D"  #'password-store-clear
-          "I"  #'password-store-init
-          (:prefix-map ("o" . "otp")
-           "a" #'password-store-otp-append
-           "i" #'password-store-otp-insert
-           "y" #'password-store-otp-token-copy
-           "A" #'password-store-otp-append-from-image
-           "Y" #'password-store-otp-uri-copy)))
-        (:prefix-map ("t" . "Tramp")
-         "C"  #'tramp-cleanup-all-connections
-         "B"  #'tramp-cleanup-all-buffers
-         "c"  #'tramp-cleanup-this-connection
-         "t"  #'counsel-tramp
-         "q"  #'counsel-tramp-quit)))
+       (:when (featurep! :tools pass)
+        (:prefix-map ("p" . "pass")
+         "/"  #'ivy-pass
+         "c"  #'password-store-edit
+         "d"  #'password-store-remove
+         "g"  #'password-store-generate
+         "i"  #'password-store-insert
+         "r"  #'password-store-rename
+         "w"  #'password-store-url
+         "y"  #'password-store-copy
+         "D"  #'password-store-clear
+         "I"  #'password-store-init
+         (:prefix-map ("o" . "otp")
+          "a" #'password-store-otp-append
+          "i" #'password-store-otp-insert
+          "y" #'password-store-otp-token-copy
+          "A" #'password-store-otp-append-from-image
+          "Y" #'password-store-otp-uri-copy)))
+       (:prefix-map ("t" . "Tramp")
+        "C"  #'tramp-cleanup-all-connections
+        "B"  #'tramp-cleanup-all-buffers
+        "c"  #'tramp-cleanup-this-connection
+        "t"  #'counsel-tramp
+        "q"  #'counsel-tramp-quit))
 ;;;;; <leader> l --- workspace / Layout
       (:when (featurep! :ui workspaces)
        (:prefix-map ("l" . "workspace")
@@ -131,11 +129,11 @@
         :desc "org"          "o"  #'(lambda () (interactive) (find-file (concat doom-private-dir "org-mode.el")))
         :desc "init"         "i"  #'(lambda () (interactive) (find-file (concat doom-private-dir "init.el")))
         :desc "packages"     "p"  #'(lambda () (interactive) (find-file (concat doom-private-dir "packages.el")))
-        :desc "mu4e"         "m"  #'(lambda () (interactive) (find-file (concat doom-private-dir "mu4e.el")))
-        (:prefix-map ("C" . "calendar")
-         "c"  #' mb/open-calendar
-         "C"  #'(lambda () (interactive) (find-file (concat org-directory "Calendar.org"))
-                  "s"  #' org-caldav-sync)))))
+        :desc "mu4e"         "m"  #'(lambda () (interactive) (find-file (concat doom-private-dir "mu4e.el"))))
+       (:prefix-map ("C" . "calendar")
+        :desc "Calendar"      "C"  #'(lambda () (interactive) (find-file (concat org-directory "Calendar.org")))
+        :desc "VdirSync"      "s"  #'khalel-run-vdirsyncer
+        :desc "import"        "i"  #'khalel-import-upcoming-events)))
 
 ;;;; MODE MAPS
 ;;;;; OVERRIDE ORG MODE MAP

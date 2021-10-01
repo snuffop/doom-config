@@ -190,7 +190,7 @@
             (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
             (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand])))
 
-;;;;; FUNCTIONS
+;;;; FUNCTIONS
 
 (defun marty/autoinsert-yas-expand ()
   "This is used by the autoinsert package to grab and expand
@@ -220,124 +220,6 @@ templates into newly created files"
          "i"  #'browse-kill-ring-append-insert))
 
   )
-
-;;;; DASHBOARD
-
-(use-package dashboard
-  :init      ;; tweak dashboard config before loading it
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-banner-logo-title "emacs is more than a text editor!")
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-startup-banner "~/.config/doom/banners/doom-emacs-slant-out-bw.png")  ;; use custom image as banner
-  (setq dashboard-center-content nil) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
-                          (agenda . 5 )
-                          (bookmarks . 5)
-                          (projects . 5)
-                          (registers . 5)))
-  :config
-  (dashboard-setup-startup-hook)
-  (dashboard-modify-heading-icons '((recents . "file-text")
-                                    (bookmarks . "book"))))
-
-;;;; EBUKU
-;;
-;; Add the E-buku management mode for buku
-
-(use-package! ebuku
-  :init
-  (evil-collection-ebuku-setup)
-  :config
-  (map! :leader
-        :prefix "a"
-        "b" #'ebuku))
-
-
-;;;; ELPHER
-
-(use-package! elpher)
-
-;;;; I3 WINDOW MANAGER CONFIG
-;; Syntax highlighting for i3 config
-(use-package! i3wm-config-mode)
-
-;;;; KHARD
-
-(use-package! khardel)
-
-;;;; KHALEL
-
-(use-package! khalel
-  :config
-  (progn
-    (setq khalel-khal-command "/usr/bin/khal")
-    (setq khalel-vdirsyncer-command "vdirsyncer")
-    (setq khalel-default-calendar "personal")
-    (setq khalel-import-org-file (concat org-directory "Calendar.org"))
-    (setq khalel-import-time-delta "365d")
-    (setq khalel-import-org-file-confirm-overwrite nil)
-    (setq khalel-capture-key "e")
-    (khalel-add-capture-template)
-    ))
-
-;;;; LEDGER
-
-(setq ledger-post-amount-alignment-column 69)
-
-;;;; MAGIT
-
-(setq magit-revision-show-gravatars '("^author:     " . "^commit:     "))
-
-;;;; MUTT-MODE
-
-(use-package! mutt-mode)
-
-;;;; OUTSHINE
-
-(use-package! outshine
-  :config
-  (map! :after outshine
-        :map emacs-lisp-mode-map
-        "TAB" #'outshine-cycle)
-  (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
-  (defvar outline-minor-mode-prefix "\M-#"))
-
-;;;; PAPERLESS
-
-(use-package paperless
-  :init (require 'org-paperless)
-  :config (progn
-            (custom-set-variables
-             '(paperless-capture-directory "~/nextcloud/documents/inbox/")
-             '(paperless-root-directory "~/nextcloud/documents"))))
-
-(after! paperless
-  (map! :leader
-        :prefix "a"
-        "x"  #'paperless)
-  (map! :after paperless
-        :localleader
-        :mode paperless-mode
-        "d"  #'paperless-display
-        "r"  #'paperless-rename
-        "r"  #'paperless-scan-directories
-        "f"  #'paperless-file
-        "x"  #'paperless-execute))
-
-;;;; SALT MODE
-
-(use-package! salt-mode)
-
-;;;; SYSTEMD MODE
-
-(use-package! systemd)
-
-(map! :map systemd-mode
-      :localleader
-      :prefix ("h" . "help")
-      "d" #'systemd-doc-directives
-      "o" #'systemd-doc-open)
 
 ;;;; COUNSEL TRAMP
 
@@ -515,9 +397,148 @@ templates into newly created files"
             ))))
 ;; end of  list of hosts
 
+;;;; DASHBOARD
+
+(use-package dashboard
+  :init      ;; tweak dashboard config before loading it
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "emacs is more than a text editor!")
+  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  (setq dashboard-startup-banner "~/.config/doom/banners/doom-emacs-slant-out-bw.png")  ;; use custom image as banner
+  (setq dashboard-center-content nil) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+                          (agenda . 5 )
+                          (bookmarks . 5)
+                          (projects . 5)
+                          (registers . 5)))
+  :config
+  (dashboard-setup-startup-hook)
+  (dashboard-modify-heading-icons '((recents . "file-text")
+                                    (bookmarks . "book"))))
+
+;;;; EBUKU
+;;
+;; Add the E-buku management mode for buku
+
+(use-package! ebuku
+  :init
+  (evil-collection-init 'ebuku)
+  :config
+  (evil-collection-ebuku-setup)
+  (map! :leader
+        :prefix "a"
+        "b" #'ebuku))
+
+
+;;;; ELPHER
+
+(use-package! elpher)
+
+;;;; I3 WINDOW MANAGER CONFIG
+;; Syntax highlighting for i3 config
+(use-package! i3wm-config-mode)
+
+;;;; KHARD
+
+(use-package! khardel)
+
+;;;; KHALEL
+
+(use-package! khalel
+  :config
+  (progn
+    (setq khalel-khal-command "/usr/bin/khal")
+    (setq khalel-vdirsyncer-command "vdirsyncer")
+    (setq khalel-default-calendar "personal")
+    (setq khalel-import-org-file (concat org-directory "Calendar.org"))
+    (setq khalel-import-time-delta "365d")
+    (setq khalel-import-org-file-confirm-overwrite nil)
+    (setq khalel-capture-key "e")
+    (khalel-add-capture-template)
+    ))
+
+;;;; LEDGER
+
+(setq ledger-post-amount-alignment-column 69)
+
+;;;; MAGIT
+
+(setq magit-revision-show-gravatars '("^author:     " . "^commit:     "))
+
+;;;; MUTT-MODE
+
+(use-package! mutt-mode)
+
+;;;; NOTDEFT
+
+(use-package! notdeft
+  :config
+  (setq notdeft-directories '("~/Nextcloud/Notes/org"
+                              "~/Nextlcoud/Notes/org/daily"
+                              "~/Nextcloud/Notes/org/TipJar"))
+  (setq notdeft-xapian-program '(concat doom-cache-dir "notdeft-xapian/"))
+  (add-hook 'notdeft-load-hook 'notdeft-xapian-make-program-when-uncurrent)
+  )
+
+;;;; OUTSHINE
+
+(use-package! outshine
+  :config
+  (map! :after outshine
+        :map emacs-lisp-mode-map
+        "TAB" #'outshine-cycle)
+  (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
+  (defvar outline-minor-mode-prefix "\M-#"))
+
+;;;; PAPERLESS
+
+(use-package paperless
+  :init (require 'org-paperless)
+  :config (progn
+            (custom-set-variables
+             '(paperless-capture-directory "~/nextcloud/documents/inbox/")
+             '(paperless-root-directory "~/nextcloud/documents"))))
+
+(after! paperless
+  (map! :leader
+        :prefix "a"
+        "x"  #'paperless)
+  (map! :after paperless
+        :localleader
+        :mode paperless-mode
+        "d"  #'paperless-display
+        "r"  #'paperless-rename
+        "r"  #'paperless-scan-directories
+        "f"  #'paperless-file
+        "x"  #'paperless-execute))
+
+;;;; SALT MODE
+
+(use-package! salt-mode)
+
+;;;; SYSTEMD MODE
+
+(use-package! systemd)
+
+(map! :map systemd-mode
+      :localleader
+      :prefix ("h" . "help")
+      "d" #'systemd-doc-directives
+      "o" #'systemd-doc-open)
+
 ;;;; TREEMACS
 
 (setq +treemacs-git-mode 'extended)
+
+;;;; TELEGA
+(use-package! telega
+  :config
+  (setq telega-notifications-mode t)
+  (map! :leader
+        :prefix "a"
+        "T" #'telega
+        ))
 
 ;;;; VLF
 

@@ -17,7 +17,7 @@
         +icons)
 
        :ui
-       ;;def
+       ;; deft
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        ;; doom-quit         ; DOOM quit-message prompts when you quit Emacs
@@ -117,7 +117,8 @@
 
        :lang
        ;;agda              ; types of types of types of types...
-       ;;beancount         ; mind the GAAP
+       (beancount         ; mind the GAAP
+        +lsp)
        (cc                ; C > C++ == 1
         +lsp)
        ;;clojure           ; java with a lisp
@@ -163,6 +164,7 @@
         +noter
         +present
         +gnuplot
+        +dragndrop
         +roam2)
        (php               ; perl's insecure younger brother
         +lsp)
