@@ -45,7 +45,7 @@
 
 (setq doom-font (font-spec :family "firacode nerd font mono" :size 15)
       doom-unicode-font (font-spec :family "symbola" :size 15)
-      doom-variable-pitch-font (font-spec :family "ubuntu" :size 15)
+      doom-variable-pitch-font (font-spec :family "Cantarell" :size 15)
       doom-big-font (font-spec :family "firacode nerd font mono" :size 24))
 
 ;;;;; FACES
@@ -430,11 +430,6 @@ templates into newly created files"
         :prefix "a"
         "b" #'ebuku))
 
-
-;;;; ELPHER
-
-(use-package! elpher)
-
 ;;;; I3 WINDOW MANAGER CONFIG
 ;; Syntax highlighting for i3 config
 (use-package! i3wm-config-mode)
@@ -477,9 +472,7 @@ templates into newly created files"
   (setq notdeft-directories '("~/Nextcloud/Notes/org"
                               "~/Nextlcoud/Notes/org/daily"
                               "~/Nextcloud/Notes/org/TipJar"))
-  (setq notdeft-xapian-program '(concat doom-cache-dir "notdeft-xapian/"))
-  (add-hook 'notdeft-load-hook 'notdeft-xapian-make-program-when-uncurrent)
-  )
+  (add-hook 'notdeft-load-hook 'notdeft-xapian-make-program-when-uncurrent))
 
 ;;;; OUTSHINE
 

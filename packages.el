@@ -17,7 +17,6 @@
 (package! counsel-tramp)
 (package! dashboard)
 (package! ebuku)
-(package! elpher)
 (package! info-colors)
 (package! khardel)
 (package! khalel)
