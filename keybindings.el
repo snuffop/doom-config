@@ -148,6 +148,7 @@
       "j"  #'org-roam-dailies-capture-today
       "p"  #'marty/org-roam-find-project
       "s"  #'org-roam-db-sync
+      "S"  #'marty/org-roam-rg-search
       :prefix "md"
       "p"  #'org-roam-dailies-goto-previous-note
       "n"  #'org-roam-dailies-goto-next-note

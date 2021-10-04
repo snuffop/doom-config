@@ -41,7 +41,6 @@
 (package! notdeft                  :recipe (:host github :repo "hasu/notdeft" :files ("*.el" "xapian")))
 (package! org-pandoc-import        :recipe (:host github :repo "tecosaur/org-pandoc-import" :files ("*.el" "filters" "preprocessors")))
 (package! org-pretty-table         :recipe (:host github :repo "Fuco1/org-pretty-table"))
-(package! org-roam-timestamps      :recipe (:host github :repo "ThomasFKJorna/org-roam-timestamps"))
 (package! org-roam-ui              :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 (package! org-transclusion         :recipe (:host github :repo "nobiot/org-transclusion" :branch "main" :files ("*.el")))
 (package! outshine                 :recipe (:host github :repo "alphapapa/outshine"))
