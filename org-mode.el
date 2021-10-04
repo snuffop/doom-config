@@ -147,8 +147,8 @@
 
 ;;;;;; CLOCKING
 
-  ;; (setq org-clock-into-drawer "clocking")
-  ;; where to put the clock in and out for tracked items
+  ;; (setq org-clock-into-drawer "CLOCKING")
+  ;; Where to put the clock in and out for tracked items
   (setq org-clock-out-remove-zero-time-clocks t)
 
 ;;;;;; LOGGING AND ID
@@ -287,3 +287,436 @@
 
   (setq org-protocol-default-template-key "t")
 
+;;;;;; Todo Faces
+  (setq org-todo-keyword-faces
+        '(("TODO"       . org-warning)
+          ("NEXT"       . (:foreground "#008080" :weight bold))
+          ("STARTED"    . (:foreground "#E35DBF" :weight bold))
+          ("BLOCKED"    . (:foreground "White"   :weight bold))
+          ("TODELEGATE" . (:foreground "White"   :weight bold))
+          ("DELEGATED"  . (:foreground "pink"    :weight bold))
+          ("CANCELED"   . (:foreground "white"   :weight bold))
+          ("TICKLE"     . (:foreground "White"   :weight bold))
+          ("DONE"       . (:foreground "green"   :weight bold))))
+
+;;;;;; keywords
+  (setq org-todo-keywords
+        '((sequence "TODO(t)"
+                    "NEXT(n!)"
+                    "STARTED(s!)"
+                    "BLOCKED(b@/!)"
+                    "TODELEGATE(g@/!)"
+                    "DELEGATED(D@/!)"
+                    "FOLLOWUP(f@/!)"
+                    "TICKLE(T!)"
+                    "|"
+                    "CANCELLED(c@)"
+                    "DONE(d@)")))
+
+  ) ;; End (after! org
+
+;;;; org-roam
+(after! org-roam
+;;;;; org-roam capture templates
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry "* %?"
+         :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+         :empty-lines-after 1 )
+        ("t" "Tasks" entry "** TODO %? "
+         :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+         :empty-lines-after 1 )
+        ("r" "Rackspace" entry "** %<%H:%M> %?"
+         :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+         :empty-lines-after 1)
+        ("j" "Journal" entry "** %<%H:%M> %?"
+         :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal") )
+         :empty-lines-after 1)))
+
+(setq org-roam-capture-templates
+      '(("d" "default" plain
+         (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
+         :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
+         :unnarrowed t)
+        ("t" "tipjar" plain
+         (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
+         :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
+         :unnarrowed t)
+        ("p" "People" plain
+         (file "~/.config/doom/templates/roam-templates/people-entry.org")
+         :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
+         :unnarrowed t)))
+
+;;;;; ORG-ROAM POPUP RULES
+(setq +org-roam-open-buffer-on-find-file nil)
+
+(set-popup-rules!
+  `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+     :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+    ("^\\*org-roam: " ; node dedicated org-roam buffer
+     :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
+;;;;; ORG-ROAM HOOKS
+
+(add-hook 'find-file-hook #'roam-extra:update-todo-tag)
+(add-hook 'before-save-hook #'roam-extra:update-todo-tag)
+(advice-add 'org-agenda :before #'roam-extra:update-todo-files)
+
+;; hook to be run whenever an org-roam capture completes
+(add-hook 'org-roam-capture-new-node-hook #'marty/add-other-auto-props-to-org-roam-properties)
+
+;;;;; ORG-ROAM FUNCTIONS
+;;;;;; ADD ADITIONAL PROPERTIES
+
+(defun marty/add-other-auto-props-to-org-roam-properties ()
+  ;; if the file already exists, don't do anything, otherwise...
+  (unless (file-exists-p (buffer-file-name))
+    ;; if there's also a CREATION_TIME property, don't modify it
+    (unless (org-find-property "CREATION_TIME")
+      ;; otherwise, add a Unix epoch timestamp for CREATION_TIME prop
+      ;; (this is what "%s" does - see http://doc.endlessparentheses.com/Fun/format-time-string )
+      (org-roam-add-property
+       (format-time-string "%s"
+                           (nth 5
+                                (file-attributes (buffer-file-name))))
+       "CREATION_TIME"))
+    (unless (org-find-property "ORG_CREATION_TIME")
+      (org-roam-add-property
+       (format-time-string "[%Y-%m-%d %a %H:%M:%S]"
+                           (nth 5
+                                (file-attributes (buffer-file-name))))
+       "ORG_CREATION_TIME"))
+    ;; similarly for AUTHOR and MAIL properties
+    (unless (org-find-property "AUTHOR")
+      (org-roam-add-property user-full-name "AUTHOR"))
+    (unless (org-find-property "MAIL")
+      (org-roam-add-property user-mail-address "MAIL"))
+    ;; also add the latitude and longitude
+    (unless (org-find-property "LAT_LONG")
+      ;; recheck location:
+      (marty/get-lat-long-from-ipinfo)
+      (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG"))))
+
+;;;;;; DAILIES GRAPHICS LINK
+(defun marty/org-roam-dailies-graphicslink ()
+  " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
+
+;;;;;; DAILIES TITLE
+(defun marty/org-roam-dailies-title ()
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "%A, %B %d %Y" datim)))
+
+;;;;;; DAILIES TODO SCHEDULE
+(defun marty/org-roam-dailies-todo-schedule ()
+  " Set the Date for the todo's in the dailies template "
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
+
+;;;;;; DAILIES TODO DEADLINE
+(defun marty/org-roam-dailies-todo-deadline ()
+  " Set the Date for the todo's in the dailies template "
+  (interactive)
+  (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+         (month (string-to-number (substring (buffer-name) 5 7)))
+         (day   (string-to-number (substring (buffer-name) 8 10)))
+         (datim (encode-time 0 0 0 day month year)))
+    (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
+
+;;;;;; SYSTEMCRAFTERS INSERT IMMEDIATE
+;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
+
+(defun org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))
+
+
+;;;;;; CAPTURE INBOX
+(defun marty/org-roam-capture-inbox ()
+  (interactive)
+  (org-roam-capture- :node (org-roam-node-create)
+                     :templates '(("i" "Inbox" plain "** %?"
+                                   :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
+
+;;;;;; MOVE TO TODAY
+;; Move Todo's to dailies when done
+(defun marty/org-roam-move-todo-to-today ()
+  (interactive)
+  (let ((org-refile-keep nil) ;; Set this to t to copy the original!
+        (org-roam-dailies-capture-templates
+         '(("t" "tasks" entry "%?"
+            :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
+        (org-after-refile-insert-hook #'save-buffer)
+        today-file
+        pos)
+    (save-window-excursion
+      (org-roam-dailies--capture (current-time) t)
+      (setq today-file (buffer-file-name))
+      (setq pos (point)))
+
+    ;; Only refile if the target file is different than the current file
+    (unless (equal (file-truename today-file)
+                   (file-truename (buffer-file-name)))
+      (org-refile nil nil (list "Tasks" today-file nil pos)))))
+
+
+;;;;;; ROAM-RG-SEARCH
+(defun marty/org-roam-rg-search ()
+  "Search org-roam directory using consult-ripgrep. With live-preview."
+  (interactive)
+  (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
+    (consult-ripgrep org-roam-directory)))
+;;;;;; ROAM-EXTRA
+(defun roam-extra:get-filetags ()
+  (split-string (or (org-roam-get-keyword "filetags") "")))
+
+(defun roam-extra:add-filetag (tag)
+  (let* ((new-tags (cons tag (roam-extra:get-filetags)))
+         (new-tags-str (combine-and-quote-strings new-tags)))
+    (org-roam-set-keyword "filetags" new-tags-str)))
+
+(defun roam-extra:del-filetag (tag)
+  (let* ((new-tags (seq-difference (roam-extra:get-filetags) `(,tag)))
+         (new-tags-str (combine-and-quote-strings new-tags)))
+    (org-roam-set-keyword "filetags" new-tags-str)))
+
+(defun roam-extra:todo-p ()
+  "Return non-nil if current buffer has any TODO entry.
+
+TODO entries marked as done are ignored, meaning the this
+function returns nil if current buffer contains only completed
+tasks."
+  (org-element-map
+      (org-element-parse-buffer 'headline)
+      'headline
+    (lambda (h)
+      (eq (org-element-property :todo-type h)
+          'todo))
+    nil 'first-match))
+
+(defun roam-extra:update-todo-tag ()
+  "Update TODO tag in the current buffer."
+  (when (and (not (active-minibuffer-window))
+             (org-roam-file-p))
+    (org-with-point-at 1
+      (let* ((tags (roam-extra:get-filetags))
+             (is-todo (roam-extra:todo-p)))
+        (cond ((and is-todo (not (seq-contains-p tags "todo")))
+               (roam-extra:add-filetag "todo"))
+              ((and (not is-todo) (seq-contains-p tags "todo"))
+               (roam-extra:del-filetag "todo")))))))
+
+(defun roam-extra:todo-files ()
+  "Return a list of roam files containing todo tag."
+  (org-roam-db-sync)
+  (let ((todo-nodes (seq-filter (lambda (n)
+                                  (seq-contains-p (org-roam-node-tags n) "todo"))
+                                (org-roam-node-list))))
+    (seq-uniq (seq-map #'org-roam-node-file todo-nodes))))
+
+(defun roam-extra:update-todo-files (&rest _)
+  "Update the value of `org-agenda-files'."
+  (setq org-agenda-files (roam-extra:todo-files)))
+
+;;;;; org-roam END
+)
+;;;;; org-roam-modules
+;;;;;; org-roam-ui
+(use-package! org-roam-ui
+  :after org-roam)
+;;;; TSfile Links
+
+(after! org
+  (defvar memacs-root "~/Nextcloud/Notes/memacs/")
+  (defvar memacs-file-pattern "files.org")
+
+  (with-eval-after-load 'org
+    (org-link-set-parameters
+     "tsfile"
+     :follow (lambda (path) (my-handle-tsfile-link path))
+     :help-echo "Opens the linked file with your default application"))
+
+  ;; by John Kitchin
+  (defun my-handle-tsfile-link (querystring)
+    ;; get a list of hits
+    (let ((queryresults (split-string
+                         (s-trim
+                          (shell-command-to-string
+                           (concat
+                            "grep \""
+                            querystring
+                            "\" "
+                            (concat memacs-root memacs-file-pattern))))
+                         "\n" t)))
+      ;; check length of list (number of lines)
+      (cond
+       ((= 0 (length queryresults))
+        ;; edge case: empty query result
+        (message "Sorry, no results found for query: %s" querystring))
+       (t
+        (with-temp-buffer
+          (insert (if (= 1 (length queryresults))
+                      (car queryresults)
+                    (completing-read "Choose: " queryresults)))
+          (org-mode)
+          (goto-char (point-min))
+          (org-next-link)
+          (org-open-at-point "file:"))))))
+
+  (defun marty/dired-copy-filename-as-tsfile-link ()
+    "Copy current file name with its basename as [[tsfile:<basename>]] custom org-mode link."
+    (interactive)
+    (dired-copy-filename-as-kill)       ;; current file name to kill ring
+    (let* ((filename (current-kill 0))) ;; get topmost kill ring element
+      (kill-new (concat "[[tsfile:" filename "]]")))))
+
+
+;;;; org-mode modules
+;;;;; org-super-agenda
+
+(use-package! org-super-agenda
+  :after org-agenda
+  :commands (org-super-agenda-mode))
+
+(after! org-agenda
+  (org-super-agenda-mode)
+
+  (setq org-agenda-custom-commands
+        '(("o" "Overview"
+           ((agenda "" ((org-super-agenda-groups
+                         '((:log t)  ; Automatically named "Log"
+                           (:name "Schedule"
+                            :time-grid t)
+                           (:name "Today"
+                            :scheduled today)
+                           (:habit t)
+                           (:name "Due today"
+                            :deadline today)
+                           (:name "Overdue"
+                            :deadline past)
+                           (:name "Due soon"
+                            :deadline future)
+                           (:name "Tickle"
+                            :deadline future)
+                           (:name "Unimportant"
+                            :todo ("BLOCKED" "TODELEGATE" "DELEGATED" "CANCELED"
+                                   :order 100)
+                            (:name "Waiting..."
+                             :todo "WAITING"
+                             :order 98)
+                            (:name "Scheduled earlier"
+                             :scheduled past))))))))
+          ("g" "group"
+           ((agenda "" ((org-agenda-spam 'week)
+                        (org-super-agenda-groups
+                         '((:auto-category t))
+                         )))))
+
+          ("u" "Super view"
+           ((agenda "" ((org-super-agenda-groups
+                         '((:name "Today"
+                            :time-grid t)))))
+            (todo "" ((org-agenda-overriding-header "Projects")
+                      (org-super-agenda-groups
+                       '((:name none  ; Disable super group header
+                          :children todo)
+                         (:discard (:anything t)))))))))))
+
+;;;;; org-pandoc
+(use-package! org-pandoc-import
+  :after org)
+
+;;;;; org-edna-mode
+(after! org
+  (org-edna-mode))
+;;;;; org-transclusion
+(use-package! org-transclusion
+  :defer t
+  :after org
+  :init
+  (map!
+   :map global-map "<f12>" #'org-transclusion-add
+   :leader
+   :prefix "n"
+   :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
+
+
+
+;; function to find latitude & longitude
+;;                      (requires curl to be installed on system)
+(setq calendar-latitude 0)
+(setq calendar-longitude 0)
+(defun marty/get-lat-long-from-ipinfo ()
+  (let*
+      ((latlong (substring
+                 (shell-command-to-string "curl -s 'https://ipinfo.io/loc'")
+                 0 -1))
+       (latlong-list (split-string latlong ",")))
+    (setq calendar-latitude (string-to-number (car latlong-list)))
+    (setq calendar-longitude (string-to-number (cadr latlong-list)))))
+
+;;;;; org-caldav
+
+;; (use-package! org-caldav
+;;   :after org
+;;   :init
+;;   ;; This is the sync on close function; it also prompts for save after syncing so
+;;   ;; no late changes get lost
+;;   (defun org-caldav-sync-at-close ()
+;;     (org-caldav-sync)
+;;     (save-some-buffers))
+
+;;   ;; This is the delayed sync function; it waits until emacs has been idle for
+;;   ;; "secs" seconds before syncing.  The delay is important because the caldav-sync
+;;   ;; can take five or ten seconds, which would be painful if it did that right at save.
+;;   ;; This way it just waits until you've been idle for a while to avoid disturbing
+;;   ;; the user.
+;;   (defvar org-caldav-sync-timer nil
+;;     "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+;;   (defun org-caldav-sync-with-delay (secs)
+;;     (when org-caldav-sync-timer
+;;       (cancel-timer org-caldav-sync-timer))
+;;     (setq org-caldav-sync-timer
+;;           (run-with-idle-timer
+;;            (* 1 secs) nil 'org-caldav-sync)))
+
+;;   (setq org-caldav-calendars
+;;         '((:calendar-id "personal"
+;;            :files ("~/Nextcloud/Notes/org/Calendar.org")
+;;            :inbox "~/Nextcloud/Notes/Calendars/personal-inbox.org"))
+;;         )
+
+;;   :config (progn
+;;             (setq org-caldav-debug-level 0)
+;;             (setq org-icalendar-alarm-time 1)
+;;             (setq org-caldav-url "https://nextcloud.dabuke.com/remote.php/dav/calendars/marty")
+;;             (setq org-icalendar-timezone "America/New York")
+;;             (setq org-caldav-save-directory (concat user-emacs-directory ".local/cache/"))
+;;             (setq org-caldav-backup-file (concat user-emacs-directory ".local/cache/"))
+;;             (setq org-icalendar-use-deadline t)
+;;             (setq org-icalendar-include-todo t)
+;;             ;; This ensures all org "deadlines" show up, and show up as due dates
+;;             (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
+;;             ;; This ensures "scheduled" org items show up, and show up as start times
+;;             (setq org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo))
+;;             ;; Add the delayed save hook with a five minute idle timer
+;;             (add-hook 'after-save-hook
+;;                       (lambda ()
+;;                         (when (eq major-mode 'org-mode)
+;;                           (org-caldav-sync-with-delay 300)))))
+;;   ;; (add-hook 'kill-emacs-hook 'org-caldav-sync-at-close)
+;;   )
