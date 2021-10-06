@@ -17,6 +17,7 @@
 (package! counsel-tramp)
 (package! dashboard)
 (package! ebuku)
+(package! elfeed-protocol)
 (package! info-colors)
 (package! khardel)
 (package! khalel)
@@ -44,4 +45,4 @@
 (package! org-roam-ui              :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 (package! org-transclusion         :recipe (:host github :repo "nobiot/org-transclusion" :branch "main" :files ("*.el")))
 (package! outshine                 :recipe (:host github :repo "alphapapa/outshine"))
-(package! vlf                      :recipe (:host github :repo "m00natic/vlfi" :files ("*.el") ))
+(package! vlf                      :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))

@@ -43,10 +43,16 @@
 ;;;; UI
 ;;;;; FONTS
 
-(setq doom-font (font-spec :family "firacode nerd font mono" :size 15)
-      doom-unicode-font (font-spec :family "symbola" :size 15)
-      doom-variable-pitch-font (font-spec :family "Cantarell" :size 15)
-      doom-big-font (font-spec :family "firacode nerd font mono" :size 24))
+(setq doom-font
+      (font-spec :family "Hack Nerd Font Mono" :size 14)
+      doom-serif-font
+      (font-spec :family "Hack Nerd Font Mono" :size 14)
+      doom-unicode-font
+      (font-spec :family "symbola" :size 14)
+      doom-variable-pitch-font
+      (font-spec :family "Cantarell" :size 14)
+      doom-big-font
+      (font-spec :family "Hack Nerd Font Mono" :size 24))
 
 ;;;;; FACES
 (custom-set-faces!
@@ -429,6 +435,16 @@ templates into newly created files"
   (map! :leader
         :prefix "a"
         "b" #'ebuku))
+
+;;;; ELFEED PROTOCOL
+(use-package! elfeed-protocol
+  :config
+  (setq elfeed-feeds '(("owncloud+https://marty@nextcloud.dabuke.com"
+                        :password (auth-source-pass-get 'secret "Login/nextcloud.dabuke.com/marty"))))
+  (map! :leader
+        :prefix "a"
+        "e" #'elfeed)
+  (elfeed-protocol-enable))
 
 ;;;; I3 WINDOW MANAGER CONFIG
 ;; Syntax highlighting for i3 config

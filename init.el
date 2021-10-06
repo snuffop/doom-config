@@ -37,8 +37,7 @@
         +defaults
         +all)
        ;;tabs              ; a tab bar for Emacs
-       (treemacs          ; a project drawer, like neotree but cooler
-        +lsp)
+       treemacs          ; a project drawer, like neotree but cooler
        ;;tree-sitter
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
@@ -97,7 +96,7 @@
        (lookup              ; navigate your code and its documentation
         +dictionary
         +docsets)
-       lsp
+       ;;lsp
        (magit)             ; a git porcelain for Emacs
 
        make              ; run make tasks from Emacs
@@ -118,10 +117,8 @@
 
        :lang
        ;;agda              ; types of types of types of types...
-       (beancount         ; mind the GAAP
-        +lsp)
-       (cc                ; C > C++ == 1
-        +lsp)
+       beancount         ; mind the GAAP
+       cc                ; C > C++ == 1
        ;;clojure           ; java with a lisp
        common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
@@ -139,8 +136,7 @@
        ;;fsharp            ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
-       (go                 ; the hipster dialect
-        +lsp)
+       go                 ; the hipster dialect
        (haskell +dante)  ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
@@ -167,12 +163,10 @@
         +gnuplot
         +dragndrop
         +roam2)
-       (php               ; perl's insecure younger brother
-        +lsp)
+       php               ; perl's insecure younger brother
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python            ; beautiful is better than ugly
-        +lsp
         +pyright)
        qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
@@ -183,15 +177,13 @@
        rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
-       (sh                ; she sells {ba,z,fi}sh shells on the C xor
-        +lsp)
+       sh                ; she sells {ba,z,fi}sh shells on the C xor
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        terra             ; Earth and Moon in alignment for performance.
        web               ; the tubes
-       (yaml              ; JSON, but readable
-        +lsp)
+       yaml              ; JSON, but readable
        ;;zig               ; C, but simpler
 
        :email
@@ -200,6 +192,7 @@
        :app
        calendar
        everywhere        ; *leave* Emacs!? You must be joking
+       rss
 
        :config
        ;; literate

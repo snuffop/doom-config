@@ -244,20 +244,15 @@
            (file "~/.config/doom/templates/todo.orgcaptmpl"))
           ("c" "Contacts" entry (file-olp "~/Nextcloud/Notes/org/contacts.org" "General")
            (file "~/.config/doom/templates/contact.orgcaptmpl"))
-          ("p" "Protocol" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox" entry)
+          ("p" "Protocol" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox" entry)
            "** %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-          ("R" "Remember-mutt" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Mail")
+          ("R" "Remember-mutt" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Mail")
            (file "~/.config/doom/templates/org-templates/mail.orgcaptmpl"))
-          ("L" "Protocol Link" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
+          ("L" "Protocol Link" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
            "** %? [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n")
-          ("w" "Web site" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
+          ("w" "Web site" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
            (file "~/.config/doom/templates/org-templates/weblink.orgcaptmpl"))
-          ("s" "Simple" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Popup")
+          ("s" "Simple" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Popup")
            "%[~/.emacs.d/.org-popup]" :immediate-finish t :prepend t)
 
           ("m" "Email Workflow")
