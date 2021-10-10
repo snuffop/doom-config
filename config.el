@@ -29,7 +29,7 @@
 (global-subword-mode 1)
 
 (after! projectile
-  (setq projectile-project-search-path '("~/source")))
+  (setq projectile-project-search-path '("~/Source")))
 ;;  (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
 
 ;;;;; COMPANY
