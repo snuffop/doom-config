@@ -12,6 +12,7 @@
 (package! aggressive-indent)
 (package! alert)
 (package! all-the-icons-completion)
+(package! all-the-icons-dired)
 (package! autoinsert)
 (package! browse-kill-ring)
 (package! counsel-tramp)
@@ -21,6 +22,7 @@
 (package! info-colors)
 (package! khardel)
 (package! khalel)
+(package! lsp-ui)
 (package! mixed-pitch)
 (package! mu4e-column-faces)
 (package! mu4e-marker-icons)
@@ -32,6 +34,8 @@
 (package! salt-mode)
 (package! systemd)
 (package! telega)
+(package! tree-sitter)
+(package! tree-sitter-langs)
 (package! wakatime-mode)
 
 ;;;;  IF

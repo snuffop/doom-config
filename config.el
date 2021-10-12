@@ -473,6 +473,62 @@ templates into newly created files"
 
 (setq ledger-post-amount-alignment-column 69)
 
+;;;; LSP
+(use-package lsp
+  :defer 0.1
+  ;; TIDE check, less laggi?
+  ;; :hook (((go-mode scss-mode css-mode web-mode ng2-html-mode ng2-ts-mode python-mode) . lsp-deferred))
+  :hook (((go-mode scss-mode css-mode js-mode typescript-mode vue-mode web-mode ng2-html-mode ng2-ts-mode python-mode) . lsp-deferred))
+  :custom
+  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-idle-delay 0.3)
+  (lsp-enable-on-type-formatting nil)
+  (lsp-eldoc-render-all nil)
+  (lsp-prefer-flymake nil)
+  (lsp-file-watch-threshold 4000)
+  (lsp-modeline-diagnostics-scope :workspace)
+  (lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr"))
+  :config
+  ;; Flycheck patch checkers
+  (require 'lsp-diagnostics)
+  (require 'flycheck)
+  (lsp-diagnostics-flycheck-enable)
+  ;; Golang
+  (defun lsp-go-install-save-hooks ()
+    ;; (flycheck-add-next-checker 'lsp '(t . golangci-lint) 'append)
+
+    (flycheck-add-next-checker 'lsp '(warning . go-gofmt) 'append)
+    (flycheck-add-next-checker 'lsp '(warning . go-golint))
+    (flycheck-add-next-checker 'lsp '(warning . go-errcheck))
+    (flycheck-add-next-checker 'lsp '(warning . go-staticcheck))
+
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+
+  ;; Override company backends for lsp
+  ;; (setq +lsp-company-backends '(company-tabnine :separate company-capf))
+  (setq +lsp-company-backends '(company-tabnine :separate company-yasnippet))
+
+  (setq lsp-disabled-clients '(html html-ls))
+  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv\\'")
+  (setq lsp-eldoc-hook nil))
+
+;;;;; LSP-UI
+
+(use-package lsp-ui
+  :after lsp-mode
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-diagnostic-max-line-length 200
+        lsp-ui-sideline-diagnostic-max-lines 5
+        lsp-ui-doc-delay 2
+        lsp-ui-doc-position 'top
+        lsp-ui-doc-show-with-mouse nil
+        lsp-ui-doc-border +m-color-main))
+
 ;;;; MAGIT
 
 (setq magit-revision-show-gravatars '("^author:     " . "^commit:     "))
@@ -539,6 +595,19 @@ templates into newly created files"
 ;;;; TREEMACS
 
 (setq +treemacs-git-mode 'extended)
+
+;;;; TREESITTER
+
+(use-package tree-sitter-langs
+  :defer 6)
+
+(use-package tree-sitter
+  :after tree-sitter-langs
+  :hook ((go-mode typescript-mode css-mode html-mode scss-mode ng2-mode js-mode python-mode rust-mode ng2-ts-mode ng2-html-mode) . tree-sitter-hl-mode)
+  :config
+  (push '(ng2-html-mode . html) tree-sitter-major-mode-language-alist)
+  (push '(ng2-ts-mode . typescript) tree-sitter-major-mode-language-alist)
+  (push '(scss-mode . css) tree-sitter-major-mode-language-alist))
 
 ;;;; TELEGA
 (use-package! telega
