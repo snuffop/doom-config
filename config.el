@@ -4,6 +4,9 @@
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Notes
+;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
 ;;
 ;;; CODE
 ;;;; GLOBAL
@@ -55,6 +58,7 @@
       (font-spec :family "Hack Nerd Font Mono" :size 24))
 
 ;;;;; FACES
+
 (custom-set-faces!
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
@@ -113,8 +117,7 @@
 
 ;;;; SPELLING
 
-(use-package flyspell
-  :defer 7
+(use-package! flyspell
   :config
   ;; (setq ispell-program-name "aspell")
   ;; You could add extra option "--camel-case" for since Aspell 0.60.8
@@ -139,7 +142,7 @@
 
 
   (setq flyspell-lazy-idle-seconds 2)
-  (setq ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+  (setq ispell-personal-dictionary "~/.config/doom/dictionary/ispell_personal" )
   (setq spell-fu-directory "~/.config/doom/dictionary") ;; Please create this directory manually.
   (after! ispell
     (setq ispell-program-name "aspell"
@@ -153,8 +156,7 @@
   (advice-add 'ispell-pdict-save :after #'flyspell-buffer-after-pdict-save))
 
 
-;; (use-package spell-fu
-;;   :defer 0.1
+;; (use-package! spell-fu
 ;;   :config
 ;;   (global-spell-fu-mode))
 
@@ -202,7 +204,6 @@
 ;;;; AGGRESSIVE INDENT
 
 (use-package! aggressive-indent
-  :defer t
   :config
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'clojure-mode-hook    #'aggressive-indent-mode)
@@ -211,8 +212,7 @@
 
 (global-aggressive-indent-mode 1)
 
-(use-package alert
-  :defer t)
+(use-package! alert)
 
 (use-package! all-the-icons-completion)
 (all-the-icons-completion-mode)
@@ -293,9 +293,8 @@ templates into newly created files"
 
 ;; (my-setup-tabnine)
 ;; Autocomplete with AI
-(use-package company-tabnine
+(use-package! company-tabnine
   :after (company lsp)
-  :bind (("C-x C-i" . company-tabnine))
   :when (featurep! :completion company)
   :config
   (setq company-idle-delay 0.1)
@@ -483,7 +482,7 @@ templates into newly created files"
 
 ;;;; DASHBOARD
 
-(use-package dashboard
+(use-package! dashboard
   :init      ;; tweak dashboard config before loading it
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
@@ -503,13 +502,11 @@ templates into newly created files"
 
 ;;;; DOCKER COMPOSE
 
-(use-package docker-compose-mode
-  :defer 6)
+(use-package! docker-compose-mode)
 
 ;;;; DOCKER
 
-(use-package dockerfile-mode
-  :defer 6)
+(use-package! dockerfile-mode)
 
 ;;;; EBUKU
 ;;
@@ -534,25 +531,10 @@ templates into newly created files"
         "e" #'elfeed)
   (elfeed-protocol-enable))
 
-;;;; ELISP
-
-(use-package elisp-mode
-  :defer 4
-  :bind (("C-c o" . outline-cycle)
-         ("C-c r" . outline-show-all)
-         ("C-c m" . outline-hide-body)
-         ("C-c ]" . outline-next-heading)
-         ("C-c [" . outline-previous-heading)
-         ("C-c c" . counsel-outline)
-         ("C-c e" . outline-hide-entry)
-         ("C-c t" . outline-toggle-children)
-         ("C-c b" . outline-cycle-buffer)))
-
 ;;;; GIT
 ;;;;; MAGIT
 
-(use-package magit
-  :defer 0.3
+(use-package! magit
   :config
   (define-key transient-map        "q" 'transient-quit-one)
   (define-key transient-edit-map   "q" 'transient-quit-one)
@@ -560,109 +542,15 @@ templates into newly created files"
 
 ;;;;; GIT-GUTTER
 
-(use-package git-gutter
-  :defer 3
+(use-package! git-gutter
   :init
   (global-git-gutter-mode)
   (global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
   (global-set-key (kbd "C-x n") 'git-gutter:next-hunk))
 
-;;;;; GIT MESSENGER
-
-(use-package git-messenger
-  :defer 25
-  :bind (:map vc-prefix-map
-         ("p" . git-messenger:popup-message)
-         :map git-messenger-map
-         ("m" . git-messenger:copy-message))
-  :config
-  (setq git-messenger:show-detail t
-        git-messenger:use-magit-popup t)
-  ;; :config
-  (with-no-warnings
-    (with-eval-after-load 'hydra
-      (defhydra git-messenger-hydra (:color blue)
-        ("s" git-messenger:popup-show "show")
-        ("c" git-messenger:copy-commit-id "copy hash")
-        ("m" git-messenger:copy-message "copy message")
-        ("," (catch 'git-messenger-loop (git-messenger:show-parent)) "go parent")
-        ("q" git-messenger:popup-close "quit")))
-
-    (defun my-git-messenger:format-detail (vcs commit-id author message)
-      (if (eq vcs 'git)
-          (let ((date (git-messenger:commit-date commit-id))
-                (colon (propertize ":" 'face 'font-lock-comment-face)))
-            (concat
-             (format "%s%s %s \n%s%s %s\n%s  %s %s \n"
-                     (propertize "Commit" 'face 'font-lock-keyword-face) colon
-                     (propertize (substring commit-id 0 8) 'face 'font-lock-comment-face)
-                     (propertize "Author" 'face 'font-lock-keyword-face) colon
-                     (propertize author 'face 'font-lock-string-face)
-                     (propertize "Date" 'face 'font-lock-keyword-face) colon
-                     (propertize date 'face 'font-lock-string-face))
-             (propertize (make-string 38 ?─) 'face 'font-lock-comment-face)
-             message
-             (propertize "\nPress q to quit" 'face '(:inherit (font-lock-comment-face italic)))))
-        (git-messenger:format-detail vcs commit-id author message)))
-
-    (defun my-git-messenger:popup-message ()
-      "Popup message with `posframe', `pos-tip', `lv' or `message', and dispatch actions with `hydra'."
-      (interactive)
-      (let* ((vcs (git-messenger:find-vcs))
-             (file (buffer-file-name (buffer-base-buffer)))
-             (line (line-number-at-pos))
-             (commit-info (git-messenger:commit-info-at-line vcs file line))
-             (commit-id (car commit-info))
-             (author (cdr commit-info))
-             (msg (git-messenger:commit-message vcs commit-id))
-             (popuped-message (if (git-messenger:show-detail-p commit-id)
-                                  (my-git-messenger:format-detail vcs commit-id author msg)
-                                (cl-case vcs
-                                  (git msg)
-                                  (svn (if (string= commit-id "-")
-                                           msg
-                                         (git-messenger:svn-message msg)))
-                                  (hg msg)))))
-        (setq git-messenger:vcs vcs
-              git-messenger:last-message msg
-              git-messenger:last-commit-id commit-id)
-        (run-hook-with-args 'git-messenger:before-popup-hook popuped-message)
-        (git-messenger-hydra/body)
-        (cond ((and (fboundp 'posframe-workable-p) (posframe-workable-p))
-               (let ((buffer-name "*git-messenger*"))
-                 (posframe-show buffer-name
-                                :string popuped-message
-                                :left-fringe 8
-                                :right-fringe 8
-                                ;; :poshandler #'posframe-poshandler-window-top-right-corner
-                                :poshandler #'posframe-poshandler-window-top-right-corner
-                                ;; Position broken with xwidgets and emacs 28
-                                ;; :position '(-1 . 0)
-                                :y-pixel-offset 20
-                                :x-pixel-offset -20
-                                :internal-border-width 2
-                                :lines-truncate t
-                                :internal-border-color (face-foreground 'font-lock-comment-face)
-                                :accept-focus nil)
-                 (unwind-protect
-                     (push (read-event) unread-command-events)
-                   (posframe-delete buffer-name))))
-              ((and (fboundp 'pos-tip-show) (display-graphic-p))
-               (pos-tip-show popuped-message))
-              ((fboundp 'lv-message)
-               (lv-message popuped-message)
-               (unwind-protect
-                   (push (read-event) unread-command-events)
-                 (lv-delete-window)))
-              (t (message "%s" popuped-message)))
-        (run-hook-with-args 'git-messenger:after-popup-hook popuped-message)))
-    (advice-add #'git-messenger:popup-close :override #'ignore)
-    ;; (advice-add #'git-messenger:popup-close :override #'(setq modal-opened 0))
-    (advice-add #'git-messenger:popup-message :override #'my-git-messenger:popup-message)));;;
 ;;;; Hydra
 
-(use-package hydra
-  :defer 8)
+(use-package! hydra)
 
 ;;;; I3 WINDOW MANAGER CONFIG
 ;; Syntax highlighting for i3 config
@@ -670,8 +558,7 @@ templates into newly created files"
 
 ;;;; JENKINS
 
-(use-package jenkinsfile-mode
-  :defer 6)
+(use-package! jenkinsfile-mode)
 
 ;;;; KHARD
 
@@ -697,11 +584,7 @@ templates into newly created files"
 (setq ledger-post-amount-alignment-column 69)
 
 ;;;; LSP
-(use-package lsp
-  :defer 0.1
-  ;; TIDE check, less laggi?
-  ;; :hook (((go-mode scss-mode css-mode web-mode ng2-html-mode ng2-ts-mode python-mode) . lsp-deferred))
-  :hook (((go-mode scss-mode css-mode js-mode typescript-mode vue-mode web-mode ng2-html-mode ng2-ts-mode python-mode) . lsp-deferred))
+(use-package! lsp
   :custom
   (lsp-headerline-breadcrumb-enable nil)
   (lsp-idle-delay 0.3)
@@ -741,9 +624,9 @@ templates into newly created files"
 
 ;;;;; LSP-UI
 
-(use-package lsp-ui
+(use-package! lsp-ui
   :after lsp-mode
-  :hook (lsp-mode . lsp-ui-mode)
+  ;;  :hook (lsp-mode . lsp-ui-mode)
   :config
   (setq lsp-ui-sideline-diagnostic-max-line-length 200
         lsp-ui-sideline-diagnostic-max-lines 5
@@ -758,12 +641,11 @@ templates into newly created files"
 
 ;;;; NGINX
 
-(use-package company-nginx
+(use-package! company-nginx
   :after nginx-mode
   :config (add-hook 'nginx-mode-hook (lambda () (add-to-list 'company-backends #'company-nginx))))
 
-(use-package nginx-mode
-  :defer 10)
+(use-package! nginx-mode)
 
 ;;;; MUTT-MODE
 
@@ -790,7 +672,7 @@ templates into newly created files"
 
 ;;;; PAPERLESS
 
-(use-package paperless
+(use-package! paperless
   :init (require 'org-paperless)
   :config (progn
             (custom-set-variables
@@ -812,9 +694,7 @@ templates into newly created files"
 
 ;;;; PYTHON MODE
 
-(use-package python-mode
-  :defer 0.5
-  :hook (python-mode . format-all-mode)
+(use-package! python-mode
   :config
   (setq pytnon-indent-level 4)
   (add-hook 'python-mode-hook
@@ -824,8 +704,7 @@ templates into newly created files"
 
 ;;;;; LSP PYRIGHT
 
-(use-package lsp-pyright
-  :defer 0.5
+(use-package! lsp-pyright
   :config
   (setq lsp-pyright-auto-import-completions t)
   (setq lsp-pyright-auto-search-paths t)
@@ -848,8 +727,7 @@ templates into newly created files"
 ;;;; TREEMACS
 ;;;; treemacs
 
-(use-package treemacs
-  :defer 3
+(use-package! treemacs
   :custom
   (treemacs-width 35)
   :config
@@ -857,12 +735,10 @@ templates into newly created files"
 
 ;;;; TREESITTER
 
-(use-package tree-sitter-langs
-  :defer 6)
+(use-package! tree-sitter-langs)
 
-(use-package tree-sitter
+(use-package! tree-sitter
   :after tree-sitter-langs
-  :hook ((go-mode typescript-mode css-mode html-mode scss-mode ng2-mode js-mode python-mode rust-mode ng2-ts-mode ng2-html-mode) . tree-sitter-hl-mode)
   :config
   (push '(ng2-html-mode . html) tree-sitter-major-mode-language-alist)
   (push '(ng2-ts-mode . typescript) tree-sitter-major-mode-language-alist)
@@ -879,8 +755,7 @@ templates into newly created files"
 
 ;;;; UNDO
 
-(use-package undo-tree
-  :defer 0.3
+(use-package! undo-tree
   :config
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist '(("." . "~/tmp/undo")))
@@ -905,8 +780,7 @@ templates into newly created files"
 
 ;;;; WEB MODE
 
-(use-package web-mode
-  :defer 0.5
+(use-package! web-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   (setq web-mode-comment-formats
@@ -925,15 +799,11 @@ templates into newly created files"
 
 ;;;;; HTML
 
-(use-package emmet-mode
-  :hook ((scss-mode . emmet-mode) (css-mode . emmet-mode) (ng2-html-mode . emmet-mode) (html-mode . emmet-mode))
-  :defer 5)
+(use-package! emmet-mode)
 
 ;;;;; JSON
 
-(use-package json-mode
-  :defer 5
-  :hook (json-mode . format-all-mode))
+(use-package! json-mode)
 
 
 ;;; TEMP / FIXUP
