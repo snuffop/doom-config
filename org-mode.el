@@ -1,4 +1,4 @@
-;;; org-mode.el --- Summary -*- lexical-binding: t -*-
+;; org-mode.el --- Summary -*- lexical-binding: t -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -173,6 +173,7 @@
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
 
+
 ;;;;;; SYMBOLS
 
   (setq prettify-symbols-unprettify-at-point 'right-edge)
@@ -219,19 +220,26 @@
                              (push '("#+begin_src" . "↦" ) prettify-symbols-alist)
                              (push '("#+end_src" . "⇤" ) prettify-symbols-alist)
                              (push '("#+TITLE:" . "") prettify-symbols-alist)
+                             (push '("#+title:" . "") prettify-symbols-alist)
                              (push '("#+DESCRIPTION:" . "") prettify-symbols-alist)
                              (push '("#+ID:" . "") prettify-symbols-alist)
                              (push '("#+FILETAGS:" . "") prettify-symbols-alist)
+                             (push '("#+filetags:" . "") prettify-symbols-alist)
                              (push '("#+ACTIVE:" . "") prettify-symbols-alist)
                              (push '("#+START_SPOILER" . "") prettify-symbols-alist)
                              (push '("#+CLOSE_SPOILER" . "") prettify-symbols-alist)
                              (push '("#+BEGIN_HIDDEN" . "") prettify-symbols-alist)
                              (push '("#+END_HIDDEN" . "") prettify-symbols-alist)
+                             (push '("#+STARTUP:" . "🌟") prettify-symbols-alist)
+                             (push '("#+startup:" . "🌟") prettify-symbols-alist)
+                             (push '("#+CATEGORY:" . "⛏ ") prettify-symbols-alist)
+                             (push '("#+category:" . "⛏ ") prettify-symbols-alist)
                              (push '("[#A]" . "⚡") prettify-symbols-alist)
                              (push '("[#B]" . "⬆") prettify-symbols-alist)
                              (push '("[#C]" . "■") prettify-symbols-alist)
                              (push '("[#D]" . "⬇") prettify-symbols-alist)
                              (push '("[#E]" . "❓") prettify-symbols-alist)
+                             (push '("lambda" . "λ") prettify-symbols-alist)
                              (prettify-symbols-mode)))
 ;;;;;; TAG LIST
 
@@ -313,7 +321,21 @@
 
   (setq org-protocol-default-template-key "t")
 
-;;;;;; Todo Faces
+;;;;;; FACES
+
+  (custom-set-faces
+   '(org-document-title ((t (:inherit outline-1 :height 1.5))))
+   '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.13))))
+   '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+   )
+
+  (add-to-list 'org-tag-faces '("@.*" . (:foreground "red")))
+
+;;;;;; TODO FACES
+
   (setq org-todo-keyword-faces
         '(("TODO"       . org-warning)
           ("NEXT"       . (:foreground "#008080" :weight bold))
@@ -325,7 +347,7 @@
           ("TICKLE"     . (:foreground "White"   :weight bold))
           ("DONE"       . (:foreground "green"   :weight bold))))
 
-;;;;;; keywords
+;;;;;; KEYWORDS
   (setq org-todo-keywords
         '((sequence "TODO(t)"
                     "NEXT(n!)"
@@ -342,8 +364,11 @@
   ) ;; End (after! org
 
 ;;;; ORG-ROAM
+
 (after! org-roam
+
 ;;;;; ORG-ROAM CAPTURE TEMPLATES
+
   (setq org-roam-dailies-capture-templates
         '(("d" "default" entry "* %?"
            :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
