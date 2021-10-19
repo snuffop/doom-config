@@ -13,27 +13,29 @@
 
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
+(setq epg-gpg-program "/usr/bin/gpg")
 
 (setq-default enable-local-variables t)            ; allow for reading the local variables file
 (setq-default window-combination-resize t)
 (setq-default left-margin-width 1 right-margin-width 2) ; Define new widths.
 (setq-default x-stretch-cursor t)
 
+(setq scroll-margin 2)                             ; it's nice to maintain a little margin
 (setq evil-want-fine-undo t)                       ; by default while in insert all changes are one big blob. be more granular
 (setq undo-limit 80000000)                         ; raise undo-limit to 80mb
-
 (setq auto-save-default t)                         ; nobody likes to loose work, i certainly don't
 (setq confirm-kill-emacs nil)                      ; stop hounding me and quit
-(setq display-time-24hr-format t)
+(setq display-time-24hr-format t)                  ; I wonder what this does
 (setq password-cache-expiry nil)                   ; i can trust my computers ... can't i?
 (setq read-process-output-max (* 1024 1024))
-(setq scroll-margin 2)                             ; it's nice to maintain a little margin
 (setq truncate-string-ellipsis "…")                ; unicode ellispis are nicer than "...", and also save /precious/ space
 (setq warning-minimum-level :emergency)
 
+(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)  ; Make the scratch buffer start in lisp mode
+
 (display-time-mode 1)                             ; enable time in the mode-line
 
-(global-subword-mode 1)
+(global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly easie
 
 (after! projectile
   (setq projectile-project-search-path '("~/Source")))
@@ -41,6 +43,31 @@
 
 (set-window-buffer nil (current-buffer))
 (setenv "zstd" "/usr/bin/zstd")
+
+;;;;; VTERM
+
+(setq vterm-kill-buffer-on-exit t)
+(setq vterm-always-compile-module t)               ; Always compile the vterm module
+
+;;;;; SERVER
+
+(require 'server)
+(when (not (server-running-p))
+  (server-start))
+
+(defun greedily-do-daemon-setup ()
+  (require 'org)
+  (when (require 'mu4e nil t)
+    (setq mu4e-confirm-quit t)
+    (setq +mu4e-lock-greedy t)
+    (setq +mu4e-lock-relaxed t)
+    (+mu4e-lock-add-watcher)
+    (when (+mu4e-lock-available t)
+      (mu4e~start))))
+
+(when (daemonp)
+  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup)
+  (add-hook! 'server-after-make-frame-hook (switch-to-buffer +doom-dashboard-name)))
 
 ;;;;; EVIL-SETTINGS
 
@@ -71,7 +98,21 @@
   '(mode-line :family "firacode nerd font mono" :height 100)
   '(mode-line-inactive :family "firacode nerd font mono" :height 100))
 
-(add-hook! 'org-mode-hook #'mixed-pitch-mode)
+;;;;;; MIXED PITCH
+
+;;(add-hook! 'org-mode-hook #'mixed-pitch-mode)
+
+(defvar marty/mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Only use `mixed-pitch-mode' for given modes.")
+
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode of `marty/mixed-pitch-modes'"
+  (when (memq major-mode marty/mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook marty/mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
 
 ;; additional colors
 (setq +m-color-main "#61AFEF"
@@ -568,101 +609,6 @@ templates into newly created files"
   (global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
   (global-set-key (kbd "C-x n") 'git-gutter:next-hunk))
 
-;;;;; GIT MESSENGER
-
-(use-package git-messenger
-  :defer 25
-  :bind (:map vc-prefix-map
-         ("p" . git-messenger:popup-message)
-         :map git-messenger-map
-         ("m" . git-messenger:copy-message))
-  :config
-  (setq git-messenger:show-detail t
-        git-messenger:use-magit-popup t)
-  ;; :config
-  (with-no-warnings
-    (with-eval-after-load 'hydra
-      (defhydra git-messenger-hydra (:color blue)
-        ("s" git-messenger:popup-show "show")
-        ("c" git-messenger:copy-commit-id "copy hash")
-        ("m" git-messenger:copy-message "copy message")
-        ("," (catch 'git-messenger-loop (git-messenger:show-parent)) "go parent")
-        ("q" git-messenger:popup-close "quit")))
-
-    (defun my-git-messenger:format-detail (vcs commit-id author message)
-      (if (eq vcs 'git)
-          (let ((date (git-messenger:commit-date commit-id))
-                (colon (propertize ":" 'face 'font-lock-comment-face)))
-            (concat
-             (format "%s%s %s \n%s%s %s\n%s  %s %s \n"
-                     (propertize "Commit" 'face 'font-lock-keyword-face) colon
-                     (propertize (substring commit-id 0 8) 'face 'font-lock-comment-face)
-                     (propertize "Author" 'face 'font-lock-keyword-face) colon
-                     (propertize author 'face 'font-lock-string-face)
-                     (propertize "Date" 'face 'font-lock-keyword-face) colon
-                     (propertize date 'face 'font-lock-string-face))
-             (propertize (make-string 38 ?─) 'face 'font-lock-comment-face)
-             message
-             (propertize "\nPress q to quit" 'face '(:inherit (font-lock-comment-face italic)))))
-        (git-messenger:format-detail vcs commit-id author message)))
-
-    (defun my-git-messenger:popup-message ()
-      "Popup message with `posframe', `pos-tip', `lv' or `message', and dispatch actions with `hydra'."
-      (interactive)
-      (let* ((vcs (git-messenger:find-vcs))
-             (file (buffer-file-name (buffer-base-buffer)))
-             (line (line-number-at-pos))
-             (commit-info (git-messenger:commit-info-at-line vcs file line))
-             (commit-id (car commit-info))
-             (author (cdr commit-info))
-             (msg (git-messenger:commit-message vcs commit-id))
-             (popuped-message (if (git-messenger:show-detail-p commit-id)
-                                  (my-git-messenger:format-detail vcs commit-id author msg)
-                                (cl-case vcs
-                                  (git msg)
-                                  (svn (if (string= commit-id "-")
-                                           msg
-                                         (git-messenger:svn-message msg)))
-                                  (hg msg)))))
-        (setq git-messenger:vcs vcs
-              git-messenger:last-message msg
-              git-messenger:last-commit-id commit-id)
-        (run-hook-with-args 'git-messenger:before-popup-hook popuped-message)
-        (git-messenger-hydra/body)
-        (cond ((and (fboundp 'posframe-workable-p) (posframe-workable-p))
-               (let ((buffer-name "*git-messenger*"))
-                 (posframe-show buffer-name
-                                :string popuped-message
-                                :left-fringe 8
-                                :right-fringe 8
-                                ;; :poshandler #'posframe-poshandler-window-top-right-corner
-                                :poshandler #'posframe-poshandler-window-top-right-corner
-                                ;; Position broken with xwidgets and emacs 28
-                                ;; :position '(-1 . 0)
-                                :y-pixel-offset 20
-                                :x-pixel-offset -20
-                                :internal-border-width 2
-                                :lines-truncate t
-                                :internal-border-color (face-foreground 'font-lock-comment-face)
-                                :accept-focus nil)
-                 (unwind-protect
-                     (push (read-event) unread-command-events)
-                   (posframe-delete buffer-name))))
-              ((and (fboundp 'pos-tip-show) (display-graphic-p))
-               (pos-tip-show popuped-message))
-              ((fboundp 'lv-message)
-               (lv-message popuped-message)
-               (unwind-protect
-                   (push (read-event) unread-command-events)
-                 (lv-delete-window)))
-              (t (message "%s" popuped-message)))
-        (run-hook-with-args 'git-messenger:after-popup-hook popuped-message)))
-
-    (advice-add #'git-messenger:popup-close :override #'ignore)
-    ;; (advice-add #'git-messenger:popup-close :override #'(setq modal-opened 0))
-    (advice-add #'git-messenger:popup-message :override #'my-git-messenger:popup-message)))
-
-
 ;;;; Hydra
 
 (use-package! hydra
@@ -671,6 +617,13 @@ templates into newly created files"
 ;;;; I3 WINDOW MANAGER CONFIG
 ;; Syntax highlighting for i3 config
 (use-package! i3wm-config-mode)
+
+;;;; INFO PAGES
+
+(use-package! info-colors
+  :after info
+  :commands (info-colors-fontify-node)
+  :hook (Info-selection . info-colors-fontify-node))
 
 ;;;; JENKINS
 
@@ -700,6 +653,7 @@ templates into newly created files"
 (setq ledger-post-amount-alignment-column 69)
 
 ;;;; LSP
+
 (use-package! lsp
   :defer 0.1
   ;; TIDE check, less laggi?
@@ -874,14 +828,6 @@ templates into newly created files"
   (push '(ng2-ts-mode . typescript) tree-sitter-major-mode-language-alist)
   (push '(scss-mode . css) tree-sitter-major-mode-language-alist))
 
-;;;; TELEGA
-(use-package! telega
-  :config
-  (setq telega-notifications-mode t)
-  (map! :leader
-        :prefix "a"
-        "T" #'telega
-        ))
 
 ;;;; UNDO
 
@@ -958,6 +904,42 @@ templates into newly created files"
 (with-eval-after-load "mm-decode"
   (add-to-list 'mm-discouraged-alternatives "text/html")
   (add-to-list 'mm-discouraged-alternatives "text/richtext"))
+
+;;;;; MARGINALIA
+
+(after! marginalia
+  (setq marginalia-censor-variables nil)
+
+  (defadvice! +marginalia--anotate-local-file-colorful (cand)
+    "Just a more colourful version of `marginalia--anotate-local-file'."
+    :override #'marginalia--annotate-local-file
+    (when-let (attrs (file-attributes (substitute-in-file-name
+                                       (marginalia--full-candidate cand))
+                                      'integer))
+      (marginalia--fields
+       ((marginalia--file-owner attrs)
+        :width 12 :face 'marginalia-file-owner)
+       ((marginalia--file-modes attrs))
+       ((+marginalia-file-size-colorful (file-attribute-size attrs))
+        :width 7)
+       ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+        :width 12))))
+
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color)))))
 
 ;;; CUSTOM
 

@@ -1,0 +1,6 @@
+** TODO %:annotation
+SCHEDULED %(org-insert-time-stamp (org-read-date nil t \"\"))
+:PROPERTIES:
+:END:
+%i
+%a

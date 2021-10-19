@@ -6,15 +6,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;;; FUNCTIONS
-
-;;;;;; PUBLISH FUNCTIONS
-
-(defun marty/publish (a b c)
-  (setq org-export-with-toc t)
-  (org-html-publish-to-html a b c)
-  (setq org-export-with-toc nil)
-  (org-ascii-publish-to-ascii a b c))
-
 ;;;;; CALENDAR OPEN
 
 (defun mb/open-calendar ()
@@ -38,7 +29,7 @@
     (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
     )))
 
-;;;;;; Open Mutt Message
+;;;;; Open Mutt Message
 
 (defun mutt-open-message (message-id)
   "In neomutt, open the nmail with the the given Message-ID"
@@ -70,7 +61,7 @@
                   "-f" "termite" "-e"
                   mutt-command)))
 
-;;;; PROT FUNCTIONS
+;;;;; PROT FUNCTIONS
 
 (defvar prot-common-url-regexp
   (concat
@@ -78,7 +69,7 @@
    "nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)"
    "\\(//[-a-z0-9_.]+:[0-9]*\\)?"
    (let ((chars "-a-z0-9_=#$@~%&*+\\/[:word:]")
-	 (punct "!?:;.,"))
+         (punct "!?:;.,"))
      (concat
       "\\(?:"
       ;; Match paired parentheses, e.g. in Wikipedia URLs:

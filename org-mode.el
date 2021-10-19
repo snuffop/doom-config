@@ -1,4 +1,4 @@
-;; org-mode.el --- Summary -*- lexical-binding: t -*-
+;;; org-mode.el --- Smary -*- lexical-binding: t -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
@@ -6,6 +6,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; CODE
+
 ;;;; ORG-MODE MAIN
 (setq org-directory "~/Nextcloud/Notes/org/")
 (setq org-roam-directory "~/Nextcloud/Notes/org/")
@@ -142,6 +143,7 @@
   (setq org-projectile-file "todo.org")
   (setq org-fancy-priorities-list '("🅰" "🅱" "🅲" "🅳" "🅴"))
   (setq org-clock-sound "~/Nextcloud/Music/sounds/shipsBell.wav")
+  (setq org-startup-with-inline-images t)  ; Show Inline Images
 
   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h)
 
@@ -275,64 +277,27 @@
                         ("WAITING"    . ?w)
                         ("WORK"       . ?W))))
 
-;;;;;; CAPTURE TEMPLATES
-
-  (setq org-capture-templates
-        '(("t" "Task" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
-           (file "~/.config/doom/templates/todo.orgcaptmpl"))
-          ("c" "Contacts" entry (file-olp "~/Nextcloud/Notes/org/contacts.org" "General")
-           (file "~/.config/doom/templates/contact.orgcaptmpl"))
-          ("P" "Protocol" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
-           "** %^{Title}\n\n  Source: %u, %c\n\n  %i" :empty-lines 1)
-          ("L" "Protocol Link" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
-           "** [[%:link][%:description]]\n")
-          ("R" "Remember-mutt" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Mail")
-           (file "~/.config/doom/templates/org-templates/mail.orgcaptmpl"))
-          ("w" "Web site" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Inbox")
-           (file "~/.config/doom/templates/org-templates/weblink.orgcaptmpl"))
-          ("s" "Simple" entry (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Popup")
-           "%[~/.emacs.d/.org-popup]" :immediate-finish t :prepend t)
-
-          ("m" "Email Workflow")
-          ("mf" "Follow Up" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
-           "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\n%a\n\n%i")
-          ("ma" "auto Follow Up" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
-           "* TODO Follow up with %:fromname on %:subject\n%a\n\n%i" :immediate-finish t)
-          ("mF" "Follow Up With Deadline" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Follow Up")
-           "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\nDEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n%a\n\n%i")
-          ("mr" "Read Later" entry
-           (file+olp "~/Nextcloud/Notes/org/0mobile.org" "Read Later")
-           "* TODO Read  Later on %:subject\nSCHEDULED:%t\n%a\n\n%i":immediate-finish t)
-          ("mm" "Masons Follow Up" entry
-           (file+olp "~/Nextcloud/Notes/org/Masons.org" "Follow Up")
-           "* TODO Follow up with %:fromname on %:subject %a\nSCHEDULED:%t\n\\n%i")
-          ("mR" "Workflow Rackspace")
-          ("mRf" "Follow Up" entry
-           (file+olp "~/Nextcloud/Notes/org/Rackspace.org" "Follow Up")
-           "* TODO Follow up with %:fromname on %:subject\nSCHEDULED:%t\nDEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))\n%a\n\n%i")
-          ("mRr" "Read Later" entry
-           (file+olp "~/Nextcloud/Notes/org/Rackspace.org" "Read Later")
-           "* TODO Read  Later with %:fromname on %:subject\nSCHEDULED:%t\n%a\n\n%i" :immediate-finish t)
-          ))
-
-  (setq org-protocol-default-template-key "t")
-
 ;;;;;; FACES
 
   (custom-set-faces
    '(org-document-title ((t (:inherit outline-1 :height 1.5))))
-   '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.13))))
+   '(org-level-1 ((t (:inherit outline-1 :height 1.12))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.1))))
    '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
    '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
    )
 
   (add-to-list 'org-tag-faces '("@.*" . (:foreground "red")))
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-tag nil :foreground nil :inherit '(shadow fixed-pitch) :weight 'bold)
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
 ;;;;;; TODO FACES
 
@@ -367,35 +332,6 @@
 
 (after! org-roam
 
-;;;;; ORG-ROAM CAPTURE TEMPLATES
-
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry "* %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-           :empty-lines-after 1 )
-          ("t" "Tasks" entry "** TODO %? "
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
-           :empty-lines-after 1 )
-          ("r" "Rackspace" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
-           :empty-lines-after 1)
-          ("j" "Journal" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal") )
-           :empty-lines-after 1)))
-
-  (setq org-roam-capture-templates
-        '(("d" "default" plain
-           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
-           :unnarrowed t)
-          ("t" "tipjar" plain
-           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
-           :unnarrowed t)
-          ("p" "People" plain
-           (file "~/.config/doom/templates/roam-templates/people-entry.org")
-           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
-           :unnarrowed t)))
 
 ;;;;; ORG-ROAM POPUP RULES
   (setq +org-roam-open-buffer-on-find-file nil)
@@ -639,6 +575,64 @@ tasks."
 
 
 ;;;; ORG-MODE MODULES
+;;;;; DOCT
+
+(use-package! doct
+  :defer t
+  :after org
+  :commands (doct))
+
+;;;;; ORG-APPEAR
+
+(use-package! org-appear
+  :after org
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t
+        org-appear-autolinks t
+        org-appear-autosubmarkers t))
+
+;;;;; ORG-EDNA-MODE
+(after! org
+  (org-edna-mode))
+;;;;; ORG-JIRA
+(use-package! org-jira
+  :defer 10
+  :init
+  (setq jiralib-url "https://rackspace.atlassian.net")
+  (setq org-jira-working-dir "~/Nextcloud/Notes/org-jira")
+  (setq org-jira-custom-jqls
+        '(
+          (:jql " project IN (NSYS) and createdDate < '2020-01-01' order by created DESC "
+           :limit 10
+           :filename "last-years-work")
+          (:jql " project IN (NSYS) and createdDate >= '2021-01-01' order by created DESC "
+           :limit 10
+           :filename "this-years-work")
+          (:jql "
+project IN (NSYS)
+and status IN ('To Do', 'In Development')
+AND (labels = EMPTY or labels NOT IN ('FutureUpdate'))
+order by priority, created DESC "
+           :limit 20
+           :filename "nsys-priority-items")
+          ))
+  )
+
+;;;;; ORG-OL-TREE
+
+(use-package! org-ol-tree
+  :commands org-ol-tree)
+
+(map! :map org-mode-map
+      :after org
+      :localleader
+      :desc "Outline" "O" #'org-ol-tree)
+
+;;;;; ORG-PANDOC
+(use-package! org-pandoc-import
+  :after org)
+
 ;;;;; ORG-SUPER-AGENDA
 
 (use-package! org-super-agenda
@@ -689,13 +683,6 @@ tasks."
                           :children todo)
                          (:discard (:anything t)))))))))))
 
-;;;;; ORG-PANDOC
-(use-package! org-pandoc-import
-  :after org)
-
-;;;;; ORG-EDNA-MODE
-(after! org
-  (org-edna-mode))
 ;;;;; ORG-TRANSCLUSION
 (use-package! org-transclusion
   :defer t
@@ -709,10 +696,12 @@ tasks."
 
 
 
-;; function to find latitude & longitude
+;;;; FUNCTIONS
+;;;;; LONG-LAT
 ;;                      (requires curl to be installed on system)
 (setq calendar-latitude 0)
 (setq calendar-longitude 0)
+
 (defun marty/get-lat-long-from-ipinfo ()
   (let*
       ((latlong (substring
@@ -722,8 +711,7 @@ tasks."
     (setq calendar-latitude (string-to-number (car latlong-list)))
     (setq calendar-longitude (string-to-number (cadr latlong-list)))))
 
-
-
+;;;;; FORMAT ORG-BLOCK
 (defun format-org-mode-block ()
   "Format org mode code block"
   (interactive "p")
@@ -733,3 +721,264 @@ tasks."
   (format-all-ensure-formatter)
   (format-all-buffer)
   (org-edit-src-exit))
+
+;;;;; PUBLISH
+(defun marty/publish (a b c)
+  (setq org-export-with-toc t)
+  (org-html-publish-to-html a b c)
+  (setq org-export-with-toc nil)
+  (org-ascii-publish-to-ascii a b c))
+
+;;;;; PRETTIFY FUNCTIONS FROM TECOSAUR
+;; for pretty capture interfaces..
+(after! org
+  (defun org-capture-select-template-prettier (&optional keys)
+    "Select a capture template, in a prettier way than default
+Lisp programs can force the template by setting KEYS to a string."
+    (let ((org-capture-templates
+           (or (org-contextualize-keys
+                (org-capture-upgrade-templates org-capture-templates)
+                org-capture-templates-contexts)
+               '(("t" "Task" entry (file+headline "" "Tasks")
+                  "* TODO %?\n  %u\n  %a")))))
+      (if keys
+          (or (assoc keys org-capture-templates)
+              (error "No capture template referred to by \"%s\" keys" keys))
+        (org-mks org-capture-templates
+                 "Select a capture template\n━━━━━━━━━━━━━━━━━━━━━━━━━"
+                 "Template key: "
+                 `(("q" ,(concat (all-the-icons-octicon "stop" :face 'all-the-icons-red :v-adjust 0.01) "\tAbort")))))))
+  (advice-add 'org-capture-select-template :override #'org-capture-select-template-prettier)
+
+  (defun org-mks-pretty (table title &optional prompt specials)
+    "Select a member of an alist with multiple keys. Prettified.
+
+TABLE is the alist which should contain entries where the car is a string.
+There should be two types of entries.
+
+1. prefix descriptions like (\"a\" \"Description\")
+   This indicates that `a' is a prefix key for multi-letter selection, and
+   that there are entries following with keys like \"ab\", \"ax\"…
+
+2. Select-able members must have more than two elements, with the first
+   being the string of keys that lead to selecting it, and the second a
+   short description string of the item.
+
+The command will then make a temporary buffer listing all entries
+that can be selected with a single key, and all the single key
+prefixes.  When you press the key for a single-letter entry, it is selected.
+When you press a prefix key, the commands (and maybe further prefixes)
+under this key will be shown and offered for selection.
+
+TITLE will be placed over the selection in the temporary buffer,
+PROMPT will be used when prompting for a key.  SPECIALS is an
+alist with (\"key\" \"description\") entries.  When one of these
+is selected, only the bare key is returned."
+    (save-window-excursion
+      (let ((inhibit-quit t)
+            (buffer (org-switch-to-buffer-other-window "*Org Select*"))
+            (prompt (or prompt "Select: "))
+            case-fold-search
+            current)
+        (unwind-protect
+            (catch 'exit
+              (while t
+                (setq-local evil-normal-state-cursor (list nil))
+                (erase-buffer)
+                (insert title "\n\n")
+                (let ((des-keys nil)
+                      (allowed-keys '("\C-g"))
+                      (tab-alternatives '("\s" "\t" "\r"))
+                      (cursor-type nil))
+                  ;; Populate allowed keys and descriptions keys
+                  ;; available with CURRENT selector.
+                  (let ((re (format "\\`%s\\(.\\)\\'"
+                                    (if current (regexp-quote current) "")))
+                        (prefix (if current (concat current " ") "")))
+                    (dolist (entry table)
+                      (pcase entry
+                        ;; Description.
+                        (`(,(and key (pred (string-match re))) ,desc)
+                         (let ((k (match-string 1 key)))
+                           (push k des-keys)
+                           ;; Keys ending in tab, space or RET are equivalent.
+                           (if (member k tab-alternatives)
+                               (push "\t" allowed-keys)
+                             (push k allowed-keys))
+                           (insert (propertize prefix 'face 'font-lock-comment-face) (propertize k 'face 'bold) (propertize "›" 'face 'font-lock-comment-face) "  " desc "…" "\n")))
+                        ;; Usable entry.
+                        (`(,(and key (pred (string-match re))) ,desc . ,_)
+                         (let ((k (match-string 1 key)))
+                           (insert (propertize prefix 'face 'font-lock-comment-face) (propertize k 'face 'bold) "   " desc "\n")
+                           (push k allowed-keys)))
+                        (_ nil))))
+                  ;; Insert special entries, if any.
+                  (when specials
+                    (insert "─────────────────────────\n")
+                    (pcase-dolist (`(,key ,description) specials)
+                      (insert (format "%s   %s\n" (propertize key 'face '(bold all-the-icons-red)) description))
+                      (push key allowed-keys)))
+                  ;; Display UI and let user select an entry or
+                  ;; a sub-level prefix.
+                  (goto-char (point-min))
+                  (unless (pos-visible-in-window-p (point-max))
+                    (org-fit-window-to-buffer))
+                  (let ((pressed (org--mks-read-key allowed-keys prompt nil)))
+                    (setq current (concat current pressed))
+                    (cond
+                     ((equal pressed "\C-g") (user-error "Abort"))
+                     ((equal pressed "ESC") (user-error "Abort"))
+                     ;; Selection is a prefix: open a new menu.
+                     ((member pressed des-keys))
+                     ;; Selection matches an association: return it.
+                     ((let ((entry (assoc current table)))
+                        (and entry (throw 'exit entry))))
+                     ;; Selection matches a special entry: return the
+                     ;; selection prefix.
+                     ((assoc current specials) (throw 'exit current))
+                     (t (error "No entry available")))))))
+          (when buffer (kill-buffer buffer))))))
+  (advice-add 'org-mks :override #'org-mks-pretty)
+
+  ;; (((())))
+
+  (setf (alist-get 'height +org-capture-frame-parameters) 15)
+  ;; (alist-get 'name +org-capture-frame-parameters) "❖ Capture") ;; ATM hardcoded in other places, so changing breaks stuff
+  (setq +org-capture-fn
+        (lambda ()
+          (interactive)
+          (set-window-parameter nil 'mode-line-format 'none)
+          (org-capture)))
+
+
+  ;; Sprinkle some doct
+
+  (defun +doct-icon-declaration-to-icon (declaration)
+    "Convert :icon declaration to icon"
+    (let ((name (pop declaration))
+          (set  (intern (concat "all-the-icons-" (plist-get declaration :set))))
+          (face (intern (concat "all-the-icons-" (plist-get declaration :color))))
+          (v-adjust (or (plist-get declaration :v-adjust) 0.01)))
+      (apply set `(,name :face ,face :v-adjust ,v-adjust))))
+
+  (defun +doct-iconify-capture-templates (groups)
+    "Add declaration's :icon to each template group in GROUPS."
+    (let ((templates (doct-flatten-lists-in groups)))
+      (setq doct-templates (mapcar (lambda (template)
+                                     (when-let* ((props (nthcdr (if (= (length template) 4) 2 5) template))
+                                                 (spec (plist-get (plist-get props :doct) :icon)))
+                                       (setf (nth 1 template) (concat (+doct-icon-declaration-to-icon spec)
+                                                                      "\t"
+                                                                      (nth 1 template))))
+                                     template)
+                                   templates))))
+
+  (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
+
+  )
+
+;;;; CAPTURE TEMPLATES Using DOCT
+(after! org-capture
+  (setq org-capture-templates
+        (doct `(("Task" :keys "t"
+                 :icon ("tag" :set "octicon" :color "cyan")
+                 :file "~/Nextcloud/Notes/org/0mobile.org"
+                 :prepend t
+                 :headline "Inbox"
+                 :template-file "~/.config/doom/templates/org-templates/todo.org")
+
+                ("Contact"
+                 :keys "c"
+                 :icon ("male" :set "faicon" :color "yellow")
+                 :file "~/Nextcloud/Notes/org/contacts.org"
+                 :headline "General"
+                 :template-file "~/.config/doom/templates/org-templates/contact.org")
+
+                ("Remember-mutt" :keys "R"
+                 :icon ("sticky-note" :set "faicon" :color "yellow")
+                 :icon ("home" :set "octicon" :color "cyan")
+                 :file "~/Nextcloud/Notes/org/0mobile.org"
+                 :headline "Mail"
+                 :template-file "~/.config/doom/templates/org-templates/mail.org")
+
+                ("Protocol" :keys "P"
+                 :file "~/Nextcloud/Notes/org/0mobile.org"
+                 :icon ("tag" :set "octicon" :color "cyan")
+                 :headline "Inbox"
+                 :children (("Today"
+                             :keys "t"
+                             :properties ((Created "%U"))
+                             :template-file "~/.config/doom/templates/org-templates/protocol-today.org")
+                            ("Important"
+                             :keys "i"
+                             :template-file "~/.config/doom/templates/org-templates/protocol-important.org")))
+
+                ("Email Workflow"
+                 :keys "m"
+                 :icon ("mail" :set "octicon" :color "yellow")
+                 :file "~/Nextcloud/Notes/org/0mobile.org"
+                 :children (("Follow Up"
+                             :keys "f"
+                             :headline "Follow Up"
+                             :template ("* TODO Follow up with %:fromname on %:subject"
+                                        "SCHEDULED:%t"
+                                        "%a"
+                                        "%i"))
+                            ("Auto Follow Up"
+                             :keys "a"
+                             :immediate-finish t
+                             :headline "Follow Up"
+                             :template ("* TODO Follow up with %:fromname on %:subject"
+                                        "%a"
+
+                                        "%i"))
+                            ("Follow Up With Deadline"
+                             :keys "F"
+                             :headline "Follow Up"
+                             :template ("* TODO Follow up with %:fromname on %:subject"
+                                        "SCHEDULED:%t"
+                                        "DEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))"
+                                        "%a"
+                                        "%i"))
+                            ("Read Later"
+                             :keys "r"
+                             :headline "Read Later"
+                             :immediate-finish t
+                             :tetmplate ("* TODO Read Later on %:subject"
+                                         "SCHEDULED:%t"
+                                         "%a"
+                                         "%i")
+                             ))))))
+
+  (setq org-protocol-default-template-key "t"))
+
+;;;; ORG-ROAM CAPTURE TEMPLATES
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "* %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1 )
+          ("t" "Tasks" entry "** TODO %? "
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+           :empty-lines-after 1 )
+          ("r" "Rackspace" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+           :empty-lines-after 1)
+          ("j" "Journal" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal") )
+           :empty-lines-after 1)))
+
+
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
+           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
+           :unnarrowed t)
+          ("t" "tipjar" plain
+           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
+           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
+           :unnarrowed t)
+          ("p" "People" plain
+           (file "~/.config/doom/templates/roam-templates/people-entry.org")
+           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
+           :unnarrowed t))))
