@@ -16,6 +16,7 @@
 
 (map!
  ;;:n "C-:"    #'+spell/correct
+ :n "C-;"    #'embark-act
  :n "C-,"    #'+spell/next-error)
 
 ;;;; LEADER KEYBINDINGS

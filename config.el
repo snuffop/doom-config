@@ -35,7 +35,7 @@
 
 (display-time-mode 1)                             ; enable time in the mode-line
 
-(global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly easie
+(global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly Essie
 
 (after! projectile
   (setq projectile-project-search-path '("~/Source")))
@@ -81,7 +81,7 @@
       doom-serif-font
       (font-spec :family "Hack Nerd Font Mono" :size 14)
       doom-unicode-font
-      (font-spec :family "symbola" :size 14)
+      (font-spec :family "sumbola" :size 14)
       doom-variable-pitch-font
       (font-spec :family "Cantarell" :size 14)
       doom-big-font

@@ -9,15 +9,17 @@
 ;;;; Config
 (after! mu4e
 ;;;;; Header Actions
+
   (add-to-list 'mu4e-headers-actions
-               '("follow up" . marty/capture-mail-follow-up) t)
-  (add-to-list 'mu4e-view-actions
                '("follow up" . marty/capture-mail-follow-up) t)
   (add-to-list 'mu4e-headers-actions
                '("read later" . marty/capture-mail-read-later) t)
   (add-to-list 'mu4e-view-actions '("ytag message" . mu4e-action-retag-message) t)
+
 ;;;;; Header
+
   (setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
+
 ;;;;; Info
 
   (add-to-list 'mu4e-header-info-custom
@@ -42,8 +44,10 @@
                            :function (lambda (msg) "  "))))
 
 ;;;;; fields
-  (setq mu4e-headers-fields '((:human-date . 18)    ;; alternatively, use :human-date
-                              (:flags . 7)
+
+  (setq mu4e-headers-fields '((:account-stripe . 1)
+                              (:human-date . 20)
+                              (:flags . 6)
                               (:size . 10)
                               (:from-or-to . 40)
                               (:full-mailing-list . 40)
@@ -71,9 +75,7 @@
   (setq mu4e-action-tags-header "X-Label")
   (setq mu4e-attachment-dir "/home/marty/Downloads/Mail")
   (setq mu4e-change-filenames-when-moving t)
-  (setq mu4e-confirm-quit t)
   (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
-  (setq mu4e-update-interval  300)
 
 ;;;;;; Set from Context  these are default
 
@@ -92,15 +94,12 @@
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
   (setq message-sendmail-extra-arguments '("--read-envelope-from"))
   (setq message-sendmail-f-is-evil t)
-  (setq mu4e-sent-messages-behavior 'sent)
-  (setq send-mail-function #'smtpmail-send-it)
   (setq sendmail-program "/usr/bin/msmtp")
 
 ;;;;;; VIEW Email
 
   (setq mu4e-headers-include-related t)
   (setq mu4e-headers-precise-alignment t)
-  (setq mu4e-thread-folding-default-view 'unfolded)
 
 ;;;;;; Compose
 
@@ -174,8 +173,6 @@
           ))
 ;;;;; Contexts
 
-  (setq mu4e-compose-context-policy 'ask-if-none)
-  (setq mu4e-context-policy 'ask-if-none)
   (setq mu4e-contexts
         `(
 ;;;;;; Dabuke
@@ -204,6 +201,7 @@
                                                (:maildir "/Dabuke/Lists.nextcloud"      :key ?N)
                                                (:maildir "/Dabuke/Lists.ofmasons"       :key ?O)
                                                (:maildir "/Dabuke/Lists.passwordstore"  :key ?W)
+                                               (:maildir "/Dabuke/Lists.Racktables"     :key ?R)
                                                (:maildir "/Dabuke/Lists.qutebrowser"    :key ?q)
                                                (:maildir "/Dabuke/SBL"                  :key ?b)
                                                (:maildir "/Dabuke/Sent"                 :key ?s)
@@ -366,12 +364,12 @@
                     (mu4e-sent-folder        . "/Google/Sent")
                     (mu4e-refile-folder      . "/Dabuke/Archive")
                     (user-full-name          . "Marty Buchaus")
-                    (mu4e-maildir-shortcuts  . ((:maildir "/Google/Drafts"            :key ?d)
+                    (mu4e-maildir-shortcuts  . ((:maildir "/Google/Archive"           :key ?a)
+                                                (:maildir "/Google/Drafts"            :key ?d)
                                                 (:maildir "/Google/INBOX"             :key ?i)
                                                 (:maildir "/Google/Sent"              :key ?s)
-                                                (:maildir "/Google/Trash"             :key ?T)
-                                                (:maildir "/Google/Archive"           :key ?a)
-                                                (:maildir "/Google/Spam"              :key ?S)))
+                                                (:maildir "/Google/Spam"              :key ?S)
+                                                (:maildir "/Google/Trash"             :key ?T)))
                     (message-sendmail-extra-arguments . ("--account=Google"))
                     (mu4e-compose-signature .
                                             (concat

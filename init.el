@@ -201,7 +201,7 @@
 
        :email
        (mu4e
-        +org)
+        +gmail)
 
        :app
        calendar
