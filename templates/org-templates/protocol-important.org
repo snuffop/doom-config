@@ -1,8 +1,13 @@
-** TODO %:annotation   :important:
-SCHEDULED %(org-insert-time-stamp (org-read-date nil t \"\"))
+** TODO %:description :important:
+SCHEDULED: %^t
 :PROPERTIES:
 :Effort: 1h
 :SCORE_ON_DONE: 30
+:CREATED: %U
 :END:
+Annotation:  %:annotation
+Link:  %:link
+
 %i
-%a
+
+%?

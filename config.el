@@ -4,7 +4,6 @@
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Notes
 ;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
 ;;
@@ -261,6 +260,17 @@
 
 ;;;; AUTOINSERT
 
+;;;;; FUNCTIONS
+
+(after! autoinsert
+  (defun marty/autoinsert-yas-expand ()
+    "This is used by the autoinsert package to grab and expand
+templates into newly created files"
+    (let ((template ( buffer-string )))
+      (delete-region (point-min) (point-max))
+      (yas-expand-snippet template)
+      (evil-insert-state))))
+
 (use-package! autoinsert
   :init (progn
           (setq auto-insert-query nil)
@@ -275,25 +285,15 @@
             (define-auto-insert "blorg/snuffy-org/.+\\.org?$" ["snuffy-org.org" marty/autoinsert-yas-expand])
             (define-auto-insert "sites/snuffy.org/.+\\.org?$" ["snuffy-org-posts.org" marty/autoinsert-yas-expand])
             (define-auto-insert "salt-master.+\\.org?$" ["salt-master.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/.+/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/tipjar/[^/]+\\.org?$" ["NSI-Documentation-tipjar.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/tva/[^/]+\\.org?$" ["NSI-Documentation-TVA.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/tva/scanreports/.+[^/]+\\.org?$" ["NSI-Documentation-TVA-scanreport.org" marty/autoinsert-yas-expand])
-            (define-auto-insert "nsi-documentation/patching/.+[^/]+\\.org?$" ["nsi-documentation-patching-notes.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "NSI-Documentation/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "NSI-Documentation/.+/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "NSI-Documentation/tipjar/[^/]+\\.org?$" ["NSI-Documentation-tipjar.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "NSI-Documentation/TVA/[^/]+\\.org?$" ["NSI-Documentation-TVA.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "NSI-Documentation/TVA/ScanReports/.+[^/]+\\.org?$" ["NSI-Documentation-TVA-scanreport.org" marty/autoinsert-yas-expand])
+            (define-auto-insert "NSI-Documentation/Patching/.+[^/]+\\.org?$" ["NSI-Documentation-Patching-Notes.org" marty/autoinsert-yas-expand])
             (define-auto-insert "masons/[^/].+\\.org?$" ["masonsMeetingMinuets.org" marty/autoinsert-yas-expand])
             (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
             (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand])))
-
-;;;;; FUNCTIONS
-
-(defun marty/autoinsert-yas-expand ()
-  "This is used by the autoinsert package to grab and expand
-templates into newly created files"
-  (let ((template ( buffer-string )))
-    (delete-region (point-min) (point-max))
-    (yas-expand-snippet template)
-    (evil-insert-state)))
 
 ;;;; BROWSE-KILL-RING
 

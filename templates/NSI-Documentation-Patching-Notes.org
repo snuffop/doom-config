@@ -1,7 +1,9 @@
+:PROPERTIES:
+:AUTHOR:   Marty Buchaus
+:EMAIL:    marty.buchaus@rackspace.com
+:END:
 #+TITLE:  ${1:`(replace-regexp-in-string "-" " " (capitalize (file-name-nondirectory (file-name-sans-extension (buffer-file-name)))))`}
 #+CATEGORY: Rackspace, Patching
-#+AUTHOR:   Marty Buchaus
-#+EMAIL:    marty.buchaus@rackspace.com
 #+STARTUP:  overview
 #+DESCRIPTION: NSI Documentation Collected by System Admin Marty Buchaus
 #+KEYWORDS: org-mode, infrastrucutre, NSI, SYSTEMS, Patching, TVA, ScanReport
@@ -13,7 +15,10 @@
 * [[https://pages.github.rackspace.com/mart4597/NSI-Documentation/][NSI Documentation]] 
 ** [[file:README.org][Roam:NSI-Documentation]] 
 
+
 * TODO Patch and Reboot Servers :@Rackspace:
+#+BEGIN: clocktable :maxlevel 4
+#+END:
 
 ** Schedule
 
@@ -77,6 +82,16 @@
 - [ ] Patch & Reboot s-websvcs-2.ord1.nsi.rackspace.com
 ** TODO IAD3 Prod
 *** Notes
+**** Uname
+#+begin_example
+
+#+end_example
+
+**** Uptime
+#+begin_example
+
+#+end_example
+
 *** Docker
 **** a-docker-*-1.iad3.nsi.rackspace.com
 ***** Before
@@ -101,6 +116,17 @@
    - [ ] Patch & Reboot a-zabbix-proxy-1.iad3.nsi.rackspace.com
 ** TODO SYD2 Prod
 *** Notes
+
+**** Uname
+#+begin_example
+
+#+end_example
+
+**** Uptime
+#+begin_example
+
+#+end_example
+
 *** Docker
 **** a-docker-*-1.syd2.nsi.rackspace.com
 ***** Before
@@ -124,6 +150,17 @@
    - [ ] Patch & Reboot a-zabbix-proxy-1.syd2.nsi.rackspace.com
 ** TODO LON3 Prod
 *** Notes
+
+**** Uname
+#+begin_example
+
+#+end_example
+
+**** Uptime
+#+begin_example
+
+#+end_example
+
 *** Docker
 **** a-docker-*-1.lon3.nsi.rackspace.com
 ***** Before
@@ -149,6 +186,17 @@
    - [ ] Patch & Reboot a-nagios-1.lon3.nsi.rackspace.com
 ** TODO HKG1 Prod
 *** Notes
+
+**** Uname
+#+begin_example
+
+#+end_example
+
+**** Uptime
+#+begin_example
+
+#+end_example
+
 *** Docker
 **** a-docker-*-1.hkg1.nsi.rackspace.com
 ***** Before
@@ -173,6 +221,17 @@
    - [ ] Patch & Reboot a-nagios-1.hkg1.nsi.rackspace.com
 ** TODO ORD1 Prod
 *** Notes
+
+**** Uname
+#+begin_example
+
+#+end_example
+
+**** Uptime
+#+begin_example
+
+#+end_example
+
 *** Docker
 **** a-docker-*-1.ord1.nsi.rackspace.com
 ***** Before
@@ -209,6 +268,17 @@
 - [ ] Patch & Reboot a-zabbix-proxy-1.ord1.nsi.rackspace.com
 ** TODO DFW3 Prod
 *** Notes
+
+**** Uname
+#+begin_example
+
+#+end_example
+
+**** Uptime
+#+begin_example
+
+#+end_example
+
 *** Docker
 **** a-docker-*-1.dfw3.nsi.rackspace.com
 ***** Before

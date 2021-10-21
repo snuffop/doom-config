@@ -58,13 +58,23 @@
 
 ;;;;; PUBLISH ALIST
 
+  (defun marty/publish (a b c)
+    (setq org-export-with-toc t)
+    (org-html-publish-to-html a b c))
+
+  (require 'find-lisp)
+  (defun marty/publish-NSI-Documentation (a b c)
+    (setq org-export-with-toc t)
+    (let ((org-id-extra-files (find-lisp-find-files "~/Source/NSI/NSI-Documentation/" "\.org$")))
+      (org-html-publish-to-html a b c)))
+
   (setq org-publish-project-alist
         '(
           ("NSI-Documentation-content"
            :base-directory "~/Source/NSI/NSI-Documentation/"
            :base-extension "org"
            :publishing-directory "~/Source/NSI/NSI-Documentation/docs"
-           :publishing-function marty/publish
+           :publishing-function marty/publish-NSI-Documentation
            :exclude "Archive"
            :section-numbers nil
            :with-toc nil
@@ -722,13 +732,6 @@ order by priority, created DESC "
   (format-all-buffer)
   (org-edit-src-exit))
 
-;;;;; PUBLISH
-(defun marty/publish (a b c)
-  (setq org-export-with-toc t)
-  (org-html-publish-to-html a b c)
-  (setq org-export-with-toc nil)
-  (org-ascii-publish-to-ascii a b c))
-
 ;;;;; PRETTIFY FUNCTIONS FROM TECOSAUR
 ;; for pretty capture interfaces..
 (after! org
@@ -905,9 +908,13 @@ is selected, only the bare key is returned."
                  :file "~/Nextcloud/Notes/org/0mobile.org"
                  :icon ("tag" :set "octicon" :color "cyan")
                  :headline "Inbox"
-                 :children (("Today"
+                 :children (("Read"
+                             :keys "r"
+                             :headline "Read Later"
+                             :immediate-finish t
+                             :template-file "~/.config/doom/templates/org-templates/protocol-read-later.org")
+                            ("Today"
                              :keys "t"
-                             :properties ((Created "%U"))
                              :template-file "~/.config/doom/templates/org-templates/protocol-today.org")
                             ("Important"
                              :keys "i"
