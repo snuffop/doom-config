@@ -43,15 +43,26 @@
                            :shortname ""
                            :function (lambda (msg) "  "))))
 
+  (defvar +mu4e-header--folder-colors nil)
+
+  (appendq! mu4e-header-info-custom
+            '((:folder .
+               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors))))))
+
 ;;;;; fields
 
   (setq mu4e-headers-fields '((:account-stripe . 1)
-                              (:human-date . 20)
+                              (:human-date . 10)
                               (:flags . 6)
                               (:size . 10)
                               (:from-or-to . 40)
                               (:full-mailing-list . 40)
                               (:tags . 15)           ;;  X-label
+                              (:folder . 20)
                               (:subject . nil)))    ;;  :subject or thread-subject
 
   (setq mu4e-view-fields '(:date
@@ -76,6 +87,13 @@
   (setq mu4e-attachment-dir "/home/marty/Downloads/Mail")
   (setq mu4e-change-filenames-when-moving t)
   (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
+  (setq mu4e-headers-date-format "%m/%d/%y")
+  (setq mu4e-headers-time-format "⧖ %H:%M")
+  (setq mu4e-headers-results-limit 1000)
+  (setq mu4e-index-cleanup t)
+  (setq mu4e-index-lazy-check t)
+  (setq mu4e-update-interval 300)
+  (setq mu4e-alert-icon "/usr/share/icons/Papirus/64x64/apps/evolution.svg")
 
 ;;;;;; Set from Context  these are default
 
@@ -92,8 +110,9 @@
 ;;;;;; Send Mail
 
   (setq message-send-mail-function 'message-send-mail-with-sendmail)
-  (setq message-sendmail-extra-arguments '("--read-envelope-from"))
+  (setq message-sendmail-extra-arguments '("--read-envelope-from"));, "--read-recipients")
   (setq message-sendmail-f-is-evil t)
+  (setq send-mail-function #'smtpmail-send-it)
   (setq sendmail-program "/usr/bin/msmtp")
 
 ;;;;;; VIEW Email
@@ -446,3 +465,4 @@ function is suitable for `mu4e-compose-mode-hook'."
   (interactive)
   (call-interactively 'org-store-link)
   (org-capture "mr"))
+

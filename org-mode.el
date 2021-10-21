@@ -980,6 +980,7 @@ is selected, only the bare key is returned."
         '(("d" "default" plain
            (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
            :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
+           :immediate-finish t
            :unnarrowed t)
           ("t" "tipjar" plain
            (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")

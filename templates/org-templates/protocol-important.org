@@ -7,7 +7,5 @@ SCHEDULED: %^t
 :END:
 Annotation:  %:annotation
 Link:  %:link
-
 %i
-
 %?
