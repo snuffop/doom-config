@@ -160,10 +160,10 @@
         '(
           (:name "All Inboxes"
            ;; :query "maildir:/Dabuke/INBOX OR maildir:/Gmail/INBOX OR maildir:/Rackspace/INBOX OR maildir:/RHH/INBOX"
-           :query "maildir:/Dabuke/INBOX OR maildir:/Gmail/INBOX OR maildir:/RHH/INBOX"
+           :query "maildir:/Dabuke/INBOX OR maildir:/Google/INBOX OR maildir:/RHH/INBOX OR maildir:/RedEarth/INBOX OR maildir:/OFMasons/INBOX OR maildir:/letEarnMoney/INBOX"
            :key ?i)
           (:name "Unread messages"
-           :query "flag:unread AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
+           :query "flag:unread AND NOT flag:trashed AND NOT maildir:/Google/Spam AND NOT maildir:/Dabuke/Spam"
            :key ?u)
           (:name "Unread Dabuke"
            :query "flag:unread AND NOT flag:trashed AND maildir:/Dabuke/"

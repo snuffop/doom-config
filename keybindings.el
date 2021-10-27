@@ -52,7 +52,7 @@
        ;; Tools
        (:when (featurep! :tools pass)
         (:prefix-map ("p" . "pass")
-         "/"  #'ivy-pass
+         "/"  #'+pass/consult
          "c"  #'password-store-edit
          "d"  #'password-store-remove
          "g"  #'password-store-generate
