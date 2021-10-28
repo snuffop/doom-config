@@ -38,11 +38,6 @@
                    :function (lambda (msg)
                                (or (mu4e-message-field msg :X-Label) "")))))
 
-  (add-to-list 'mu4e-header-info-custom
-               '(:empty . (:name "Empty"
-                           :shortname ""
-                           :function (lambda (msg) "  "))))
-
   (defvar +mu4e-header--folder-colors nil)
 
   (appendq! mu4e-header-info-custom
@@ -55,15 +50,15 @@
 
 ;;;;; fields
 
-  (setq mu4e-headers-fields '((:account-stripe . 1)
-                              (:human-date . 10)
-                              (:flags . 6)
-                              (:size . 10)
-                              (:from-or-to . 40)
+  (setq mu4e-headers-fields '((:account-stripe    . 1)
+                              (:human-date        . 10)
+                              (:flags             . 6)
+                              (:size              . 10)
+                              (:from-or-to        . 40)
                               (:full-mailing-list . 40)
-                              (:tags . 15)           ;;  X-label
-                              (:folder . 20)
-                              (:subject . nil)))    ;;  :subject or thread-subject
+                              (:tags              . 15)     ;;  X-label
+                              (:folder            . 20)
+                              (:subject           . nil)))  ;;  :subject or thread-subject
 
   (setq mu4e-view-fields '(:date
                            :from

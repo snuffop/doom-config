@@ -190,99 +190,71 @@
 ;;;;;; SYMBOLS
 
   (setq prettify-symbols-unprettify-at-point 'right-edge)
-  (setq org-ellipsis " ▾ ")
 
-  (appendq! +ligatures-extra-symbols
-            `(:checkbox      "☐"
-              :pending       "◼"
-              :checkedbox    "☑"
-              :list_property "∷"
-              :em_dash       "—"
-              :ellipses      "…"
-              :arrow_right   "→"
-              :arrow_left    "←"
-              :title         nil
-              :subtitle      "𝙩"
-              :author        "𝘼"
-              :date          "𝘿"
-              :property      ""
-              :options       "⌥"
-              :startup       "⏻"
-              :macro         "𝓜"
-              :html_head     "🅷"
-              :html          "🅗"
-              :latex_class   "🄻"
-              :latex_header  "🅻"
-              :beamer_header "🅑"
-              :latex         "🅛"
-              :attr_latex    "🄛"
-              :attr_html     "🄗"
-              :attr_org      "⒪"
-              :begin_quote   "❝"
-              :end_quote     "❞"
-              :caption       "☰"
-              :header        "›"
-              :results       "🠶"
-              :begin_export  "⏩"
-              :end_export    "⏪"
-              :properties    ""
-              :end           "∎"
-              :priority_a   ,(propertize "⚑" 'face 'all-the-icons-red)
-              :priority_b   ,(propertize "⬆" 'face 'all-the-icons-orange)
-              :priority_c   ,(propertize "■" 'face 'all-the-icons-yellow)
-              :priority_d   ,(propertize "⬇" 'face 'all-the-icons-green)
-              :priority_e   ,(propertize "❓" 'face 'all-the-icons-blue)
-              :roam_tags nil
-              :filetags nil))
+  (add-hook 'org-mode-hook (lambda ()
+                             "Beautify Org Checkbox Symbol"
+                             (push '("#+ACTIVE:"            . ""  ) prettify-symbols-alist)
+                             (push '("#+BEGIN_EXAMPLE"      . "↦"  ) prettify-symbols-alist)
+                             (push '("#+BEGIN_HIDDEN"       . ""  ) prettify-symbols-alist)
+                             (push '("#+BEGIN_QUOTE"        . "↦"  ) prettify-symbols-alist)
+                             (push '("#+BEGIN_SRC"          . "↦"  ) prettify-symbols-alist)
+                             (push '("#+CATEGORY:"          . "⛏ "  ) prettify-symbols-alist)
+                             (push '("#+CLOSE_SPOILER"      . ""  ) prettify-symbols-alist)
+                             (push '("#+END_EXAMPLE"        . "⇤"  ) prettify-symbols-alist)
+                             (push '("#+END_HIDDEN"         . ""  ) prettify-symbols-alist)
+                             (push '("#+END_QUOTE"          . "⇤"  ) prettify-symbols-alist)
+                             (push '("#+END_SRC"            . "⇤"  ) prettify-symbols-alist)
+                             (push '("#+FILETAGS:"          . ""  ) prettify-symbols-alist)
+                             (push '("#+ID:"                . ""  ) prettify-symbols-alist)
+                             (push '("#+STARTUP:"           . "🌟"  ) prettify-symbols-alist)
+                             (push '("#+START_SPOILER"      . ""  ) prettify-symbols-alist)
+                             (push '("#+TITLE:"             . ""  ) prettify-symbols-alist)
+                             (push '("#+begin_example"      . "↦"  ) prettify-symbols-alist)
+                             (push '("#+begin_quote"        . "❝"  ) prettify-symbols-alist)
+                             (push '("#+begin_src"          . "↦"  ) prettify-symbols-alist)
+                             (push '("#+category:"          . "⛏ "  ) prettify-symbols-alist)
+                             (push '("#+end_example"        . "⇤"  ) prettify-symbols-alist)
+                             (push '("#+end_quote"          . "❞"  ) prettify-symbols-alist)
+                             (push '("#+end_src"            . "⇤"  ) prettify-symbols-alist)
+                             (push '("#+filetags:"          . ""  ) prettify-symbols-alist)
+                             (push '("#+startup:"           . "⏻"  ) prettify-symbols-alist)
+                             (push '("#+title:"             . ""  ) prettify-symbols-alist)
+                             (push '("---"                  . "—"  ) prettify-symbols-alist)
+                             (push '("->"                   . "→"  ) prettify-symbols-alist)
+                             (push '("..."                  . "…"  ) prettify-symbols-alist)
+                             (push '("::"                   . "∷"  ) prettify-symbols-alist)
+                             (push '(":attr_html"           . "🄗"  ) prettify-symbols-alist)
+                             (push '(":attr_latex"          . "🄛"  ) prettify-symbols-alist)
+                             (push '(":attr_org"            . "⒪"  ) prettify-symbols-alist)
+                             (push '(":author"              . "𝘼"  ) prettify-symbols-alist)
+                             (push '(":beamer_header"       . "🅑"  ) prettify-symbols-alist)
+                             (push '(":begin_export"        . "⏩"  ) prettify-symbols-alist)
+                             (push '(":caption"             . "☰"  ) prettify-symbols-alist)
+                             (push '(":date"                . "𝘿"  ) prettify-symbols-alist)
+                             (push '(":end"                 . "∎" ) prettify-symbols-alist)
+                             (push '(":end_export"          . "⏪"  ) prettify-symbols-alist)
+                             (push '(":header"              . "›"  ) prettify-symbols-alist)
+                             (push '(":html"                . "🅗"  ) prettify-symbols-alist)
+                             (push '(":html_head"           . "🅷" ) prettify-symbols-alist)
+                             (push '(":latex"               . "🅛" ) prettify-symbols-alist)
+                             (push '(":latex_class"         . "🄻" ) prettify-symbols-alist)
+                             (push '(":latex_header"        . "🅻" ) prettify-symbols-alist)
+                             (push '(":macro"               . "𝓜" ) prettify-symbols-alist)
+                             (push '(":options"             . "⌥" ) prettify-symbols-alist)
+                             (push '(":results"             . "🠶" ) prettify-symbols-alist)
+                             (push '("<-"                   . "←" ) prettify-symbols-alist)
+                             (push '("[ ]"                  . "☐"  ) prettify-symbols-alist)
+                             (push '("[#A]"                 . "⚑"  ) prettify-symbols-alist)
+                             (push '("[#B]"                 . "⬆"  ) prettify-symbols-alist)
+                             (push '("[#C]"                 . "■"  ) prettify-symbols-alist)
+                             (push '("[#D]"                 . "⬇"  ) prettify-symbols-alist)
+                             (push '("[#E]"                 . "❓"  ) prettify-symbols-alist)
+                             (push '("[-]"                  . "◼" ) prettify-symbols-alist)
+                             (push '("[X]"                  . "☑" ) prettify-symbols-alist)
+                             (push '("lambda"               . "λ"  ) prettify-symbols-alist)
+                             (push '("subtitle"             . "𝙩" ) prettify-symbols-alist)
+                             (prettify-symbols-mode)))
 
-  (set-ligatures! 'org-mode
-    :merge t
-    :checkbox      "[ ]"
-    :pending       "[-]"
-    :checkedbox    "[X]"
-    :list_property "::"
-    :em_dash       "---"
-    :ellipsis      "..."
-    :arrow_right   "->"
-    :arrow_left    "<-"
-    :title         "#+title:"
-    :subtitle      "#+subtitle:"
-    :author        "#+author:"
-    :date          "#+date:"
-    :property      "#+property:"
-    :options       "#+options:"
-    :startup       "#+startup:"
-    :macro         "#+macro:"
-    :html_head     "#+html_head:"
-    :html          "#+html:"
-    :latex_class   "#+latex_class:"
-    :latex_header  "#+latex_header:"
-    :beamer_header "#+beamer_header:"
-    :latex         "#+latex:"
-    :attr_latex    "#+attr_latex:"
-    :attr_html     "#+attr_html:"
-    :attr_org      "#+attr_org:"
-    :begin_quote   "#+begin_quote"
-    :end_quote     "#+end_quote"
-    :caption       "#+caption:"
-    :header        "#+header:"
-    :begin_export  "#+begin_export"
-    :end_export    "#+end_export"
-    :results       "#+RESULTS:"
-    :property      ":PROPERTIES:"
-    :end           ":END:"
-    :priority_a    "[#A]"
-    :priority_b    "[#B]"
-    :priority_c    "[#C]"
-    :priority_d    "[#D]"
-    :priority_e    "[#E]"
-    :roam_tags     "#+roam_tags:"
-    :filetags      "#+filetags:")
-  (plist-put +ligatures-extra-symbols :name "⁍")
-
-
-  (with-eval-after-load 'org
-    (plist-put org-format-latex-options :background 'default))
 
 ;;;;;; TAG LIST
 
@@ -656,22 +628,31 @@
 
 ;;;;;; ORG-ROAM-UI
 
-  (use-package! org-roam-ui
-    :after org-roam)
+(use-package! org-roam-ui
+  :after org-roam)
+
+;;;;;; ORG-ROAM-TIMESTAMPS
+
+(use-package! org-roam-timestamps
+  :after org-roam
+  :config
+  (setq org-roam-timestamps-parent-file t)
+  (setq org-roam-timestamps-remember-timestamps t)
+  (org-roam-timestamps-mode))
 
 ;;;; ORG-MODE MODULES
 ;;;;; DOCT
 
-  (use-package! doct
-    :defer t
-    :after org
-    :commands (doct))
+(use-package! doct
+  :defer t
+  :after org
+  :commands (doct))
 
 ;;;;; ORG-APPEAR
 
 (use-package! org-appear
   :after org
-  :hook (org-mode . org-appear-mode)
+  ;;:hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autoemphasis t
         org-appear-autolinks t
@@ -763,6 +744,11 @@
     ":DOI: ${doi}\n"
     ":URL: ${url}\n"
     ":END:\n\n")))
+
+;;;;; ORG-NOTIFICATIONS
+
+(use-package! org-notifications
+  :init (org-notifications-start))
 
 ;;;;; TSFILE LINKS
 

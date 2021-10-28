@@ -47,6 +47,7 @@
 
 (setq vterm-kill-buffer-on-exit t)
 (setq vterm-always-compile-module t)               ; Always compile the vterm module
+(setq vterm-shell "/usr/bin/zsh")
 
 ;;;;; SERVER
 
