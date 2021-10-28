@@ -75,16 +75,11 @@
 ;;;; UI
 ;;;;; FONTS
 
-(setq doom-font
-      (font-spec :family "Hack Nerd Font Mono" :size 14)
-      doom-serif-font
-      (font-spec :family "Hack Nerd Font Mono" :size 14)
-      doom-unicode-font
-      (font-spec :family "sumbola" :size 14)
-      doom-variable-pitch-font
-      (font-spec :family "Cantarell" :size 14)
-      doom-big-font
-      (font-spec :family "Hack Nerd Font Mono" :size 24))
+(setq doom-font (font-spec :family "FiraCode" :size 14 :weight 'regular )
+      doom-variable-pitch-font (font-spec :family "Firacode" :style "Regular" :size 14 :weight 'regular)
+      doom-unicode-font (font-spec :family "symbola" :size 14)
+      doom-big-font (font-spec :family "FiraCode" :size 24))
+
 
 ;;;;; FACES
 
@@ -127,12 +122,21 @@
 ;;;;; MODELINE
 
 (after! doom-modeline
-  (setq all-the-icons-scale-factor 1.1
-        auto-revert-check-vc-info t
-        doom-modeline-major-mode-icon (display-graphic-p)
-        doom-modeline-major-mode-color-icon (display-graphic-p)
-        doom-modeline-buffer-file-name-style 'relative-to-project
-        doom-modeline-vcs-max-length 60))
+  (setq all-the-icons-scale-factor 1.1)
+  (setq doom-modeline-enable-word-count t)
+  (setq doom-themes-padded-modeline t)
+  (setq auto-revert-check-vc-info t)
+  (setq doom-modeline-buffer-file-name-style 'relative-to-project)
+  (setq doom-modeline-major-mode-color-icon (display-graphic-p))
+  (setq doom-modeline-major-mode-icon (display-graphic-p))
+  (setq doom-modeline-vcs-max-length 60)
+
+  (add-hook! 'doom-modeline-mode-hook
+    (progn
+      (set-face-attribute 'header-line nil
+                          :background (face-background 'mode-line)
+                          :foreground (face-foreground 'mode-line))
+      )))
 
 ;;;;; LINE NUMBERS
 
@@ -892,6 +896,13 @@ templates into newly created files"
 
 
 ;;; TEMP / FIXUP
+
+(setq +format-on-save-enabled-modes
+      '(not emacs-lisp-mode  ; elisp's mechanisms are good enough
+            sql-mode         ; sqlformat is currently broken
+            tex-mode         ; latexindent is broken
+            latex-mode))
+
 ;;;; XTERM SET-WINDOW-TITLE
 
 (setq xterm-set-window-title t)

@@ -1,5 +1,19 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
+;; This file controls what Doom modules are enabled and what order they load
+;; in. Remember to run 'doom sync' after modifying it!
+
+;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
+;;      documentation. There you'll find a "Module Index" link where you'll find
+;;      a comprehensive list of Doom's modules and what flags they support.
+
+;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
+;;      'C-c c k' for non-vim users) to view its documentation. This works on
+;;      flags as well (those symbols that start with a plus).
+;;
+;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
+;;      directory (for easy access to its source code).
+
 (doom! :input
        ;;chinese
        ;;japanese
@@ -38,7 +52,6 @@
         +all)
        ;;tabs              ; a tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
-       ;;tree-sitter
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -63,12 +76,12 @@
 
        :emacs
        (dired             ; making dired pretty [functional]
+        +ranger
         +icons)
        electric          ; smarter, keyword-based electric-indent
        (ibuffer         ; interactive buffer management
         +icons)
-       (undo              ; persistent, smarter undo for your inevitable mistakes
-        +tree)
+       undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
@@ -91,22 +104,23 @@
        docker
        editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
-       (eval +overlay)     ; run code, run (also, repls)
+       eval     ; run code, run (also, repls)
+       ;; +overlay)
        gist              ; interacting with github gists
        (lookup              ; navigate your code and its documentation
-        +dictionary
-        +docsets)
-       lsp
+        +dictionary)
+       (lsp
+        +peek)
        (magit)             ; a git porcelain for Emacs
 
        make              ; run make tasks from Emacs
        (pass              ; password manager for nerds
         +auth)
        pdf               ; pdf enhancements
-       ;;prodigy           ; FIXME managing external services & code builders
+       prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
-       ;;terraform         ; infrastructure as code
+       terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
 
@@ -121,7 +135,8 @@
         +lsp)
        (cc                ; C > C++ == 1
         +lsp)
-       ;;clojure           ; java with a lisp
+       (clojure           ; java with a lisp
+        +lsp)
        common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
@@ -157,7 +172,8 @@
        ledger            ; be audit you can be
        (lua               ; one-based indices? one-based indices
         +lsp)
-       markdown          ; writing docs for people to ignore
+       (markdown          ; writing docs for people to ignore
+        +grip)
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;; ocaml             ; an objective camel
@@ -177,6 +193,7 @@
        ;;purescript        ; javascript, but functional
        (python            ; beautiful is better than ugly
         +lsp
+        +pyenv
         +pyright)
        qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
@@ -189,6 +206,7 @@
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
        (sh                ; she sells {ba,z,fi}sh shells on the C xor
+        +powershell
         +lsp)
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
@@ -205,6 +223,7 @@
 
        :app
        calendar
+       emms
        everywhere        ; *leave* Emacs!? You must be joking
        rss
        irc

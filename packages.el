@@ -6,6 +6,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Packages
+(unpin! org-roam)
 
 (package! evil-snipe :disable t)
 
@@ -37,8 +38,15 @@
 (package! mu4e-marker-icons)
 (package! mutt-mode)
 (package! nginx-mode)
+(package! olivetti)
 (package! org-edna)
 (package! org-jira)
+(package! org-noter)
+(package! org-roam-bibtex)
+(package! org-gtd)
+(package! org-ref)
+(package! org-noter-pdftools)
+(package! org-pdftools)
 (package! org-projectile)
 (package! org-super-agenda)
 (package! ox-gfm)

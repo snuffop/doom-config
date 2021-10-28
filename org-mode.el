@@ -190,70 +190,100 @@
 ;;;;;; SYMBOLS
 
   (setq prettify-symbols-unprettify-at-point 'right-edge)
-  ;; (setq-default prettify-symbols-alist '(
-  ;;                                        ("->"              . "→")
-  ;;                                        ("->>"             . "↠")
-  ;;                                        ("<-"              . "←")
-  ;;                                        ("<="              . "≤")
-  ;;                                        ("<|"              . "◁")
-  ;;                                        ("=>"              . "⇒")
-  ;;                                        (">="              . "≥")
-  ;;                                        ("|>"              . "▷")
-  ;;                                        ("[ ]"             . "☐")
-  ;;                                        ("[-]"             . "⊡")
-  ;;                                        ("[X]"             . "☑")
-  ;;                                        ("lambda"          . "λ")
-  ;;                                        ("#+BEGIN_EXAMPLE" . ">EG>")
-  ;;                                        ("#+BEGIN_SRC"     . "†")
-  ;;                                        ("#+END_EXAMPLE"   . "<EG<")
-  ;;                                        ("#+END_SRC"       . "†")
-  ;;                                        ("#+begin_example" . ">EG>")
-  ;;                                        ("#+begin_src"     . "†")
-  ;;                                        ("#+end_example"   . "<EG<")
-  ;;                                        ("#+end_src"       . "†")
-  ;;                                        ("[ ]"             . "☐")
-  ;;                                        ("[X]"             . "☑")
-  ;;                                        ("[-]"             . "❍")
-  ;;                                        ))
-  (add-hook 'org-mode-hook (lambda ()
-                             "Beautify Org Checkbox Symbol"
-                             (push '("[ ]" .  "☐") prettify-symbols-alist)
-                             (push '("[X]" . "☑" ) prettify-symbols-alist)
-                             (push '("[-]" . "❍" ) prettify-symbols-alist)
-                             (push '("#+BEGIN_SRC" . "↦" ) prettify-symbols-alist)
-                             (push '("#+END_SRC" . "⇤" ) prettify-symbols-alist)
-                             (push '("#+BEGIN_EXAMPLE" . "↦" ) prettify-symbols-alist)
-                             (push '("#+END_EXAMPLE" . "⇤" ) prettify-symbols-alist)
-                             (push '("#+BEGIN_QUOTE" . "↦" ) prettify-symbols-alist)
-                             (push '("#+END_QUOTE" . "⇤" ) prettify-symbols-alist)
-                             (push '("#+begin_quote" . "↦" ) prettify-symbols-alist)
-                             (push '("#+end_quote" . "⇤" ) prettify-symbols-alist)
-                             (push '("#+begin_example" . "↦" ) prettify-symbols-alist)
-                             (push '("#+end_example" . "⇤" ) prettify-symbols-alist)
-                             (push '("#+begin_src" . "↦" ) prettify-symbols-alist)
-                             (push '("#+end_src" . "⇤" ) prettify-symbols-alist)
-                             (push '("#+TITLE:" . "") prettify-symbols-alist)
-                             (push '("#+title:" . "") prettify-symbols-alist)
-                             (push '("#+DESCRIPTION:" . "") prettify-symbols-alist)
-                             (push '("#+ID:" . "") prettify-symbols-alist)
-                             (push '("#+FILETAGS:" . "") prettify-symbols-alist)
-                             (push '("#+filetags:" . "") prettify-symbols-alist)
-                             (push '("#+ACTIVE:" . "") prettify-symbols-alist)
-                             (push '("#+START_SPOILER" . "") prettify-symbols-alist)
-                             (push '("#+CLOSE_SPOILER" . "") prettify-symbols-alist)
-                             (push '("#+BEGIN_HIDDEN" . "") prettify-symbols-alist)
-                             (push '("#+END_HIDDEN" . "") prettify-symbols-alist)
-                             (push '("#+STARTUP:" . "🌟") prettify-symbols-alist)
-                             (push '("#+startup:" . "🌟") prettify-symbols-alist)
-                             (push '("#+CATEGORY:" . "⛏ ") prettify-symbols-alist)
-                             (push '("#+category:" . "⛏ ") prettify-symbols-alist)
-                             (push '("[#A]" . "⚡") prettify-symbols-alist)
-                             (push '("[#B]" . "⬆") prettify-symbols-alist)
-                             (push '("[#C]" . "■") prettify-symbols-alist)
-                             (push '("[#D]" . "⬇") prettify-symbols-alist)
-                             (push '("[#E]" . "❓") prettify-symbols-alist)
-                             (push '("lambda" . "λ") prettify-symbols-alist)
-                             (prettify-symbols-mode)))
+  (setq org-ellipsis " ▾ ")
+
+  (appendq! +ligatures-extra-symbols
+            `(:checkbox      "☐"
+              :pending       "◼"
+              :checkedbox    "☑"
+              :list_property "∷"
+              :em_dash       "—"
+              :ellipses      "…"
+              :arrow_right   "→"
+              :arrow_left    "←"
+              :title         nil
+              :subtitle      "𝙩"
+              :author        "𝘼"
+              :date          "𝘿"
+              :property      ""
+              :options       "⌥"
+              :startup       "⏻"
+              :macro         "𝓜"
+              :html_head     "🅷"
+              :html          "🅗"
+              :latex_class   "🄻"
+              :latex_header  "🅻"
+              :beamer_header "🅑"
+              :latex         "🅛"
+              :attr_latex    "🄛"
+              :attr_html     "🄗"
+              :attr_org      "⒪"
+              :begin_quote   "❝"
+              :end_quote     "❞"
+              :caption       "☰"
+              :header        "›"
+              :results       "🠶"
+              :begin_export  "⏩"
+              :end_export    "⏪"
+              :properties    ""
+              :end           "∎"
+              :priority_a   ,(propertize "⚑" 'face 'all-the-icons-red)
+              :priority_b   ,(propertize "⬆" 'face 'all-the-icons-orange)
+              :priority_c   ,(propertize "■" 'face 'all-the-icons-yellow)
+              :priority_d   ,(propertize "⬇" 'face 'all-the-icons-green)
+              :priority_e   ,(propertize "❓" 'face 'all-the-icons-blue)
+              :roam_tags nil
+              :filetags nil))
+
+  (set-ligatures! 'org-mode
+    :merge t
+    :checkbox      "[ ]"
+    :pending       "[-]"
+    :checkedbox    "[X]"
+    :list_property "::"
+    :em_dash       "---"
+    :ellipsis      "..."
+    :arrow_right   "->"
+    :arrow_left    "<-"
+    :title         "#+title:"
+    :subtitle      "#+subtitle:"
+    :author        "#+author:"
+    :date          "#+date:"
+    :property      "#+property:"
+    :options       "#+options:"
+    :startup       "#+startup:"
+    :macro         "#+macro:"
+    :html_head     "#+html_head:"
+    :html          "#+html:"
+    :latex_class   "#+latex_class:"
+    :latex_header  "#+latex_header:"
+    :beamer_header "#+beamer_header:"
+    :latex         "#+latex:"
+    :attr_latex    "#+attr_latex:"
+    :attr_html     "#+attr_html:"
+    :attr_org      "#+attr_org:"
+    :begin_quote   "#+begin_quote"
+    :end_quote     "#+end_quote"
+    :caption       "#+caption:"
+    :header        "#+header:"
+    :begin_export  "#+begin_export"
+    :end_export    "#+end_export"
+    :results       "#+RESULTS:"
+    :property      ":PROPERTIES:"
+    :end           ":END:"
+    :priority_a    "[#A]"
+    :priority_b    "[#B]"
+    :priority_c    "[#C]"
+    :priority_d    "[#D]"
+    :priority_e    "[#E]"
+    :roam_tags     "#+roam_tags:"
+    :filetags      "#+filetags:")
+  (plist-put +ligatures-extra-symbols :name "⁍")
+
+
+  (with-eval-after-load 'org
+    (plist-put org-format-latex-options :background 'default))
+
 ;;;;;; TAG LIST
 
   (setq org-tag-alist (quote
@@ -342,7 +372,13 @@
 
 ;;;; ORG-ROAM
 
-(after! org-roam
+(use-package! org-roam
+  :after org
+  :config
+  (setq org-roam-mode-selections
+        (list #'org-roam-backlinks-insert-section
+              #'org-roam-reflinks-insert-section
+              #'org-roam-unlinked-references-insert-section))
 
 ;;;;; ORG-ROAM POPUP RULES
 
@@ -356,9 +392,9 @@
 
 ;;;;; ORG-ROAM HOOKS
 
-  ; (add-hook 'find-file-hook #'roam-extra:update-todo-tag)
-  ; (add-hook 'before-save-hook #'roam-extra:update-todo-tag)
-  ; (advice-add 'org-agenda :before #'roam-extra:update-todo-files)
+                                        ; (add-hook 'find-file-hook #'roam-extra:update-todo-tag)
+                                        ; (add-hook 'before-save-hook #'roam-extra:update-todo-tag)
+                                        ; (advice-add 'org-agenda :before #'roam-extra:update-todo-files)
 
   ;; hook to be run whenever an org-roam capture completes
   (add-hook 'org-roam-capture-new-node-hook #'marty/add-other-auto-props-to-org-roam-properties)
@@ -589,13 +625,146 @@
   ;;     "Update the value of `org-agenda-files'."
   ;;     (setq org-agenda-files (roam-extra:todo-files)))
 
+;;;;;; HOTTER BUFFER
+
+  (defun org-roam-buffer-setup ()
+    "Function to make org-roam-buffer more pretty."
+    (progn
+      (setq-local olivetti-body-width 44)
+      (variable-pitch-mode 1)
+      (olivetti-mode 1)
+      ;; (centaur-tabs-local-mode -1)
+
+      (set-face-background 'magit-section-highlight (face-background 'default))))
+
+  (add-hook! 'org-roam-mode-hook #'org-roam-buffer-setup)
+
 ;;;;; ORG-ROAM END
-  )
+
+  (org-roam-setup))
+
 ;;;;; ORG-ROAM-MODULES
+;;;;;; ROAM-BIBTEX
+
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-mode . org-roam-bibtex-mode)
+  :config
+  (require 'org-ref)
+  (setq orb-preformat-keywords
+        '("citekey" "title" "url" "file" "author-or-editor" "keywords" "pdf" "doi" "author" "tags" "year" "author-bbrev")))
+
 ;;;;;; ORG-ROAM-UI
-(use-package! org-roam-ui
-  :after org-roam)
-;;;; TSFILE LINKS
+
+  (use-package! org-roam-ui
+    :after org-roam)
+
+;;;; ORG-MODE MODULES
+;;;;; DOCT
+
+  (use-package! doct
+    :defer t
+    :after org
+    :commands (doct))
+
+;;;;; ORG-APPEAR
+
+(use-package! org-appear
+  :after org
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t
+        org-appear-autolinks t
+        org-appear-autosubmarkers t))
+
+;;;;; ORG-EDNA-MODE
+
+(after! org
+  (org-edna-mode))
+
+;;;;; ORG-JIRA
+
+(use-package! org-jira
+  :defer 10
+  :init
+  (setq jiralib-url "https://rackspace.atlassian.net")
+  (setq org-jira-working-dir "~/Nextcloud/Notes/org-jira")
+  (setq org-jira-custom-jqls
+        '(
+          (:jql " project IN (NSYS) and createdDate < '2020-01-01' order by created DESC "
+           :limit 10
+           :filename "last-years-work")
+          (:jql " project IN (NSYS) and createdDate >= '2021-01-01' order by created DESC "
+           :limit 10
+           :filename "this-years-work")
+          (:jql " project IN (NSYS) and status IN ('To Do', 'In Development') AND (labels = EMPTY or labels NOT IN ('FutureUpdate')) order by priority, created DESC "
+           :limit 20
+           :filename "nsys-priority-items"))))
+
+;;;;; ORG-NOTER
+
+(use-package! org-noter
+  :after (:any org pdf-view)
+  :config
+  (setq
+   ;; The WM can handle splits
+   ;;org-noter-notes-window-location 'other-frame
+   ;; Please stop opening frames
+   ;;org-noter-always-create-frame nil
+   ;; I want to see the whole file
+   org-noter-hide-other nil
+   ;; Everything is relative to the rclone mega
+   org-noter-notes-search-path "~/Nextcloud/Notes/org/Noter"
+
+   ))
+
+
+(use-package! org-pdftools
+  :hook (org-load . org-pdftools-setup-link))
+
+(use-package! org-noter-pdftools
+  :after org-noter
+  :config
+  (with-eval-after-load 'pdf-annot
+    (add-hook 'pdf-annot-activate-handler-functions #'org-noter-pdftools-jump-to-note)))
+
+;;;;; CITATIONS
+
+(use-package! org-ref
+  ;;:after org-roam
+  :config
+  (setq
+   org-ref-completion-library 'org-ref-ivy-cite
+   org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+   bibtex-completion-bibliography (list "~/Nextcloud/Notes/library.bib")
+   bibtex-completion-notes "~/Nextcloud/Notes/org/bibnotes.org"
+   org-ref-note-title-format "* %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
+   org-ref-notes-directory "~/Nextcloud/Notes/org/Noter"
+   org-ref-notes-function 'orb-edit-notes
+   ))
+
+(after! org-ref
+  (setq
+   bibtex-completion-notes-path "~/Nextcloud/Notes/org/Noter/"
+   bibtex-completion-bibliography "~/Nextcloud/Notes/library.bib"
+   bibtex-completion-pdf-field "file"
+   bibtex-completion-notes-template-multiple-files
+   (concat
+    "#+TITLE: ${title}\n"
+    "#+ROAM_KEY: cite:${=key=}\n"
+    "* TODO Notes\n"
+    ":PROPERTIES:\n"
+    ":Custom_ID: ${=key=}\n"
+    ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+    ":AUTHOR: ${author-abbrev}\n"
+    ":JOURNAL: ${journaltitle}\n"
+    ":DATE: ${date}\n"
+    ":YEAR: ${year}\n"
+    ":DOI: ${doi}\n"
+    ":URL: ${url}\n"
+    ":END:\n\n")))
+
+;;;;; TSFILE LINKS
 
 (after! org
   (defvar memacs-root "~/Nextcloud/Notes/memacs/")
@@ -642,55 +811,10 @@
       (kill-new (concat "[[tsfile:" filename "]]")))))
 
 
-;;;; ORG-MODE MODULES
-;;;;; DOCT
-
-(use-package! doct
-  :defer t
-  :after org
-  :commands (doct))
-
-;;;;; ORG-APPEAR
-
-(use-package! org-appear
-  :after org
-  :hook (org-mode . org-appear-mode)
-  :config
-  (setq org-appear-autoemphasis t
-        org-appear-autolinks t
-        org-appear-autosubmarkers t))
-
-;;;;; ORG-EDNA-MODE
-(after! org
-  (org-edna-mode))
-;;;;; ORG-JIRA
-(use-package! org-jira
-  :defer 10
-  :init
-  (setq jiralib-url "https://rackspace.atlassian.net")
-  (setq org-jira-working-dir "~/Nextcloud/Notes/org-jira")
-  (setq org-jira-custom-jqls
-        '(
-          (:jql " project IN (NSYS) and createdDate < '2020-01-01' order by created DESC "
-           :limit 10
-           :filename "last-years-work")
-          (:jql " project IN (NSYS) and createdDate >= '2021-01-01' order by created DESC "
-           :limit 10
-           :filename "this-years-work")
-          (:jql "
-project IN (NSYS)
-and status IN ('To Do', 'In Development')
-AND (labels = EMPTY or labels NOT IN ('FutureUpdate'))
-order by priority, created DESC "
-           :limit 20
-           :filename "nsys-priority-items")
-          ))
-  )
-
 ;;;;; ORG-OL-TREE
 
-(use-package! org-ol-tree
-  :commands org-ol-tree)
+      (use-package! org-ol-tree
+        :commands org-ol-tree)
 
 (map! :map org-mode-map
       :after org
@@ -698,6 +822,7 @@ order by priority, created DESC "
       :desc "Outline" "O" #'org-ol-tree)
 
 ;;;;; ORG-PANDOC
+
 (use-package! org-pandoc-import
   :after org)
 
@@ -752,15 +877,16 @@ order by priority, created DESC "
                          (:discard (:anything t)))))))))))
 
 ;;;;; ORG-TRANSCLUSION
-(use-package! org-transclusion
-  :defer t
-  :after org
-  :init
-  (map!
-   :map global-map "<f12>" #'org-transclusion-add
-   :leader
-   :prefix "n"
-   :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
+
+                         (use-package! org-transclusion
+                           :defer t
+                           :after org
+                           :init
+                           (map!
+                            :map global-map "<f12>" #'org-transclusion-add
+                            :leader
+                            :prefix "n"
+                            :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
 
 
 
