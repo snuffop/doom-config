@@ -6,8 +6,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Packages
-(unpin! org-roam)
-
+t
 (package! evil-snipe :disable t)
 
 (package! aggressive-indent)
