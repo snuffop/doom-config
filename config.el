@@ -573,6 +573,7 @@ templates into newly created files"
         "b" #'ebuku))
 
 ;;;; ELFEED PROTOCOL
+
 (use-package! elfeed-protocol
   :config
   (setq elfeed-feeds '(("owncloud+https://marty@nextcloud.dabuke.com"
@@ -919,7 +920,7 @@ templates into newly created files"
   (add-to-list 'mm-discouraged-alternatives "text/html")
   (add-to-list 'mm-discouraged-alternatives "text/richtext"))
 
-;;;;; MARGINALIA
+;;;; MARGINALIA
 
 (after! marginalia
   (setq marginalia-censor-variables nil)
