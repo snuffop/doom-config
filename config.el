@@ -34,6 +34,7 @@
 (setq truncate-string-ellipsis "…")                ; unicode ellispis are nicer than "...", and also save /precious/ space
 (setq warning-minimum-level :emergency)
 (setq garbage-collection-messages t)
+(setq gcmh-auto-idle-delay-factor 20)
 
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)  ; Make the scratch buffer start in lisp mode
 
@@ -181,7 +182,7 @@
 ;;;; SPELLING
 
 (use-package! flyspell
-  :defer 7
+  :defer t
   :config
   ;; (setq ispell-program-name "aspell")
   ;; You could add extra option "--camel-case" for since Aspell 0.60.8
@@ -260,12 +261,14 @@
   (global-activity-watch-mode))
 
 (use-package! activity-watch-mode
+  :defer t
   :config
   (add-hook 'doom-first-buffer-hook #'marty/startactivitywatchmode))
 
 ;;;; AGGRESSIVE INDENT
 
 (use-package! aggressive-indent
+  :defer t
   :config
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'clojure-mode-hook    #'aggressive-indent-mode)
@@ -274,9 +277,11 @@
 
 (global-aggressive-indent-mode 1)
 
-(use-package! alert)
+(use-package! alert
+  :defer t)
 
-(use-package! all-the-icons-completion)
+(use-package! all-the-icons-completion
+  :defer t)
 (all-the-icons-completion-mode)
 (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
 
@@ -294,6 +299,7 @@ templates into newly created files"
       (evil-insert-state))))
 
 (use-package! autoinsert
+  :defer t
   :init (progn
           (setq auto-insert-query nil)
           (setq auto-insert-directory "~/.config/doom/templates")
@@ -320,6 +326,7 @@ templates into newly created files"
 ;;;; BROWSE-KILL-RING
 
 (use-package! browse-kill-ring
+  :defer t
   :config
   (progn
     (defadvice yank-pop (around kill-ring-browse-maybe (arg))
@@ -567,18 +574,19 @@ templates into newly created files"
 ;;;; DOCKER COMPOSE
 
 (use-package! docker-compose-mode
-  :defer 6)
+  :defer t)
 
 ;;;; DOCKER
 
 (use-package! dockerfile-mode
-  :defer 6)
+  :defer t)
 
 ;;;; EBUKU
 ;;
 ;; Add the E-buku management mode for buku
 
 (use-package! ebuku
+  :defer t
   :init
   (evil-collection-init 'ebuku)
   :config
@@ -589,6 +597,7 @@ templates into newly created files"
 
 ;;;; ELFEED PROTOCOL
 (use-package! elfeed-protocol
+  :defer t
   :config
   (setq elfeed-feeds '(("owncloud+https://marty@nextcloud.dabuke.com"
                         :password (auth-source-pass-get 'secret "Login/nextcloud.dabuke.com/marty"))))
@@ -615,7 +624,7 @@ templates into newly created files"
 ;;;;; MAGIT
 
 (use-package! magit
-  :defer 0.3
+  :defer t 
   :config
   (define-key transient-map        "q" 'transient-quit-one)
   (define-key transient-edit-map   "q" 'transient-quit-one)
@@ -625,7 +634,7 @@ templates into newly created files"
 ;;;;; GIT-GUTTER
 
 (use-package! git-gutter
-  :defer 3
+  :defer t
   :init
   (global-git-gutter-mode)
   (global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
@@ -634,11 +643,12 @@ templates into newly created files"
 ;;;; Hydra
 
 (use-package! hydra
-  :defer 8)
+  :defer t)
 
 ;;;; I3 WINDOW MANAGER CONFIG
 ;; Syntax highlighting for i3 config
-(use-package! i3wm-config-mode)
+(use-package! i3wm-config-mode
+  :defer t )
 
 ;;;; INFO PAGES
 
@@ -649,15 +659,18 @@ templates into newly created files"
 
 ;;;; JENKINS
 
-(use-package! jenkinsfile-mode)
+(use-package! jenkinsfile-mode
+  :defer t )
 
 ;;;; KHARD
 
-(use-package! khardel)
+(use-package! khardel
+  :defer t )
 
 ;;;; KHALEL
 
 (use-package! khalel
+  :defer t 
   :config
   (progn
     (setq khalel-khal-command "/usr/bin/khal")
@@ -677,7 +690,7 @@ templates into newly created files"
 ;;;; LSP
 
 (use-package! lsp
-  :defer 0.1
+  :defer t
   ;; TIDE check, less laggi?
   ;; :hook (((go-mode scss-mode css-mode web-mode ng2-html-mode ng2-ts-mode python-mode) . lsp-deferred))
   :hook (((go-mode scss-mode css-mode js-mode typescript-mode vue-mode web-mode ng2-html-mode ng2-ts-mode python-mode) . lsp-deferred))
@@ -741,15 +754,17 @@ templates into newly created files"
   :config (add-hook 'nginx-mode-hook (lambda () (add-to-list 'company-backends #'company-nginx))))
 
 (use-package! nginx-mode
-  :defer 10)
+  :defer t)
 
 ;;;; MUTT-MODE
 
-(use-package! mutt-mode)
+(use-package! mutt-mode
+  :defer t)
 
 ;;;; NOTDEFT
 
 (use-package! notdeft
+  :defer t
   :config
   (setq notdeft-directories '("~/Nextcloud/Notes/org"
                               "~/Nextlcoud/Notes/org/daily"
@@ -759,6 +774,7 @@ templates into newly created files"
 ;;;; OUTSHINE
 
 (use-package! outshine
+  :defer t
   :config
   (map! :after outshine
         :map emacs-lisp-mode-map
@@ -769,6 +785,7 @@ templates into newly created files"
 ;;;; PAPERLESS
 
 (use-package! paperless
+  :defer t
   :init (require 'org-paperless)
   :config (progn
             (custom-set-variables
@@ -791,7 +808,7 @@ templates into newly created files"
 ;;;; PYTHON MODE
 
 (use-package! python-mode
-  :defer 0.5
+  :defer t
   :hook (python-mode . format-all-mode)
   :config
   (setq pytnon-indent-level 4)
@@ -803,24 +820,27 @@ templates into newly created files"
 ;;;;; LSP PYRIGHT
 
 (use-package! lsp-pyright
-  :defer 0.5
+  :defer t
   :config
   (setq lsp-pyright-auto-import-completions t)
   (setq lsp-pyright-auto-search-paths t)
   (setq lsp-pyright-log-level "trace"))
+
 ;;;; RAINBOW MODE
 
 (use-package rainbow-mode
-  :hook (((css-mode scss-mode org-mode emacs-lisp-mode typescript-mode js-mode). rainbow-mode))
-  :defer 2.3)
+  :defer t
+  :hook (((css-mode scss-mode org-mode emacs-lisp-mode typescript-mode js-mode). rainbow-mode)))
 
 ;;;; SALT MODE
 
-(use-package! salt-mode)
+(use-package! salt-mode
+  :defer t)
 
 ;;;; SYSTEMD MODE
 
-(use-package! systemd)
+(use-package! systemd
+  :defer t)
 
 (map! :map systemd-mode
       :localleader
@@ -831,7 +851,7 @@ templates into newly created files"
 ;;;; TREEMACS
 
 (use-package! treemacs
-  :defer 3
+  :defer t
   :custom
   (treemacs-width 35)
   :config
@@ -840,7 +860,7 @@ templates into newly created files"
 ;;;; TREESITTER
 
 (use-package! tree-sitter-langs
-  :defer 6)
+  :defer t)
 
 (use-package! tree-sitter
   :after tree-sitter-langs
@@ -854,7 +874,7 @@ templates into newly created files"
 ;;;; UNDO
 
 (use-package! undo-tree
-  :defer 0.3
+  :defer t
   :config
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist '(("." . "~/tmp/undo")))
@@ -874,7 +894,7 @@ templates into newly created files"
   (global-wakatime-mode))
 
 (use-package! wakatime-mode
-  :defer 1.2
+  :defer t
   :config
   (add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
   (setq wakatime-cli-path "/usr/bin/wakatime"))
@@ -882,7 +902,7 @@ templates into newly created files"
 ;;;; WEB MODE
 
 (use-package! web-mode
-  :defer 0.5
+  :defer t
   :config
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   (setq web-mode-comment-formats
@@ -903,13 +923,13 @@ templates into newly created files"
 
 (use-package! emmet-mode
   :hook ((scss-mode . emmet-mode) (css-mode . emmet-mode) (ng2-html-mode . emmet-mode) (html-mode . emmet-mode))
-  :defer 5)
+  :defer t)
 
 
 ;;;;; JSON
 
 (use-package! json-mode
-  :defer 5
+  :defer t
   :hook (json-mode . format-all-mode))
 
 

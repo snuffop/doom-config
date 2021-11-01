@@ -6,5 +6,4 @@
 * Links
 ** `(marty/org-roam-dailies-graphicslink)`
 * Tasks
-* Rackspace
 * Journal
