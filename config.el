@@ -84,6 +84,10 @@
       doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
       doom-unicode-font (font-spec :family "symbola" :size 14)
       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
+<<<<<<< HEAD
+=======
+
+>>>>>>> Putbackel
 
 ;;;;; FACES
 
