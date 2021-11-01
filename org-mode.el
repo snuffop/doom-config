@@ -28,9 +28,8 @@
                                  (concat org-directory "Calendar.org")
                                  (concat org-directory "contacts.org")
                                  (concat org-directory "Someday.org")
-                                 (concat org-directory "0mobile.org")
-                                 "~/.cache/calendar/google.org"
-                                 "~/.cache/calendar/tatjana.org"))
+                                 (concat org-directory "0mobile.org")))
+
   (after! org-agenda
 
     (setq org-agenda-block-separator nil)

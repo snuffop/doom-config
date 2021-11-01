@@ -6,15 +6,12 @@
 #+AUTHOR: Marty Bucahus
 #+startup: fold
 
-* GLOBAL
-** files startup
-*** config.el
+* files startup
+** start config.el
 
 startup initial config file tangled with org-bable
 
 #+begin_src emacs-lisp :tangle config.el
-
-,#+begin_src emacs-lisp
 ;; $doomdir/config.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; author: marty buchaus <marty@dabuke.com>
@@ -26,7 +23,7 @@ startup initial config file tangled with org-bable
 
 #+end_src
 
-*** functions.el
+** start functions.el
 
 functions.el   all Misc function go here  but littered where they are relevant to other code
 
@@ -42,132 +39,8 @@ functions.el   all Misc function go here  but littered where they are relevant t
 ;;;; functions
 
 #+end_src
-**** REST
-#+begin_src emacs-lisp :tangle functions.el
 
-;;;;; CALENDAR OPEN
-
-(defun mb/open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:org-create-source "Green")
-    (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
-
-(defun my-open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    ;; (cfw:org-create-file-source "Google" "~/.cache/calendar/google.com" "Blue")
-    (cfw:org-create-file-source "Tatjana" "~/.cache/calendar/tatjana.org" "Pink")  ; other org source
-    ;; (cfw:org-create-file-source "Rackspace" "~/.cache/calendar/rackspace.org" "Red")  ; other org source
-    (cfw:org-create-file-source "Next-Personal" "~/Nextcloud/Notes/Calendars/personal.org" "Blue")  ; other org source
-    (cfw:org-create-file-source "Next-Birthdays" "~/Nextcloud/Notes/Calendars/contact_birthdays.org" "Brown")  ; other org source
-    (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
-    )))
-
-;;;;; Open Mutt Message
-
-(defun mutt-open-message (message-id)
-  "In neomutt, open the nmail with the the given Message-ID"
-  (let*
-      ((message-id
-        (replace-regexp-in-string "^/*" "" message-id))
-       (mail-file
-        ;; notmuch
-        (replace-regexp-in-string
-         "\n$" "" (shell-command-to-string
-                   (format "notmuch search --output=files id:%s" message-id))))
-       (mail-box (replace-regexp-in-string "/home/marty/Mail" "" mail-file))
-       (mail-dir (replace-regexp-in-string "/\\(cur\\|new\\|tmp\\)/$" ""
-                                           (file-name-directory mail-box)))
-       (mutt-keystrokes
-        (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
-       (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-dir  mutt-keystrokes)))
-    ;; MU
-    ;;         (replace-regexp-in-string
-    ;;          "\n$" "" (shell-command-to-string
-    ;;                    (format "mu find -u i:%s --fields 'm'" message-id ))))
-    ;;        (mutt-keystrokes
-    ;;         (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
-    ;;         (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-file  mutt-keystrokes)))
-
-    (message "Launching neomutt for message %s" message-id)
-    (message " %s" mutt-command)
-    (call-process "setsid" nil nil nil
-                  "-f" "termite" "-e"
-                  mutt-command)))
-
-;;;;; PROT FUNCTIONS
-
-(defvar prot-common-url-regexp
-  (concat
-   "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|"
-   "nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)"
-   "\\(//[-a-z0-9_.]+:[0-9]*\\)?"
-   (let ((chars "-a-z0-9_=#$@~%&*+\\/[:word:]")
-         (punct "!?:;.,"))
-     (concat
-      "\\(?:"
-      ;; Match paired parentheses, e.g. in Wikipedia URLs:
-      ;; http://thread.gmane.org/47B4E3B2.3050402@gmail.com
-      "[" chars punct "]+" "(" "[" chars punct "]+" ")"
-      "\\(?:" "[" chars punct "]+" "[" chars "]" "\\)?"
-      "\\|"
-      "[" chars punct "]+" "[" chars "]"
-      "\\)"))
-   "\\)")
-  "Regular expression that matches URLs.
-Copy of variable `browse-url-button-regexp'.")
-
-
-(defun prot-diff-buffer-dwim (&optional arg)
-  "Diff buffer with its file's last saved state, or run `vc-diff'.
-With optional prefix ARG (\\[universal-argument]) enable
-highlighting of word-wise changes (local to the current buffer)."
-  (interactive "P")
-  (let ((buf))
-    (if (buffer-modified-p)
-        (progn
-          (diff-buffer-with-file (current-buffer))
-          (setq buf "*Diff*"))
-      (vc-diff)
-      (setq buf "*vc-diff*"))
-    (when arg
-      (with-current-buffer (get-buffer buf)
-        (unless diff-refine
-          (setq-local diff-refine 'font-lock))))))
-
-(defvar-local prot-diff--refine-diff-state 0
-  "Current state of `prot-diff-refine-dwim'.")
-
-;;;###autoload
-(defun prot-simple-rename-file-and-buffer (name)
-  "Apply NAME to current file and rename its buffer.
-Do not try to make a new directory or anything fancy."
-  (interactive
-   (list (read-string "Rename current file: " (buffer-file-name))))
-  (let ((file (buffer-file-name)))
-    (if (vc-registered file)
-        (vc-rename-file file name)
-      (rename-file file name))
-    (set-visited-file-name name t t)))
-
-
-;;;###autoload
-(defun prot-search-occur-urls ()
-  "Produce buttonised list of all URLs in the current buffer."
-  (interactive)
-  (let ((buf-name (format "*links in <%s>*" (buffer-name))))
-    (add-hook 'occur-hook #'goto-address-mode)
-    (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
-    (remove-hook 'occur-hook #'goto-address-mode)))
-
-#+end_src
-
-*** org-mode.el
+** start org-mode.el
 
 org-mode.el  header file for the org-mode  config
 
@@ -184,7 +57,863 @@ org-mode.el  header file for the org-mode  config
 
 
 #+end_src
-**** REST
+
+#+RESULTS:
+
+** packages.el
+
+packages file for doom sync to use to maintain the packages i use
+
+#+begin_src emacs-lisp :tangle packages.el
+;;; packages.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;
+;; author: marty buchaus <marty@dabuke.com>
+;; copyright © 2021, marty buchaus, all rights reserved.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; packages
+
+#+end_src
+** start keybindings.el
+
+#+begin_src emacs-lisp :tangle keybindings.el
+;;; $doomdir/keybindings.el --- summary -*- lexical-binding: t; -*-
+;;
+;; author: marty buchaus <marty@dabuke.com>
+;; copyright © 2021, marty buchaus, all rights reserved.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; code:
+
+#+end_src
+
+* init.el
+
+#+begin_src emacs-lisp :tangle init.el
+;;; init.el -*- lexical-binding: t; -*-
+
+(doom! :input
+       ;;chinese
+       ;;japanese
+       ;;layout            ; auie,ctsrnm is the superior home row
+
+       :completion
+       (company           ; the ultimate code completion backend
+        +childframe)
+       ;;helm              ; the *other* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       ;; (ivy               ; a search engine for love and life
+       ;; +prescient
+       ;; +fuzzy)
+       (vertico
+        +icons)
+
+       :ui
+       ;; deft
+       doom              ; what makes doom look the way it does
+       doom-dashboard    ; a nifty splash screen for emacs
+       ;; doom-quit         ; doom quit-message prompts when you quit emacs
+       (emoji +unicode)  ; 🙂
+       ;;fill-column       ; a `fill-column' indicator
+       hl-todo           ; highlight todo/fixme/note/deprecated/hack/review
+       hydra
+       ;;indent-guides     ; highlighted indent columns
+       ligatures         ; ligatures and symbols to make your code pretty again
+       ;;  +extra)
+       ;;minimap           ; show a map of the code on the side
+       modeline          ; snazzy, atom-inspired modeline, plus api
+       nav-flash         ; blink cursor line after big motions
+       ;;neotree           ; a project drawer, like nerdtree for vim
+       ophints           ; highlight the region an operation acts on
+       (popup            ; tame sudden yet inevitable temporary windows
+        +defaults
+        +all)
+       ;;tabs              ; a tab bar for emacs
+       treemacs          ; a project drawer, like neotree but cooler
+       ;;unicode           ; extended unicode support for various languages
+       vc-gutter         ; vcs diff in the fringe
+       vi-tilde-fringe   ; fringe tildes to mark beyond eob
+       (window-select     ; visually switch windows
+        +numbers)
+       workspaces        ; tab emulation, persistence & separate workspaces
+       ;;zen               ; distraction-free coding or writing
+
+       :editor
+       (evil +everywhere); come to the dark side, we have cookies
+       ;;file-templates    ; auto-snippets for empty files
+       fold                ; (nigh) universal code folding
+       format              ; automated prettiness
+       ;;god               ; run emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who don't like vim
+       ;;multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;; parinfer          ; turn lisp into python, sort of
+       ;;rotate-text       ; cycle region at point between text candidates
+       snippets          ; my elves. they type so i don't have to
+       word-wrap         ; soft wrapping with language-aware indent
+
+       :emacs
+       (dired             ; making dired pretty [functional]
+        +icons)
+       electric          ; smarter, keyword-based electric-indent
+       (ibuffer         ; interactive buffer management
+        +icons)
+       undo              ; persistent, smarter undo for your inevitable mistakes
+       vc                ; version-control and emacs, sitting in a tree
+
+       :term
+       eshell            ; the elisp shell that works everywhere
+       ;;shell             ; simple shell repl for emacs
+       ;;term              ; basic terminal emulator for emacs
+       vterm             ; the best terminal emulation in emacs
+
+       :checkers
+       (syntax           ; tasing you for every semicolon you forget
+        +childframe)
+       (spell          ; tasing you for misspelling mispelling
+        +flyspell)
+       grammar           ; tasing grammar mistake every you make
+
+       :tools
+       ansible
+       debugger          ; fixme stepping through code, to help you add bugs
+       ;;direnv
+       docker
+       editorconfig      ; let someone else argue about tabs vs spaces
+       ;;ein               ; tame jupyter notebooks with emacs
+       eval     ; run code, run (also, repls)
+       ;; +overlay)
+       gist              ; interacting with github gists
+       (lookup              ; navigate your code and its documentation
+        +dictionary)
+       (lsp
+        +peek)
+       (magit)             ; a git porcelain for emacs
+
+       make              ; run make tasks from emacs
+       (pass              ; password manager for nerds
+        +auth)
+       pdf               ; pdf enhancements
+       prodigy           ; fixme managing external services & code builders
+       rgb               ; creating color strings
+       ;;taskrunner        ; taskrunner for all your projects
+       terraform         ; infrastructure as code
+       ;;tmux              ; an api for interacting with tmux
+       upload            ; map local to remote projects via ssh/ftp
+
+       :os
+       ;; (:if is-mac macos)  ; improve compatibility with macos
+       (tty               ; improve the terminal emacs experience
+        +osc)
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       (beancount         ; mind the gaap
+        +lsp)
+       (cc                ; c > c++ == 1
+        +lsp)
+       (clojure           ; java with a lisp
+        +lsp)
+       common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .net, and mono shenanigans
+       data              ; config/data formats
+       ;;(dart +flutter)   ; paint ui and not much else
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of tea?
+       emacs-lisp        ; drown in parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;factor
+       ;;faust             ; dsp, but you get to keep your soul
+       ;;fsharp            ; ml stands for microsoft's language
+       ;;fstar             ; (dependent) types and (monadic) effects and z3
+       ;;gdscript          ; the language you waited for
+       (go                 ; the hipster dialect
+        +lsp)
+       (haskell            ; a language that's lazier than i am
+        +dante)
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ; a language you can depend on
+       (json              ; at least it ain't xml
+        +lsp)
+       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
+       (javascript        ; all(hope(abandon(ye(who(enter(here))))))
+        +lsp)
+       ;;julia             ; a better, faster matlab
+       ;;kotlin            ; a better, slicker java(script)
+       (latex             ; writing papers in emacs has never been so fun
+        +lsp)
+       ;;lean              ; for folks with too much to prove
+       ledger            ; be audit you can be
+       (lua               ; one-based indices? one-based indices
+        +lsp)
+       (markdown          ; writing docs for people to ignore
+        +grip)
+       ;;nim               ; python + lisp at the speed of c
+       ;;nix               ; i hereby declare "nix geht mehr!"
+       ;; ocaml             ; an objective camel
+       (org               ; organize your plain life in plain text
+        +hugo
+        +pandoc
+        +pretty
+        +pomodoro
+        +noter
+        +present
+        +gnuplot
+        +dragndrop
+        +roam2)
+       (php               ; perl's insecure younger brother
+        +lsp)
+       plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       (python            ; beautiful is better than ugly
+        +lsp
+        +pyenv
+        +pyright)
+       qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a dsl for dsls
+       ;;raku              ; the artist formerly known as perl6
+       ;;rest              ; emacs as a rest client
+       ;;rst               ; rest in peace
+       ;;(ruby +rails)     ; 1.step {|i| p "ruby is #{i.even? ? 'love' : 'life'}"}
+       (rust              ; fe2o3.unwrap().unwrap().unwrap().unwrap()
+        +lsp)
+       ;;scala             ; java, but good
+       ;;(scheme +guile)   ; a fully conniving family of lisps
+       (sh                ; she sells {ba,z,fi}sh shells on the c xor
+        +powershell
+        +lsp)
+       ;;sml
+       ;;solidity          ; do you need a blockchain? no.
+       ;;swift             ; who asked for emoji variables?
+       terra             ; earth and moon in alignment for performance.
+       web               ; the tubes
+       (yaml              ; json, but readable
+        +lsp)
+       ;;zig               ; c, but simpler
+
+       :email
+       (mu4e
+        +gmail)
+
+       :app
+       calendar
+       emms
+       everywhere        ; *leave* emacs!? you must be joking
+       rss
+       irc
+
+       :config
+       literate
+       (default
+         +bindings
+         +smartparens))
+
+#+end_src
+
+* packages
+#+begin_src emacs-lisp :tangle packages.el
+
+(package! evil-snipe :disable t)
+
+(package! aggressive-indent)
+(package! alert)
+(package! all-the-icons-completion)
+(package! all-the-icons-dired)
+(package! autoinsert)
+(package! browse-kill-ring)
+(package! company-nginx)
+(package! company-tabnine)
+(package! counsel-tramp)
+(package! dashboard)
+(package! docker-compose-mode)
+(package! dockerfile-mode)
+(package! doct)
+(package! ebuku)
+(package! elfeed-protocol)
+(package! emmet-mode)
+(package! hydra)
+(package! info-colors)
+(package! jenkinsfile-mode)
+(package! json-mode)
+(package! khalel)
+(package! khardel)
+(package! lsp-ui)
+(package! mixed-pitch)
+(package! mu4e-column-faces)
+(package! mu4e-marker-icons)
+(package! mutt-mode)
+(package! nginx-mode)
+(package! olivetti)
+(package! org-edna)
+(package! org-jira)
+(package! org-noter)
+(package! org-noter-pdftools)
+(package! org-notifications)
+(package! org-pdftools)
+(package! org-projectile)
+(package! org-ref)
+(package! org-roam-bibtex)
+(package! org-super-agenda)
+(package! org-wild-notifier)
+(package! ox-gfm)
+(package! paperless)
+(package! powerthesaurus)
+(package! python-mode)
+(package! salt-mode)
+(package! systemd)
+(package! wakatime-mode)
+
+;;;;
+;;(when (string= (system-name) "archovo.home.snuffy.org"))
+
+(package! activity-watch-mode      :recipe (:host github :repo "pauldub/activity-watch-mode"))
+(package! burly                    :recipe (:host github :repo "alphapapa/burly.el"))
+(package! i3wm-config-mode         :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))
+(package! notdeft                  :recipe (:host github :repo "hasu/notdeft" :files ("*.el" "xapian")))
+(package! org-appear               :recipe (:host github :repo "awth13/org-appear"))
+(package! org-ol-tree              :recipe (:host github :repo "Townk/org-ol-tree"))
+(package! org-pandoc-import        :recipe (:host github :repo "tecosaur/org-pandoc-import" :files ("*.el" "filters" "preprocessors")))
+(package! org-pretty-table         :recipe (:host github :repo "Fuco1/org-pretty-table"))
+(package! org-roam-timestamps      :recipe (:host github :repo "ThomasFKJorna/org-roam-timestamps"))
+(package! org-roam-ui              :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+(package! org-transclusion         :recipe (:host github :repo "nobiot/org-transclusion" :branch "main" :files ("*.el")))
+(package! outshine                 :recipe (:host github :repo "alphapapa/outshine"))
+(package! vlf                      :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
+
+#+end_src
+
+* CONFIGURATION
+** Notes
+Notes that need to be added to the config
+#+begin_src emacs-lisp :tangle config.el
+
+;;; Notes
+;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
+;;
+
+#+end_src
+
+** Global Settings
+#+begin_src emacs-lisp :tangle config.el
+
+(defun native-comp-available-p () nil)             ; fixing issue with org-agenda with this function negation
+
+(setq user-full-name "Marty Buchaus")
+(setq user-mail-address "marty@dabuke.com")
+(setq epg-gpg-program "/usr/bin/gpg")
+
+(setq-default enable-local-variables t)            ; allow for reading the local variables file
+(setq-default window-combination-resize t)
+(setq-default left-margin-width 1)                 ; Define new widths
+(setq-default right-margin-width 2)                ; Define new widths.
+(setq-default x-stretch-cursor t)
+
+(setq scroll-margin 2)                             ; it's nice to maintain a little margin
+(setq evil-want-fine-undo t)                       ; by default while in insert all changes are one big blob. be more granular
+(setq undo-limit 80000000)                         ; raise undo-limit to 80mb
+(setq auto-save-default t)                         ; nobody likes to loose work, i certainly don't
+(setq confirm-kill-emacs nil)                      ; stop hounding me and quit
+(setq display-time-24hr-format t)                  ; I wonder what this does
+(setq password-cache-expiry nil)                   ; i can trust my computers ... can't i?
+(setq read-process-output-max (* 1024 1024))
+(setq truncate-string-ellipsis "…")                ; unicode ellispis are nicer than "...", and also save /precious/ space
+(setq warning-minimum-level :emergency)
+(setq garbage-collection-messages t)
+
+(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)  ; Make the scratch buffer start in lisp mode
+
+(display-time-mode 1)                              ; enable time in the mode-line
+
+(global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly Essie
+
+(after! projectile
+  (setq projectile-project-search-path '("~/Source")))
+;; this doesn't seem to work to fix the doom doctor issue
+;; (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
+
+(set-window-buffer nil (current-buffer))
+(setenv "zstd" "/usr/bin/zstd")
+
+#+end_src
+*** FIX Garbage Collection
+#+begin_src emacs-lisp :tangle config.el
+(defun my-minibuffer-setup-hook ()
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun my-minibuffer-exit-hook ()
+  (setq gc-cons-threshold 800000))
+
+(add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+#+end_src
+
+
+*** VTERM
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;; VTERM
+
+(setq vterm-kill-buffer-on-exit t)
+(setq vterm-always-compile-module t)               ; Always compile the vterm module
+(setq vterm-shell "/usr/bin/zsh")
+
+#+end_src
+
+*** SERVER Settings
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;; SERVER
+
+(require 'server)
+(when (not (server-running-p))
+  (server-start))
+
+;; (defun greedily-do-daemon-setup ()
+;;   (require 'org)
+;;   (when (require 'mu4e nil t)
+;;     (setq mu4e-confirm-quit t)
+;;     (setq +mu4e-lock-greedy t)
+;;     (setq +mu4e-lock-relaxed t)
+;;     (+mu4e-lock-add-watcher)
+;;     (when (+mu4e-lock-available t)
+;;       (mu4e~start))))
+
+;; (when (daemonp)
+;;   (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup)
+;;   (add-hook! 'server-after-make-frame-hook (switch-to-buffer +doom-dashboard-name)))
+
+#+end_src
+
+*** EVIL SETTINGS
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;; EVIL-SETTINGS
+
+(setq! evil-want-Y-yank-to-eol nil)
+
+#+end_src
+** UI
+*** FONTS
+
+The Font settings for Most of the interface
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;; FONTS
+
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
+      doom-unicode-font (font-spec :family "symbola" :size 14)
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
+
+#+end_src
+
+*** FACES
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;; FACES
+
+(custom-set-faces!
+  '(font-lock-comment-face :slant italic)
+  '(font-lock-keyword-face :slant italic))
+(setq global-prettify-symbols-mode t)
+
+(custom-set-faces!
+  '(mode-line :family "firacode nerd font mono" :height 100)
+  '(mode-line-inactive :family "firacode nerd font mono" :height 100))
+
+#+end_src
+
+*** MIXED PITCH
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;;; MIXED PITCH
+
+;;(add-hook! 'org-mode-hook #'mixed-pitch-mode)
+
+(defvar marty/mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Only use `mixed-pitch-mode' for given modes.")
+
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode of `marty/mixed-pitch-modes'"
+  (when (memq major-mode marty/mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook marty/mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+
+;; additional colors
+(setq +m-color-main "#61AFEF"
+      +m-color-secondary "red")
+
+#+end_src
+
+*** THEME
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;; THEME
+
+(setq doom-theme 'doom-dracula )
+
+(after! doom-themes
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t))
+
+#+end_src
+
+*** MODELINE
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;; MODELINE
+
+(after! doom-modeline
+  (setq all-the-icons-scale-factor 1.1)
+  (setq doom-modeline-enable-word-count t)
+  (setq doom-themes-padded-modeline t)
+  (setq auto-revert-check-vc-info t)
+  (setq doom-modeline-buffer-file-name-style 'relative-to-project)
+  (setq doom-modeline-major-mode-color-icon (display-graphic-p))
+  (setq doom-modeline-major-mode-icon (display-graphic-p))
+  (setq doom-modeline-vcs-max-length 60)
+
+  (add-hook! 'doom-modeline-mode-hook
+    (progn
+      (set-face-attribute 'header-line nil
+                          :background (face-background 'mode-line)
+                          :foreground (face-foreground 'mode-line))
+      )))
+#+end_src
+
+*** LINE NUMBER
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;; LINE NUMBERS
+
+(setq display-line-numbers-type 'relative)
+
+;; remove numbers from these modes
+
+(dolist (mode '(org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+#+end_src
+
+*** REGISTERS
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;;; REGISTERS
+
+;; These registers are manually added by calling this function for Rackspace
+;; Patching
+;;
+
+(defun marty/set-patching-macro-registers ()
+  "evil keyboard macros for patching,  running docker containers"
+  (interactive)
+  (evil-set-register ?e [?0 ?i ?* ?* ?* ?* ?* ?* ?  escape ?0])
+  (evil-set-register ?b [?0 ?o escape ?0 ?i ?# ?+ ?e ?n ?d ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0] )
+  (evil-set-register ?t [?0 ?o ?i backspace ?# ?+ ?b ?e ?g ?i ?n ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0]))
+
+#+end_src
+
+** SPELLING
+#+begin_src emacs-lisp :tangle config.el
+
+;;;; SPELLING
+
+(use-package! flyspell
+  :defer 7
+  :config
+  ;; (setq ispell-program-name "aspell")
+  ;; You could add extra option "--camel-case" for since Aspell 0.60.8
+  ;; @see https://github.com/redguardtoo/emacs.d/issues/796
+  ;; (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
+  (setq-default flyspell-prog-text-faces
+                '(tree-sitter-hl-face:comment
+                  tree-sitter-hl-face:doc
+                  tree-sitter-hl-face:string
+                  tree-sitter-hl-face:function
+                  tree-sitter-hl-face:variable
+                  tree-sitter-hl-face:type
+                  tree-sitter-hl-face:method
+                  tree-sitter-hl-face:function.method
+                  tree-sitter-hl-face:function.special
+                  tree-sitter-hl-face:attribute
+                  font-lock-comment-face
+                  font-lock-doc-face
+                  font-lock-string-face
+                  lsp-face-highlight-textual
+                  default))
+
+
+  (setq flyspell-lazy-idle-seconds 2)
+  (setq ispell-personal-dictionary "~/.config/doom/dictionary/ispell_personal" )
+  (setq spell-fu-directory "~/.config/doom/dictionary") ;; Please create this directory manually.
+  (after! ispell
+    (setq ispell-program-name "aspell"
+          ;; Notice the lack of "--run-together"
+          ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
+    (ispell-kill-ispell t))
+
+  (defun flyspell-buffer-after-pdict-save (&rest _)
+    (flyspell-buffer))
+
+  (advice-add 'ispell-pdict-save :after #'flyspell-buffer-after-pdict-save))
+
+
+(add-hook 'text-mode-hook 'flyspell-mode!)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+#+end_src
+
+** KEYBINDINGS
+*** keybindings.el
+#+begin_src emacs-lisp :tangle keybindings.el
+
+(setq doom-localleader-key ",")
+
+;;;; global keybindings
+
+(define-key! help-map
+  "h"    #'helpful-at-point)
+
+(map!
+ ;;:n "c-:"    #'+spell/correct
+ :n "c-;"    #'embark-act
+ :n "c-,"    #'+spell/next-error)
+
+;;;; leader keybindings
+
+(map! :leader
+      "tab"  #'evil-switch-to-windows-last-buffer
+      "spc"  #'execute-extended-command
+      ;;; <leader> a --- application
+      (:prefix-map ("a" . "application")
+       "m"  #'=mu4e
+       ;; org
+       (:prefix-map ("o" . "org")
+        "/" #'org-occur-in-agenda-files
+        "a" #'org-agenda-list
+        "t" #'org-todo-list
+        "l" #'org-store-link
+        "m" #'org-tags-view
+        "o" #'org-agenda
+        "s" #'org-search-view
+        "t" #'org-todo-list
+        (:prefix-map ("c" . "clock/contacts")
+         "c"  #'org-clock-cancel
+         "g"  #'org-clock-goto
+         "i"  #'org-clock-in
+         "j"  #'org-clock-jump-to-current-clock
+         "o"  #'org-clock-out
+         "r"  #'org-resolve-clocks
+         "i"  #'org-clock-in-last
+         (:prefix-map ("t" . "org-timer")
+          "t"  #'org-timer-set-timer
+          "p"  #'org-timer-pause-or-continue
+          "q"  #'org-timer-stop)))
+       ;; tools
+       (:when (featurep! :tools pass)
+        (:prefix-map ("p" . "pass")
+         "/"  #'+pass/consult
+         "c"  #'password-store-edit
+         "d"  #'password-store-remove
+         "g"  #'password-store-generate
+         "i"  #'password-store-insert
+         "r"  #'password-store-rename
+         "w"  #'password-store-url
+         "y"  #'password-store-copy
+         "d"  #'password-store-clear
+         "i"  #'password-store-init
+         (:prefix-map ("o" . "otp")
+          "a" #'password-store-otp-append
+          "i" #'password-store-otp-insert
+          "y" #'password-store-otp-token-copy
+          "a" #'password-store-otp-append-from-image
+          "y" #'password-store-otp-uri-copy)))
+       (:prefix-map ("t" . "tramp")
+        "c"  #'tramp-cleanup-all-connections
+        "b"  #'tramp-cleanup-all-buffers
+        "c"  #'tramp-cleanup-this-connection
+        "t"  #'counsel-tramp
+        "q"  #'counsel-tramp-quit))
+;;;;; <leader> l --- workspace / layout
+      (:when (featurep! :ui workspaces)
+       (:prefix-map ("l" . "workspace")
+        :desc "display tab bar"           "spc" #'+workspace/display
+        :desc "cycle tab bar"             "tab" #'+workspace/cycle
+        :desc "switch workspace"          "."   #'+workspace/switch-to
+        :desc "switch to last workspace"  "`"   #'+workspace/other
+        :desc "move workspace left"       "<"   #'+workspace/swap-left
+        :desc "move workspace right"      ">"   #'+workspace/swap-right
+        :desc "new workspace"             "n"   #'+workspace/new
+        :desc "create named workspace"    "n"   #'+workspace/new-named
+        :desc "open workspace from file"  "o"   #'+workspace/load
+        :desc "save workspace to file"    "s"   #'+workspace/save
+        :desc "delete session"            "x"   #'+workspace/kill-session
+        :desc "delete this workspace"     "d"   #'+workspace/delete
+        :desc "rename workspace"          "r"   #'+workspace/rename
+        :desc "switch workspace"          "l"   #'+workspace/switch-to
+        :desc "restore last session"      "r"   #'+workspace/restore-last-session
+        :desc "next workspace"            "]"   #'+workspace/switch-right
+        :desc "previous workspace"        "["   #'+workspace/switch-left
+        :desc "switch to 1st workspace"   "1"   #'+workspace/switch-to-0
+        :desc "switch to 2nd workspace"   "2"   #'+workspace/switch-to-1
+        :desc "switch to 3rd workspace"   "3"   #'+workspace/switch-to-2
+        :desc "switch to 4th workspace"   "4"   #'+workspace/switch-to-3
+        :desc "switch to 5th workspace"   "5"   #'+workspace/switch-to-4
+        :desc "switch to 6th workspace"   "6"   #'+workspace/switch-to-5
+        :desc "switch to 7th workspace"   "7"   #'+workspace/switch-to-6
+        :desc "switch to 8th workspace"   "8"   #'+workspace/switch-to-7
+        :desc "switch to 9th workspace"   "9"   #'+workspace/switch-to-8
+        :desc "switch to final workspace" "0"   #'+workspace/switch-to-final)))
+
+;;;;; <leader n --- notes
+
+(map! :leader
+      :prefix "n"
+      "b" #'marty/org-roam-capture-inbox)
+
+;;;;; <leader> o --- open
+
+(map! :leader
+      :prefix "o"
+      (:prefix-map ("m" . "my")
+       :desc "0mobile"       "0" #'(lambda () (interactive) (find-file (concat org-directory "0mobile.org")))
+       :desc "desktop"       "d" #'(lambda () (interactive) (find-file (concat org-directory "desktop.org")))
+       :desc "contacts"      "o" #'(lambda () (interactive) (find-file (concat org-directory "contacts.org")))
+       :desc "tasks"         "g" #'(lambda () (interactive) (find-file (concat org-directory "tasks.org")))
+       :desc "habits"        "h" #'(lambda () (interactive) (find-file (concat org-directory "habits.org")))
+       :desc "read later"    "l" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
+       :desc "someday"       "s" #'(lambda () (interactive) (find-file (concat org-directory "someday.org")))
+       :desc "tip jar"       "t" #'(lambda () (interactive) (find-file (concat org-directory "tipjar.org")))
+       (:prefix-map ("c" . "+config")
+        :desc "keybindings"  "k"  #'(lambda () (interactive) (find-file (concat doom-private-dir "keybindings.el")))
+        :desc "config"       "c"  #'(lambda () (interactive) (find-file (concat doom-private-dir "config.el")))
+        :desc "org"          "o"  #'(lambda () (interactive) (find-file (concat doom-private-dir "org-mode.el")))
+        :desc "init"         "i"  #'(lambda () (interactive) (find-file (concat doom-private-dir "init.el")))
+        :desc "packages"     "p"  #'(lambda () (interactive) (find-file (concat doom-private-dir "packages.el")))
+        :desc "mu4e"         "m"  #'(lambda () (interactive) (find-file (concat doom-private-dir "mu4e.el"))))
+       (:prefix-map ("c" . "calendar")
+        :desc "calendar"      "c"  #'(lambda () (interactive) (find-file (concat org-directory "calendar.org")))
+        :desc "vdirsync"      "s"  #'khalel-run-vdirsyncer
+        :desc "import"        "i"  #'khalel-import-upcoming-events)))
+
+;;;; mode maps
+;;;;; override org mode map
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :prefix "m"
+      "a"  #'marty/org-roam-move-todo-to-today
+      "b"  #'marty/org-roam-capture-inbox
+      "i"  #'org-roam-node-insert-immediate
+      "j"  #'org-roam-dailies-capture-today
+      "p"  #'marty/org-roam-find-project
+      "s"  #'org-roam-db-sync
+      "s"  #'marty/org-roam-rg-search
+      :prefix "md"
+      "p"  #'org-roam-dailies-goto-previous-note
+      "n"  #'org-roam-dailies-goto-next-note
+      )
+
+;;;; dired keybindings
+;;;;;  ts file trigger keybinding
+(define-key! dired-mode-map
+  (kbd "c-t") #'marty/dired-copy-filename-as-tsfile-link)
+
+(map! :leader
+      (:prefix ("d" . "dired")
+       :desc "open dired" "d"                   #'dired
+       :desc "dired jump to current" "j"        #'dired-jump)
+      (:after dired
+       (:map dired-mode-map
+        :desc "peep-dired image previews" "d p" #'peep-dired
+        :desc "create tsfile link" "d t"        #'marty/dired-copy-filename-as-tsfile-link
+        :desc "dired view file" "d v"           #'dired-view-file)))
+;; make 'h' and 'l' go back and forward in dired. much faster to navigate the directory structure!
+
+(evil-define-key 'normal dired-mode-map
+  (kbd "m-ret") 'dired-display-file
+  (kbd "h") 'dired-up-directory
+  (kbd "l") 'dired-view-file
+  (kbd "m") 'dired-mark
+  (kbd "t") 'dired-toggle-marks
+  (kbd "u") 'dired-unmark
+  (kbd "c") 'dired-do-copy
+  (kbd "d") 'dired-do-delete
+  (kbd "j") 'dired-goto-file
+  (kbd "m") 'dired-chmod
+  (kbd "o") 'dired-chown
+  (kbd "p") 'dired-do-print
+  (kbd "r") 'dired-rename
+  (kbd "t") 'dired-do-touch
+  (kbd "y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
+  (kbd "+") 'dired-create-directory
+  (kbd "-") 'dired-up-directory
+  (kbd "% l") 'dired-downcase
+  (kbd "% u") 'dired-upcase
+  (kbd "; d") 'epa-dired-do-decrypt
+  (kbd "; e") 'epa-dired-do-encrypt)
+;; if peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
+(evil-define-key 'normal peep-dired-mode-map
+  (kbd "j") 'peep-dired-next-file
+  (kbd "k") 'peep-dired-prev-file)
+#+end_src
+
+*** Load KEYBINDINGS
+
+Load the Keybindings file
+#+begin_src emacs-lisp :tangle config.el
+
+;;;; KEYBINDINGS
+
+(load! "keybindings.el")
+
+#+end_src
+
+** DIRED
+
+#+begin_src emacs-lisp :tangle config.el
+
+;;;; DIRED
+
+(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+;; get file icons in dired
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+;; with dired-open plugin, you can launch external programs for certain extensions
+;; for example, i set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
+(setq dired-open-extensions '(("gif" . "sxiv")
+                              ("jpg" . "sxiv")
+                              ("png" . "sxiv")
+                              ("mkv" . "mpv")
+                              ("mp4" . "mpv")))
+
+#+end_src
+
+* ORG-MODE
+
+** Configuration
+
 #+begin_src emacs-lisp :tangle org-mode.el
 
 ;;;; ORG-MODE MAIN
@@ -207,9 +936,8 @@ org-mode.el  header file for the org-mode  config
                                  (concat org-directory "Calendar.org")
                                  (concat org-directory "contacts.org")
                                  (concat org-directory "Someday.org")
-                                 (concat org-directory "0mobile.org")
-                                 "~/.cache/calendar/google.org"
-                                 "~/.cache/calendar/tatjana.org"))
+                                 (concat org-directory "0mobile.org")))
+
   (after! org-agenda
 
     (setq org-agenda-block-separator nil)
@@ -1260,525 +1988,628 @@ is selected, only the bare key is returned."
            :unnarrowed t))))
 #+end_src
 
-*** packages.el
+#+RESULTS:
+| d | default | plain | (file ~/.config/doom/templates/roam-templates/default-capture-entry.org) | :if-new | (file+head ${slug}.org #+TITLE: ${title} |
 
-packages file for doom sync to use to maintain the packages i use
+** LOAD org-mode.el
 
-#+begin_src emacs-lisp :tangle packages.el
-;;; packages.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
+#+begin_src emacs-lisp :tangle config.el
+;;;; ORG MODE
+
+(load! "org-mode.el")
+
+#+end_src
+
+* FUNCTIONS
+** Misc Functions
+
+#+begin_src emacs-lisp :tangle functions.el
+
+;;;;; CALENDAR OPEN
+
+(defun mb/open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")
+    (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
+
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    ;; (cfw:org-create-file-source "Google" "~/.cache/calendar/google.com" "Blue")
+    (cfw:org-create-file-source "Tatjana" "~/.cache/calendar/tatjana.org" "Pink")  ; other org source
+    ;; (cfw:org-create-file-source "Rackspace" "~/.cache/calendar/rackspace.org" "Red")  ; other org source
+    (cfw:org-create-file-source "Next-Personal" "~/Nextcloud/Notes/Calendars/personal.org" "Blue")  ; other org source
+    (cfw:org-create-file-source "Next-Birthdays" "~/Nextcloud/Notes/Calendars/contact_birthdays.org" "Brown")  ; other org source
+    (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
+    )))
+
+;;;;; Open Mutt Message
+
+(defun mutt-open-message (message-id)
+  "In neomutt, open the nmail with the the given Message-ID"
+  (let*
+      ((message-id
+        (replace-regexp-in-string "^/*" "" message-id))
+       (mail-file
+        ;; notmuch
+        (replace-regexp-in-string
+         "\n$" "" (shell-command-to-string
+                   (format "notmuch search --output=files id:%s" message-id))))
+       (mail-box (replace-regexp-in-string "/home/marty/Mail" "" mail-file))
+       (mail-dir (replace-regexp-in-string "/\\(cur\\|new\\|tmp\\)/$" ""
+                                           (file-name-directory mail-box)))
+       (mutt-keystrokes
+        (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
+       (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-dir  mutt-keystrokes)))
+    ;; MU
+    ;;         (replace-regexp-in-string
+    ;;          "\n$" "" (shell-command-to-string
+    ;;                    (format "mu find -u i:%s --fields 'm'" message-id ))))
+    ;;        (mutt-keystrokes
+    ;;         (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
+    ;;         (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-file  mutt-keystrokes)))
+
+    (message "Launching neomutt for message %s" message-id)
+    (message " %s" mutt-command)
+    (call-process "setsid" nil nil nil
+                  "-f" "termite" "-e"
+                  mutt-command)))
+
+;;;;; PROT FUNCTIONS
+
+(defvar prot-common-url-regexp
+  (concat
+   "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|"
+   "nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)"
+   "\\(//[-a-z0-9_.]+:[0-9]*\\)?"
+   (let ((chars "-a-z0-9_=#$@~%&*+\\/[:word:]")
+         (punct "!?:;.,"))
+     (concat
+      "\\(?:"
+      ;; Match paired parentheses, e.g. in Wikipedia URLs:
+      ;; http://thread.gmane.org/47B4E3B2.3050402@gmail.com
+      "[" chars punct "]+" "(" "[" chars punct "]+" ")"
+      "\\(?:" "[" chars punct "]+" "[" chars "]" "\\)?"
+      "\\|"
+      "[" chars punct "]+" "[" chars "]"
+      "\\)"))
+   "\\)")
+  "Regular expression that matches URLs.
+Copy of variable `browse-url-button-regexp'.")
+
+
+(defun prot-diff-buffer-dwim (&optional arg)
+  "Diff buffer with its file's last saved state, or run `vc-diff'.
+With optional prefix ARG (\\[universal-argument]) enable
+highlighting of word-wise changes (local to the current buffer)."
+  (interactive "P")
+  (let ((buf))
+    (if (buffer-modified-p)
+        (progn
+          (diff-buffer-with-file (current-buffer))
+          (setq buf "*Diff*"))
+      (vc-diff)
+      (setq buf "*vc-diff*"))
+    (when arg
+      (with-current-buffer (get-buffer buf)
+        (unless diff-refine
+          (setq-local diff-refine 'font-lock))))))
+
+(defvar-local prot-diff--refine-diff-state 0
+  "Current state of `prot-diff-refine-dwim'.")
+
+;;;###autoload
+(defun prot-simple-rename-file-and-buffer (name)
+  "Apply NAME to current file and rename its buffer.
+Do not try to make a new directory or anything fancy."
+  (interactive
+   (list (read-string "Rename current file: " (buffer-file-name))))
+  (let ((file (buffer-file-name)))
+    (if (vc-registered file)
+        (vc-rename-file file name)
+      (rename-file file name))
+    (set-visited-file-name name t t)))
+
+
+;;;###autoload
+(defun prot-search-occur-urls ()
+  "Produce buttonised list of all URLs in the current buffer."
+  (interactive)
+  (let ((buf-name (format "*links in <%s>*" (buffer-name))))
+    (add-hook 'occur-hook #'goto-address-mode)
+    (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
+    (remove-hook 'occur-hook #'goto-address-mode)))
+
+#+end_src
+
+** LOAD functions.el
+#+begin_src emacs-lisp :tangle config.el
+;;;; FUNCTIONS
+
+(load! "functions.el")
+
+#+end_src
+
+* MU4E
+** MU4E
+#+begin_src emacs-lisp :tangle mu4e.el
+
+;;; mu4e.el --- Summary -*- lexical-binding: t; -*-
 ;;
-;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2021, marty buchaus, all rights reserved.
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; packages
+;;; Code:
+;;;; Config
+(after! mu4e
+;;;;; Header Actions
+
+  (add-to-list 'mu4e-headers-actions
+               '("follow up" . marty/capture-mail-follow-up) t)
+  (add-to-list 'mu4e-headers-actions
+               '("read later" . marty/capture-mail-read-later) t)
+  (add-to-list 'mu4e-view-actions '("ytag message" . mu4e-action-retag-message) t)
+
+;;;;; Header
+
+  (setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
+
+;;;;; Info
+
+  (add-to-list 'mu4e-header-info-custom
+               '(:full-mailing-list .
+                 ( :name "Mailing-list"                     ;; long name, as seen in the message-view
+                   :shortname "Mail List"                    ;; short name, as seen in the headers view
+                   :help "Full name for mailing list" ;; tooltip
+                   :function (lambda (msg)
+                               (or (mu4e-message-field msg :mailing-list) "")))))
+
+  (add-to-list 'mu4e-header-info-custom
+               '(:xlabel .
+                 ( :name "X-Label or Tag"                 ;; long name, as seen in the message-view
+                   :shortname "X-Label"        ;; short name, as seen in the headers view
+                   :help "Maildir X-Label"   ;; tooltip
+                   :function (lambda (msg)
+                               (or (mu4e-message-field msg :X-Label) "")))))
+
+  (defvar +mu4e-header--folder-colors nil)
+
+  (appendq! mu4e-header-info-custom
+            '((:folder .
+               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors))))))
+
+;;;;; fields
+
+  (setq mu4e-headers-fields '((:account-stripe    . 1)
+                              (:human-date        . 10)
+                              (:flags             . 6)
+                              (:size              . 10)
+                              (:from-or-to        . 40)
+                              (:full-mailing-list . 40)
+                              (:tags              . 15)     ;;  X-label
+                              (:folder            . 20)
+                              (:subject           . nil)))  ;;  :subject or thread-subject
+
+  (setq mu4e-view-fields '(:date
+                           :from
+                           :to
+                           :cc
+                           :bcc
+                           :subject
+                           :flags
+                           :maildir
+                           :full-mailing-list
+                           :size
+                           :signature
+                           :xlabel
+                           :tags
+                           :decryption
+                           :attachments))
+
+;;;;; (config)
+
+  (setq mu4e-action-tags-header "X-Label")
+  (setq mu4e-attachment-dir "/home/marty/Downloads/Mail")
+  (setq mu4e-change-filenames-when-moving t)
+  (setq mu4e-get-mail-command "mbsync -c ~/.mbsyncrc -a")
+  (setq mu4e-headers-date-format "%m/%d/%y")
+  (setq mu4e-headers-time-format "⧖ %H:%M")
+  (setq mu4e-headers-results-limit 1000)
+  (setq mu4e-index-cleanup t)
+  (setq mu4e-index-lazy-check t)
+  (setq mu4e-update-interval 300)
+  (setq mu4e-alert-icon "/usr/share/icons/Papirus/64x64/apps/evolution.svg")
+
+;;;;;; Set from Context  these are default
+
+  (setq mu4e-drafts-folder nil)                      ;; set from context
+  (setq mu4e-get-mail-command nil)                   ;; set from context
+  (setq mu4e-sent-folder nil)                        ;; set from context
+  (setq mu4e-trash-folder nil)                       ;; set from context
+
+;;;;;; PGP
+
+  (setq mml-secure-openpgp-encrypt-to-self t)
+  (setq mml-secure-openpgp-sign-with-sender t)
+
+;;;;;; Send Mail
+
+  (setq message-send-mail-function 'message-send-mail-with-sendmail)
+  (setq message-sendmail-extra-arguments '("--read-envelope-from"));, "--read-recipients")
+  (setq message-sendmail-f-is-evil t)
+  (setq send-mail-function #'smtpmail-send-it)
+  (setq sendmail-program "/usr/bin/msmtp")
+
+;;;;;; VIEW Email
+
+  (setq mu4e-headers-include-related t)
+  (setq mu4e-headers-precise-alignment t)
+
+;;;;;; Compose
+
+  (setq mu4e-compose-dont-reply-to-self t)
+  (setq mu4e-compose-signature nil)        ;; Pulled from Contexts so Null as default
+
+;;;;;; compose mode hook
+
+  (add-hook 'mu4e-compose-mode-hook
+            #'(lambda ()
+                "My Setting for Composing Messages"
+                (save-excursion (message-add-header "X-Mailer: mu4e/Linux"))
+                (save-excursion (message-add-header "X-PGP-KEY-Fingerprint: 7F6C A60C 06C2 4811 FA1C A2BC 2EBC 5E32 FEE3 0AD4"))
+                (save-excursion (message-add-header "X-PGP-Key-ID: 0x090F6CEA"))
+                (save-excursion (message-add-header "X-PGP-Key: https://keybase.io/mbuchaus/key.asc "))
+                (marty-mu4e/mu4e-compose-maybe-signed-and-crypted)
+                (set-fill-column 72)
+                (turn-on-auto-fill)))
+
+
+  (setq mu4e-compose-hidden-headers '("^Face:"
+                                      "^X-Face:"
+                                      "^Openpgp:"
+                                      "^X-Draft-From:"
+                                      "^X-Mailer:"
+                                      "^User-agent:"))
+
+;;;;;; Encryption
+
+  (setq epg-user-id "0x090F6CEA")
+  (setq mu4e-decryption-policy t)
+  (setq mu4e-compose-crypto-reply-plain-policy 'sign)
+  (setq mml-secure-openpgp-encrypt-to-self t)
+  (setq mml-secure-openpgp-sign-with-sender  t)
+
+;;;;; bookmarks
+
+  (setq mu4e-bookmarks
+        '(
+          (:name "All Inboxes"
+           ;; :query "maildir:/Dabuke/INBOX OR maildir:/Gmail/INBOX OR maildir:/Rackspace/INBOX OR maildir:/RHH/INBOX"
+           :query "maildir:/Dabuke/INBOX OR maildir:/Google/INBOX OR maildir:/RHH/INBOX OR maildir:/RedEarth/INBOX OR maildir:/OFMasons/INBOX OR maildir:/letEarnMoney/INBOX"
+           :key ?i)
+          (:name "Unread messages"
+           :query "flag:unread AND NOT flag:trashed AND NOT maildir:/Google/Spam AND NOT maildir:/Dabuke/Spam"
+           :key ?u)
+          (:name "Unread Dabuke"
+           :query "flag:unread AND NOT flag:trashed AND maildir:/Dabuke/"
+           :key ?d)
+          (:name "Today's messages"
+           :query "date:today..now AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
+           :key ?t)
+          (:name "Yesterday and today messages"
+           :query "date:1d..now AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
+           :key ?y)
+          (:name "Last 7 days"
+           :query "date:7d..now AND NOT flag:trashed AND NOT maildir:/Gmail/[Gmail].Spam"
+           :key ?w)
+          (:name "Messages with images last 30 days"
+           :query "date:30d..now mime:image/*"
+           :key ?p)
+          (:name "Messages with images All"
+           :query "mime:image/*"
+           :key ?P)
+          (:name "Messages with attachments last 30 days"
+           :query "date:30d..now flag:attach"
+           :key ?a)
+          (:name "Messages with attachments All"
+           :query "flag:attach"
+           :key ?A)
+          ))
+;;;;; Contexts
+
+  (setq mu4e-contexts
+        `(
+;;;;;; Dabuke
+          ,(make-mu4e-context
+            :name "Dabuke"
+            :enter-func (lambda () (mu4e-message "Switch to the Dabuke context"))
+            :leave-func (lambda () (mu4e-message "Leaving Dabuke context"))
+            :vars '((user-mail-address      . "marty@dabuke.com")
+                    (mu4e-get-mail-command  . "mbsync Dabuke")
+                    (mu4e-refile-folder     . "/Dabuke/Archive")
+                    (mu4e-trash-folder      . "/Dabuke/Trash")
+                    (mu4e-drafts-folder     . "/Dabuke/Drafts")
+                    (mu4e-sent-folder       . "/Dabuke/Sent")
+                    (user-full-name         . "Marty Buchaus")
+                    (mu4e-maildir-shortcuts . ((:maildir "/Dabuke/Archive"              :key ?a)
+                                               (:maildir "/Dabuke/Drafts"               :key ?d)
+                                               (:maildir "/Dabuke/INBOX"                :key ?i)
+                                               (:maildir "/Dabuke/Spam"                 :key ?S)
+                                               (:maildir "/Dabuke/Lists.CraigsList"     :key ?c)
+                                               (:maildir "/Dabuke/Lists.Emacs"          :key ?e)
+                                               (:maildir "/Dabuke/Lists.Github"         :key ?g)
+                                               (:maildir "/Dabuke/Lists.Linode"         :key ?l)
+                                               (:maildir "/Dabuke/Lists.Mutt"           :key ?M)
+                                               (:maildir "/Dabuke/Lists.Root"           :key ?r)
+                                               (:maildir "/Dabuke/Lists.Spacemacs"      :key ?m)
+                                               (:maildir "/Dabuke/Lists.nextcloud"      :key ?N)
+                                               (:maildir "/Dabuke/Lists.ofmasons"       :key ?O)
+                                               (:maildir "/Dabuke/Lists.passwordstore"  :key ?W)
+                                               (:maildir "/Dabuke/Lists.Racktables"     :key ?R)
+                                               (:maildir "/Dabuke/Lists.qutebrowser"    :key ?q)
+                                               (:maildir "/Dabuke/SBL"                  :key ?b)
+                                               (:maildir "/Dabuke/Sent"                 :key ?s)
+                                               (:maildir "/Dabuke/TrainGood"            :key ?G)
+                                               (:maildir "/Dabuke/TrainSpam"            :key ?B)
+                                               (:maildir "/Dabuke/Trash"                :key ?T)))
+                    (message-sendmail-extra-arguments . ("--account=Dabuke"))
+                    (mu4e-compose-signature .
+                                            (concat
+                                             "William Marty Buchaus Jr\n"
+                                             "A person is smart. People are dumb, panicky, dangerous animals and you know it. -k MIB\n"
+                                             "Meet on the level Act by the Plumb and Part upon the Square  AF&AM 832\n"
+                                             "https://snuffy.org\n"))))
+
+;;;;;; Lets Earn Money
+          ,(make-mu4e-context
+            :name "letsEarnMoney"
+            :enter-func (lambda () (mu4e-message "Switch to the letsEarnMoney context"))
+            :leave-func (lambda () (mu4e-message "Leaving letsEarnMoney context"))
+            :vars '((user-mail-address      . "marty@letsearnmoney.com")
+                    (mu4e-get-mail-command  . "mbsync letsEarnMoney")
+                    (mu4e-refile-folder     . "/letsEarnMoney/Archive")
+                    (mu4e-trash-folder      . "/letsEarnMoney/Trash")
+                    (mu4e-drafts-folder     . "/letsEarnMoney/Drafts")
+                    (mu4e-sent-folder       . "/letsEarnMoney/Sent")
+                    (user-full-name         . "Marty Buchaus")
+                    (mu4e-maildir-shortcuts . ((:maildir "/letsEarnMoney/Archive"              :key ?a)
+                                               (:maildir "/letsEarnMoney/Drafts"               :key ?d)
+                                               (:maildir "/letsEarnMoney/INBOX"                :key ?i)
+                                               (:maildir "/letsEarnMoney/Junk"                 :key ?j)
+                                               (:maildir "/letsEarnMoney/Queue"                :key ?Q)
+                                               (:maildir "/letsEarnMoney/SBL"                  :key ?b)
+                                               (:maildir "/letsEarnMoney/Sent"                 :key ?s)
+                                               (:maildir "/letsEarnMoney/Spam"                 :key ?S)
+                                               (:maildir "/letsEarnMoney/TrainGood"            :key ?G)
+                                               (:maildir "/letsEarnMoney/TrainSpam"            :key ?B)
+                                               (:maildir "/letsEarnMoney/Trash"                :key ?T)))
+                    (message-sendmail-extra-arguments . ("--account=letsEarnMoney"))
+                    (mu4e-compose-signature .
+                                            (concat
+                                             "William Marty Buchaus Jr\n"
+                                             "https://www.letsearnmoney.com\n"))))
+
+;;;;;; OFMasons
+          ,(make-mu4e-context
+            :name "OFMasons"
+            :enter-func (lambda () (mu4e-message "Switch to the OFMasons context"))
+            :leave-func (lambda () (mu4e-message "Leaving OFMasons context"))
+            :vars '((user-mail-address      . "marty@ofmasons.com")
+                    (mu4e-get-mail-command  . "mbsync OFMasons")
+                    (mu4e-refile-folder     . "/OFMasons/Archive")
+                    (mu4e-trash-folder      . "/OFMasons/Trash")
+                    (mu4e-drafts-folder     . "/OFMasons/Drafts")
+                    (mu4e-sent-folder       . "/OFMasons/Sent")
+                    (user-full-name         . "Marty Buchaus")
+                    (mu4e-maildir-shortcuts . ((:maildir "/OFMasons/Archive"              :key ?a)
+                                               (:maildir "/OFMasons/Drafts"               :key ?d)
+                                               (:maildir "/OFMasons/INBOX"                :key ?i)
+                                               (:maildir "/OFMasons/Junk"                 :key ?j)
+                                               (:maildir "/OFMasons/Queue"                :key ?Q)
+                                               (:maildir "/OFMasons/SBL"                  :key ?b)
+                                               (:maildir "/OFMasons/Sent"                 :key ?s)
+                                               (:maildir "/OFMasons/Spam"                 :key ?S)
+                                               (:maildir "/OFMasons/TrainGood"            :key ?G)
+                                               (:maildir "/OFMasons/TrainSpam"            :key ?B)
+                                               (:maildir "/OFMasons/Trash"                :key ?T)))
+                    (message-sendmail-extra-arguments . ("--account=OFMasons"))
+                    (mu4e-compose-signature .
+                                            (concat
+                                             "William Marty Buchaus Jr\n"
+                                             "Meet on the level Act by the Plumb and Part upon the Square  AF&AM 832\n"
+                                             "https://www.ofmasons.com\n"))))
+
+;;;;;; Radhits
+          ,(make-mu4e-context
+            :name "TRadhits"
+            :enter-func (lambda () (mu4e-message "Switch to the Rad Hits context"))
+            :leave-func (lambda () (mu4e-message "Leaving Rad Hits context"))
+            :vars '((user-mail-address       . "marty@radhits.net")
+                    (mu4e-get-mail-command   . "mbsync Radhits")
+                    (mu4e-trash-folder       . "/Radhits/Trash")
+                    (mu4e-refile-folder      . "/Radhits/Archive")
+                    (mu4e-drafts-folder      . "/Radhits/Drafts")
+                    (mu4e-sent-folder        . "/Radhits/Sent")
+                    (user-full-name          . "Marty Buchaus")
+                    (mu4e-maildir-shortcuts  . ((:maildir "/Radhits/INBOX"    :key ?i)
+                                                (:maildir "/Radhits/Archive"  :key ?a)
+                                                (:maildir "/Radhits/Trash"    :key ?T)
+                                                (:maildir "/Radhits/Sent"     :key ?s)))
+                    (message-sendmail-extra-arguments . ("--account=Radhits"))
+                    (mu4e-compose-signature .
+                                            (concat
+                                             "Marty Buchaus\n"
+                                             "Meet on the Level Act by the Plumb and Part upon the Square\n"
+                                             "mobile: 210-763-4052\n"))))
+
+;;;;;; RedEarth Group Inc
+          ,(make-mu4e-context
+            :name "ERedEarthgroupinc"
+            :enter-func (lambda () (mu4e-message "Switch to the Red Earth Group context"))
+            :leave-func (lambda () (mu4e-message "Leaving Red Earth Group context"))
+            :vars '((user-mail-address       . "marty@redearthgroupinc.com")
+                    (mu4e-get-mail-command   . "mbsync RedEarth")
+                    (mu4e-trash-folder       . "/RedEarth/Trash")
+                    (mu4e-refile-folder      . "/RedEarth/Archive")
+                    (mu4e-drafts-folder      . "/RedEarth/Drafts")
+                    (mu4e-sent-folder        . "/RedEarth/Sent")
+                    (user-full-name          . "Marty Buchaus")
+                    (mu4e-maildir-shortcuts  . ((:maildir "/RedEarth/INBOX"      :key ?i)
+                                                (:maildir "/RedEarth/Archive"    :key ?a)
+                                                (:maildir "/RedEarth/Drafts"     :key ?d)
+                                                (:maildir "/RedEarth/Trash"      :key ?T)
+                                                (:maildir "/REdEarth/TrainGood"  :key ?G)
+                                                (:maildir "/REdEarth/TrainSpam"  :key ?B)
+                                                (:maildir "/REdEarth/JUnk"       :key ?S)
+                                                (:maildir "/RedEarth/Sent"       :key ?s)))
+                    (message-sendmail-extra-arguments . ("--account=RedEarth"))
+                    (mu4e-compose-signature .
+                                            (concat
+                                             "Marty Buchaus\n"
+                                             "Meet on the Level Act by the Plumb and Part upon the Square\n"
+                                             "mobile: 210-763-4052\n"))))
+
+;;;;;; RE Construction FL
+          ,(make-mu4e-context
+            :name "FREconstructionfl"
+            :enter-func (lambda () (mu4e-message "Switch to the Red Earth Construction FL context"))
+            :leave-func (lambda () (mu4e-message "Leaving Red Earth Construction FL context"))
+            :vars '((user-mail-address       . "marty@reconstructionfl.com")
+                    (mu4e-get-mail-command   . "mbsync reconstructionfl")
+                    (mu4e-trash-folder       . "/reconstructionfl/Trash")
+                    (mu4e-refile-folder      . "/reconstructionfl/Archive")
+                    (mu4e-drafts-folder      . "/reconstructionfl/Drafts")
+                    (mu4e-sent-folder        . "/reconstructionfl/Sent")
+                    (user-full-name          . "Marty Buchaus")
+                    (mu4e-maildir-shortcuts  . ((:maildir "/reconstructionfl/INBOX"      :key ?i)
+                                                (:maildir "/reconstructionfl/Archive"    :key ?a)
+                                                (:maildir "/reconstructionfl/Drafts"     :key ?d)
+                                                (:maildir "/reconstructionfl/TrainGood"  :key ?G)
+                                                (:maildir "/reconstructionfl/TrainSpam"  :key ?B)
+                                                (:maildir "/reconstructionfl/JUnk"       :key ?S)
+                                                (:maildir "/reconstructionfl/Trash"      :key ?T)
+                                                (:maildir "/reconstructionfl/Sent"       :key ?s)))
+                    (message-sendmail-extra-arguments . ("--account=ReConstructionFL"))
+                    (mu4e-compose-signature .
+                                            (concat
+                                             "Marty Buchaus\n"
+                                             "Meet on the Level Act by the Plumb and Part upon the Square\n"
+                                             "mobile: 210-763-4052\n"))))
+
+;;;;;; Google
+          ,(make-mu4e-context
+            :name "Gmail"
+            :enter-func (lambda () (mu4e-message "Switch to the Gmail context"))
+            :leave-func (lambda () (mu4e-message "Leaving Gmail context"))
+            :vars '((user-mail-address       . "snuffop@gmail.com")
+                    (mu4e-get-mail-command   . "mbsync Google")
+                    (mu4e-trash-folder       . "/Google/Trash")
+                    (mu4e-drafts-folder      . "/Google/Drafts")
+                    (mu4e-sent-folder        . "/Google/Sent")
+                    (mu4e-refile-folder      . "/Dabuke/Archive")
+                    (user-full-name          . "Marty Buchaus")
+                    (mu4e-maildir-shortcuts  . ((:maildir "/Google/Archive"           :key ?a)
+                                                (:maildir "/Google/Drafts"            :key ?d)
+                                                (:maildir "/Google/INBOX"             :key ?i)
+                                                (:maildir "/Google/Sent"              :key ?s)
+                                                (:maildir "/Google/Spam"              :key ?S)
+                                                (:maildir "/Google/Trash"             :key ?T)))
+                    (message-sendmail-extra-arguments . ("--account=Google"))
+                    (mu4e-compose-signature .
+                                            (concat
+                                             "Marty Buchaus\n"
+                                             "Meet on the Level Act by the Plumb and Part upon the Square\n"))))
+
+;;;;;; Real House Hunters
+          ,(make-mu4e-context
+            :name "HH"
+            :enter-func (lambda () (mu4e-message "Switch to the RHH context"))
+            :leave-func (lambda () (mu4e-message "Leaving RHH context"))
+            :vars '((user-mail-address      . "wbuchaus@realhousehunters.com")
+                    (mu4e-get-mail-command  . "mbsync RHH")
+                    (mu4e-refile-folder     . "/RHH/Archive")
+                    (mu4e-trash-folder      . "/RHH/Trash")
+                    (mu4e-drafts-folder     . "/RHH/Drafts")
+                    (mu4e-sent-folder       . "/RHH/Sent")
+                    (user-full-name         . "Marty Buchaus")
+                    (mu4e-maildir-shortcuts . ((:maildir "/RHH/INBOX"   :key ?i)
+                                               (:maildir "/RHH/Trash"   :key ?T)
+                                               (:maildir "/RHH/Drafts"  :key ?d)
+                                               (:maildir "/RHH/Archive" :key ?a)
+                                               (:maildir "/RHH/Sent"    :key ?s)))
+                    (message-sendmail-extra-arguments . ("--account=RHH"))
+                    (mu4e-compose-signature .
+                                            (concat
+                                             "Marty Buchaus\n"
+                                             "Real House Hunters / Jazney Inc\n"))))
+          ) ;; End Lists
+        ) ;; End Contexts
+;;;;; END of after mu4e
+  ) ;;end after mu4e
+;;;; Modules
+;;;;; mu4e-column-faces
+
+(use-package! mu4e-column-faces
+  :after mu4e
+  :config (mu4e-column-faces-mode))
+
+;;;;; mu4e-marker-icons
+
+(use-package! mu4e-marker-icons
+  :after mu4e
+  :init (mu4e-marker-icons-mode 1))
+
+;;;; Functions
+
+(defvar marty-mu4e/mu4e-compose-signed-p t)
+(defvar marty-mu4e/mu4e-compose-signed-and-crypted-p nil)
+
+(defun marty-mu4e/mu4e-compose-maybe-signed-and-crypted ()
+  "Maybe sign or encrypt+sign message. Message is signed or encrypted+signed
+when replying to a signed or encrypted message, respectively. Alternatively,
+message is signed or encrypted+signed if `ambrevar/mu4e-compose-signed-p' or
+`ambrevar/mu4e-compose-signed-and-crypted-p' is non-nil, respectively. This
+function is suitable for `mu4e-compose-mode-hook'."
+  (let ((msg mu4e-compose-parent-message))
+    (cond
+     ((or marty-mu4e/mu4e-compose-signed-and-crypted-p
+          (and msg (member 'encrypted (mu4e-message-field msg :flags))))
+      (mml-secure-message-sign-encrypt))
+     ((or marty-mu4e/mu4e-compose-signed-p
+          (and msg (member 'signed (mu4e-message-field msg :flags))))
+      (mml-secure-message-sign-pgpmime)))))
+
+;; Follow up quick key
+
+(defun marty/capture-mail-follow-up (msg)
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture "ma"))
+
+(defun marty/capture-mail-read-later (msg)
+  (interactive)
+  (call-interactively 'org-store-link)
+  (org-capture "mr"))
 
 #+end_src
-**** REST
-#+begin_src emacs-lisp :tangle packages.el
+
+** LOAD mu4e.el
 
-(package! evil-snipe :disable t)
+#+begin_src emacs-lisp :tangle config.el
 
-(package! aggressive-indent)
-(package! alert)
-(package! all-the-icons-completion)
-(package! all-the-icons-dired)
-(package! autoinsert)
-(package! browse-kill-ring)
-(package! company-nginx)
-(package! company-tabnine)
-(package! counsel-tramp)
-(package! dashboard)
-(package! docker-compose-mode)
-(package! dockerfile-mode)
-(package! doct)
-(package! ebuku)
-(package! elfeed-protocol)
-(package! emmet-mode)
-(package! hydra)
-(package! info-colors)
-(package! jenkinsfile-mode)
-(package! json-mode)
-(package! khalel)
-(package! khardel)
-(package! lsp-ui)
-(package! mixed-pitch)
-(package! mu4e-column-faces)
-(package! mu4e-marker-icons)
-(package! mutt-mode)
-(package! nginx-mode)
-(package! olivetti)
-(package! org-edna)
-(package! org-jira)
-(package! org-noter)
-(package! org-noter-pdftools)
-(package! org-notifications)
-(package! org-pdftools)
-(package! org-projectile)
-(package! org-ref)
-(package! org-roam-bibtex)
-(package! org-super-agenda)
-(package! org-wild-notifier)
-(package! ox-gfm)
-(package! paperless)
-(package! powerthesaurus)
-(package! python-mode)
-(package! salt-mode)
-(package! systemd)
-(package! wakatime-mode)
+;;;; MU4E
 
-;;;;
-;;(when (string= (system-name) "archovo.home.snuffy.org"))
-
-(package! activity-watch-mode      :recipe (:host github :repo "pauldub/activity-watch-mode"))
-(package! burly                    :recipe (:host github :repo "alphapapa/burly.el"))
-(package! i3wm-config-mode         :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))
-(package! notdeft                  :recipe (:host github :repo "hasu/notdeft" :files ("*.el" "xapian")))
-(package! org-appear               :recipe (:host github :repo "awth13/org-appear"))
-(package! org-ol-tree              :recipe (:host github :repo "Townk/org-ol-tree"))
-(package! org-pandoc-import        :recipe (:host github :repo "tecosaur/org-pandoc-import" :files ("*.el" "filters" "preprocessors")))
-(package! org-pretty-table         :recipe (:host github :repo "Fuco1/org-pretty-table"))
-(package! org-roam-timestamps      :recipe (:host github :repo "ThomasFKJorna/org-roam-timestamps"))
-(package! org-roam-ui              :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
-(package! org-transclusion         :recipe (:host github :repo "nobiot/org-transclusion" :branch "main" :files ("*.el")))
-(package! outshine                 :recipe (:host github :repo "alphapapa/outshine"))
-(package! vlf                      :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
+(load! "mu4e.el")
 
 #+end_src
-
-*** init.el
-
-#+begin_src emacs-lisp :tangle init.el
-;;; init.el -*- lexical-binding: t; -*-
-
-(doom! :input
-       ;;chinese
-       ;;japanese
-       ;;layout            ; auie,ctsrnm is the superior home row
-
-       :completion
-       (company           ; the ultimate code completion backend
-        +childframe)
-       ;;helm              ; the *other* search engine for love and life
-       ;;ido               ; the other *other* search engine...
-       ;; (ivy               ; a search engine for love and life
-       ;; +prescient
-       ;; +fuzzy)
-       (vertico
-        +icons)
-
-       :ui
-       ;; deft
-       doom              ; what makes doom look the way it does
-       doom-dashboard    ; a nifty splash screen for emacs
-       ;; doom-quit         ; doom quit-message prompts when you quit emacs
-       (emoji +unicode)  ; 🙂
-       ;;fill-column       ; a `fill-column' indicator
-       hl-todo           ; highlight todo/fixme/note/deprecated/hack/review
-       hydra
-       ;;indent-guides     ; highlighted indent columns
-       ligatures         ; ligatures and symbols to make your code pretty again
-       ;;  +extra)
-       ;;minimap           ; show a map of the code on the side
-       modeline          ; snazzy, atom-inspired modeline, plus api
-       nav-flash         ; blink cursor line after big motions
-       ;;neotree           ; a project drawer, like nerdtree for vim
-       ophints           ; highlight the region an operation acts on
-       (popup            ; tame sudden yet inevitable temporary windows
-        +defaults
-        +all)
-       ;;tabs              ; a tab bar for emacs
-       treemacs          ; a project drawer, like neotree but cooler
-       ;;unicode           ; extended unicode support for various languages
-       vc-gutter         ; vcs diff in the fringe
-       vi-tilde-fringe   ; fringe tildes to mark beyond eob
-       (window-select     ; visually switch windows
-        +numbers)
-       workspaces        ; tab emulation, persistence & separate workspaces
-       ;;zen               ; distraction-free coding or writing
-
-       :editor
-       (evil +everywhere); come to the dark side, we have cookies
-       ;;file-templates    ; auto-snippets for empty files
-       fold                ; (nigh) universal code folding
-       format              ; automated prettiness
-       ;;god               ; run emacs commands without modifier keys
-       ;;lispy             ; vim for lisp, for people who don't like vim
-       ;;multiple-cursors  ; editing in many places at once
-       ;;objed             ; text object editing for the innocent
-       ;; parinfer          ; turn lisp into python, sort of
-       ;;rotate-text       ; cycle region at point between text candidates
-       snippets          ; my elves. they type so i don't have to
-       word-wrap         ; soft wrapping with language-aware indent
-
-       :emacs
-       (dired             ; making dired pretty [functional]
-        +icons)
-       electric          ; smarter, keyword-based electric-indent
-       (ibuffer         ; interactive buffer management
-        +icons)
-       undo              ; persistent, smarter undo for your inevitable mistakes
-       vc                ; version-control and emacs, sitting in a tree
-
-       :term
-       eshell            ; the elisp shell that works everywhere
-       ;;shell             ; simple shell repl for emacs
-       ;;term              ; basic terminal emulator for emacs
-       vterm             ; the best terminal emulation in emacs
-
-       :checkers
-       (syntax           ; tasing you for every semicolon you forget
-        +childframe)
-       (spell          ; tasing you for misspelling mispelling
-        +flyspell)
-       grammar           ; tasing grammar mistake every you make
-
-       :tools
-       ansible
-       debugger          ; fixme stepping through code, to help you add bugs
-       ;;direnv
-       docker
-       editorconfig      ; let someone else argue about tabs vs spaces
-       ;;ein               ; tame jupyter notebooks with emacs
-       eval     ; run code, run (also, repls)
-       ;; +overlay)
-       gist              ; interacting with github gists
-       (lookup              ; navigate your code and its documentation
-        +dictionary)
-       (lsp
-        +peek)
-       (magit)             ; a git porcelain for emacs
-
-       make              ; run make tasks from emacs
-       (pass              ; password manager for nerds
-        +auth)
-       pdf               ; pdf enhancements
-       prodigy           ; fixme managing external services & code builders
-       rgb               ; creating color strings
-       ;;taskrunner        ; taskrunner for all your projects
-       terraform         ; infrastructure as code
-       ;;tmux              ; an api for interacting with tmux
-       upload            ; map local to remote projects via ssh/ftp
-
-       :os
-       ;; (:if is-mac macos)  ; improve compatibility with macos
-       (tty               ; improve the terminal emacs experience
-        +osc)
-
-       :lang
-       ;;agda              ; types of types of types of types...
-       (beancount         ; mind the gaap
-        +lsp)
-       (cc                ; c > c++ == 1
-        +lsp)
-       (clojure           ; java with a lisp
-        +lsp)
-       common-lisp       ; if you've seen one lisp, you've seen them all
-       ;;coq               ; proofs-as-programs
-       ;;crystal           ; ruby at the speed of c
-       ;;csharp            ; unity, .net, and mono shenanigans
-       data              ; config/data formats
-       ;;(dart +flutter)   ; paint ui and not much else
-       ;;elixir            ; erlang done right
-       ;;elm               ; care for a cup of tea?
-       emacs-lisp        ; drown in parentheses
-       ;;erlang            ; an elegant language for a more civilized age
-       ;;ess               ; emacs speaks statistics
-       ;;factor
-       ;;faust             ; dsp, but you get to keep your soul
-       ;;fsharp            ; ml stands for microsoft's language
-       ;;fstar             ; (dependent) types and (monadic) effects and z3
-       ;;gdscript          ; the language you waited for
-       (go                 ; the hipster dialect
-        +lsp)
-       (haskell            ; a language that's lazier than i am
-        +dante)
-       ;;hy                ; readability of scheme w/ speed of python
-       ;;idris             ; a language you can depend on
-       (json              ; at least it ain't xml
-        +lsp)
-       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
-       (javascript        ; all(hope(abandon(ye(who(enter(here))))))
-        +lsp)
-       ;;julia             ; a better, faster matlab
-       ;;kotlin            ; a better, slicker java(script)
-       (latex             ; writing papers in emacs has never been so fun
-        +lsp)
-       ;;lean              ; for folks with too much to prove
-       ledger            ; be audit you can be
-       (lua               ; one-based indices? one-based indices
-        +lsp)
-       (markdown          ; writing docs for people to ignore
-        +grip)
-       ;;nim               ; python + lisp at the speed of c
-       ;;nix               ; i hereby declare "nix geht mehr!"
-       ;; ocaml             ; an objective camel
-       (org               ; organize your plain life in plain text
-        +hugo
-        +pandoc
-        +pretty
-        +pomodoro
-        +noter
-        +present
-        +gnuplot
-        +dragndrop
-        +roam2)
-       (php               ; perl's insecure younger brother
-        +lsp)
-       plantuml          ; diagrams for confusing people more
-       ;;purescript        ; javascript, but functional
-       (python            ; beautiful is better than ugly
-        +lsp
-        +pyenv
-        +pyright)
-       qt                ; the 'cutest' gui framework ever
-       ;;racket            ; a dsl for dsls
-       ;;raku              ; the artist formerly known as perl6
-       ;;rest              ; emacs as a rest client
-       ;;rst               ; rest in peace
-       ;;(ruby +rails)     ; 1.step {|i| p "ruby is #{i.even? ? 'love' : 'life'}"}
-       (rust              ; fe2o3.unwrap().unwrap().unwrap().unwrap()
-        +lsp)
-       ;;scala             ; java, but good
-       ;;(scheme +guile)   ; a fully conniving family of lisps
-       (sh                ; she sells {ba,z,fi}sh shells on the c xor
-        +powershell
-        +lsp)
-       ;;sml
-       ;;solidity          ; do you need a blockchain? no.
-       ;;swift             ; who asked for emoji variables?
-       terra             ; earth and moon in alignment for performance.
-       web               ; the tubes
-       (yaml              ; json, but readable
-        +lsp)
-       ;;zig               ; c, but simpler
-
-       :email
-       (mu4e
-        +gmail)
-
-       :app
-       calendar
-       emms
-       everywhere        ; *leave* emacs!? you must be joking
-       rss
-       irc
-
-       :config
-       literate
-       (default
-         +bindings
-         +smartparens))
-
-#+end_src
-
-*** keybindings.el
-
-All Keybindings start here and this is the global override of them all
-Tangles can be added and or removed if needed
-
-#+begin_src emacs-lisp :tangle keybindings.el
-;;; $doomdir/keybindings.el --- summary -*- lexical-binding: t; -*-
-;;
-;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2021, marty buchaus, all rights reserved.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;;; code:
-
-(setq doom-localleader-key ",")
-
-;;;; global keybindings
-
-(define-key! help-map
-  "h"    #'helpful-at-point)
-
-(map!
- ;;:n "c-:"    #'+spell/correct
- :n "c-;"    #'embark-act
- :n "c-,"    #'+spell/next-error)
-
-;;;; leader keybindings
-
-(map! :leader
-      "tab"  #'evil-switch-to-windows-last-buffer
-      "spc"  #'execute-extended-command
-      ;;; <leader> a --- application
-      (:prefix-map ("a" . "application")
-       "m"  #'=mu4e
-       ;; org
-       (:prefix-map ("o" . "org")
-        "/" #'org-occur-in-agenda-files
-        "a" #'org-agenda-list
-        "t" #'org-todo-list
-        "l" #'org-store-link
-        "m" #'org-tags-view
-        "o" #'org-agenda
-        "s" #'org-search-view
-        "t" #'org-todo-list
-        (:prefix-map ("c" . "clock/contacts")
-         "c"  #'org-clock-cancel
-         "g"  #'org-clock-goto
-         "i"  #'org-clock-in
-         "j"  #'org-clock-jump-to-current-clock
-         "o"  #'org-clock-out
-         "r"  #'org-resolve-clocks
-         "i"  #'org-clock-in-last
-         (:prefix-map ("t" . "org-timer")
-          "t"  #'org-timer-set-timer
-          "p"  #'org-timer-pause-or-continue
-          "q"  #'org-timer-stop)))
-       ;; tools
-       (:when (featurep! :tools pass)
-        (:prefix-map ("p" . "pass")
-         "/"  #'+pass/consult
-         "c"  #'password-store-edit
-         "d"  #'password-store-remove
-         "g"  #'password-store-generate
-         "i"  #'password-store-insert
-         "r"  #'password-store-rename
-         "w"  #'password-store-url
-         "y"  #'password-store-copy
-         "d"  #'password-store-clear
-         "i"  #'password-store-init
-         (:prefix-map ("o" . "otp")
-          "a" #'password-store-otp-append
-          "i" #'password-store-otp-insert
-          "y" #'password-store-otp-token-copy
-          "a" #'password-store-otp-append-from-image
-          "y" #'password-store-otp-uri-copy)))
-       (:prefix-map ("t" . "tramp")
-        "c"  #'tramp-cleanup-all-connections
-        "b"  #'tramp-cleanup-all-buffers
-        "c"  #'tramp-cleanup-this-connection
-        "t"  #'counsel-tramp
-        "q"  #'counsel-tramp-quit))
-;;;;; <leader> l --- workspace / layout
-      (:when (featurep! :ui workspaces)
-       (:prefix-map ("l" . "workspace")
-        :desc "display tab bar"           "spc" #'+workspace/display
-        :desc "cycle tab bar"             "tab" #'+workspace/cycle
-        :desc "switch workspace"          "."   #'+workspace/switch-to
-        :desc "switch to last workspace"  "`"   #'+workspace/other
-        :desc "move workspace left"       "<"   #'+workspace/swap-left
-        :desc "move workspace right"      ">"   #'+workspace/swap-right
-        :desc "new workspace"             "n"   #'+workspace/new
-        :desc "create named workspace"    "n"   #'+workspace/new-named
-        :desc "open workspace from file"  "o"   #'+workspace/load
-        :desc "save workspace to file"    "s"   #'+workspace/save
-        :desc "delete session"            "x"   #'+workspace/kill-session
-        :desc "delete this workspace"     "d"   #'+workspace/delete
-        :desc "rename workspace"          "r"   #'+workspace/rename
-        :desc "switch workspace"          "l"   #'+workspace/switch-to
-        :desc "restore last session"      "r"   #'+workspace/restore-last-session
-        :desc "next workspace"            "]"   #'+workspace/switch-right
-        :desc "previous workspace"        "["   #'+workspace/switch-left
-        :desc "switch to 1st workspace"   "1"   #'+workspace/switch-to-0
-        :desc "switch to 2nd workspace"   "2"   #'+workspace/switch-to-1
-        :desc "switch to 3rd workspace"   "3"   #'+workspace/switch-to-2
-        :desc "switch to 4th workspace"   "4"   #'+workspace/switch-to-3
-        :desc "switch to 5th workspace"   "5"   #'+workspace/switch-to-4
-        :desc "switch to 6th workspace"   "6"   #'+workspace/switch-to-5
-        :desc "switch to 7th workspace"   "7"   #'+workspace/switch-to-6
-        :desc "switch to 8th workspace"   "8"   #'+workspace/switch-to-7
-        :desc "switch to 9th workspace"   "9"   #'+workspace/switch-to-8
-        :desc "switch to final workspace" "0"   #'+workspace/switch-to-final)))
-
-;;;;; <leader n --- notes
-
-(map! :leader
-      :prefix "n"
-      "b" #'marty/org-roam-capture-inbox)
-
-;;;;; <leader> o --- open
-
-(map! :leader
-      :prefix "o"
-      (:prefix-map ("m" . "my")
-       :desc "0mobile"       "0" #'(lambda () (interactive) (find-file (concat org-directory "0mobile.org")))
-       :desc "desktop"       "d" #'(lambda () (interactive) (find-file (concat org-directory "desktop.org")))
-       :desc "contacts"      "o" #'(lambda () (interactive) (find-file (concat org-directory "contacts.org")))
-       :desc "tasks"         "g" #'(lambda () (interactive) (find-file (concat org-directory "tasks.org")))
-       :desc "habits"        "h" #'(lambda () (interactive) (find-file (concat org-directory "habits.org")))
-       :desc "read later"    "l" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
-       :desc "someday"       "s" #'(lambda () (interactive) (find-file (concat org-directory "someday.org")))
-       :desc "tip jar"       "t" #'(lambda () (interactive) (find-file (concat org-directory "tipjar.org")))
-       (:prefix-map ("c" . "+config")
-        :desc "keybindings"  "k"  #'(lambda () (interactive) (find-file (concat doom-private-dir "keybindings.el")))
-        :desc "config"       "c"  #'(lambda () (interactive) (find-file (concat doom-private-dir "config.el")))
-        :desc "org"          "o"  #'(lambda () (interactive) (find-file (concat doom-private-dir "org-mode.el")))
-        :desc "init"         "i"  #'(lambda () (interactive) (find-file (concat doom-private-dir "init.el")))
-        :desc "packages"     "p"  #'(lambda () (interactive) (find-file (concat doom-private-dir "packages.el")))
-        :desc "mu4e"         "m"  #'(lambda () (interactive) (find-file (concat doom-private-dir "mu4e.el"))))
-       (:prefix-map ("c" . "calendar")
-        :desc "calendar"      "c"  #'(lambda () (interactive) (find-file (concat org-directory "calendar.org")))
-        :desc "vdirsync"      "s"  #'khalel-run-vdirsyncer
-        :desc "import"        "i"  #'khalel-import-upcoming-events)))
-
-;;;; mode maps
-;;;;; override org mode map
-
-(map! :after org
-      :map org-mode-map
-      :localleader
-      :prefix "m"
-      "a"  #'marty/org-roam-move-todo-to-today
-      "b"  #'marty/org-roam-capture-inbox
-      "i"  #'org-roam-node-insert-immediate
-      "j"  #'org-roam-dailies-capture-today
-      "p"  #'marty/org-roam-find-project
-      "s"  #'org-roam-db-sync
-      "s"  #'marty/org-roam-rg-search
-      :prefix "md"
-      "p"  #'org-roam-dailies-goto-previous-note
-      "n"  #'org-roam-dailies-goto-next-note
-      )
-
-;;;; dired keybindings
-;;;;;  ts file trigger keybinding
-(define-key! dired-mode-map
-  (kbd "c-t") #'marty/dired-copy-filename-as-tsfile-link)
-
-(map! :leader
-      (:prefix ("d" . "dired")
-       :desc "open dired" "d"                   #'dired
-       :desc "dired jump to current" "j"        #'dired-jump)
-      (:after dired
-       (:map dired-mode-map
-        :desc "peep-dired image previews" "d p" #'peep-dired
-        :desc "create tsfile link" "d t"        #'marty/dired-copy-filename-as-tsfile-link
-        :desc "dired view file" "d v"           #'dired-view-file)))
-;; make 'h' and 'l' go back and forward in dired. much faster to navigate the directory structure!
-
-(evil-define-key 'normal dired-mode-map
-  (kbd "m-ret") 'dired-display-file
-  (kbd "h") 'dired-up-directory
-  (kbd "l") 'dired-view-file
-  (kbd "m") 'dired-mark
-  (kbd "t") 'dired-toggle-marks
-  (kbd "u") 'dired-unmark
-  (kbd "c") 'dired-do-copy
-  (kbd "d") 'dired-do-delete
-  (kbd "j") 'dired-goto-file
-  (kbd "m") 'dired-chmod
-  (kbd "o") 'dired-chown
-  (kbd "p") 'dired-do-print
-  (kbd "r") 'dired-rename
-  (kbd "t") 'dired-do-touch
-  (kbd "y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
-  (kbd "+") 'dired-create-directory
-  (kbd "-") 'dired-up-directory
-  (kbd "% l") 'dired-downcase
-  (kbd "% u") 'dired-upcase
-  (kbd "; d") 'epa-dired-do-decrypt
-  (kbd "; e") 'epa-dired-do-encrypt)
-;; if peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
-(evil-define-key 'normal peep-dired-mode-map
-  (kbd "j") 'peep-dired-next-file
-  (kbd "k") 'peep-dired-prev-file)
-#+end_src
-
-* CONFIGURATION
-

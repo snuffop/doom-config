@@ -460,4 +460,3 @@ function is suitable for `mu4e-compose-mode-hook'."
   (interactive)
   (call-interactively 'org-store-link)
   (org-capture "mr"))
-
