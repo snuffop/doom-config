@@ -10,6 +10,8 @@
 ;;; CODE
 ;;;; GLOBAL
 
+(defun native-comp-available-p () nil)             ; fixing issue with org-agenda with this function negation
+
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
 (setq epg-gpg-program "/usr/bin/gpg")
