@@ -214,7 +214,7 @@
        irc
 
        :config
-       literate
+       ;;literate
        (default
          +bindings
          +smartparens))
