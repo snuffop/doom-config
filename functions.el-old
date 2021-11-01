@@ -1,13 +1,11 @@
-;;; functions.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; functions.el --- Summary -*- lexical-binding: t; -*-
 ;;
-;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2021, marty buchaus, all rights reserved.
-;; created:  7 july 2021
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;;; functions
-
+;;;; FUNCTIONS
 ;;;;; CALENDAR OPEN
 
 (defun mb/open-calendar ()
@@ -127,3 +125,4 @@ Do not try to make a new directory or anything fancy."
     (add-hook 'occur-hook #'goto-address-mode)
     (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
     (remove-hook 'occur-hook #'goto-address-mode)))
+

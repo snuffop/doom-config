@@ -1,12 +1,11 @@
-;;; org-mode.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; org-mode.el --- Summary -*- lexical-binding: t -*-
 ;;
-;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2021, marty buchaus, all rights reserved.
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; org-mode configuration
-;;
+;;; CODE
 
 ;;;; ORG-MODE MAIN
 (setq org-directory "~/Nextcloud/Notes/org/")

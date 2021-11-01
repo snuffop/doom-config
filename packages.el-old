@@ -1,12 +1,12 @@
-;;; packages.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; packages.el --- Summary -*- lexical-binding: t; -*-
 ;;
-;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2021, marty buchaus, all rights reserved.
+;; Author: Marty Buchaus <marty@dabuke.com>
+;; Copyright © 2021, Marty Buchaus, all rights reserved.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; packages
-
+;;; Packages
+t
 (package! evil-snipe :disable t)
 
 (package! aggressive-indent)

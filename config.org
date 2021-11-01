@@ -1,3 +1,177 @@
+:PROPERTIES:
+:ID:       c7c0d6a9-6a80-4345-b5b5-77ed7b277424
+:END:
+#+TITLE: Marty's Doom Emacs Config
+#+subtitle: The config of doom emacs for Marty Buchaus
+#+AUTHOR: Marty Bucahus
+#+startup: fold
+
+* GLOBAL
+** files startup
+*** config.el
+
+startup initial config file tangled with org-bable
+
+#+begin_src emacs-lisp :tangle config.el
+
+,#+begin_src emacs-lisp
+;; $doomdir/config.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;
+;; author: marty buchaus <marty@dabuke.com>
+;; copyright © 2021, marty buchaus, all rights reserved.
+;; created:  1 november 2021
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+
+#+end_src
+
+*** functions.el
+
+functions.el   all Misc function go here  but littered where they are relevant to other code
+
+#+begin_src emacs-lisp :tangle functions.el
+;;; functions.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;
+;; author: marty buchaus <marty@dabuke.com>
+;; copyright © 2021, marty buchaus, all rights reserved.
+;; created:  7 july 2021
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;;; functions
+
+#+end_src
+**** REST
+#+begin_src emacs-lisp :tangle functions.el
+
+;;;;; CALENDAR OPEN
+
+(defun mb/open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")
+    (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
+
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    ;; (cfw:org-create-file-source "Google" "~/.cache/calendar/google.com" "Blue")
+    (cfw:org-create-file-source "Tatjana" "~/.cache/calendar/tatjana.org" "Pink")  ; other org source
+    ;; (cfw:org-create-file-source "Rackspace" "~/.cache/calendar/rackspace.org" "Red")  ; other org source
+    (cfw:org-create-file-source "Next-Personal" "~/Nextcloud/Notes/Calendars/personal.org" "Blue")  ; other org source
+    (cfw:org-create-file-source "Next-Birthdays" "~/Nextcloud/Notes/Calendars/contact_birthdays.org" "Brown")  ; other org source
+    (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
+    )))
+
+;;;;; Open Mutt Message
+
+(defun mutt-open-message (message-id)
+  "In neomutt, open the nmail with the the given Message-ID"
+  (let*
+      ((message-id
+        (replace-regexp-in-string "^/*" "" message-id))
+       (mail-file
+        ;; notmuch
+        (replace-regexp-in-string
+         "\n$" "" (shell-command-to-string
+                   (format "notmuch search --output=files id:%s" message-id))))
+       (mail-box (replace-regexp-in-string "/home/marty/Mail" "" mail-file))
+       (mail-dir (replace-regexp-in-string "/\\(cur\\|new\\|tmp\\)/$" ""
+                                           (file-name-directory mail-box)))
+       (mutt-keystrokes
+        (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
+       (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-dir  mutt-keystrokes)))
+    ;; MU
+    ;;         (replace-regexp-in-string
+    ;;          "\n$" "" (shell-command-to-string
+    ;;                    (format "mu find -u i:%s --fields 'm'" message-id ))))
+    ;;        (mutt-keystrokes
+    ;;         (format "macro index - l~i%s; push -\\nb\\n" (shell-quote-argument message-id)))
+    ;;         (mutt-command (format "neomutt -f '=%s' -e '%s'" mail-file  mutt-keystrokes)))
+
+    (message "Launching neomutt for message %s" message-id)
+    (message " %s" mutt-command)
+    (call-process "setsid" nil nil nil
+                  "-f" "termite" "-e"
+                  mutt-command)))
+
+;;;;; PROT FUNCTIONS
+
+(defvar prot-common-url-regexp
+  (concat
+   "\\b\\(\\(www\\.\\|\\(s?https?\\|ftp\\|file\\|gopher\\|"
+   "nntp\\|news\\|telnet\\|wais\\|mailto\\|info\\):\\)"
+   "\\(//[-a-z0-9_.]+:[0-9]*\\)?"
+   (let ((chars "-a-z0-9_=#$@~%&*+\\/[:word:]")
+         (punct "!?:;.,"))
+     (concat
+      "\\(?:"
+      ;; Match paired parentheses, e.g. in Wikipedia URLs:
+      ;; http://thread.gmane.org/47B4E3B2.3050402@gmail.com
+      "[" chars punct "]+" "(" "[" chars punct "]+" ")"
+      "\\(?:" "[" chars punct "]+" "[" chars "]" "\\)?"
+      "\\|"
+      "[" chars punct "]+" "[" chars "]"
+      "\\)"))
+   "\\)")
+  "Regular expression that matches URLs.
+Copy of variable `browse-url-button-regexp'.")
+
+
+(defun prot-diff-buffer-dwim (&optional arg)
+  "Diff buffer with its file's last saved state, or run `vc-diff'.
+With optional prefix ARG (\\[universal-argument]) enable
+highlighting of word-wise changes (local to the current buffer)."
+  (interactive "P")
+  (let ((buf))
+    (if (buffer-modified-p)
+        (progn
+          (diff-buffer-with-file (current-buffer))
+          (setq buf "*Diff*"))
+      (vc-diff)
+      (setq buf "*vc-diff*"))
+    (when arg
+      (with-current-buffer (get-buffer buf)
+        (unless diff-refine
+          (setq-local diff-refine 'font-lock))))))
+
+(defvar-local prot-diff--refine-diff-state 0
+  "Current state of `prot-diff-refine-dwim'.")
+
+;;;###autoload
+(defun prot-simple-rename-file-and-buffer (name)
+  "Apply NAME to current file and rename its buffer.
+Do not try to make a new directory or anything fancy."
+  (interactive
+   (list (read-string "Rename current file: " (buffer-file-name))))
+  (let ((file (buffer-file-name)))
+    (if (vc-registered file)
+        (vc-rename-file file name)
+      (rename-file file name))
+    (set-visited-file-name name t t)))
+
+
+;;;###autoload
+(defun prot-search-occur-urls ()
+  "Produce buttonised list of all URLs in the current buffer."
+  (interactive)
+  (let ((buf-name (format "*links in <%s>*" (buffer-name))))
+    (add-hook 'occur-hook #'goto-address-mode)
+    (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
+    (remove-hook 'occur-hook #'goto-address-mode)))
+
+#+end_src
+
+*** org-mode.el
+
+org-mode.el  header file for the org-mode  config
+
+#+begin_src emacs-lisp :tangle org-mode.el
 ;;; org-mode.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; author: marty buchaus <marty@dabuke.com>
@@ -7,6 +181,11 @@
 ;;
 ;;; org-mode configuration
 ;;
+
+
+#+end_src
+**** REST
+#+begin_src emacs-lisp :tangle org-mode.el
 
 ;;;; ORG-MODE MAIN
 (setq org-directory "~/Nextcloud/Notes/org/")
@@ -1079,3 +1258,527 @@ is selected, only the bare key is returned."
            (file "~/.config/doom/templates/roam-templates/people-entry.org")
            :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
            :unnarrowed t))))
+#+end_src
+
+*** packages.el
+
+packages file for doom sync to use to maintain the packages i use
+
+#+begin_src emacs-lisp :tangle packages.el
+;;; packages.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;
+;; author: marty buchaus <marty@dabuke.com>
+;; copyright © 2021, marty buchaus, all rights reserved.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; packages
+
+#+end_src
+**** REST
+#+begin_src emacs-lisp :tangle packages.el
+
+(package! evil-snipe :disable t)
+
+(package! aggressive-indent)
+(package! alert)
+(package! all-the-icons-completion)
+(package! all-the-icons-dired)
+(package! autoinsert)
+(package! browse-kill-ring)
+(package! company-nginx)
+(package! company-tabnine)
+(package! counsel-tramp)
+(package! dashboard)
+(package! docker-compose-mode)
+(package! dockerfile-mode)
+(package! doct)
+(package! ebuku)
+(package! elfeed-protocol)
+(package! emmet-mode)
+(package! hydra)
+(package! info-colors)
+(package! jenkinsfile-mode)
+(package! json-mode)
+(package! khalel)
+(package! khardel)
+(package! lsp-ui)
+(package! mixed-pitch)
+(package! mu4e-column-faces)
+(package! mu4e-marker-icons)
+(package! mutt-mode)
+(package! nginx-mode)
+(package! olivetti)
+(package! org-edna)
+(package! org-jira)
+(package! org-noter)
+(package! org-noter-pdftools)
+(package! org-notifications)
+(package! org-pdftools)
+(package! org-projectile)
+(package! org-ref)
+(package! org-roam-bibtex)
+(package! org-super-agenda)
+(package! org-wild-notifier)
+(package! ox-gfm)
+(package! paperless)
+(package! powerthesaurus)
+(package! python-mode)
+(package! salt-mode)
+(package! systemd)
+(package! wakatime-mode)
+
+;;;;
+;;(when (string= (system-name) "archovo.home.snuffy.org"))
+
+(package! activity-watch-mode      :recipe (:host github :repo "pauldub/activity-watch-mode"))
+(package! burly                    :recipe (:host github :repo "alphapapa/burly.el"))
+(package! i3wm-config-mode         :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))
+(package! notdeft                  :recipe (:host github :repo "hasu/notdeft" :files ("*.el" "xapian")))
+(package! org-appear               :recipe (:host github :repo "awth13/org-appear"))
+(package! org-ol-tree              :recipe (:host github :repo "Townk/org-ol-tree"))
+(package! org-pandoc-import        :recipe (:host github :repo "tecosaur/org-pandoc-import" :files ("*.el" "filters" "preprocessors")))
+(package! org-pretty-table         :recipe (:host github :repo "Fuco1/org-pretty-table"))
+(package! org-roam-timestamps      :recipe (:host github :repo "ThomasFKJorna/org-roam-timestamps"))
+(package! org-roam-ui              :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+(package! org-transclusion         :recipe (:host github :repo "nobiot/org-transclusion" :branch "main" :files ("*.el")))
+(package! outshine                 :recipe (:host github :repo "alphapapa/outshine"))
+(package! vlf                      :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
+
+#+end_src
+
+*** init.el
+
+#+begin_src emacs-lisp :tangle init.el
+;;; init.el -*- lexical-binding: t; -*-
+
+(doom! :input
+       ;;chinese
+       ;;japanese
+       ;;layout            ; auie,ctsrnm is the superior home row
+
+       :completion
+       (company           ; the ultimate code completion backend
+        +childframe)
+       ;;helm              ; the *other* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       ;; (ivy               ; a search engine for love and life
+       ;; +prescient
+       ;; +fuzzy)
+       (vertico
+        +icons)
+
+       :ui
+       ;; deft
+       doom              ; what makes doom look the way it does
+       doom-dashboard    ; a nifty splash screen for emacs
+       ;; doom-quit         ; doom quit-message prompts when you quit emacs
+       (emoji +unicode)  ; 🙂
+       ;;fill-column       ; a `fill-column' indicator
+       hl-todo           ; highlight todo/fixme/note/deprecated/hack/review
+       hydra
+       ;;indent-guides     ; highlighted indent columns
+       ligatures         ; ligatures and symbols to make your code pretty again
+       ;;  +extra)
+       ;;minimap           ; show a map of the code on the side
+       modeline          ; snazzy, atom-inspired modeline, plus api
+       nav-flash         ; blink cursor line after big motions
+       ;;neotree           ; a project drawer, like nerdtree for vim
+       ophints           ; highlight the region an operation acts on
+       (popup            ; tame sudden yet inevitable temporary windows
+        +defaults
+        +all)
+       ;;tabs              ; a tab bar for emacs
+       treemacs          ; a project drawer, like neotree but cooler
+       ;;unicode           ; extended unicode support for various languages
+       vc-gutter         ; vcs diff in the fringe
+       vi-tilde-fringe   ; fringe tildes to mark beyond eob
+       (window-select     ; visually switch windows
+        +numbers)
+       workspaces        ; tab emulation, persistence & separate workspaces
+       ;;zen               ; distraction-free coding or writing
+
+       :editor
+       (evil +everywhere); come to the dark side, we have cookies
+       ;;file-templates    ; auto-snippets for empty files
+       fold                ; (nigh) universal code folding
+       format              ; automated prettiness
+       ;;god               ; run emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who don't like vim
+       ;;multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;; parinfer          ; turn lisp into python, sort of
+       ;;rotate-text       ; cycle region at point between text candidates
+       snippets          ; my elves. they type so i don't have to
+       word-wrap         ; soft wrapping with language-aware indent
+
+       :emacs
+       (dired             ; making dired pretty [functional]
+        +icons)
+       electric          ; smarter, keyword-based electric-indent
+       (ibuffer         ; interactive buffer management
+        +icons)
+       undo              ; persistent, smarter undo for your inevitable mistakes
+       vc                ; version-control and emacs, sitting in a tree
+
+       :term
+       eshell            ; the elisp shell that works everywhere
+       ;;shell             ; simple shell repl for emacs
+       ;;term              ; basic terminal emulator for emacs
+       vterm             ; the best terminal emulation in emacs
+
+       :checkers
+       (syntax           ; tasing you for every semicolon you forget
+        +childframe)
+       (spell          ; tasing you for misspelling mispelling
+        +flyspell)
+       grammar           ; tasing grammar mistake every you make
+
+       :tools
+       ansible
+       debugger          ; fixme stepping through code, to help you add bugs
+       ;;direnv
+       docker
+       editorconfig      ; let someone else argue about tabs vs spaces
+       ;;ein               ; tame jupyter notebooks with emacs
+       eval     ; run code, run (also, repls)
+       ;; +overlay)
+       gist              ; interacting with github gists
+       (lookup              ; navigate your code and its documentation
+        +dictionary)
+       (lsp
+        +peek)
+       (magit)             ; a git porcelain for emacs
+
+       make              ; run make tasks from emacs
+       (pass              ; password manager for nerds
+        +auth)
+       pdf               ; pdf enhancements
+       prodigy           ; fixme managing external services & code builders
+       rgb               ; creating color strings
+       ;;taskrunner        ; taskrunner for all your projects
+       terraform         ; infrastructure as code
+       ;;tmux              ; an api for interacting with tmux
+       upload            ; map local to remote projects via ssh/ftp
+
+       :os
+       ;; (:if is-mac macos)  ; improve compatibility with macos
+       (tty               ; improve the terminal emacs experience
+        +osc)
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       (beancount         ; mind the gaap
+        +lsp)
+       (cc                ; c > c++ == 1
+        +lsp)
+       (clojure           ; java with a lisp
+        +lsp)
+       common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .net, and mono shenanigans
+       data              ; config/data formats
+       ;;(dart +flutter)   ; paint ui and not much else
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of tea?
+       emacs-lisp        ; drown in parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;factor
+       ;;faust             ; dsp, but you get to keep your soul
+       ;;fsharp            ; ml stands for microsoft's language
+       ;;fstar             ; (dependent) types and (monadic) effects and z3
+       ;;gdscript          ; the language you waited for
+       (go                 ; the hipster dialect
+        +lsp)
+       (haskell            ; a language that's lazier than i am
+        +dante)
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ; a language you can depend on
+       (json              ; at least it ain't xml
+        +lsp)
+       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
+       (javascript        ; all(hope(abandon(ye(who(enter(here))))))
+        +lsp)
+       ;;julia             ; a better, faster matlab
+       ;;kotlin            ; a better, slicker java(script)
+       (latex             ; writing papers in emacs has never been so fun
+        +lsp)
+       ;;lean              ; for folks with too much to prove
+       ledger            ; be audit you can be
+       (lua               ; one-based indices? one-based indices
+        +lsp)
+       (markdown          ; writing docs for people to ignore
+        +grip)
+       ;;nim               ; python + lisp at the speed of c
+       ;;nix               ; i hereby declare "nix geht mehr!"
+       ;; ocaml             ; an objective camel
+       (org               ; organize your plain life in plain text
+        +hugo
+        +pandoc
+        +pretty
+        +pomodoro
+        +noter
+        +present
+        +gnuplot
+        +dragndrop
+        +roam2)
+       (php               ; perl's insecure younger brother
+        +lsp)
+       plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       (python            ; beautiful is better than ugly
+        +lsp
+        +pyenv
+        +pyright)
+       qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a dsl for dsls
+       ;;raku              ; the artist formerly known as perl6
+       ;;rest              ; emacs as a rest client
+       ;;rst               ; rest in peace
+       ;;(ruby +rails)     ; 1.step {|i| p "ruby is #{i.even? ? 'love' : 'life'}"}
+       (rust              ; fe2o3.unwrap().unwrap().unwrap().unwrap()
+        +lsp)
+       ;;scala             ; java, but good
+       ;;(scheme +guile)   ; a fully conniving family of lisps
+       (sh                ; she sells {ba,z,fi}sh shells on the c xor
+        +powershell
+        +lsp)
+       ;;sml
+       ;;solidity          ; do you need a blockchain? no.
+       ;;swift             ; who asked for emoji variables?
+       terra             ; earth and moon in alignment for performance.
+       web               ; the tubes
+       (yaml              ; json, but readable
+        +lsp)
+       ;;zig               ; c, but simpler
+
+       :email
+       (mu4e
+        +gmail)
+
+       :app
+       calendar
+       emms
+       everywhere        ; *leave* emacs!? you must be joking
+       rss
+       irc
+
+       :config
+       literate
+       (default
+         +bindings
+         +smartparens))
+
+#+end_src
+
+*** keybindings.el
+
+All Keybindings start here and this is the global override of them all
+Tangles can be added and or removed if needed
+
+#+begin_src emacs-lisp :tangle keybindings.el
+;;; $doomdir/keybindings.el --- summary -*- lexical-binding: t; -*-
+;;
+;; author: marty buchaus <marty@dabuke.com>
+;; copyright © 2021, marty buchaus, all rights reserved.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;; code:
+
+(setq doom-localleader-key ",")
+
+;;;; global keybindings
+
+(define-key! help-map
+  "h"    #'helpful-at-point)
+
+(map!
+ ;;:n "c-:"    #'+spell/correct
+ :n "c-;"    #'embark-act
+ :n "c-,"    #'+spell/next-error)
+
+;;;; leader keybindings
+
+(map! :leader
+      "tab"  #'evil-switch-to-windows-last-buffer
+      "spc"  #'execute-extended-command
+      ;;; <leader> a --- application
+      (:prefix-map ("a" . "application")
+       "m"  #'=mu4e
+       ;; org
+       (:prefix-map ("o" . "org")
+        "/" #'org-occur-in-agenda-files
+        "a" #'org-agenda-list
+        "t" #'org-todo-list
+        "l" #'org-store-link
+        "m" #'org-tags-view
+        "o" #'org-agenda
+        "s" #'org-search-view
+        "t" #'org-todo-list
+        (:prefix-map ("c" . "clock/contacts")
+         "c"  #'org-clock-cancel
+         "g"  #'org-clock-goto
+         "i"  #'org-clock-in
+         "j"  #'org-clock-jump-to-current-clock
+         "o"  #'org-clock-out
+         "r"  #'org-resolve-clocks
+         "i"  #'org-clock-in-last
+         (:prefix-map ("t" . "org-timer")
+          "t"  #'org-timer-set-timer
+          "p"  #'org-timer-pause-or-continue
+          "q"  #'org-timer-stop)))
+       ;; tools
+       (:when (featurep! :tools pass)
+        (:prefix-map ("p" . "pass")
+         "/"  #'+pass/consult
+         "c"  #'password-store-edit
+         "d"  #'password-store-remove
+         "g"  #'password-store-generate
+         "i"  #'password-store-insert
+         "r"  #'password-store-rename
+         "w"  #'password-store-url
+         "y"  #'password-store-copy
+         "d"  #'password-store-clear
+         "i"  #'password-store-init
+         (:prefix-map ("o" . "otp")
+          "a" #'password-store-otp-append
+          "i" #'password-store-otp-insert
+          "y" #'password-store-otp-token-copy
+          "a" #'password-store-otp-append-from-image
+          "y" #'password-store-otp-uri-copy)))
+       (:prefix-map ("t" . "tramp")
+        "c"  #'tramp-cleanup-all-connections
+        "b"  #'tramp-cleanup-all-buffers
+        "c"  #'tramp-cleanup-this-connection
+        "t"  #'counsel-tramp
+        "q"  #'counsel-tramp-quit))
+;;;;; <leader> l --- workspace / layout
+      (:when (featurep! :ui workspaces)
+       (:prefix-map ("l" . "workspace")
+        :desc "display tab bar"           "spc" #'+workspace/display
+        :desc "cycle tab bar"             "tab" #'+workspace/cycle
+        :desc "switch workspace"          "."   #'+workspace/switch-to
+        :desc "switch to last workspace"  "`"   #'+workspace/other
+        :desc "move workspace left"       "<"   #'+workspace/swap-left
+        :desc "move workspace right"      ">"   #'+workspace/swap-right
+        :desc "new workspace"             "n"   #'+workspace/new
+        :desc "create named workspace"    "n"   #'+workspace/new-named
+        :desc "open workspace from file"  "o"   #'+workspace/load
+        :desc "save workspace to file"    "s"   #'+workspace/save
+        :desc "delete session"            "x"   #'+workspace/kill-session
+        :desc "delete this workspace"     "d"   #'+workspace/delete
+        :desc "rename workspace"          "r"   #'+workspace/rename
+        :desc "switch workspace"          "l"   #'+workspace/switch-to
+        :desc "restore last session"      "r"   #'+workspace/restore-last-session
+        :desc "next workspace"            "]"   #'+workspace/switch-right
+        :desc "previous workspace"        "["   #'+workspace/switch-left
+        :desc "switch to 1st workspace"   "1"   #'+workspace/switch-to-0
+        :desc "switch to 2nd workspace"   "2"   #'+workspace/switch-to-1
+        :desc "switch to 3rd workspace"   "3"   #'+workspace/switch-to-2
+        :desc "switch to 4th workspace"   "4"   #'+workspace/switch-to-3
+        :desc "switch to 5th workspace"   "5"   #'+workspace/switch-to-4
+        :desc "switch to 6th workspace"   "6"   #'+workspace/switch-to-5
+        :desc "switch to 7th workspace"   "7"   #'+workspace/switch-to-6
+        :desc "switch to 8th workspace"   "8"   #'+workspace/switch-to-7
+        :desc "switch to 9th workspace"   "9"   #'+workspace/switch-to-8
+        :desc "switch to final workspace" "0"   #'+workspace/switch-to-final)))
+
+;;;;; <leader n --- notes
+
+(map! :leader
+      :prefix "n"
+      "b" #'marty/org-roam-capture-inbox)
+
+;;;;; <leader> o --- open
+
+(map! :leader
+      :prefix "o"
+      (:prefix-map ("m" . "my")
+       :desc "0mobile"       "0" #'(lambda () (interactive) (find-file (concat org-directory "0mobile.org")))
+       :desc "desktop"       "d" #'(lambda () (interactive) (find-file (concat org-directory "desktop.org")))
+       :desc "contacts"      "o" #'(lambda () (interactive) (find-file (concat org-directory "contacts.org")))
+       :desc "tasks"         "g" #'(lambda () (interactive) (find-file (concat org-directory "tasks.org")))
+       :desc "habits"        "h" #'(lambda () (interactive) (find-file (concat org-directory "habits.org")))
+       :desc "read later"    "l" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
+       :desc "someday"       "s" #'(lambda () (interactive) (find-file (concat org-directory "someday.org")))
+       :desc "tip jar"       "t" #'(lambda () (interactive) (find-file (concat org-directory "tipjar.org")))
+       (:prefix-map ("c" . "+config")
+        :desc "keybindings"  "k"  #'(lambda () (interactive) (find-file (concat doom-private-dir "keybindings.el")))
+        :desc "config"       "c"  #'(lambda () (interactive) (find-file (concat doom-private-dir "config.el")))
+        :desc "org"          "o"  #'(lambda () (interactive) (find-file (concat doom-private-dir "org-mode.el")))
+        :desc "init"         "i"  #'(lambda () (interactive) (find-file (concat doom-private-dir "init.el")))
+        :desc "packages"     "p"  #'(lambda () (interactive) (find-file (concat doom-private-dir "packages.el")))
+        :desc "mu4e"         "m"  #'(lambda () (interactive) (find-file (concat doom-private-dir "mu4e.el"))))
+       (:prefix-map ("c" . "calendar")
+        :desc "calendar"      "c"  #'(lambda () (interactive) (find-file (concat org-directory "calendar.org")))
+        :desc "vdirsync"      "s"  #'khalel-run-vdirsyncer
+        :desc "import"        "i"  #'khalel-import-upcoming-events)))
+
+;;;; mode maps
+;;;;; override org mode map
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :prefix "m"
+      "a"  #'marty/org-roam-move-todo-to-today
+      "b"  #'marty/org-roam-capture-inbox
+      "i"  #'org-roam-node-insert-immediate
+      "j"  #'org-roam-dailies-capture-today
+      "p"  #'marty/org-roam-find-project
+      "s"  #'org-roam-db-sync
+      "s"  #'marty/org-roam-rg-search
+      :prefix "md"
+      "p"  #'org-roam-dailies-goto-previous-note
+      "n"  #'org-roam-dailies-goto-next-note
+      )
+
+;;;; dired keybindings
+;;;;;  ts file trigger keybinding
+(define-key! dired-mode-map
+  (kbd "c-t") #'marty/dired-copy-filename-as-tsfile-link)
+
+(map! :leader
+      (:prefix ("d" . "dired")
+       :desc "open dired" "d"                   #'dired
+       :desc "dired jump to current" "j"        #'dired-jump)
+      (:after dired
+       (:map dired-mode-map
+        :desc "peep-dired image previews" "d p" #'peep-dired
+        :desc "create tsfile link" "d t"        #'marty/dired-copy-filename-as-tsfile-link
+        :desc "dired view file" "d v"           #'dired-view-file)))
+;; make 'h' and 'l' go back and forward in dired. much faster to navigate the directory structure!
+
+(evil-define-key 'normal dired-mode-map
+  (kbd "m-ret") 'dired-display-file
+  (kbd "h") 'dired-up-directory
+  (kbd "l") 'dired-view-file
+  (kbd "m") 'dired-mark
+  (kbd "t") 'dired-toggle-marks
+  (kbd "u") 'dired-unmark
+  (kbd "c") 'dired-do-copy
+  (kbd "d") 'dired-do-delete
+  (kbd "j") 'dired-goto-file
+  (kbd "m") 'dired-chmod
+  (kbd "o") 'dired-chown
+  (kbd "p") 'dired-do-print
+  (kbd "r") 'dired-rename
+  (kbd "t") 'dired-do-touch
+  (kbd "y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
+  (kbd "+") 'dired-create-directory
+  (kbd "-") 'dired-up-directory
+  (kbd "% l") 'dired-downcase
+  (kbd "% u") 'dired-upcase
+  (kbd "; d") 'epa-dired-do-decrypt
+  (kbd "; e") 'epa-dired-do-encrypt)
+;; if peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
+(evil-define-key 'normal peep-dired-mode-map
+  (kbd "j") 'peep-dired-next-file
+  (kbd "k") 'peep-dired-prev-file)
+#+end_src
+
+* CONFIGURATION
+
