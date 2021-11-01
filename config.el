@@ -78,10 +78,10 @@
 ;;;; UI
 ;;;;; FONTS
 
-(setq doom-font (font-spec :family "FiraCode" :size 14 :weight 'regular )
-      doom-variable-pitch-font (font-spec :family "Firacode" :style "Regular" :size 14 :weight 'regular)
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
       doom-unicode-font (font-spec :family "symbola" :size 14)
-      doom-big-font (font-spec :family "FiraCode" :size 24))
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24)
 
 
 ;;;;; FACES
@@ -616,7 +616,7 @@ templates into newly created files"
   (global-set-key (kbd "C-x p") 'git-gutter:previous-hunk)
   (global-set-key (kbd "C-x n") 'git-gutter:next-hunk))
 
-;;;; Hydra
+;;;; HYDRA
 
 (use-package! hydra
   :defer 8)
