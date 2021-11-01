@@ -173,6 +173,12 @@
 
 ;;;;;; REFILE TARGETS
 
+  ;; ;; (setq myroamfiles (directory-files "~/nextcloud/notes/org/" t "org$"))
+  ;; (setq myroamdailiesfiles (directory-files "~/nextcloud/notes/org/daily/" t "org$"))
+  ;;
+  ;; (myroamfiles :maxlevel . 5)
+  ;; (myroamdailiesfiles :maxlevel . 2)))
+
   (setq org-refile-targets '((nil :maxlevel . 3)
                              (org-agenda-files :maxlevel . 5)))
 
@@ -358,6 +364,10 @@
 
 ;;;;; ORG-ROAM HOOKS
 
+                                        ; (add-hook 'find-file-hook #'roam-extra:update-todo-tag)
+                                        ; (add-hook 'before-save-hook #'roam-extra:update-todo-tag)
+                                        ; (advice-add 'org-agenda :before #'roam-extra:update-todo-files)
+
   ;; hook to be run whenever an org-roam capture completes
   (add-hook 'org-roam-capture-new-node-hook #'marty/add-other-auto-props-to-org-roam-properties)
 
@@ -393,6 +403,24 @@
         ;; recheck location:
         (marty/get-lat-long-from-ipinfo)
         (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG"))))
+
+;;;;;; BACKLINKS COUNT
+
+  (cl-defmethod org-roam-node-directories ((node org-roam-node))
+    (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
+        (format "(%s)" (car (f-split dirs)))
+      ""))
+
+  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
+    (let* ((count (caar (org-roam-db-query
+                         [:select (funcall count source)
+                          :from links
+                          :where (= dest $s1)
+                          :and (= type "id")]
+                         (org-roam-node-id node)))))
+      (format "[%d]" count)))
+
+  (setq org-roam-node-display-template "${directories:10} ${tags:10} ${title:100} ${backlinkscount:6}")
 
 ;;;;;; DAILIES GRAPHICS LINK
   (defun marty/org-roam-dailies-graphicslink ()
@@ -443,45 +471,45 @@
                                                     '(:immediate-finish t)))))
       (apply #'org-roam-node-insert args)))
 
-;;   (defun my/org-roam-filter-by-tag (tag-name)
-;;     (lambda (node)
-;;       (member tag-name (org-roam-node-tags node))))
+  (defun my/org-roam-filter-by-tag (tag-name)
+    (lambda (node)
+      (member tag-name (org-roam-node-tags node))))
 
-;;   (defun my/org-roam-list-notes-by-tag (tag-name)
-;;     (mapcar #'org-roam-node-file
-;;             (seq-filter
-;;              (my/org-roam-filter-by-tag tag-name)
-;;              (org-roam-node-list))))
+  (defun my/org-roam-list-notes-by-tag (tag-name)
+    (mapcar #'org-roam-node-file
+            (seq-filter
+             (my/org-roam-filter-by-tag tag-name)
+             (org-roam-node-list))))
 
-;;   (defun dw/org-roam-goto-month ()
-;;     (interactive)
-;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y-%B")) '(4))
-;;                        :node (org-roam-node-create)
-;;                        :templates '(("m" "month" plain "\n* Goals\n\n%?* Summary\n\n"
-;;                                      :if-new (file+head "%<%Y-%B>.org"
-;;                                                         "#+title: %<%Y-%B>\n#+filetags: Project\n")
-;;                                      :unnarrowed t))))
+  (defun dw/org-roam-goto-month ()
+    (interactive)
+    (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y-%B")) '(4))
+                       :node (org-roam-node-create)
+                       :templates '(("m" "month" plain "\n* Goals\n\n%?* Summary\n\n"
+                                     :if-new (file+head "%<%Y-%B>.org"
+                                                        "#+title: %<%Y-%B>\n#+filetags: Project\n")
+                                     :unnarrowed t))))
 
-;;   (defun dw/org-roam-goto-year ()
-;;     (interactive)
-;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y")) '(4))
-;;                        :node (org-roam-node-create)
-;;                        :templates '(("y" "year" plain "\n* Goals\n\n%?* Summary\n\n"
-;;                                      :if-new (file+head "%<%Y>.org"
-;;                                                         "#+title: %<%Y>\n#+filetags: Project\n")
-;;                                      :unnarrowed t))))
+  (defun dw/org-roam-goto-year ()
+    (interactive)
+    (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y")) '(4))
+                       :node (org-roam-node-create)
+                       :templates '(("y" "year" plain "\n* Goals\n\n%?* Summary\n\n"
+                                     :if-new (file+head "%<%Y>.org"
+                                                        "#+title: %<%Y>\n#+filetags: Project\n")
+                                     :unnarrowed t))))
 
-;;   (defun my/org-roam-refresh-agenda-list ()
-;;     (interactive)
-;;     (setq org-agenda-files (my/org-roam-list-notes-by-tag "todo")))
+  (defun my/org-roam-refresh-agenda-list ()
+    (interactive)
+    (setq org-agenda-files (my/org-roam-list-notes-by-tag "todo")))
 
 
-;; ;;;;;; CAPTURE INBOX
-;;   (defun marty/org-roam-capture-inbox ()
-;;     (interactive)
-;;     (org-roam-capture- :node (org-roam-node-create)
-;;                        :templates '(("i" "Inbox" plain "** %?"
-;;                                      :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
+;;;;;; CAPTURE INBOX
+  (defun marty/org-roam-capture-inbox ()
+    (interactive)
+    (org-roam-capture- :node (org-roam-node-create)
+                       :templates '(("i" "Inbox" plain "** %?"
+                                     :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
 
 ;;;;;; MOVE TO TODAY
   ;; Move Todo's to dailies when done
@@ -514,6 +542,60 @@
     (interactive)
     (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
       (consult-ripgrep org-roam-directory)))
+
+
+;;;;;; ROAM-EXTRA
+
+  ;;   (defun roam-extra:get-filetags ()
+  ;;     (split-string (or (org-roam-get-keyword "filetags") "")))
+
+  ;;   (defun roam-extra:add-filetag (tag)
+  ;;     (let* ((new-tags (cons tag (roam-extra:get-filetags)))
+  ;;            (new-tags-str (combine-and-quote-strings new-tags)))
+  ;;       (org-roam-set-keyword "filetags" new-tags-str)))
+
+  ;;   (defun roam-extra:del-filetag (tag)
+  ;;     (let* ((new-tags (seq-difference (roam-extra:get-filetags) `(,tag)))
+  ;;            (new-tags-str (combine-and-quote-strings new-tags)))
+  ;;       (org-roam-set-keyword "filetags" new-tags-str)))
+
+  ;;   (defun roam-extra:todo-p ()
+  ;;     "Return non-nil if current buffer has any TODO entry.
+
+  ;; TODO entries marked as done are ignored, meaning the this
+  ;; function returns nil if current buffer contains only completed
+  ;; tasks."
+  ;;     (org-element-map
+  ;;         (org-element-parse-buffer 'headline)
+  ;;         'headline
+  ;;       (lambda (h)
+  ;;         (eq (org-element-property :todo-type h)
+  ;;             'todo))
+  ;;       nil 'first-match))
+
+  ;;   (defun roam-extra:update-todo-tag ()
+  ;;     "Update TODO tag in the current buffer."
+  ;;     (when (and (not (active-minibuffer-window))
+  ;;                (org-roam-file-p))
+  ;;       (org-with-point-at 1
+  ;;         (let* ((tags (roam-extra:get-filetags))
+  ;;                (is-todo (roam-extra:todo-p)))
+  ;;           (cond ((and is-todo (not (seq-contains-p tags "todo")))
+  ;;                  (roam-extra:add-filetag "todo"))
+  ;;                 ((and (not is-todo) (seq-contains-p tags "todo"))
+  ;;                  (roam-extra:del-filetag "todo")))))))
+
+  ;;   (defun roam-extra:todo-files ()
+  ;;     "Return a list of roam files containing todo tag."
+  ;;     (org-roam-db-sync)
+  ;;     (let ((todo-nodes (seq-filter (lambda (n)
+  ;;                                     (seq-contains-p (org-roam-node-tags n) "todo"))
+  ;;                                   (org-roam-node-list))))
+  ;;       (seq-uniq (seq-map #'org-roam-node-file todo-nodes))))
+
+  ;;   (defun roam-extra:update-todo-files (&rest _)
+  ;;     "Update the value of `org-agenda-files'."
+  ;;     (setq org-agenda-files (roam-extra:todo-files)))
 
 ;;;;;; HOTTER BUFFER
 

@@ -11,8 +11,6 @@
 ;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
 ;;
 
-(defun native-comp-available-p () nil)             ; fixing issue with org-agenda with this function negation
-
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
 (setq epg-gpg-program "/usr/bin/gpg")
