@@ -83,6 +83,7 @@
         :desc "Switch to last workspace"  "`"   #'+workspace/other
         :desc "Move workspace left"       "<"   #'+workspace/swap-left
         :desc "Move workspace right"      ">"   #'+workspace/swap-right
+        :desc "Burly open Bookmark "      "b"   #'burly-open-bookmark
         :desc "New workspace"             "n"   #'+workspace/new
         :desc "Create named workspace"    "N"   #'+workspace/new-named
         :desc "open workspace from file"  "o"   #'+workspace/load

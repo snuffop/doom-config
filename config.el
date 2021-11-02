@@ -33,8 +33,7 @@
 (setq read-process-output-max (* 1024 1024))
 (setq truncate-string-ellipsis "…")                ; unicode ellispis are nicer than "...", and also save /precious/ space
 (setq warning-minimum-level :emergency)
-(setq garbage-collection-messages t)
-(setq gcmh-auto-idle-delay-factor 20)
+;; (setq garbage-collection-messages t)
 
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)  ; Make the scratch buffer start in lisp mode
 
@@ -58,6 +57,10 @@
 
 (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
 (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
+
+(setq gcmh-verbose t)
+;; (setq gcmh-auto-idle-delay-factor 20)
+;; (setq gcmh-high-cons-threshold (* 1024 1024 1024)) ; 1 gig
 
 ;;;;; VTERM
 
@@ -761,20 +764,11 @@ templates into newly created files"
 (use-package! mutt-mode
   :defer t)
 
-;;;; NOTDEFT
-
-(use-package! notdeft
-  :defer t
-  :config
-  (setq notdeft-directories '("~/Nextcloud/Notes/org"
-                              "~/Nextlcoud/Notes/org/daily"
-                              "~/Nextcloud/Notes/org/TipJar"))
-  (add-hook 'notdeft-load-hook 'notdeft-xapian-make-program-when-uncurrent))
-
 ;;;; OUTSHINE
 
 (use-package! outshine
   :defer t
+  :hook (emacs-lisp-mode . outshine-mode)
   :config
   (map! :after outshine
         :map emacs-lisp-mode-map

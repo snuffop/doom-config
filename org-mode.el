@@ -343,199 +343,199 @@
 ;;;; ORG-ROAM
 
 (use-package! org-roam
-  :after org
-  :config
-  (setq org-roam-mode-selections
-        (list #'org-roam-backlinks-insert-section
-              #'org-roam-reflinks-insert-section
-              #'org-roam-unlinked-references-insert-section))
+              :after org
+              :config
+              (setq org-roam-mode-selections
+                    (list #'org-roam-backlinks-insert-section
+                          #'org-roam-reflinks-insert-section
+                          #'org-roam-unlinked-references-insert-section))
 
 ;;;;; ORG-ROAM POPUP RULES
 
-  (setq +org-roam-open-buffer-on-find-file nil)
+              (setq +org-roam-open-buffer-on-find-file nil)
 
-  (set-popup-rules!
-    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
-      ("^\\*org-roam: " ; node dedicated org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
+              (set-popup-rules!
+               `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+                  :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+                 ("^\\*org-roam: " ; node dedicated org-roam buffer
+                  :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
 
 ;;;;; ORG-ROAM HOOKS
 
-  ;; hook to be run whenever an org-roam capture completes
-  (add-hook 'org-roam-capture-new-node-hook #'marty/add-other-auto-props-to-org-roam-properties)
+              ;; hook to be run whenever an org-roam capture completes
+              (add-hook 'org-roam-capture-new-node-hook #'marty/add-other-auto-props-to-org-roam-properties)
 
 ;;;;; ORG-ROAM FUNCTIONS
 
 ;;;;;; ADD ADITIONAL PROPERTIES
 
-  (defun marty/add-other-auto-props-to-org-roam-properties ()
-    ;; if the file already exists, don't do anything, otherwise...
-    (unless (file-exists-p (buffer-file-name))
-      ;; if there's also a CREATION_TIME property, don't modify it
-      (unless (org-find-property "CREATION_TIME")
-        ;; otherwise, add a Unix epoch timestamp for CREATION_TIME prop
-        ;; (this is what "%s" does - see http://doc.endlessparentheses.com/Fun/format-time-string )
-        (org-roam-add-property
-         (format-time-string "%s"
-                             (nth 5
-                                  (file-attributes (buffer-file-name))))
-         "CREATION_TIME"))
-      (unless (org-find-property "ORG_CREATION_TIME")
-        (org-roam-add-property
-         (format-time-string "[%Y-%m-%d %a %H:%M:%S]"
-                             (nth 5
-                                  (file-attributes (buffer-file-name))))
-         "ORG_CREATION_TIME"))
-      ;; similarly for AUTHOR and MAIL properties
-      (unless (org-find-property "AUTHOR")
-        (org-roam-add-property user-full-name "AUTHOR"))
-      (unless (org-find-property "MAIL")
-        (org-roam-add-property user-mail-address "MAIL"))
-      ;; also add the latitude and longitude
-      (unless (org-find-property "LAT_LONG")
-        ;; recheck location:
-        (marty/get-lat-long-from-ipinfo)
-        (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG"))))
+              (defun marty/add-other-auto-props-to-org-roam-properties ()
+                ;; if the file already exists, don't do anything, otherwise...
+                (unless (file-exists-p (buffer-file-name))
+                  ;; if there's also a CREATION_TIME property, don't modify it
+                  (unless (org-find-property "CREATION_TIME")
+                    ;; otherwise, add a Unix epoch timestamp for CREATION_TIME prop
+                    ;; (this is what "%s" does - see http://doc.endlessparentheses.com/Fun/format-time-string )
+                    (org-roam-add-property
+                     (format-time-string "%s"
+                                         (nth 5
+                                              (file-attributes (buffer-file-name))))
+                     "CREATION_TIME"))
+                  (unless (org-find-property "ORG_CREATION_TIME")
+                    (org-roam-add-property
+                     (format-time-string "[%Y-%m-%d %a %H:%M:%S]"
+                                         (nth 5
+                                              (file-attributes (buffer-file-name))))
+                     "ORG_CREATION_TIME"))
+                  ;; similarly for AUTHOR and MAIL properties
+                  (unless (org-find-property "AUTHOR")
+                    (org-roam-add-property user-full-name "AUTHOR"))
+                  (unless (org-find-property "MAIL")
+                    (org-roam-add-property user-mail-address "MAIL"))
+                  ;; also add the latitude and longitude
+                  (unless (org-find-property "LAT_LONG")
+                    ;; recheck location:
+                    (marty/get-lat-long-from-ipinfo)
+                    (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG"))))
 
 ;;;;;; DAILIES GRAPHICS LINK
-  (defun marty/org-roam-dailies-graphicslink ()
-    " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
-    (interactive)
-    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-           (month (string-to-number (substring (buffer-name) 5 7)))
-           (day   (string-to-number (substring (buffer-name) 8 10)))
-           (datim (encode-time 0 0 0 day month year)))
-      (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
+              (defun marty/org-roam-dailies-graphicslink ()
+                " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
+                (interactive)
+                (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+                       (month (string-to-number (substring (buffer-name) 5 7)))
+                       (day   (string-to-number (substring (buffer-name) 8 10)))
+                       (datim (encode-time 0 0 0 day month year)))
+                  (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
 
 ;;;;;; DAILIES TITLE
-  (defun marty/org-roam-dailies-title ()
-    (interactive)
-    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-           (month (string-to-number (substring (buffer-name) 5 7)))
-           (day   (string-to-number (substring (buffer-name) 8 10)))
-           (datim (encode-time 0 0 0 day month year)))
-      (format-time-string "%A, %B %d %Y" datim)))
+              (defun marty/org-roam-dailies-title ()
+                (interactive)
+                (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+                       (month (string-to-number (substring (buffer-name) 5 7)))
+                       (day   (string-to-number (substring (buffer-name) 8 10)))
+                       (datim (encode-time 0 0 0 day month year)))
+                  (format-time-string "%A, %B %d %Y" datim)))
 
 ;;;;;; DAILIES TODO SCHEDULE
-  (defun marty/org-roam-dailies-todo-schedule ()
-    " Set the Date for the todo's in the dailies template "
-    (interactive)
-    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-           (month (string-to-number (substring (buffer-name) 5 7)))
-           (day   (string-to-number (substring (buffer-name) 8 10)))
-           (datim (encode-time 0 0 0 day month year)))
-      (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
+              (defun marty/org-roam-dailies-todo-schedule ()
+                " Set the Date for the todo's in the dailies template "
+                (interactive)
+                (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+                       (month (string-to-number (substring (buffer-name) 5 7)))
+                       (day   (string-to-number (substring (buffer-name) 8 10)))
+                       (datim (encode-time 0 0 0 day month year)))
+                  (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
 
 ;;;;;; DAILIES TODO DEADLINE
-  (defun marty/org-roam-dailies-todo-deadline ()
-    " Set the Date for the todo's in the dailies template "
-    (interactive)
-    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-           (month (string-to-number (substring (buffer-name) 5 7)))
-           (day   (string-to-number (substring (buffer-name) 8 10)))
-           (datim (encode-time 0 0 0 day month year)))
-      (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
+              (defun marty/org-roam-dailies-todo-deadline ()
+                " Set the Date for the todo's in the dailies template "
+                (interactive)
+                (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+                       (month (string-to-number (substring (buffer-name) 5 7)))
+                       (day   (string-to-number (substring (buffer-name) 8 10)))
+                       (datim (encode-time 0 0 0 day month year)))
+                  (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
 
 ;;;;;; SYSTEMCRAFTERS INSERT IMMEDIATE
-  ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
+              ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
 
-  (defun org-roam-node-insert-immediate (arg &rest args)
-    (interactive "P")
-    (let ((args (cons arg args))
-          (org-roam-capture-templates (list (append (car org-roam-capture-templates)
-                                                    '(:immediate-finish t)))))
-      (apply #'org-roam-node-insert args)))
+              (defun org-roam-node-insert-immediate (arg &rest args)
+                (interactive "P")
+                (let ((args (cons arg args))
+                      (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                                '(:immediate-finish t)))))
+                  (apply #'org-roam-node-insert args)))
 
-;;   (defun my/org-roam-filter-by-tag (tag-name)
-;;     (lambda (node)
-;;       (member tag-name (org-roam-node-tags node))))
+              ;;   (defun my/org-roam-filter-by-tag (tag-name)
+              ;;     (lambda (node)
+              ;;       (member tag-name (org-roam-node-tags node))))
 
-;;   (defun my/org-roam-list-notes-by-tag (tag-name)
-;;     (mapcar #'org-roam-node-file
-;;             (seq-filter
-;;              (my/org-roam-filter-by-tag tag-name)
-;;              (org-roam-node-list))))
+              ;;   (defun my/org-roam-list-notes-by-tag (tag-name)
+              ;;     (mapcar #'org-roam-node-file
+              ;;             (seq-filter
+              ;;              (my/org-roam-filter-by-tag tag-name)
+              ;;              (org-roam-node-list))))
 
-;;   (defun dw/org-roam-goto-month ()
-;;     (interactive)
-;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y-%B")) '(4))
-;;                        :node (org-roam-node-create)
-;;                        :templates '(("m" "month" plain "\n* Goals\n\n%?* Summary\n\n"
-;;                                      :if-new (file+head "%<%Y-%B>.org"
-;;                                                         "#+title: %<%Y-%B>\n#+filetags: Project\n")
-;;                                      :unnarrowed t))))
+              ;;   (defun dw/org-roam-goto-month ()
+              ;;     (interactive)
+              ;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y-%B")) '(4))
+              ;;                        :node (org-roam-node-create)
+              ;;                        :templates '(("m" "month" plain "\n* Goals\n\n%?* Summary\n\n"
+              ;;                                      :if-new (file+head "%<%Y-%B>.org"
+              ;;                                                         "#+title: %<%Y-%B>\n#+filetags: Project\n")
+              ;;                                      :unnarrowed t))))
 
-;;   (defun dw/org-roam-goto-year ()
-;;     (interactive)
-;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y")) '(4))
-;;                        :node (org-roam-node-create)
-;;                        :templates '(("y" "year" plain "\n* Goals\n\n%?* Summary\n\n"
-;;                                      :if-new (file+head "%<%Y>.org"
-;;                                                         "#+title: %<%Y>\n#+filetags: Project\n")
-;;                                      :unnarrowed t))))
+              ;;   (defun dw/org-roam-goto-year ()
+              ;;     (interactive)
+              ;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y")) '(4))
+              ;;                        :node (org-roam-node-create)
+              ;;                        :templates '(("y" "year" plain "\n* Goals\n\n%?* Summary\n\n"
+              ;;                                      :if-new (file+head "%<%Y>.org"
+              ;;                                                         "#+title: %<%Y>\n#+filetags: Project\n")
+              ;;                                      :unnarrowed t))))
 
-;;   (defun my/org-roam-refresh-agenda-list ()
-;;     (interactive)
-;;     (setq org-agenda-files (my/org-roam-list-notes-by-tag "todo")))
+              ;;   (defun my/org-roam-refresh-agenda-list ()
+              ;;     (interactive)
+              ;;     (setq org-agenda-files (my/org-roam-list-notes-by-tag "todo")))
 
 
-;; ;;;;;; CAPTURE INBOX
-;;   (defun marty/org-roam-capture-inbox ()
-;;     (interactive)
-;;     (org-roam-capture- :node (org-roam-node-create)
-;;                        :templates '(("i" "Inbox" plain "** %?"
-;;                                      :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
+              ;; ;;;;;; CAPTURE INBOX
+              ;;   (defun marty/org-roam-capture-inbox ()
+              ;;     (interactive)
+              ;;     (org-roam-capture- :node (org-roam-node-create)
+              ;;                        :templates '(("i" "Inbox" plain "** %?"
+              ;;                                      :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
 
 ;;;;;; MOVE TO TODAY
-  ;; Move Todo's to dailies when done
-  (defun marty/org-roam-move-todo-to-today ()
-    (interactive)
-    (let ((org-refile-keep nil) ;; Set this to t to copy the original!
-          (org-roam-dailies-capture-templates
-           '(("t" "tasks" entry "%?"
-              :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
-          (org-after-refile-insert-hook #'save-buffer)
-          today-file
-          pos)
-      (save-window-excursion
-        (org-roam-dailies--capture (current-time) t)
-        (setq today-file (buffer-file-name))
-        (setq pos (point)))
+              ;; Move Todo's to dailies when done
+              (defun marty/org-roam-move-todo-to-today ()
+                (interactive)
+                (let ((org-refile-keep nil) ;; Set this to t to copy the original!
+                      (org-roam-dailies-capture-templates
+                       '(("t" "tasks" entry "%?"
+                          :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
+                      (org-after-refile-insert-hook #'save-buffer)
+                      today-file
+                      pos)
+                  (save-window-excursion
+                    (org-roam-dailies--capture (current-time) t)
+                    (setq today-file (buffer-file-name))
+                    (setq pos (point)))
 
-      ;; Only refile if the target file is different than the current file
-      (unless (equal (file-truename today-file)
-                     (file-truename (buffer-file-name)))
-        (org-refile nil nil (list "Tasks" today-file nil pos)))))
+                  ;; Only refile if the target file is different than the current file
+                  (unless (equal (file-truename today-file)
+                                 (file-truename (buffer-file-name)))
+                    (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
 
 ;;;;;; ROAM-RG-SEARCH
 
-  ;; Snagged from Roam discourse
-  ;; https://org-roam.discourse.group/t/using-consult-ripgrep-with-org-roam-for-searching-notes/1226
-  (defun marty/org-roam-rg-search ()
-    "Search org-roam directory using consult-ripgrep. With live-preview."
-    (interactive)
-    (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
-      (consult-ripgrep org-roam-directory)))
+              ;; Snagged from Roam discourse
+              ;; https://org-roam.discourse.group/t/using-consult-ripgrep-with-org-roam-for-searching-notes/1226
+              (defun marty/org-roam-rg-search ()
+                "Search org-roam directory using consult-ripgrep. With live-preview."
+                (interactive)
+                (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
+                  (consult-ripgrep org-roam-directory)))
 
 ;;;;;; HOTTER BUFFER
 
-  (defun org-roam-buffer-setup ()
-    "Function to make org-roam-buffer more pretty."
-    (progn
-      (setq-local olivetti-body-width 44)
-      (variable-pitch-mode 1)
-      (olivetti-mode 1)
-      ;; (centaur-tabs-local-mode -1)
+              (defun org-roam-buffer-setup ()
+                "Function to make org-roam-buffer more pretty."
+                (progn
+                  (setq-local olivetti-body-width 44)
+                  (variable-pitch-mode 1)
+                  (olivetti-mode 1)
+                  ;; (centaur-tabs-local-mode -1)
 
-      (set-face-background 'magit-section-highlight (face-background 'default))))
+                  (set-face-background 'magit-section-highlight (face-background 'default))))
 
-  (add-hook! 'org-roam-mode-hook #'org-roam-buffer-setup)
+              (add-hook! 'org-roam-mode-hook #'org-roam-buffer-setup)
 
 ;;;;; ORG-ROAM END
 
-  (org-roam-setup))
+              (org-roam-setup))
 
 ;;;;; ORG-ROAM-MODULES
 ;;;;;; ROAM-BIBTEX
@@ -584,25 +584,6 @@
 
 (after! org
   (org-edna-mode))
-
-;;;;; ORG-JIRA
-
-(use-package! org-jira
-  :defer 10
-  :init
-  (setq jiralib-url "https://rackspace.atlassian.net")
-  (setq org-jira-working-dir "~/Nextcloud/Notes/org-jira")
-  (setq org-jira-custom-jqls
-        '(
-          (:jql " project IN (NSYS) and createdDate < '2020-01-01' order by created DESC "
-           :limit 10
-           :filename "last-years-work")
-          (:jql " project IN (NSYS) and createdDate >= '2021-01-01' order by created DESC "
-           :limit 10
-           :filename "this-years-work")
-          (:jql " project IN (NSYS) and status IN ('To Do', 'In Development') AND (labels = EMPTY or labels NOT IN ('FutureUpdate')) order by priority, created DESC "
-           :limit 20
-           :filename "nsys-priority-items"))))
 
 ;;;;; ORG-NOTER
 
