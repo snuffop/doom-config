@@ -16,7 +16,6 @@
 (package! autoinsert)
 (package! browse-kill-ring)
 (package! company-nginx)
-(package! company-tabnine)
 (package! counsel-tramp)
 (package! dashboard)
 (package! docker-compose-mode)
@@ -60,7 +59,6 @@
 ;;(when (string= (system-name) "archovo.home.snuffy.org"))
 
 (package! activity-watch-mode      :recipe (:host github :repo "pauldub/activity-watch-mode"))
-(package! burly                    :recipe (:host github :repo "alphapapa/burly.el"))
 (package! i3wm-config-mode         :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))
 (package! org-appear               :recipe (:host github :repo "awth13/org-appear"))
 (package! org-ol-tree              :recipe (:host github :repo "Townk/org-ol-tree"))

@@ -105,9 +105,9 @@
        prodigy           ; fixme managing external services & code builders
        rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
-       terraform         ; infrastructure as code
+       ;; terraform         ; infrastructure as code
        ;;tmux              ; an api for interacting with tmux
-       upload            ; map local to remote projects via ssh/ftp
+       ;; upload            ; map local to remote projects via ssh/ftp
 
        :os
        ;; (:if is-mac macos)  ; improve compatibility with macos
@@ -116,17 +116,17 @@
 
        :lang
        ;;agda              ; types of types of types of types...
-       (beancount         ; mind the gaap
-        +lsp)
-       (cc                ; c > c++ == 1
-        +lsp)
-       (clojure           ; java with a lisp
-        +lsp)
-       common-lisp       ; if you've seen one lisp, you've seen them all
+       ;; (beancount         ; mind the gaap
+       ;;  +lsp)
+       ;; (cc                ; c > c++ == 1
+       ;;  +lsp)
+       ;; (clojure           ; java with a lisp
+       ;;  +lsp)
+       ;; common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .net, and mono shenanigans
-       data              ; config/data formats
+       ;; data              ; config/data formats
        ;;(dart +flutter)   ; paint ui and not much else
        ;;elixir            ; erlang done right
        ;;elm               ; care for a cup of tea?
@@ -140,8 +140,8 @@
        ;;gdscript          ; the language you waited for
        (go                 ; the hipster dialect
         +lsp)
-       (haskell            ; a language that's lazier than i am
-        +dante)
+       ;; (haskell            ; a language that's lazier than i am
+       ;;  +dante)
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
        (json              ; at least it ain't xml
@@ -157,8 +157,8 @@
        ledger            ; be audit you can be
        (lua               ; one-based indices? one-based indices
         +lsp)
-       (markdown          ; writing docs for people to ignore
-        +grip)
+       ;; (markdown          ; writing docs for people to ignore
+       ;;  +grip)
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; i hereby declare "nix geht mehr!"
        ;; ocaml             ; an objective camel
@@ -172,31 +172,30 @@
         +gnuplot
         +dragndrop
         +roam2)
-       (php               ; perl's insecure younger brother
-        +lsp)
+       ;; (php               ; perl's insecure younger brother
+       ;;  +lsp)
        plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
        (python            ; beautiful is better than ugly
         +lsp
         +pyenv
         +pyright)
-       qt                ; the 'cutest' gui framework ever
+       ;; qt                ; the 'cutest' gui framework ever
        ;;racket            ; a dsl for dsls
        ;;raku              ; the artist formerly known as perl6
        ;;rest              ; emacs as a rest client
        ;;rst               ; rest in peace
        ;;(ruby +rails)     ; 1.step {|i| p "ruby is #{i.even? ? 'love' : 'life'}"}
-       (rust              ; fe2o3.unwrap().unwrap().unwrap().unwrap()
-        +lsp)
+       ;; (rust              ; fe2o3.unwrap().unwrap().unwrap().unwrap()
+       ;;  +lsp)
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
        (sh                ; she sells {ba,z,fi}sh shells on the c xor
-        +powershell
         +lsp)
        ;;sml
        ;;solidity          ; do you need a blockchain? no.
        ;;swift             ; who asked for emoji variables?
-       terra             ; earth and moon in alignment for performance.
+       ;; terra             ; earth and moon in alignment for performance.
        web               ; the tubes
        (yaml              ; json, but readable
         +lsp)
