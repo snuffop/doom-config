@@ -1,9 +1,0 @@
-#+TITLE: Daily Notes for `(marty/org-roam-dailies-title)`
-#+STARTUP: content
-#+filetags: :2021:daily:
-
-* Status () {}
-* Links
-** `(marty/org-roam-dailies-graphicslink)`
-* Tasks
-* Journal

@@ -1,42 +1,25 @@
-;;; packages.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
-;;
-;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2021, marty buchaus, all rights reserved.
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; packages
+; -*- no-byte-compile: t; -*-
+;;; $DOOMDIR/packages.el
 
 (package! evil-snipe :disable t)
+(package! solaire-mode :disable t)
 
 (package! aggressive-indent)
-(package! alert)
-(package! all-the-icons-completion)
 (package! all-the-icons-dired)
-(package! autoinsert)
-(package! browse-kill-ring)
+(package! all-the-icons-dired)
 (package! company-nginx)
 (package! counsel-tramp)
 (package! dashboard)
-(package! docker-compose-mode)
-(package! dockerfile-mode)
 (package! doct)
 (package! ebuku)
 (package! elfeed-protocol)
-(package! emmet-mode)
-(package! hydra)
-(package! info-colors)
 (package! jenkinsfile-mode)
-(package! json-mode)
 (package! khalel)
 (package! khardel)
-(package! lsp-ui)
-(package! mixed-pitch)
 (package! mu4e-column-faces)
 (package! mu4e-marker-icons)
 (package! mutt-mode)
 (package! nginx-mode)
-(package! olivetti)
 (package! org-edna)
 (package! org-noter)
 (package! org-noter-pdftools)
@@ -49,14 +32,10 @@
 (package! org-wild-notifier)
 (package! ox-gfm)
 (package! paperless)
-(package! powerthesaurus)
-(package! python-mode)
 (package! salt-mode)
 (package! systemd)
 (package! wakatime-mode)
 
-;;;;
-;;(when (string= (system-name) "archovo.home.snuffy.org"))
 
 (package! activity-watch-mode      :recipe (:host github :repo "pauldub/activity-watch-mode"))
 (package! i3wm-config-mode         :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))

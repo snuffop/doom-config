@@ -1,8 +1,0 @@
-**  %:description :@Reading:
-:PROPERTIES:
-:CREATED: %U
-:END:
-Annotation:  %:annotation
-Link:  %:link
-%i
-%?

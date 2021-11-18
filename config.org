@@ -1,3 +1,12 @@
+#+TITLE: Marty Buchaus Config
+#+startup: content
+
+
+* Config
+** File Header
+*** Top
+
+#+begin_src emacs-lisp
 ;; $doomdir/config.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; author: marty buchaus <marty@dabuke.com>
@@ -6,6 +15,11 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
+#+end_src
+
+*** Notes
+
+#+begin_src emacs-lisp
 
 ;;; Notes
 ;;;; Global
@@ -13,6 +27,11 @@
 ;;  2021 11 18 Update clean Install and config
 ;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
 
+#+end_src
+
+** Global
+
+#+begin_src emacs-lisp
 ;;; Global
 
 (setq user-full-name "Marty Buchaus")
@@ -51,11 +70,23 @@
 (set-window-buffer nil (current-buffer))
 (setenv "zstd" "/usr/bin/zstd")
 
+#+end_src
+
+** Vtirm Settings
+
+#+begin_src emacs-lisp
+
 ;;;;; VTERM
 
 (setq vterm-kill-buffer-on-exit t)
 (setq vterm-always-compile-module t)               ; Always compile the vterm module
 (setq vterm-shell "/usr/bin/zsh")
+
+#+end_src
+
+** UI
+*** Fonts
+#+begin_src emacs-lisp
 
 ;;; Set Fonts
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
@@ -63,6 +94,10 @@
       doom-unicode-font (font-spec :family "symbola" :size 14)
       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
 
+#+end_src
+
+*** Faces
+#+begin_src emacs-lisp
 ;;;;; FACES
 
 (custom-set-faces!
@@ -74,6 +109,11 @@
  '(mode-line :family "firacode nerd font mono" :height 100)
  '(mode-line-inactive :family "firacode nerd font mono" :height 100))
 
+#+end_src
+
+*** Theme
+#+begin_src emacs-lisp
+
 ;;;;; THEME
 
 (setq doom-theme 'doom-dracula )
@@ -81,6 +121,10 @@
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
+
+#+end_src
+*** Modeline
+#+begin_src emacs-lisp
 
 ;;;;; MODELINE
 
@@ -100,6 +144,9 @@
                           :background (face-background 'mode-line)
                           :foreground (face-foreground 'mode-line))
       )))
+#+end_src
+*** Line Numbers
+#+begin_src emacs-lisp
 
 ;;;;; LINE NUMBERS
 
@@ -112,6 +159,12 @@
                 shell-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+#+end_src
+
+** Packages
+*** Spelling
+#+begin_src emacs-lisp
 
 ;;;; SPELLING
 
@@ -157,6 +210,9 @@
 
 (add-hook 'text-mode-hook 'flyspell-mode!)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+#+end_src
+*** DIRED
+#+begin_src emacs-lisp
 
 ;;;; DIRED
 
@@ -170,10 +226,18 @@
                               ("png" . "sxiv")
                               ("mkv" . "mpv")
                               ("mp4" . "mpv")))
+#+end_src
+*** Company
+#+begin_src emacs-lisp
 
 ;;;; COMPANY
 
 (setq company-idle-delay 0.5)
+#+end_src
+
+*** Dashboard
+
+#+begin_src emacs-lisp
 
 ;;;; DASHBOARD
 
@@ -195,6 +259,10 @@
 	      (dashboard-modify-heading-icons '((recents . "file-text")
 						(bookmarks . "book"))))
 
+#+end_src
+*** Magit
+#+begin_src emacs-lisp
+
 (use-package! magit
 	      :config
 	      (define-key transient-map        "q" 'transient-quit-one)
@@ -202,20 +270,38 @@
 	      (define-key transient-sticky-map "q" 'transient-quit-seq)
 	      (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
 
+#+end_src
+** Modules
+*** I3
+#+begin_src emacs-lisp
+
 ;;;; I3 WINDOW MANAGER CONFIG
 ;; Syntax highlighting for i3 config
 (use-package! i3wm-config-mode
       :defer t )
+#+end_src
+*** Jenkins
+#+begin_src emacs-lisp
+
 
 ;;;; JENKINS
 
 (use-package! jenkinsfile-mode
 	      :defer t )
+#+end_src
+*** Khard
+#+begin_src emacs-lisp
 
 ;;;; KHARD
 
 (use-package! khardel
   :defer t )
+
+#+end_src
+
+*** Nginx mode
+#+begin_src emacs-lisp
+
 
 ;;;; NGINX
 
@@ -225,11 +311,20 @@
 
 (use-package! nginx-mode
   :defer t)
+#+end_src
+*** Mutt Mode
+#+begin_src emacs-lisp
+
 
 ;;;; MUTT-MODE
 
 (use-package! mutt-mode
   :defer t)
+
+#+end_src
+*** Outshine
+#+begin_src emacs-lisp
+
 
 ;;;; OUTSHINE
 
@@ -242,6 +337,11 @@
         "TAB" #'outshine-cycle)
   (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
+
+#+end_src
+*** Paperless
+#+begin_src emacs-lisp
+
 
 ;;;; PAPERLESS
 
@@ -265,17 +365,26 @@
         "r"  #'paperless-scan-directories
         "f"  #'paperless-file
         "x"  #'paperless-execute))
+#+end_src
+
+*** Rainbow Mode
+#+begin_src emacs-lisp
 
 ;;;; RAINBOW MODE
 
 (use-package rainbow-mode
   :defer t
   :hook (((css-mode scss-mode org-mode emacs-lisp-mode typescript-mode js-mode). rainbow-mode)))
-
+#+end_src
+*** Salt Mode
+#+begin_src emacs-lisp
 ;;;; SALT MODE
 
 (use-package! salt-mode
   :defer t)
+#+end_src
+*** Systemd Mode
+#+begin_src emacs-lisp
 
 ;;;; SYSTEMD MODE
 
@@ -287,11 +396,19 @@
       :prefix ("h" . "help")
       "d" #'systemd-doc-directives
       "o" #'systemd-doc-open)
+#+end_src
+
+*** VLF
+#+begin_src emacs-lisp
 
 ;;;; VLF
 
 (use-package! vlf-setup
   :defer-incrementally  vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+#+end_src
+
+*** Wakatime
+#+begin_src emacs-lisp
 
 ;;;; WAKATIME
 
@@ -305,9 +422,14 @@
   :config
   (add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
   (setq wakatime-cli-path "/usr/bin/wakatime"))
+#+end_src
+
+** CUSTOM
+#+begin_src emacs-lisp
 
 ;;; CUSTOM
 
 (setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
 (when (file-exists-p custom-file)
   (load custom-file))
+#+end_src
