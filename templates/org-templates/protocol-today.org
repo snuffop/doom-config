@@ -1,0 +1,9 @@
+** TODO %:description
+SCHEDULED: %^t
+:PROPERTIES:
+:CREATED: %U
+:END:
+Annotation:  %:annotation
+Link:  %:link
+%i
+%?

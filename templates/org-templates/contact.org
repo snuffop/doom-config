@@ -1,0 +1,14 @@
+** %^{ Contact Name }
+   :PROPERTIES:
+   :TYPE: person
+   :EMAIL: %^{ EMAIL }
+   :PHONE: %^{ PHONE }
+   :ALIAS:
+   :NICKNAME:
+   :IGNORE:
+   :ICON:
+   :NOTE:
+   :ADDRESS: %^{289 Cleveland St. Brooklyn, 11206 NY, USA}
+   :BIRTHDAY: %^{yyyy-mm-d}
+   :CREATED:
+   :END:

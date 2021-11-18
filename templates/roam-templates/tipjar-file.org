@@ -1,0 +1,6 @@
+#+TITLE: ${title}
+#+AUTHOR: %n
+#+DATE:%U
+#+STARTUP: overview
+#+SETUPFILE: ~/Nextcloud/Notes/org/notes-style.org
+#+filetags: tipjar
