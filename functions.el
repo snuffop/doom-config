@@ -6,9 +6,10 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;;; functions
+;;; functions
 
-;;;;; CALENDAR OPEN
+
+;;;; CALENDAR OPEN
 
 (defun mb/open-calendar ()
   (interactive)
@@ -31,7 +32,7 @@
     (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
     )))
 
-;;;;; Open Mutt Message
+;;;; OPEN MUTT MESSAGE
 
 (defun mutt-open-message (message-id)
   "In neomutt, open the nmail with the the given Message-ID"
@@ -63,7 +64,7 @@
                   "-f" "termite" "-e"
                   mutt-command)))
 
-;;;;; PROT FUNCTIONS
+;;;; PROT FUNCTIONS
 
 (defvar prot-common-url-regexp
   (concat
@@ -127,8 +128,3 @@ Do not try to make a new directory or anything fancy."
     (add-hook 'occur-hook #'goto-address-mode)
     (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
     (remove-hook 'occur-hook #'goto-address-mode)))
-
-;;; PROVIDE
-(provide 'functions)
-;;;; Functions ends here
-:

@@ -1,284 +1,13 @@
-#+TITLE: Marty Buchaus Config
-#+startup: content
+;;; org-mode.el -*- lexical-binding: t; -*-
 
-
-* Config
-** File Header
-*** Top
-
-#+begin_src emacs-lisp
-;; $doomdir/config.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
-;;
 ;; author: marty buchaus <marty@dabuke.com>
 ;; copyright © 2021, marty buchaus, all rights reserved.
 ;; created:  1 November 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-#+end_src
-
-*** Notes
-
-#+begin_src emacs-lisp
-
-;;; Notes
-;;;; Global
-
-;;  2021 11 18 Update clean Install and config
-;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
-
-#+end_src
-
-** Global
-
-#+begin_src emacs-lisp
-;;; Global
-
-(setq user-full-name "Marty Buchaus")
-(setq user-mail-address "marty@dabuke.com")
-(setq epg-gpg-program "/usr/bin/gpg2")
-
-(setq-default enable-local-variables t)            ; allow for reading the local variables file
-(setq-default window-combination-resize t)
-(setq-default left-margin-width 1)                 ; Define new widths
-(setq-default right-margin-width 2)                ; Define new widths.
-(setq-default x-stretch-cursor t)
-
-(setq scroll-margin 2)                             ; it's nice to maintain a little margin
-(setq evil-want-fine-undo t)                       ; by default while in insert all changes are one big blob. be more granular
-(setq undo-limit 80000000)                         ; raise undo-limit to 80mb
-(setq auto-save-default t)                         ; nobody likes to loose work, i certainly don't
-(setq confirm-kill-emacs nil)                      ; stop hounding me and quit
-(setq display-time-24hr-format t)                  ; I wonder what this does
-(setq password-cache-expiry nil)                   ; i can trust my computers ... can't i?
-(setq read-process-output-max (* 1024 1024))
-(setq truncate-string-ellipsis "…")                ; unicode ellispis are nicer than "...", and also save /precious/ space
-(setq warning-minimum-level :emergency)
-(setq garbage-collection-messages t)
-
-(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)  ; Make the scratch buffer start in lisp mode
-
-(display-time-mode 1)                              ; enable time in the mode-line
-
-(global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly Essie
-
-(after! projectile
-  (setq projectile-project-search-path '("~/Source")))
-;; this doesn't seem to work to fix the doom doctor issue
-;; (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
-
-(set-window-buffer nil (current-buffer))
-(setenv "zstd" "/usr/bin/zstd")
-
-#+end_src
-
-** Vtirm Settings
-
-#+begin_src emacs-lisp
-
-;;;;; VTERM
-
-(setq vterm-kill-buffer-on-exit t)
-(setq vterm-always-compile-module t)               ; Always compile the vterm module
-(setq vterm-shell "/usr/bin/zsh")
-
-#+end_src
-
-** UI
-*** Fonts
-#+begin_src emacs-lisp
-
-;;; Set Fonts
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
-      doom-unicode-font (font-spec :family "symbola" :size 14)
-      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
-
-#+end_src
-
-*** Faces
-#+begin_src emacs-lisp
-;;;;; FACES
-
-(custom-set-faces!
-  '(font-lock-comment-face :slant italic)
-  '(font-lock-keyword-face :slant italic))
-(setq global-prettify-symbols-mode t)
-
-(custom-set-faces!
- '(mode-line :family "firacode nerd font mono" :height 100)
- '(mode-line-inactive :family "firacode nerd font mono" :height 100))
-
-#+end_src
-
-*** Theme
-#+begin_src emacs-lisp
-
-;;;;; THEME
-
-(setq doom-theme 'doom-dracula )
-
-(after! doom-themes
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t))
-
-#+end_src
-*** Modeline
-#+begin_src emacs-lisp
-
-;;;;; MODELINE
-
-(after! doom-modeline
-  (setq all-the-icons-scale-factor 1.1)
-  (setq doom-modeline-enable-word-count t)
-  (setq doom-themes-padded-modeline t)
-  (setq auto-revert-check-vc-info t)
-  (setq doom-modeline-buffer-file-name-style 'relative-to-project)
-  (setq doom-modeline-major-mode-color-icon (display-graphic-p))
-  (setq doom-modeline-major-mode-icon (display-graphic-p))
-  (setq doom-modeline-vcs-max-length 60)
-
-  (add-hook! 'doom-modeline-mode-hook
-    (progn
-      (set-face-attribute 'header-line nil
-                          :background (face-background 'mode-line)
-                          :foreground (face-foreground 'mode-line))
-      )))
-#+end_src
-*** Line Numbers
-#+begin_src emacs-lisp
-
-;;;;; LINE NUMBERS
-
-(setq display-line-numbers-type 'relative)
-
-;; remove numbers from these modes
-
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-                shell-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-#+end_src
-
-** Packages
-*** Spelling
-#+begin_src emacs-lisp
-
-;;;; SPELLING
-
-(use-package! flyspell
-  :defer t
-  :config
-  ;; (setq ispell-program-name "aspell")
-  ;; You could add extra option "--camel-case" for since Aspell 0.60.8
-  ;; @see https://github.com/redguardtoo/emacs.d/issues/796
-  ;; (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
-  (setq-default flyspell-prog-text-faces
-                '(tree-sitter-hl-face:comment
-                  tree-sitter-hl-face:doc
-                  tree-sitter-hl-face:string
-                  tree-sitter-hl-face:function
-                  tree-sitter-hl-face:variable
-                  tree-sitter-hl-face:type
-                  tree-sitter-hl-face:method
-                  tree-sitter-hl-face:function.method
-                  tree-sitter-hl-face:function.special
-                  tree-sitter-hl-face:attribute
-                  font-lock-comment-face
-                  font-lock-doc-face
-                  font-lock-string-face
-                  lsp-face-highlight-textual
-                  default))
-
-
-  (setq flyspell-lazy-idle-seconds 2)
-  (setq ispell-personal-dictionary "~/.config/doom/dictionary/ispell_personal" )
-  (setq spell-fu-directory "~/.config/doom/dictionary") ;; Please create this directory manually.
-  (after! ispell
-    (setq ispell-program-name "aspell"
-          ;; Notice the lack of "--run-together"
-          ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
-    (ispell-kill-ispell t))
-
-  (defun flyspell-buffer-after-pdict-save (&rest _)
-    (flyspell-buffer))
-
-  (advice-add 'ispell-pdict-save :after #'flyspell-buffer-after-pdict-save))
-
-
-(add-hook 'text-mode-hook 'flyspell-mode!)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-#+end_src
-*** DIRED
-#+begin_src emacs-lisp
-
-;;;; DIRED
-
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-;; get file icons in dired
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-;; with dired-open plugin, you can launch external programs for certain extensions
-;; for example, i set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
-(setq dired-open-extensions '(("gif" . "sxiv")
-                              ("jpg" . "sxiv")
-                              ("png" . "sxiv")
-                              ("mkv" . "mpv")
-                              ("mp4" . "mpv")))
-#+end_src
-*** Company
-#+begin_src emacs-lisp
-
-;;;; COMPANY
-
-(setq company-idle-delay 0.5)
-#+end_src
-
-*** Dashboard
-
-#+begin_src emacs-lisp
-
-;;;; DASHBOARD
-
-(use-package! dashboard
-	      :init      ;; tweak dashboard config before loading it
-	      (setq dashboard-set-heading-icons t)
-	      (setq dashboard-set-file-icons t)
-	      (setq dashboard-banner-logo-title "emacs is more than a text editor!")
-	      ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-	      (setq dashboard-startup-banner "~/.config/doom/banners/doom-emacs-slant-out-bw.png")  ;; use custom image as banner
-	      (setq dashboard-center-content t) ;; set to 't' for centered content
-	      (setq dashboard-items '((recents . 5)
-				      (agenda . 5 )
-				      (bookmarks . 5)
-				      (projects . 5)
-				      (registers . 5)))
-	      :config
-	      (dashboard-setup-startup-hook)
-	      (dashboard-modify-heading-icons '((recents . "file-text")
-						(bookmarks . "book"))))
-
-#+end_src
-*** Magit
-#+begin_src emacs-lisp
-
-(use-package! magit
-	      :config
-	      (define-key transient-map        "q" 'transient-quit-one)
-	      (define-key transient-edit-map   "q" 'transient-quit-one)
-	      (define-key transient-sticky-map "q" 'transient-quit-seq)
-	      (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
-
-#+end_src
-** ORG-Mode
-*** Pre org config
-
-Set the Org and Roam Directories so that subsequent runs will have this variable
-Set also the org-agenda files variable
-
-#+begin_src emacs-lisp
-
+;;; ORG-Mode
+;;;; Pre
 (setq org-directory "~/Nextcloud/Notes/org/")
 (setq org-roam-directory "~/Nextcloud/Notes/org/")
 (setq org-roam-dailies/directory "daily/")
@@ -292,12 +21,7 @@ Set also the org-agenda files variable
                                (concat org-directory "Someday.org")
                                (concat org-directory "0mobile.org")))
 
-#+end_src
-*** Org Publish
-
-#+begin_src emacs-lisp
-
-;;;;; PUBLISH ALIST
+;;;; PUBLISH ALIST
 
 (after! org
   (defun marty/publish (a b c)
@@ -391,14 +115,7 @@ Set also the org-agenda files variable
                                             "NSI-Documentation-TVA-ScanReports-2021-images"
                                             "NSI-Documentation-TVA-ScanReports-2021-reports"
                                             "NSI-Documentation-TVA-ScanReports-files")))))
-
-
-#+end_src
-
-*** Org-Agenda
-Setup and config for the org agenda system of org-mode
-
-#+begin_src emacs-lisp
+;;;; ORG-AGENDA
 
 (after! org-agenda
 
@@ -426,14 +143,10 @@ Setup and config for the org agenda system of org-mode
                 (push file org-agenda-files)))
           (org-projectile-todo-files)))
 
-#+end_src
 
-*** ORG Configuration
-**** BASE
-#+begin_src emacs-lisp
+;;;; BASE
+
 (after! org
-
-;;;;;; BASE
 
   (setq org-default-notes-file (concat org-directory "0mobile.org"))
   (setq org-download-image-dir "~/Nextcloud/Notes/images/")
@@ -444,20 +157,20 @@ Setup and config for the org agenda system of org-mode
   (setq org-clock-sound "~/Nextcloud/Music/sounds/shipsBell.wav")
   (setq org-startup-with-inline-images t)  ; Show Inline Images
 
-;;;;;; CLOCKING
+;;;;; CLOCKING
 
   ;; (setq org-clock-into-drawer "CLOCKING")
   ;; Where to put the clock in and out for tracked items
   (setq org-clock-out-remove-zero-time-clocks t)
 
-;;;;;; LOGGING AND ID
+;;;;; LOGGING AND ID
 
   (setq org-log-done t)
   (setq org-log-into-drawer t)
   (setq org-icalendar-store-UID t)
   (setq org-id-track-globally t)
 
-;;;;;; REFILE TARGETS
+;;;;; REFILE TARGETS
 
   (setq org-refile-targets '((nil :maxlevel . 3)
                              (org-agenda-files :maxlevel . 5)))
@@ -467,14 +180,10 @@ Setup and config for the org agenda system of org-mode
   (setq org-refile-allow-creating-parent-nodes 'confirm)
 
   (setq prettify-symbols-unprettify-at-point 'right-edge)
-)
-#+end_src
 
-**** Org-Symbols / org-mode-hook
 
-#+begin_src emacs-lisp
-;;;;;; org-mode-hook
-(after! org
+;;;;; org-mode-hook
+
   (add-hook 'org-mode-hook (lambda ()
                              "Beautify Org Checkbox Symbol"
                              (push '("#+ACTIVE:"            . ""  ) prettify-symbols-alist)
@@ -541,13 +250,9 @@ Setup and config for the org agenda system of org-mode
                              (push '("[X]"                  . "☑" ) prettify-symbols-alist)
                              (push '("lambda"               . "λ"  ) prettify-symbols-alist)
                              (push '("subtitle"             . "𝙩" ) prettify-symbols-alist)
-                             (prettify-symbols-mode))))
-#+end_src
-**** Tag List
-#+begin_src emacs-lisp
+                             (prettify-symbols-mode)))
 
-;;;;;; TAG LIST
-(after! org
+;;;;; TAG LIST
   (setq org-tag-alist (quote
                        ((:startgroup)
                         ("@ASITS"     . ?A)
@@ -578,15 +283,10 @@ Setup and config for the org agenda system of org-mode
                         ("NOTE"       . ?N)
                         ("PROJECT"    . ?P)
                         ("WAITING"    . ?w)
-                        ("WORK"       . ?W)))))
-#+end_src
+                        ("WORK"       . ?W))))
 
-**** Faces
-#+begin_src emacs-lisp
+;;;;; FACES
 
-;;;;;; FACES
-
-(after! org
   (custom-set-faces
    '(org-document-title ((t (:inherit outline-1 :height 1.5))))
    '(org-level-1 ((t (:inherit outline-1 :height 1.12))))
@@ -605,17 +305,10 @@ Setup and config for the org agenda system of org-mode
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
-#+end_src
+;;;;; KEYWORDS
 
-**** Keywords
-
-#+begin_src emacs-lisp
-
-;;;;;; KEYWORDS
-
-(after! org
   (setq org-todo-keywords
         '((sequence "TODO(t)"
                     "NEXT(n!)"
@@ -627,19 +320,13 @@ Setup and config for the org agenda system of org-mode
                     "TICKLE(T!)"
                     "|"
                     "CANCELLED(c@)"
-                    "DONE(d@)"))))
+                    "DONE(d@)")))
 
-#+end_src
-
-*** Org Roam
-**** Package
-
-Setup the Package and setup some variables
-
-#+begin_src emacs-lisp
+;;;;; END (after! org)
+  )
 
 ;;;; ORG-ROAM
-
+;;;;; PACKAGE
 (use-package! org-roam
               :after org
               :config
@@ -647,14 +334,6 @@ Setup the Package and setup some variables
                     (list #'org-roam-backlinks-insert-section
                           #'org-roam-reflinks-insert-section
                           #'org-roam-unlinked-references-insert-section)))
-
-#+end_src
-
-**** Popup Rules
-
-Set the Doom Popup rules to adjust for size and look of the buffer
-
-#+begin_src emacs-lisp
 
 ;;;;; ORG-ROAM POPUP RULES
 
@@ -667,224 +346,13 @@ Set the Doom Popup rules to adjust for size and look of the buffer
       ("^\\*org-roam: " ; node dedicated org-roam buffer
        :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2))))
 
-#+end_src
-
-**** Org-roam Hooks
-
-Set the org-roam Hook
-
-#+begin_src emacs-lisp
-
 ;;;;; ORG-ROAM HOOKS
 
 (after! org-roam
   ;; hook to be run whenever an org-roam capture completes
   (add-hook 'org-roam-capture-new-node-hook #'marty/add-other-auto-props-to-org-roam-properties))
 
-#+end_src
-**** Org-roam Functions
-***** Additional Properties
-
-Add Author and time stamps to New Roam files
-
-#+begin_src emacs-lisp
-
-;;;;;; ADD ADITIONAL PROPERTIES
-
-(after! org-roam
-  (defun marty/add-other-auto-props-to-org-roam-properties ()
-    ;; if the file already exists, don't do anything, otherwise...
-    (unless (file-exists-p (buffer-file-name))
-      ;; if there's also a CREATION_TIME property, don't modify it
-      (unless (org-find-property "CREATION_TIME")
-        ;; otherwise, add a Unix epoch timestamp for CREATION_TIME prop
-        ;; (this is what "%s" does - see http://doc.endlessparentheses.com/Fun/format-time-string )
-        (org-roam-add-property
-         (format-time-string "%s"
-                             (nth 5
-                                  (file-attributes (buffer-file-name))))
-         "CREATION_TIME"))
-      (unless (org-find-property "ORG_CREATION_TIME")
-        (org-roam-add-property
-         (format-time-string "[%Y-%m-%d %a %H:%M:%S]"
-                             (nth 5
-                                  (file-attributes (buffer-file-name))))
-         "ORG_CREATION_TIME"))
-      ;; similarly for AUTHOR and MAIL properties
-      (unless (org-find-property "AUTHOR")
-        (org-roam-add-property user-full-name "AUTHOR"))
-      (unless (org-find-property "MAIL")
-        (org-roam-add-property user-mail-address "MAIL"))
-      ;; also add the latitude and longitude
-      (unless (org-find-property "LAT_LONG")
-        ;; recheck location:
-        (marty/get-lat-long-from-ipinfo)
-        (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG")))))
-
-#+end_src
-
-***** Dailies Graphics Link Title
-
-Setup the org-roam Dailies Graphics Link, Title, Schedule and Deadline
-#+begin_src emacs-lisp
-
-(after! org-roam
-
-;;;;;; DAILIES GRAPHICS LINK
-
-  (defun marty/org-roam-dailies-graphicslink ()
-    " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
-    (interactive)
-    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-           (month (string-to-number (substring (buffer-name) 5 7)))
-           (day   (string-to-number (substring (buffer-name) 8 10)))
-           (datim (encode-time 0 0 0 day month year)))
-      (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
-
-;;;;;; DAILIES TITLE
-
-  (defun marty/org-roam-dailies-title ()
-    (interactive)
-    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-           (month (string-to-number (substring (buffer-name) 5 7)))
-           (day   (string-to-number (substring (buffer-name) 8 10)))
-           (datim (encode-time 0 0 0 day month year)))
-      (format-time-string "%A, %B %d %Y" datim)))
-
-;;;;;; DAILIES TODO SCHEDULE
-
-  (defun marty/org-roam-dailies-todo-schedule ()
-    " Set the Date for the todo's in the dailies template "
-    (interactive)
-    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-           (month (string-to-number (substring (buffer-name) 5 7)))
-           (day   (string-to-number (substring (buffer-name) 8 10)))
-           (datim (encode-time 0 0 0 day month year)))
-      (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
-
-;;;;;; DAILIES TODO DEADLINE
-
-  (defun marty/org-roam-dailies-todo-deadline ()
-    " Set the Date for the todo's in the dailies template "
-    (interactive)
-    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
-           (month (string-to-number (substring (buffer-name) 5 7)))
-           (day   (string-to-number (substring (buffer-name) 8 10)))
-           (datim (encode-time 0 0 0 day month year)))
-      (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim))))
-
-#+end_src
-
-***** Systemcrafters Stuff
-
-#+begin_src emacs-lisp
-
-(after! org-roam
-
-;;;;;; SYSTEMCRAFTERS INSERT IMMEDIATE
-  ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
-
-  (defun org-roam-node-insert-immediate (arg &rest args)
-    (interactive "P")
-    (let ((args (cons arg args))
-          (org-roam-capture-templates (list (append (car org-roam-capture-templates)
-                                                    '(:immediate-finish t)))))
-      (apply #'org-roam-node-insert args)))
-
-  ;;   (defun my/org-roam-filter-by-tag (tag-name)
-  ;;     (lambda (node)
-  ;;       (member tag-name (org-roam-node-tags node))))
-
-  ;;   (defun my/org-roam-list-notes-by-tag (tag-name)
-  ;;     (mapcar #'org-roam-node-file
-  ;;             (seq-filter
-  ;;              (my/org-roam-filter-by-tag tag-name)
-  ;;              (org-roam-node-list))))
-
-  ;;   (defun dw/org-roam-goto-month ()
-  ;;     (interactive)
-  ;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y-%B")) '(4))
-  ;;                        :node (org-roam-node-create)
-  ;;                        :templates '(("m" "month" plain "\n* Goals\n\n%?* Summary\n\n"
-  ;;                                      :if-new (file+head "%<%Y-%B>.org"
-  ;;                                                         "#+title: %<%Y-%B>\n#+filetags: Project\n")
-  ;;                                      :unnarrowed t))))
-
-  ;;   (defun dw/org-roam-goto-year ()
-  ;;     (interactive)
-  ;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y")) '(4))
-  ;;                        :node (org-roam-node-create)
-  ;;                        :templates '(("y" "year" plain "\n* Goals\n\n%?* Summary\n\n"
-  ;;                                      :if-new (file+head "%<%Y>.org"
-  ;;                                                         "#+title: %<%Y>\n#+filetags: Project\n")
-  ;;                                      :unnarrowed t))))
-
-  ;;   (defun my/org-roam-refresh-agenda-list ()
-  ;;     (interactive)
-  ;;     (setq org-agenda-files (my/org-roam-list-notes-by-tag "todo")))
-
-
-  ;; ;;;;;; CAPTURE INBOX
-  ;;   (defun marty/org-roam-capture-inbox ()
-  ;;     (interactive)
-  ;;     (org-roam-capture- :node (org-roam-node-create)
-  ;;                        :templates '(("i" "Inbox" plain "** %?"
-  ;;                                      :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
-
-)
-#+end_src
-
-***** Move to todays Dailies Entry
-#+begin_src emacs-lisp
-
-(after! org-roam
-
-;;;;;; MOVE TO TODAY
-
-  ;; Move Todo's to dailies when done
-  (defun marty/org-roam-move-todo-to-today ()
-    (interactive)
-    (let ((org-refile-keep nil) ;; Set this to t to copy the original!
-          (org-roam-dailies-capture-templates
-           '(("t" "tasks" entry "%?"
-              :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
-          (org-after-refile-insert-hook #'save-buffer)
-          today-file
-          pos)
-      (save-window-excursion
-        (org-roam-dailies--capture (current-time) t)
-        (setq today-file (buffer-file-name))
-        (setq pos (point)))
-
-      ;; Only refile if the target file is different than the current file
-      (unless (equal (file-truename today-file)
-                     (file-truename (buffer-file-name)))
-        (org-refile nil nil (list "Tasks" today-file nil pos))))))
-
-#+end_src
-***** RipGrep Search
-
-#+begin_src emacs-lisp
-
-(after! org-roam
-
-;;;;;; ROAM-RG-SEARCH
-
-  ;; Snagged from Roam discourse
-  ;; https://org-roam.discourse.group/t/using-consult-ripgrep-with-org-roam-for-searching-notes/1226
-  (defun marty/org-roam-rg-search ()
-    "Search org-roam directory using consult-ripgrep. With live-preview."
-    (interactive)
-    (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
-      (consult-ripgrep org-roam-directory))))
-
-#+end_src
-**** org-roam Modules
-
-***** org-roam-bibtex
-#+begin_src emacs-lisp
-
-;;;;;; ROAM-BIBTEX
+;;;;; ROAM-BIBTEX
 
 (use-package! org-roam-bibtex
   :after org-roam
@@ -894,22 +362,12 @@ Setup the org-roam Dailies Graphics Link, Title, Schedule and Deadline
   (setq orb-preformat-keywords
         '("citekey" "title" "url" "file" "author-or-editor" "keywords" "pdf" "doi" "author" "tags" "year" "author-bbrev")))
 
-#+end_src
-
-***** org-roam-ui
-
-#+begin_src emacs-lisp
-
-;;;;;; ORG-ROAM-UI
+;;;;; ORG-ROAM-UI
 
 (use-package! org-roam-ui
   :after org-roam)
 
-#+end_src
-***** org-roam-timestamps
-
-#+begin_src emacs-lisp
-
+;;;;; FUNCTIONS
 ;;;;;; ORG-ROAM-TIMESTAMPS
 
 (use-package! org-roam-timestamps
@@ -919,61 +377,7 @@ Setup the org-roam Dailies Graphics Link, Title, Schedule and Deadline
   (setq org-roam-timestamps-remember-timestamps t)
   (org-roam-timestamps-mode))
 
-#+end_src
-
-**** org-roam capture templates
-#+begin_src emacs-lisp
-
-;;;; ORG-ROAM CAPTURE TEMPLATES
-(after! org-roam
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry "* %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-           :empty-lines-after 1 )
-          ("t" "Tasks" entry "** TODO %? "
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
-           :empty-lines-after 1 )
-          ("r" "Rackspace" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
-           :empty-lines-after 1)
-          ("j" "Journal" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal") )
-           :empty-lines-after 1)))
-
-
-  (setq org-roam-capture-templates
-        '(("d" "default" plain
-           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
-           :immediate-finish t
-           :unnarrowed t)
-          ("t" "tipjar" plain
-           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
-           :unnarrowed t)
-          ("p" "People" plain
-           (file "~/.config/doom/templates/roam-templates/people-entry.org")
-           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
-           :unnarrowed t))))
-
-#+end_src
-*** Org Modules
-**** DOCT
-
-#+begin_src emacs-lisp
-
-(use-package! doct
-  :defer t
-  :after org
-  :commands (doct))
-
-#+end_src
-
-*** Org Functions
-**** Longitude & Latatude
-#+begin_src emacs-lisp
-
-;;;;; LONG-LAT
+;;;;;; LONG-LAT
 ;;                      (requires curl to be installed on system)
 ;;
 (setq calendar-latitude 0)
@@ -988,13 +392,8 @@ Setup the org-roam Dailies Graphics Link, Title, Schedule and Deadline
     (setq calendar-latitude (string-to-number (car latlong-list)))
     (setq calendar-longitude (string-to-number (cadr latlong-list)))))
 
-#+end_src
-
-**** Format Org-Block
-#+begin_src emacs-lisp
-
 (after! org
-;;;;; FORMAT ORG-BLOCK
+;;;;;; FORMAT ORG-BLOCK
   (defun format-org-mode-block ()
     "Format org mode code block"
     (interactive "p")
@@ -1005,13 +404,7 @@ Setup the org-roam Dailies Graphics Link, Title, Schedule and Deadline
     (format-all-buffer)
     (org-edit-src-exit)))
 
-#+end_src
-
-**** PRETTIFY FUNCTIONS FROM TECOSAUR
-#+begin_src emacs-lisp
-
-
-;;;;; PRETTIFY FUNCTIONS FROM TECOSAUR
+;;;;;; PRETTIFY FUNCTIONS FROM TECOSAUR
 ;; for pretty capture interfaces..
 (after! org
   (defun org-capture-select-template-prettier (&optional keys)
@@ -1159,13 +552,214 @@ is selected, only the bare key is returned."
 
   )
 
-#+end_src
-*** CAPTURE Templates
 
-#+begin_src emacs-lisp
+;;;;;; ADD ADITIONAL PROPERTIES
+
+(after! org-roam
+  (defun marty/add-other-auto-props-to-org-roam-properties ()
+    ;; if the file already exists, don't do anything, otherwise...
+    (unless (file-exists-p (buffer-file-name))
+      ;; if there's also a CREATION_TIME property, don't modify it
+      (unless (org-find-property "CREATION_TIME")
+        ;; otherwise, add a Unix epoch timestamp for CREATION_TIME prop
+        ;; (this is what "%s" does - see http://doc.endlessparentheses.com/Fun/format-time-string )
+        (org-roam-add-property
+         (format-time-string "%s"
+                             (nth 5
+                                  (file-attributes (buffer-file-name))))
+         "CREATION_TIME"))
+      (unless (org-find-property "ORG_CREATION_TIME")
+        (org-roam-add-property
+         (format-time-string "[%Y-%m-%d %a %H:%M:%S]"
+                             (nth 5
+                                  (file-attributes (buffer-file-name))))
+         "ORG_CREATION_TIME"))
+      ;; similarly for AUTHOR and MAIL properties
+      (unless (org-find-property "AUTHOR")
+        (org-roam-add-property user-full-name "AUTHOR"))
+      (unless (org-find-property "MAIL")
+        (org-roam-add-property user-mail-address "MAIL"))
+      ;; also add the latitude and longitude
+      (unless (org-find-property "LAT_LONG")
+        ;; recheck location:
+        (marty/get-lat-long-from-ipinfo)
+        (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG")))))
+
+(after! org-roam
+
+;;;;;; DAILIES GRAPHICS LINK
+
+  (defun marty/org-roam-dailies-graphicslink ()
+    " Set the Graphics Link to Today in the Pictures folder that maid pushes to."
+    (interactive)
+    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+           (month (string-to-number (substring (buffer-name) 5 7)))
+           (day   (string-to-number (substring (buffer-name) 8 10)))
+           (datim (encode-time 0 0 0 day month year)))
+      (format-time-string "[[/home/marty/Nextcloud/Pictures/2020 - 2029/%Y/%0m/Daily/%d][Graphics Link]]" datim)))
+
+;;;;;; DAILIES TITLE
+
+  (defun marty/org-roam-dailies-title ()
+    (interactive)
+    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+           (month (string-to-number (substring (buffer-name) 5 7)))
+           (day   (string-to-number (substring (buffer-name) 8 10)))
+           (datim (encode-time 0 0 0 day month year)))
+      (format-time-string "%A, %B %d %Y" datim)))
+
+;;;;;; DAILIES TODO SCHEDULE
+
+  (defun marty/org-roam-dailies-todo-schedule ()
+    " Set the Date for the todo's in the dailies template "
+    (interactive)
+    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+           (month (string-to-number (substring (buffer-name) 5 7)))
+           (day   (string-to-number (substring (buffer-name) 8 10)))
+           (datim (encode-time 0 0 0 day month year)))
+      (format-time-string "SCHEDULED: [%Y-%m-%d %a 10:00]" datim)))
+
+;;;;;; DAILIES TODO DEADLINE
+
+  (defun marty/org-roam-dailies-todo-deadline ()
+    " Set the Date for the todo's in the dailies template "
+    (interactive)
+    (let* ((year  (string-to-number (substring (buffer-name) 0 4)))
+           (month (string-to-number (substring (buffer-name) 5 7)))
+           (day   (string-to-number (substring (buffer-name) 8 10)))
+           (datim (encode-time 0 0 0 day month year)))
+      (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim))))
+
+(after! org-roam
+
+;;;;;; SYSTEMCRAFTERS INSERT IMMEDIATE
+  ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
+
+  (defun org-roam-node-insert-immediate (arg &rest args)
+    (interactive "P")
+    (let ((args (cons arg args))
+          (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                    '(:immediate-finish t)))))
+      (apply #'org-roam-node-insert args)))
+
+  ;;   (defun my/org-roam-filter-by-tag (tag-name)
+  ;;     (lambda (node)
+  ;;       (member tag-name (org-roam-node-tags node))))
+
+  ;;   (defun my/org-roam-list-notes-by-tag (tag-name)
+  ;;     (mapcar #'org-roam-node-file
+  ;;             (seq-filter
+  ;;              (my/org-roam-filter-by-tag tag-name)
+  ;;              (org-roam-node-list))))
+
+  ;;   (defun dw/org-roam-goto-month ()
+  ;;     (interactive)
+  ;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y-%B")) '(4))
+  ;;                        :node (org-roam-node-create)
+  ;;                        :templates '(("m" "month" plain "\n* Goals\n\n%?* Summary\n\n"
+  ;;                                      :if-new (file+head "%<%Y-%B>.org"
+  ;;                                                         "#+title: %<%Y-%B>\n#+filetags: Project\n")
+  ;;                                      :unnarrowed t))))
+
+  ;;   (defun dw/org-roam-goto-year ()
+  ;;     (interactive)
+  ;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y")) '(4))
+  ;;                        :node (org-roam-node-create)
+  ;;                        :templates '(("y" "year" plain "\n* Goals\n\n%?* Summary\n\n"
+  ;;                                      :if-new (file+head "%<%Y>.org"
+  ;;                                                         "#+title: %<%Y>\n#+filetags: Project\n")
+  ;;                                      :unnarrowed t))))
+
+  ;;   (defun my/org-roam-refresh-agenda-list ()
+  ;;     (interactive)
+  ;;     (setq org-agenda-files (my/org-roam-list-notes-by-tag "todo")))
+
+
+  ;; ;;;;;; CAPTURE INBOX
+  ;;   (defun marty/org-roam-capture-inbox ()
+  ;;     (interactive)
+  ;;     (org-roam-capture- :node (org-roam-node-create)
+  ;;                        :templates '(("i" "Inbox" plain "** %?"
+  ;;                                      :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
+
+)
+
+(after! org-roam
+
+;;;;;; MOVE TO TODAY
+
+  ;; Move Todo's to dailies when done
+  (defun marty/org-roam-move-todo-to-today ()
+    (interactive)
+    (let ((org-refile-keep nil) ;; Set this to t to copy the original!
+          (org-roam-dailies-capture-templates
+           '(("t" "tasks" entry "%?"
+              :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks")))))
+          (org-after-refile-insert-hook #'save-buffer)
+          today-file
+          pos)
+      (save-window-excursion
+        (org-roam-dailies--capture (current-time) t)
+        (setq today-file (buffer-file-name))
+        (setq pos (point)))
+
+      ;; Only refile if the target file is different than the current file
+      (unless (equal (file-truename today-file)
+                     (file-truename (buffer-file-name)))
+        (org-refile nil nil (list "Tasks" today-file nil pos))))))
+
+(after! org-roam
+
+;;;;;; ROAM-RG-SEARCH
+
+  ;; Snagged from Roam discourse
+  ;; https://org-roam.discourse.group/t/using-consult-ripgrep-with-org-roam-for-searching-notes/1226
+  (defun marty/org-roam-rg-search ()
+    "Search org-roam directory using consult-ripgrep. With live-preview."
+    (interactive)
+    (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
+      (consult-ripgrep org-roam-directory))))
+
+;;;;; ORG-ROAM CAPTURE TEMPLATES
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "* %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1 )
+          ("t" "Tasks" entry "** TODO %? "
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+           :empty-lines-after 1 )
+          ("r" "Rackspace" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+           :empty-lines-after 1)
+          ("j" "Journal" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal") )
+           :empty-lines-after 1)))
+
+
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
+           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
+           :immediate-finish t
+           :unnarrowed t)
+          ("t" "tipjar" plain
+           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
+           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
+           :unnarrowed t)
+          ("p" "People" plain
+           (file "~/.config/doom/templates/roam-templates/people-entry.org")
+           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
+           :unnarrowed t))))
+;;;; DOCT
+(use-package! doct
+  :defer t
+  :after org
+  :commands (doct))
 
 ;;;; CAPTURE TEMPLATES Using DOCT
-(after! org-capture
+
+(after! org
   (setq org-capture-templates
         (doct `(("Task" :keys "t"
                  :icon ("tag" :set "octicon" :color "cyan")
@@ -1243,22 +837,11 @@ is selected, only the bare key is returned."
 
   (setq org-protocol-default-template-key "t"))
 
-#+end_src
-
-*** Org-misc
-**** Mutt
-#+begin_src emacs-lisp
-
-;;;;; MAIL/MUTT
+;;;; MAIL/MUTT
 (after! org
   (org-add-link-type "message" 'mutt-open-message))
 
-#+end_src
-
-**** TSFiles
-#+begin_src emacs-lisp
-
-;;;;; TSFILE LINKS
+;;;; TSFILE LINKS
 
 (after! org
   (defvar memacs-root "~/Nextcloud/Notes/memacs/")
@@ -1303,176 +886,3 @@ is selected, only the bare key is returned."
     (dired-copy-filename-as-kill)       ;; current file name to kill ring
     (let* ((filename (current-kill 0))) ;; get topmost kill ring element
       (kill-new (concat "[[tsfile:" filename "]]")))))
-
-#+end_src
-
-
-** Modules
-*** I3
-#+begin_src emacs-lisp
-
-;;;; I3 WINDOW MANAGER CONFIG
-;; Syntax highlighting for i3 config
-(use-package! i3wm-config-mode
-      :defer t )
-#+end_src
-*** Jenkins
-#+begin_src emacs-lisp
-
-
-;;;; JENKINS
-
-(use-package! jenkinsfile-mode
-	      :defer t )
-#+end_src
-*** Khard
-#+begin_src emacs-lisp
-
-;;;; KHARD
-
-(use-package! khardel
-  :defer t )
-
-#+end_src
-
-*** Nginx mode
-#+begin_src emacs-lisp
-
-
-;;;; NGINX
-
-(use-package! company-nginx
-  :after nginx-mode
-  :config (add-hook 'nginx-mode-hook (lambda () (add-to-list 'company-backends #'company-nginx))))
-
-(use-package! nginx-mode
-  :defer t)
-#+end_src
-*** Mutt Mode
-#+begin_src emacs-lisp
-
-
-;;;; MUTT-MODE
-
-(use-package! mutt-mode
-  :defer t)
-
-#+end_src
-*** Outshine
-#+begin_src emacs-lisp
-
-
-;;;; OUTSHINE
-
-(use-package! outshine
-  :defer t
-  :hook (emacs-lisp-mode . outshine-mode)
-  :config
-  (map! :after outshine
-        :map emacs-lisp-mode-map
-        "TAB" #'outshine-cycle)
-  (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
-  (defvar outline-minor-mode-prefix "\M-#"))
-
-#+end_src
-*** Paperless
-#+begin_src emacs-lisp
-
-
-;;;; PAPERLESS
-
-(use-package! paperless
-  :defer t
-  :init (require 'org-paperless)
-  :config (progn
-            (custom-set-variables
-             '(paperless-capture-directory "~/nextcloud/documents/inbox/")
-             '(paperless-root-directory "~/nextcloud/documents"))))
-
-(after! paperless
-  (map! :leader
-        :prefix "a"
-        "x"  #'paperless)
-  (map! :after paperless
-        :localleader
-        :mode paperless-mode
-        "d"  #'paperless-display
-        "r"  #'paperless-rename
-        "r"  #'paperless-scan-directories
-        "f"  #'paperless-file
-        "x"  #'paperless-execute))
-#+end_src
-
-*** Rainbow Mode
-#+begin_src emacs-lisp
-
-;;;; RAINBOW MODE
-
-(use-package rainbow-mode
-  :defer t
-  :hook (((css-mode scss-mode org-mode emacs-lisp-mode typescript-mode js-mode). rainbow-mode)))
-#+end_src
-*** Salt Mode
-#+begin_src emacs-lisp
-;;;; SALT MODE
-
-(use-package! salt-mode
-  :defer t)
-#+end_src
-*** Systemd Mode
-#+begin_src emacs-lisp
-
-;;;; SYSTEMD MODE
-
-(use-package! systemd
-  :defer t)
-
-(map! :map systemd-mode
-      :localleader
-      :prefix ("h" . "help")
-      "d" #'systemd-doc-directives
-      "o" #'systemd-doc-open)
-#+end_src
-
-*** VLF
-#+begin_src emacs-lisp
-
-;;;; VLF
-
-(use-package! vlf-setup
-  :defer-incrementally  vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
-#+end_src
-
-*** Wakatime
-#+begin_src emacs-lisp
-
-;;;; WAKATIME
-
-(defun marty/startwakatime ()
-  (interactive)
-  (setq wakatime-api-key (auth-source-pass-get 'secret "Application/wakatime/apikey"))
-  (global-wakatime-mode))
-
-(use-package! wakatime-mode
-  :defer t
-  :config
-  (add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
-  (setq wakatime-cli-path "/usr/bin/wakatime"))
-#+end_src
-
-** Requires
-#+begin_src emacs-lisp
-
-(require! 'functions)
-(require! 'keybindings)
-#+end_src
-
-** CUSTOM
-#+begin_src emacs-lisp
-
-;;; CUSTOM
-
-(setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
-(when (file-exists-p custom-file)
-  (load custom-file))
-#+end_src

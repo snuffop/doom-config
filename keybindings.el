@@ -16,7 +16,7 @@
 
 (map!
  ;;:n "C-:"    #'+spell/correct
- :n "C-;"    #'embark-act
+ :n "C-."    #'embark-act
  :n "C-,"    #'+spell/next-error)
 
 ;;;; LEADER KEYBINDINGS
@@ -74,6 +74,7 @@
         "c"  #'tramp-cleanup-this-connection
         "t"  #'counsel-tramp
         "q"  #'counsel-tramp-quit))
+
 ;;;;; <leader> l --- workspace / Layout
       (:when (featurep! :ui workspaces)
        (:prefix-map ("l" . "workspace")
@@ -143,17 +144,18 @@
 (map! :after org
       :map org-mode-map
       :localleader
-      :prefix "m"
-      "a"  #'marty/org-roam-move-todo-to-today
-      "b"  #'marty/org-roam-capture-inbox
-      "i"  #'org-roam-node-insert-immediate
-      "j"  #'org-roam-dailies-capture-today
-      "p"  #'marty/org-roam-find-project
-      "s"  #'org-roam-db-sync
-      "S"  #'marty/org-roam-rg-search
-      :prefix "md"
-      "p"  #'org-roam-dailies-goto-previous-note
-      "n"  #'org-roam-dailies-goto-next-note
+      "m"  #'hydra-roam-jump/body
+      ;; :prefix "m"
+      ;; "a"  #'marty/org-roam-move-todo-to-today
+      ;; "b"  #'marty/org-roam-capture-inbox
+      ;; "i"  #'org-roam-node-insert-immediate
+      ;; "j"  #'org-roam-dailies-capture-today
+      ;; "p"  #'marty/org-roam-find-project
+      ;; "s"  #'org-roam-db-sync
+      ;; "S"  #'marty/org-roam-rg-search
+      ;; :prefix "md"
+      ;; "p"  #'org-roam-dailies-goto-previous-note
+      ;; "n"  #'org-roam-dailies-goto-next-note
       )
 
 ;;;; DIRED KEYBINDINGS
@@ -200,8 +202,5 @@
   (kbd "k") 'peep-dired-prev-file)
 
 
-;;; PROVIDE
-(provide 'keybindings)
-
-;;;; END
+;;; END
 :

@@ -16,6 +16,7 @@
 (package! jenkinsfile-mode)
 (package! khalel)
 (package! khardel)
+(package! major-mode-hydra)
 (package! mu4e-column-faces)
 (package! mu4e-marker-icons)
 (package! mutt-mode)
