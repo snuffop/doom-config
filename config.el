@@ -325,6 +325,7 @@
 (load! "org-mode.el")
 (load! "keybindings.el")
 (load! "mu4e.el")
+(load! "hydra.el")
 ;;; CUSTOM
 
 (setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
