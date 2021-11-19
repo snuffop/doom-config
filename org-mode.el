@@ -20,8 +20,8 @@
                                (concat org-directory "contacts.org")
                                (concat org-directory "Someday.org")
                                (concat org-directory "0mobile.org")))
-;;;; Org-Mode
-;;;;; Package
+;;;; ORG-MODE
+;;;;; PACKAGE
 (after! org
 
 ;;;;; PUBLISH ALIST
@@ -182,75 +182,85 @@
   (setq prettify-symbols-unprettify-at-point 'right-edge)
 
 
-;;;;; org-mode-hook
+;;;;; ORG-MODE-HOOK
 
-  (add-hook 'org-mode-hook (lambda ()
-                             "Beautify Org Checkbox Symbol"
-                             (push '("#+ACTIVE:"            . ""  ) prettify-symbols-alist)
-                             (push '("#+BEGIN_EXAMPLE"      . "↦"  ) prettify-symbols-alist)
-                             (push '("#+BEGIN_HIDDEN"       . ""  ) prettify-symbols-alist)
-                             (push '("#+BEGIN_QUOTE"        . "↦"  ) prettify-symbols-alist)
-                             (push '("#+BEGIN_SRC"          . "↦"  ) prettify-symbols-alist)
-                             (push '("#+CATEGORY:"          . "⛏ "  ) prettify-symbols-alist)
-                             (push '("#+CLOSE_SPOILER"      . ""  ) prettify-symbols-alist)
-                             (push '("#+END_EXAMPLE"        . "⇤"  ) prettify-symbols-alist)
-                             (push '("#+END_HIDDEN"         . ""  ) prettify-symbols-alist)
-                             (push '("#+END_QUOTE"          . "⇤"  ) prettify-symbols-alist)
-                             (push '("#+END_SRC"            . "⇤"  ) prettify-symbols-alist)
-                             (push '("#+FILETAGS:"          . ""  ) prettify-symbols-alist)
-                             (push '("#+ID:"                . ""  ) prettify-symbols-alist)
-                             (push '("#+STARTUP:"           . "🌟"  ) prettify-symbols-alist)
-                             (push '("#+START_SPOILER"      . ""  ) prettify-symbols-alist)
-                             (push '("#+TITLE:"             . ""  ) prettify-symbols-alist)
-                             (push '("#+begin_example"      . "↦"  ) prettify-symbols-alist)
-                             (push '("#+begin_quote"        . "❝"  ) prettify-symbols-alist)
-                             (push '("#+begin_src"          . "↦"  ) prettify-symbols-alist)
-                             (push '("#+category:"          . "⛏ "  ) prettify-symbols-alist)
-                             (push '("#+end_example"        . "⇤"  ) prettify-symbols-alist)
-                             (push '("#+end_quote"          . "❞"  ) prettify-symbols-alist)
-                             (push '("#+end_src"            . "⇤"  ) prettify-symbols-alist)
-                             (push '("#+filetags:"          . ""  ) prettify-symbols-alist)
-                             (push '("#+startup:"           . "⏻"  ) prettify-symbols-alist)
-                             (push '("#+title:"             . ""  ) prettify-symbols-alist)
-                             (push '("---"                  . "—"  ) prettify-symbols-alist)
-                             (push '("->"                   . "→"  ) prettify-symbols-alist)
-                             (push '("..."                  . "…"  ) prettify-symbols-alist)
-                             (push '("::"                   . "∷"  ) prettify-symbols-alist)
-                             (push '(":CREATION_TIME:"      . ""  ) prettify-symbols-alist)
-                             (push '(":ID:"                 . ""  ) prettify-symbols-alist)
-                             (push '(":LAT-LONG:"           . ""  ) prettify-symbols-alist)
-                             (push '(":MAIL:"               . ""  ) prettify-symbols-alist)
-                             (push '(":attr_html"           . "🄗"  ) prettify-symbols-alist)
-                             (push '(":attr_latex"          . "🄛"  ) prettify-symbols-alist)
-                             (push '(":attr_org"            . "⒪"  ) prettify-symbols-alist)
-                             (push '(":author"              . "𝘼"  ) prettify-symbols-alist)
-                             (push '(":beamer_header"       . "🅑"  ) prettify-symbols-alist)
-                             (push '(":begin_export"        . "⏩"  ) prettify-symbols-alist)
-                             (push '(":caption"             . "☰"  ) prettify-symbols-alist)
-                             (push '(":date"                . "𝘿"  ) prettify-symbols-alist)
-                             (push '(":end"                 . "∎" ) prettify-symbols-alist)
-                             (push '(":end_export"          . "⏪"  ) prettify-symbols-alist)
-                             (push '(":header"              . "›"  ) prettify-symbols-alist)
-                             (push '(":html"                . "🅗"  ) prettify-symbols-alist)
-                             (push '(":html_head"           . "🅷" ) prettify-symbols-alist)
-                             (push '(":latex"               . "🅛" ) prettify-symbols-alist)
-                             (push '(":latex_class"         . "🄻" ) prettify-symbols-alist)
-                             (push '(":latex_header"        . "🅻" ) prettify-symbols-alist)
-                             (push '(":macro"               . "𝓜" ) prettify-symbols-alist)
-                             (push '(":options"             . "⌥" ) prettify-symbols-alist)
-                             (push '(":results"             . "🠶" ) prettify-symbols-alist)
-                             (push '("<-"                   . "←" ) prettify-symbols-alist)
-                             (push '("[ ]"                  . "☐"  ) prettify-symbols-alist)
-                             (push '("[#A]"                 . "⚑"  ) prettify-symbols-alist)
-                             (push '("[#B]"                 . "⬆"  ) prettify-symbols-alist)
-                             (push '("[#C]"                 . "■"  ) prettify-symbols-alist)
-                             (push '("[#D]"                 . "⬇"  ) prettify-symbols-alist)
-                             (push '("[#E]"                 . "❓"  ) prettify-symbols-alist)
-                             (push '("[-]"                  . "◼" ) prettify-symbols-alist)
-                             (push '("[X]"                  . "☑" ) prettify-symbols-alist)
-                             (push '("lambda"               . "λ"  ) prettify-symbols-alist)
-                             (push '("subtitle"             . "𝙩" ) prettify-symbols-alist)
-                             (prettify-symbols-mode)))
+  (defun +org*setup-org-mode-hook ()
+    "Setup Org mode buffers."
+
+    (push '("#+ACTIVE:"            . ""  ) prettify-symbols-alist)
+    (push '("#+BEGIN_EXAMPLE"      . "↦"  ) prettify-symbols-alist)
+    (push '("#+BEGIN_HIDDEN"       . ""  ) prettify-symbols-alist)
+    (push '("#+BEGIN_QUOTE"        . "↦"  ) prettify-symbols-alist)
+    (push '("#+BEGIN_SRC"          . "↦"  ) prettify-symbols-alist)
+    (push '("#+CATEGORY:"          . "⛏ "  ) prettify-symbols-alist)
+    (push '("#+CLOSE_SPOILER"      . ""  ) prettify-symbols-alist)
+    (push '("#+END_EXAMPLE"        . "⇤"  ) prettify-symbols-alist)
+    (push '("#+END_HIDDEN"         . ""  ) prettify-symbols-alist)
+    (push '("#+END_QUOTE"          . "⇤"  ) prettify-symbols-alist)
+    (push '("#+END_SRC"            . "⇤"  ) prettify-symbols-alist)
+    (push '("#+FILETAGS:"          . ""  ) prettify-symbols-alist)
+    (push '("#+ID:"                . ""  ) prettify-symbols-alist)
+    (push '("#+STARTUP:"           . "🌟"  ) prettify-symbols-alist)
+    (push '("#+START_SPOILER"      . ""  ) prettify-symbols-alist)
+    (push '("#+TITLE:"             . ""  ) prettify-symbols-alist)
+    (push '("#+begin_example"      . "↦"  ) prettify-symbols-alist)
+    (push '("#+begin_quote"        . "❝"  ) prettify-symbols-alist)
+    (push '("#+begin_src"          . "↦"  ) prettify-symbols-alist)
+    (push '("#+category:"          . "⛏ "  ) prettify-symbols-alist)
+    (push '("#+end_example"        . "⇤"  ) prettify-symbols-alist)
+    (push '("#+end_quote"          . "❞"  ) prettify-symbols-alist)
+    (push '("#+end_src"            . "⇤"  ) prettify-symbols-alist)
+    (push '("#+filetags:"          . ""  ) prettify-symbols-alist)
+    (push '("#+startup:"           . "⏻"  ) prettify-symbols-alist)
+    (push '("#+title:"             . ""  ) prettify-symbols-alist)
+    (push '("---"                  . "—"  ) prettify-symbols-alist)
+    (push '("->"                   . "→"  ) prettify-symbols-alist)
+    (push '("..."                  . "…"  ) prettify-symbols-alist)
+    (push '("::"                   . "∷"  ) prettify-symbols-alist)
+    (push '(":CREATION_TIME:"      . ""  ) prettify-symbols-alist)
+    (push '(":ID:"                 . ""  ) prettify-symbols-alist)
+    (push '(":LAT-LONG:"           . ""  ) prettify-symbols-alist)
+    (push '(":MAIL:"               . ""  ) prettify-symbols-alist)
+    (push '(":attr_html"           . "🄗"  ) prettify-symbols-alist)
+    (push '(":attr_latex"          . "🄛"  ) prettify-symbols-alist)
+    (push '(":attr_org"            . "⒪"  ) prettify-symbols-alist)
+    (push '(":author"              . "𝘼"  ) prettify-symbols-alist)
+    (push '(":beamer_header"       . "🅑"  ) prettify-symbols-alist)
+    (push '(":begin_export"        . "⏩"  ) prettify-symbols-alist)
+    (push '(":caption"             . "☰"  ) prettify-symbols-alist)
+    (push '(":date"                . "𝘿"  ) prettify-symbols-alist)
+    (push '(":end"                 . "∎" ) prettify-symbols-alist)
+    (push '(":end_export"          . "⏪"  ) prettify-symbols-alist)
+    (push '(":header"              . "›"  ) prettify-symbols-alist)
+    (push '(":html"                . "🅗"  ) prettify-symbols-alist)
+    (push '(":html_head"           . "🅷" ) prettify-symbols-alist)
+    (push '(":latex"               . "🅛" ) prettify-symbols-alist)
+    (push '(":latex_class"         . "🄻" ) prettify-symbols-alist)
+    (push '(":latex_header"        . "🅻" ) prettify-symbols-alist)
+    (push '(":macro"               . "𝓜" ) prettify-symbols-alist)
+    (push '(":options"             . "⌥" ) prettify-symbols-alist)
+    (push '(":results"             . "🠶" ) prettify-symbols-alist)
+    (push '("<-"                   . "←" ) prettify-symbols-alist)
+    (push '("[ ]"                  . "☐"  ) prettify-symbols-alist)
+    (push '("[#A]"                 . "⚑"  ) prettify-symbols-alist)
+    (push '("[#B]"                 . "⬆"  ) prettify-symbols-alist)
+    (push '("[#C]"                 . "■"  ) prettify-symbols-alist)
+    (push '("[#D]"                 . "⬇"  ) prettify-symbols-alist)
+    (push '("[#E]"                 . "❓"  ) prettify-symbols-alist)
+    (push '("[-]"                  . "◼" ) prettify-symbols-alist)
+    (push '("[X]"                  . "☑" ) prettify-symbols-alist)
+    (push '("lambda"               . "λ"  ) prettify-symbols-alist)
+    (push '("subtitle"             . "𝙩" ) prettify-symbols-alist)
+    (prettify-symbols-mode)
+    (auto-fill-mode -1)
+    (display-line-numbers-mode -1)
+    (hl-line-mode -1)
+    (auto-revert-mode 1)
+    (visual-line-mode)
+    (variable-pitch-mode 1)
+    )
+
+  (add-hook! org-mode-hook #'+org*setup-org-mode-hook)
 
 ;;;;; TAG LIST
   (setq org-tag-alist (quote
@@ -450,19 +460,19 @@
       (kill-new (concat "[[tsfile:" filename "]]"))))
 ;;;;; FUNCTIONS
 ;;;;;; LONG-LAT
-;;                      (requires curl to be installed on system)
+  ;;                      (requires curl to be installed on system)
 
-(setq calendar-latitude 0)
-(setq calendar-longitude 0)
+  (setq calendar-latitude 0)
+  (setq calendar-longitude 0)
 
-(defun marty/get-lat-long-from-ipinfo ()
-  (let*
-      ((latlong (substring
-                 (shell-command-to-string "curl -s 'https://ipinfo.io/loc'")
-                 0 -1))
-       (latlong-list (split-string latlong ",")))
-    (setq calendar-latitude (string-to-number (car latlong-list)))
-    (setq calendar-longitude (string-to-number (cadr latlong-list)))))
+  (defun marty/get-lat-long-from-ipinfo ()
+    (let*
+        ((latlong (substring
+                   (shell-command-to-string "curl -s 'https://ipinfo.io/loc'")
+                   0 -1))
+         (latlong-list (split-string latlong ",")))
+      (setq calendar-latitude (string-to-number (car latlong-list)))
+      (setq calendar-longitude (string-to-number (cadr latlong-list)))))
 
 ;;;;;; FORMAT ORG-BLOCK
   (defun format-org-mode-block ()
@@ -476,7 +486,7 @@
     (org-edit-src-exit))
 
 ;;;;;; PRETTIFY FUNCTIONS FROM TECOSAUR
-;; for pretty capture interfaces..
+  ;; for pretty capture interfaces..
   (defun org-capture-select-template-prettier (&optional keys)
     "Select a capture template, in a prettier way than default
 Lisp programs can force the template by setting KEYS to a string."
@@ -621,6 +631,41 @@ is selected, only the bare key is returned."
   (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
 
 
+
+;;;;; REFILE
+
+  (setq +org:level-1-refile-targets
+        (+org/expand-org-file-name
+         '("0mobile.org"
+           "Bookmark.org"
+           "desktop.org"
+           "Media.org"
+           "Someday.org"
+           "Tasks.org"
+           "Rackspace.org"
+           "joyent.org")))
+
+  (setq +org:max-level-2-refile-targets
+        (+org/expand-org-file-name
+         '("read-later.org"
+           "red team.org"
+           "linode.org")))
+
+  (setq max-level-3-refile-targets
+        (+org/expand-org-file-name
+         '("TipJar/Emacs/emacs.org")))
+
+  (defun +org:level-1-refile-targets () +org:level-1-refile-targets)
+  (defun +org:max-level-2-refile-targets () +org:max-level-2-refile-targets)
+  (defun max-level-3-refile-targets () max-level-3-refile-targets)
+
+  (after! org
+    :config
+    (setq org-refile-targets (quote ((nil :maxlevel . 5)
+                                     (+org:max-level-2-refile-targets :maxlevel . 2)
+                                     (max-level-3-refile-targets :maxlevel . 3)
+                                     (+org:level-1-refile-targets :level . 1))))
+    (setq org-agenda-refile org-agenda-files))
 
 ;;;;; END (progn org)
   )
@@ -830,3 +875,47 @@ is selected, only the bare key is returned."
 
 (use-package! org-roam-ui
   :after org-roam)
+
+
+;;; ORG-AUTOLOAD
+;;;; Expand org file name
+;;;###autoload
+(defun +org/expand-org-file-name (x)
+  "Expand file name X with org-directory."
+  (if (eq (type-of x) 'cons)
+      (-map #'+org/expand-org-file-name x)
+    (expand-file-name x org-directory)))
+
+;;;; Find in files
+;;;###autoload
+(defun +org/find-in-files (file)
+  "Find file in org directory."
+  (->> (+org/expand-org-file-name file)
+       (find-file)))
+
+;;;; Set Agenda command or replace on reload
+;;;###autoload
+(defun +org/add-to-agenda-custom-commands (x)
+  "Add or replace X in the org-agenda-custom-commands list."
+  (if-let ((key (car x))
+           (index (--find-index (string= key (car it)) org-agenda-custom-commands)))
+      (->> (-replace-at index x org-agenda-custom-commands)
+           (setq org-agenda-custom-commands))
+    (add-to-list 'org-agenda-custom-commands x)));;;
+
+;;;; Timestamp
+(defun +org/active-timestamp (&optional str)
+  (let* ((str (or str ""))
+         (default-time (org-current-time))
+         (decoded-time (decode-time default-time nil))
+         (analyzed-time (org-read-date-analyze str default-time decoded-time))
+         (encoded-time (apply #'encode-time analyzed-time)))
+    (format-time-string (org-time-stamp-format t) encoded-time)))
+
+(defun +org/inactive-timestamp (&optional str)
+  (let* ((str (or str ""))
+         (default-time (org-current-time))
+         (decoded-time (decode-time default-time nil))
+         (analyzed-time (org-read-date-analyze str default-time decoded-time))
+         (encoded-time (apply #'encode-time analyzed-time)))
+    (format-time-string (org-time-stamp-format t t) encoded-time)))

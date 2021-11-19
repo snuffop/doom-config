@@ -127,11 +127,22 @@
                               ("png" . "sxiv")
                               ("mkv" . "mpv")
                               ("mp4" . "mpv")))
-
 ;;;;; COMPANY
 
 (after! company
-  (setq company-idle-delay 0.5))
+  (setq company-idle-delay 0.5)
+  (setq company-backends
+        '(company-capf company-dabbrev company-files company-yasnippet)
+        company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)))
+
+(use-package! company-box
+  :after company
+  :config
+  (setq company-box-max-candidates 5))
+
+(use-package! company-prescient
+  :after company
+  :hook (company-mode . company-prescient-mode))
 
 ;;;;; MAGIT
 

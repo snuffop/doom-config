@@ -14,6 +14,14 @@
 (define-key! help-map
   "h"    #'helpful-at-point)
 
+(after! evil
+  (map! :m  "-"  #'dired-jump
+        :en "C-h"   #'evil-window-left
+        :en "C-j"   #'evil-window-down
+        :en "C-k"   #'evil-window-up
+        :en "C-l"   #'evil-window-right))
+
+
 (map!
  :n "C-:"    #'+spell/correct
  :n "C-."    #'embark-act
