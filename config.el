@@ -4,15 +4,15 @@
 ;; copyright © 2021, marty buchaus, all rights reserved.
 ;; created:  1 November 2021
 ;;
+;;;; Notes
+;;
+;;  2021 11 18 Update clean Install and config
+;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Code
-;;;; Notes
-
-;;  2021 11 18 Update clean Install and config
-;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
-
-;;;; Global
+;;;; GLOBAL
 
 (setq user-full-name "Marty Buchaus")
 (setq user-mail-address "marty@dabuke.com")
@@ -43,9 +43,10 @@
 (global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly Essie
 
 (after! projectile
+  (setq projectile-indexing-method 'alien)
   (setq projectile-project-search-path '("~/Source")))
-;; this doesn't seem to work to fix the doom doctor issue
-;; (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
+  ;; (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
+
 
 (set-window-buffer nil (current-buffer))
 (setenv "zstd" "/usr/bin/zstd")
@@ -60,7 +61,7 @@
 ;;;;; SET FONTS
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
       doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
-      doom-unicode-font (font-spec :family "symbola" :size 14)
+      doom-unicode-font (font-spec :family "symbola" :size 15)
       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
 
 ;;;;; FACES
@@ -113,52 +114,7 @@
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-;;;; Packages
-;;;;; SPELLING
-
-(use-package! flyspell
-  :defer t
-  :config
-  ;; (setq ispell-program-name "aspell")
-  ;; You could add extra option "--camel-case" for since Aspell 0.60.8
-  ;; @see https://github.com/redguardtoo/emacs.d/issues/796
-  ;; (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
-  (setq-default flyspell-prog-text-faces
-                '(tree-sitter-hl-face:comment
-                  tree-sitter-hl-face:doc
-                  tree-sitter-hl-face:string
-                  tree-sitter-hl-face:function
-                  tree-sitter-hl-face:variable
-                  tree-sitter-hl-face:type
-                  tree-sitter-hl-face:method
-                  tree-sitter-hl-face:function.method
-                  tree-sitter-hl-face:function.special
-                  tree-sitter-hl-face:attribute
-                  font-lock-comment-face
-                  font-lock-doc-face
-                  font-lock-string-face
-                  lsp-face-highlight-textual
-                  default))
-
-
-  (setq flyspell-lazy-idle-seconds 2)
-  (setq ispell-personal-dictionary "~/.config/doom/dictionary/ispell_personal" )
-  (setq spell-fu-directory "~/.config/doom/dictionary") ;; Please create this directory manually.
-  (after! ispell
-    (setq ispell-program-name "aspell"
-          ;; Notice the lack of "--run-together"
-          ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--run-together" "--run-together-limit=16"))
-    (ispell-kill-ispell t))
-
-  (defun flyspell-buffer-after-pdict-save (&rest _)
-    (flyspell-buffer))
-
-  (advice-add 'ispell-pdict-save :after #'flyspell-buffer-after-pdict-save))
-
-
-(add-hook 'text-mode-hook 'flyspell-mode!)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-
+;;;; PACKAGES
 ;;;;; DIRED
 
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
@@ -174,40 +130,69 @@
 
 ;;;;; COMPANY
 
-(setq company-idle-delay 0.5)
+(after! company
+  (setq company-idle-delay 0.5))
 
-;;;;; DASHBOARD
-
-(use-package! dashboard
-  :init      ;; tweak dashboard config before loading it
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-banner-logo-title "emacs is more than a text editor!")
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-startup-banner "~/.config/doom/banners/doom-emacs-slant-out-bw.png")  ;; use custom image as banner
-  (setq dashboard-center-content t) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
-                          (agenda . 5 )
-                          (bookmarks . 5)
-                          (projects . 5)
-                          (registers . 5)))
-  :config
-  (dashboard-setup-startup-hook)
-  (dashboard-modify-heading-icons '((recents . "file-text")
-				    (bookmarks . "book"))))
 ;;;;; MAGIT
-(use-package! magit
-  :config
-  (define-key transient-map        "q" 'transient-quit-one)
-  (define-key transient-edit-map   "q" 'transient-quit-one)
-  (define-key transient-sticky-map "q" 'transient-quit-seq)
+
+(after! magit
+  (setq magit-commit-arguments '("--gpg-sign=7ACF5A8C6A106D1F561F1699E72D93984A1E2483")
+        magit-rebase-arguments '("--autostash" "--gpg-sign=7ACF5A8C6A106D1F561F1699E72D93984A1E2483")
+        magit-pull-arguments   '("--rebase" "--autostash" "--gpg-sign=7ACF5A8C6A106D1F561F1699E72D93984A1E2483"))
+  (magit-define-popup-option 'magit-rebase-popup
+    ?S "Sign using gpg" "--gpg-sign=" #'magit-read-gpg-secret-key)
   (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
 
+;;;;; FILE-TEMPLATE
+
+
 ;;;; MODULES
+
+(defun marty/autoinsert-yas-expand ()
+  (let ((template ( buffer-string )))
+    (delete-region (point-min) (point-max))
+    (yas-expand-snippet template)
+    (evil-insert-state)))
+
+(use-package! autoinsert
+  :init
+  (setq auto-insert-query nil)
+  (setq auto-insert-directory "~/.config/doom/templates")
+  (add-hook 'find-file-hook 'auto-insert)
+  (auto-insert-mode 1)
+  :config
+  (define-auto-insert "\\.html?$" "default.html")
+  (define-auto-insert "\\.org" ["default.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "\\.sh" ["default.sh" marty/autoinsert-yas-expand])
+  (define-auto-insert "\\.el" ["default.el" marty/autoinsert-yas-expand])
+  (define-auto-insert "Roam/.+\\.org?$" ["defaultRoam.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "Blorg/snuffy-org/.+\\.org?$" ["snuffy-org.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "Sites/snuffy.org/.+\\.org?$" ["snuffy-org-posts.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "salt-master.+\\.org?$" ["salt-master.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/.+/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/tipjar/[^/]+\\.org?$" ["NSI-Documentation-tipjar.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/TVA/[^/]+\\.org?$" ["NSI-Documentation-TVA.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/TVA/ScanReports/.+[^/]+\\.org?$" ["NSI-Documentation-TVA-scanreport.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/Patching/.+[^/]+\\.org?$" ["NSI-Documentation-Patching-Notes.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "masons/[^/].+\\.org?$" ["masonsMeetingMinuets.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand]))
+
+;;;;; ACTIVITY WATCH MODE
+
+(defun marty/startactivitywatchmode ()
+  (interactive)
+  (global-activity-watch-mode))
+
+(use-package! activity-watch-mode
+  :defer t
+  :config
+  (add-hook 'doom-first-buffer-hook #'marty/startactivitywatchmode))
+
 ;;;;; AGGRESSIVE INDENT
 
 (use-package! aggressive-indent
-  :defer t
   :config
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'clojure-mode-hook    #'aggressive-indent-mode)
@@ -222,7 +207,7 @@
 ;;;;; JENKINS
 
 (use-package! jenkinsfile-mode
-	      :defer t )
+:defer t )
 
 ;;;;; KHARD
 
@@ -258,17 +243,11 @@
 ;;;;; PAPERLESS
 
 (use-package! paperless
-  :defer t
-  :init (require 'org-paperless)
+  :commands (paperless)
   :config (progn
             (custom-set-variables
-             '(paperless-capture-directory "~/nextcloud/documents/inbox/")
-             '(paperless-root-directory "~/nextcloud/documents"))))
-
-(after! paperless
-  (map! :leader
-        :prefix "a"
-        "x"  #'paperless)
+             '(paperless-capture-directory "~/Nextcloud/Documents/INBOX")
+             '(paperless-root-directory "~/Nextcloud/Documents")))
   (map! :after paperless
         :localleader
         :mode paperless-mode
@@ -280,8 +259,7 @@
 
 ;;;;; RAINBOW MODE
 
-(use-package rainbow-mode
-  :defer t
+(use-package! rainbow-mode
   :hook (((css-mode scss-mode org-mode emacs-lisp-mode typescript-mode js-mode). rainbow-mode)))
 
 ;;;;; SALT MODE
@@ -292,13 +270,13 @@
 ;;;;; SYSTEMD MODE
 
 (use-package! systemd
-  :defer t)
-
-(map! :map systemd-mode
-      :localleader
-      :prefix ("h" . "help")
-      "d" #'systemd-doc-directives
-      "o" #'systemd-doc-open)
+  :defer t
+  :config
+  (map! :map systemd-mode
+        :localleader
+        :prefix ("h" . "help")
+        "d" #'systemd-doc-directives
+        "o" #'systemd-doc-open))
 
 ;;;;; VLF
 
@@ -326,6 +304,7 @@
 (load! "keybindings.el")
 (load! "mu4e.el")
 (load! "hydra.el")
+
 ;;; CUSTOM
 
 (setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))

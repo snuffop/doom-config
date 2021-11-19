@@ -9,7 +9,6 @@
 (package! all-the-icons-dired)
 (package! company-nginx)
 (package! counsel-tramp)
-(package! dashboard)
 (package! doct)
 (package! ebuku)
 (package! elfeed-protocol)

@@ -15,7 +15,7 @@
   "h"    #'helpful-at-point)
 
 (map!
- ;;:n "C-:"    #'+spell/correct
+ :n "C-:"    #'+spell/correct
  :n "C-."    #'embark-act
  :n "C-,"    #'+spell/next-error)
 
@@ -24,9 +24,12 @@
 (map! :leader
       "TAB"  #'evil-switch-to-windows-last-buffer
       "SPC"  #'execute-extended-command
+
       ;;; <leader> a --- Application
       (:prefix-map ("a" . "Application")
        "m"  #'=mu4e
+       "p"  #'paperless
+
        ;; ORG
        (:prefix-map ("o" . "org")
         "/" #'org-occur-in-agenda-files
@@ -49,6 +52,7 @@
           "t"  #'org-timer-set-timer
           "p"  #'org-timer-pause-or-continue
           "q"  #'org-timer-stop)))
+
        ;; Tools
        (:when (featurep! :tools pass)
         (:prefix-map ("p" . "pass")
@@ -111,7 +115,8 @@
 
 (map! :leader
       :prefix "n"
-      "b" #'marty/org-roam-capture-inbox)
+      "b" #'marty/org-roam-capture-inbox
+      "r" #'hydra-roam-jump/body)
 
 ;;;;; <leader> o --- open
 
@@ -144,19 +149,7 @@
 (map! :after org
       :map org-mode-map
       :localleader
-      "m"  #'hydra-roam-jump/body
-      ;; :prefix "m"
-      ;; "a"  #'marty/org-roam-move-todo-to-today
-      ;; "b"  #'marty/org-roam-capture-inbox
-      ;; "i"  #'org-roam-node-insert-immediate
-      ;; "j"  #'org-roam-dailies-capture-today
-      ;; "p"  #'marty/org-roam-find-project
-      ;; "s"  #'org-roam-db-sync
-      ;; "S"  #'marty/org-roam-rg-search
-      ;; :prefix "md"
-      ;; "p"  #'org-roam-dailies-goto-previous-note
-      ;; "n"  #'org-roam-dailies-goto-next-note
-      )
+      "m"  #'hydra-roam-jump/body)
 
 ;;;; DIRED KEYBINDINGS
 ;;;;;  TS FILE TRIGGER KEYBINDING

@@ -6,7 +6,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; ORG-Mode
+;;; Code
 ;;;; Pre
 (setq org-directory "~/Nextcloud/Notes/org/")
 (setq org-roam-directory "~/Nextcloud/Notes/org/")
@@ -20,15 +20,18 @@
                                (concat org-directory "contacts.org")
                                (concat org-directory "Someday.org")
                                (concat org-directory "0mobile.org")))
-
-;;;; PUBLISH ALIST
-
+;;;; Org-Mode
+;;;;; Package
 (after! org
+
+;;;;; PUBLISH ALIST
+
   (defun marty/publish (a b c)
     (setq org-export-with-toc t)
     (org-html-publish-to-html a b c))
 
-  (require 'find-lisp)
+  ;;(require 'find-lisp)
+
   (defun marty/publish-NSI-Documentation (a b c)
     (setq org-export-with-toc t)
     (let ((org-id-extra-files (find-lisp-find-files "~/Source/NSI/NSI-Documentation/" "\.org$")))
@@ -114,39 +117,36 @@
                                             "NSI-Documentation-TVA-ScanReports-2020-reports"
                                             "NSI-Documentation-TVA-ScanReports-2021-images"
                                             "NSI-Documentation-TVA-ScanReports-2021-reports"
-                                            "NSI-Documentation-TVA-ScanReports-files")))))
-;;;; ORG-AGENDA
-
-(after! org-agenda
-
-  (setq org-agenda-block-separator nil)
-  (setq org-agenda-compact-blocks t)
-  (setq org-agenda-files marty/org-agenda-files)
-  (setq org-agenda-include-deadlines t)
-  (setq org-agenda-start-on-weekday 1)
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-agenda-tags-column 100) ;; from testing this seems to be a good value
-  (setq org-agenda-window-setup 'current-window)
-  (setq org-deadline-warning-days 14)
-
-  ;; Ignore scheduled tasks in task list
-  (setq org-agenda-todo-ignore-scheduled 'all)
-  (setq org-agenda-todo-ignore-deadlines 'far)
-
-  ;; Skip Finished Items
-  (setq org-agenda-skip-deadline-if-done t)
-  (setq org-agenda-skip-scheduled-if-done t)
-
-  (require 'org-projectile)
-  (mapcar #'(lambda (file)
-              (when (file-exists-p file)
-                (push file org-agenda-files)))
-          (org-projectile-todo-files)))
+                                            "NSI-Documentation-TVA-ScanReports-files"))))
+;;;;; ORG-AGENDA
 
 
-;;;; BASE
+  ;; (setq org-agenda-block-separator nil)
+  ;; (setq org-agenda-compact-blocks t)
+  ;; (setq org-agenda-files marty/org-agenda-files)
+  ;; (setq org-agenda-include-deadlines t)
+  ;; (setq org-agenda-start-on-weekday 1)
+  ;; (setq org-agenda-start-with-log-mode t)
+  ;; (setq org-agenda-tags-column 100) ;; from testing this seems to be a good value
+  ;; (setq org-agenda-window-setup 'current-window)
+  ;; (setq org-deadline-warning-days 14)
 
-(after! org
+  ;; ;; Ignore scheduled tasks in task list
+  ;; (setq org-agenda-todo-ignore-scheduled 'all)
+  ;; (setq org-agenda-todo-ignore-deadlines 'far)
+
+  ;; ;; Skip Finished Items
+  ;; (setq org-agenda-skip-deadline-if-done t)
+  ;; (setq org-agenda-skip-scheduled-if-done t)
+
+  ;; (require 'org-projectile)
+  ;; (mapcar #'(lambda (file)
+  ;;             (when (file-exists-p file)
+  ;;               (push file org-agenda-files)))
+  ;;         (org-projectile-todo-files))
+
+
+;;;;; BASE
 
   (setq org-default-notes-file (concat org-directory "0mobile.org"))
   (setq org-download-image-dir "~/Nextcloud/Notes/images/")
@@ -322,64 +322,136 @@
                     "CANCELLED(c@)"
                     "DONE(d@)")))
 
-;;;;; END (after! org)
-  )
+;;;;; CAPTURE TEMPLATES Using DOCT
 
-;;;; ORG-ROAM
-;;;;; PACKAGE
-(use-package! org-roam
-              :after org
-              :config
-              (setq org-roam-mode-selections
-                    (list #'org-roam-backlinks-insert-section
-                          #'org-roam-reflinks-insert-section
-                          #'org-roam-unlinked-references-insert-section)))
+  (setq org-capture-templates
+        (doct `(("Task" :keys "t"
+                 :icon ("tag" :set "octicon" :color "cyan")
+                 :file "~/Nextcloud/Notes/org/0mobile.org"
+                 :prepend t
+                 :headline "Inbox"
+                 :template-file "~/.config/doom/templates/org-templates/todo.org")
 
-;;;;; ORG-ROAM POPUP RULES
+                ("Contact"
+                 :keys "c"
+                 :icon ("male" :set "faicon" :color "yellow")
+                 :file "~/Nextcloud/Notes/org/contacts.org"
+                 :headline "General"
+                 :template-file "~/.config/doom/templates/org-templates/contact.org")
 
-(after! org-roam
-  (setq +org-roam-open-buffer-on-find-file nil)
+                ("Remember-mutt" :keys "R"
+                 :icon ("sticky-note" :set "faicon" :color "yellow")
+                 :icon ("home" :set "octicon" :color "cyan")
+                 :file "~/Nextcloud/Notes/org/0mobile.org"
+                 :headline "Mail"
+                 :template-file "~/.config/doom/templates/org-templates/mail.org")
 
-  (set-popup-rules!
-    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
-      ("^\\*org-roam: " ; node dedicated org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2))))
+                ("Protocol" :keys "P"
+                 :file "~/Nextcloud/Notes/org/0mobile.org"
+                 :icon ("tag" :set "octicon" :color "cyan")
+                 :headline "Inbox"
+                 :children (("Read"
+                             :keys "r"
+                             :headline "Read Later"
+                             :immediate-finish t
+                             :template-file "~/.config/doom/templates/org-templates/protocol-read-later.org")
+                            ("Today"
+                             :keys "t"
+                             :template-file "~/.config/doom/templates/org-templates/protocol-today.org")
+                            ("Important"
+                             :keys "i"
+                             :template-file "~/.config/doom/templates/org-templates/protocol-important.org")))
 
-;;;;; ORG-ROAM HOOKS
+                ("Email Workflow"
+                 :keys "m"
+                 :icon ("mail" :set "octicon" :color "yellow")
+                 :file "~/Nextcloud/Notes/org/0mobile.org"
+                 :children (("Follow Up"
+                             :keys "f"
+                             :headline "Follow Up"
+                             :template ("* TODO Follow up with %:fromname on %:subject"
+                                        "SCHEDULED:%t"
+                                        "%a"
+                                        "%i"))
+                            ("Auto Follow Up"
+                             :keys "a"
+                             :immediate-finish t
+                             :headline "Follow Up"
+                             :template ("* TODO Follow up with %:fromname on %:subject"
+                                        "%a"
 
-(after! org-roam
-  ;; hook to be run whenever an org-roam capture completes
-  (add-hook 'org-roam-capture-new-node-hook #'marty/add-other-auto-props-to-org-roam-properties))
+                                        "%i"))
+                            ("Follow Up With Deadline"
+                             :keys "F"
+                             :headline "Follow Up"
+                             :template ("* TODO Follow up with %:fromname on %:subject"
+                                        "SCHEDULED:%t"
+                                        "DEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))"
+                                        "%a"
+                                        "%i"))
+                            ("Read Later"
+                             :keys "r"
+                             :headline "Read Later"
+                             :immediate-finish t
+                             :tetmplate ("* TODO Read Later on %:subject"
+                                         "SCHEDULED:%t"
+                                         "%a"
+                                         "%i")
+                             ))))))
 
-;;;;; ROAM-BIBTEX
+  (setq org-protocol-default-template-key "t")
 
-(use-package! org-roam-bibtex
-  :after org-roam
-  :hook (org-mode . org-roam-bibtex-mode)
-  :config
-  (require 'org-ref)
-  (setq orb-preformat-keywords
-        '("citekey" "title" "url" "file" "author-or-editor" "keywords" "pdf" "doi" "author" "tags" "year" "author-bbrev")))
+;;;;; MAIL/MUTT
+  (org-add-link-type "message" 'mutt-open-message)
 
-;;;;; ORG-ROAM-UI
+;;;;; TSFILE LINKS
 
-(use-package! org-roam-ui
-  :after org-roam)
+  (defvar memacs-root "~/Nextcloud/Notes/memacs/")
+  (defvar memacs-file-pattern "files.org")
 
+  (with-eval-after-load 'org
+    (org-link-set-parameters
+     "tsfile"
+     :follow (lambda (path) (my-handle-tsfile-link path))
+     :help-echo "Opens the linked file with your default application"))
+
+  ;; by John Kitchin
+  (defun my-handle-tsfile-link (querystring)
+    ;; get a list of hits
+    (let ((queryresults (split-string
+                         (s-trim
+                          (shell-command-to-string
+                           (concat
+                            "grep \""
+                            querystring
+                            "\" "
+                            (concat memacs-root memacs-file-pattern))))
+                         "\n" t)))
+      ;; check length of list (number of lines)
+      (cond
+       ((= 0 (length queryresults))
+        ;; edge case: empty query result
+        (message "Sorry, no results found for query: %s" querystring))
+       (t
+        (with-temp-buffer
+          (insert (if (= 1 (length queryresults))
+                      (car queryresults)
+                    (completing-read "Choose: " queryresults)))
+          (org-mode)
+          (goto-char (point-min))
+          (org-next-link)
+          (org-open-at-point "file:"))))))
+
+  (defun marty/dired-copy-filename-as-tsfile-link ()
+    "Copy current file name with its basename as [[tsfile:<basename>]] custom org-mode link."
+    (interactive)
+    (dired-copy-filename-as-kill)       ;; current file name to kill ring
+    (let* ((filename (current-kill 0))) ;; get topmost kill ring element
+      (kill-new (concat "[[tsfile:" filename "]]"))))
 ;;;;; FUNCTIONS
-;;;;;; ORG-ROAM-TIMESTAMPS
-
-(use-package! org-roam-timestamps
-  :after org-roam
-  :config
-  (setq org-roam-timestamps-parent-file t)
-  (setq org-roam-timestamps-remember-timestamps t)
-  (org-roam-timestamps-mode))
-
 ;;;;;; LONG-LAT
 ;;                      (requires curl to be installed on system)
-;;
+
 (setq calendar-latitude 0)
 (setq calendar-longitude 0)
 
@@ -392,7 +464,6 @@
     (setq calendar-latitude (string-to-number (car latlong-list)))
     (setq calendar-longitude (string-to-number (cadr latlong-list)))))
 
-(after! org
 ;;;;;; FORMAT ORG-BLOCK
   (defun format-org-mode-block ()
     "Format org mode code block"
@@ -402,11 +473,10 @@
     (org-edit-special)
     (format-all-ensure-formatter)
     (format-all-buffer)
-    (org-edit-src-exit)))
+    (org-edit-src-exit))
 
 ;;;;;; PRETTIFY FUNCTIONS FROM TECOSAUR
 ;; for pretty capture interfaces..
-(after! org
   (defun org-capture-select-template-prettier (&optional keys)
     "Select a capture template, in a prettier way than default
 Lisp programs can force the template by setting KEYS to a string."
@@ -550,12 +620,74 @@ is selected, only the bare key is returned."
 
   (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
 
+
+
+;;;;; END (progn org)
   )
+
+;;;; DOCT
+(use-package! doct
+  :after org
+  :commands (doct))
+
+;;;; ORG-ROAM
+;;;;; PACKAGE
+(after! org-roam
+  (setq org-roam-mode-selections
+        (list #'org-roam-backlinks-insert-section
+              #'org-roam-reflinks-insert-section
+              #'org-roam-unlinked-references-insert-section))
+
+;;;;;; ORG-ROAM POPUP RULES
+
+  (setq +org-roam-open-buffer-on-find-file nil)
+
+  (set-popup-rules!
+    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+      ("^\\*org-roam: " ; node dedicated org-roam buffer
+       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
+
+;;;;;; ORG-ROAM HOOKS
+
+  ;; hook to be run whenever an org-roam capture completes
+  (add-hook 'org-roam-capture-new-node-hook #'marty/add-other-auto-props-to-org-roam-properties)
+
+;;;;;; ORG-ROAM CAPTURE TEMPLATES
+
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "* %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1 )
+          ("t" "Tasks" entry "** TODO %? "
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+           :empty-lines-after 1 )
+          ("r" "Rackspace" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+           :empty-lines-after 1)
+          ("j" "Journal" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :empty-lines-after 1)))
+
+  (setq org-roam-capture-templates
+        '(("d" "default" plain
+           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
+           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
+           :immediate-finish t
+           :unnarrowed t)
+          ("t" "tipjar" plain
+           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
+           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
+           :unnarrowed t)
+          ("p" "People" plain
+           (file "~/.config/doom/templates/roam-templates/people-entry.org")
+           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
+           :unnarrowed t)))
+
 
 
 ;;;;;; ADD ADITIONAL PROPERTIES
 
-(after! org-roam
   (defun marty/add-other-auto-props-to-org-roam-properties ()
     ;; if the file already exists, don't do anything, otherwise...
     (unless (file-exists-p (buffer-file-name))
@@ -583,9 +715,8 @@ is selected, only the bare key is returned."
       (unless (org-find-property "LAT_LONG")
         ;; recheck location:
         (marty/get-lat-long-from-ipinfo)
-        (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG")))))
+        (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG"))))
 
-(after! org-roam
 
 ;;;;;; DAILIES GRAPHICS LINK
 
@@ -628,9 +759,8 @@ is selected, only the bare key is returned."
            (month (string-to-number (substring (buffer-name) 5 7)))
            (day   (string-to-number (substring (buffer-name) 8 10)))
            (datim (encode-time 0 0 0 day month year)))
-      (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim))))
+      (format-time-string "DEADLINE: [%Y-%m-%d %a 20:00]" datim)))
 
-(after! org-roam
 
 ;;;;;; SYSTEMCRAFTERS INSERT IMMEDIATE
   ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
@@ -641,50 +771,6 @@ is selected, only the bare key is returned."
           (org-roam-capture-templates (list (append (car org-roam-capture-templates)
                                                     '(:immediate-finish t)))))
       (apply #'org-roam-node-insert args)))
-
-  ;;   (defun my/org-roam-filter-by-tag (tag-name)
-  ;;     (lambda (node)
-  ;;       (member tag-name (org-roam-node-tags node))))
-
-  ;;   (defun my/org-roam-list-notes-by-tag (tag-name)
-  ;;     (mapcar #'org-roam-node-file
-  ;;             (seq-filter
-  ;;              (my/org-roam-filter-by-tag tag-name)
-  ;;              (org-roam-node-list))))
-
-  ;;   (defun dw/org-roam-goto-month ()
-  ;;     (interactive)
-  ;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y-%B")) '(4))
-  ;;                        :node (org-roam-node-create)
-  ;;                        :templates '(("m" "month" plain "\n* Goals\n\n%?* Summary\n\n"
-  ;;                                      :if-new (file+head "%<%Y-%B>.org"
-  ;;                                                         "#+title: %<%Y-%B>\n#+filetags: Project\n")
-  ;;                                      :unnarrowed t))))
-
-  ;;   (defun dw/org-roam-goto-year ()
-  ;;     (interactive)
-  ;;     (org-roam-capture- :goto (when (org-roam-node-from-title-or-alias (format-time-string "%Y")) '(4))
-  ;;                        :node (org-roam-node-create)
-  ;;                        :templates '(("y" "year" plain "\n* Goals\n\n%?* Summary\n\n"
-  ;;                                      :if-new (file+head "%<%Y>.org"
-  ;;                                                         "#+title: %<%Y>\n#+filetags: Project\n")
-  ;;                                      :unnarrowed t))))
-
-  ;;   (defun my/org-roam-refresh-agenda-list ()
-  ;;     (interactive)
-  ;;     (setq org-agenda-files (my/org-roam-list-notes-by-tag "todo")))
-
-
-  ;; ;;;;;; CAPTURE INBOX
-  ;;   (defun marty/org-roam-capture-inbox ()
-  ;;     (interactive)
-  ;;     (org-roam-capture- :node (org-roam-node-create)
-  ;;                        :templates '(("i" "Inbox" plain "** %?"
-  ;;                                      :if-new (file+olp "~/Nextcloud/Notes/org/0mobile.org" ("Inbox"))))))
-
-)
-
-(after! org-roam
 
 ;;;;;; MOVE TO TODAY
 
@@ -706,9 +792,8 @@ is selected, only the bare key is returned."
       ;; Only refile if the target file is different than the current file
       (unless (equal (file-truename today-file)
                      (file-truename (buffer-file-name)))
-        (org-refile nil nil (list "Tasks" today-file nil pos))))))
+        (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
-(after! org-roam
 
 ;;;;;; ROAM-RG-SEARCH
 
@@ -718,171 +803,30 @@ is selected, only the bare key is returned."
     "Search org-roam directory using consult-ripgrep. With live-preview."
     (interactive)
     (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
-      (consult-ripgrep org-roam-directory))))
+      (consult-ripgrep org-roam-directory)))
 
-;;;;; ORG-ROAM CAPTURE TEMPLATES
-(after! org-roam
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry "* %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
-           :empty-lines-after 1 )
-          ("t" "Tasks" entry "** TODO %? "
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
-           :empty-lines-after 1 )
-          ("r" "Rackspace" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
-           :empty-lines-after 1)
-          ("j" "Journal" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal") )
-           :empty-lines-after 1)))
+;;;;;; END Package
+  )
 
+;;;; ORG-ROAM-TIMESTAMPS
 
-  (setq org-roam-capture-templates
-        '(("d" "default" plain
-           (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
-           :immediate-finish t
-           :unnarrowed t)
-          ("t" "tipjar" plain
-           (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
-           :unnarrowed t)
-          ("p" "People" plain
-           (file "~/.config/doom/templates/roam-templates/people-entry.org")
-           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
-           :unnarrowed t))))
-;;;; DOCT
-(use-package! doct
-  :defer t
-  :after org
-  :commands (doct))
+(use-package! org-roam-timestamps
+  :after org-roam
+  :config
+  (setq org-roam-timestamps-parent-file t)
+  (setq org-roam-timestamps-remember-timestamps t)
+  (org-roam-timestamps-mode))
 
-;;;; CAPTURE TEMPLATES Using DOCT
+;;;; ROAM-BIBTEX
 
-(after! org
-  (setq org-capture-templates
-        (doct `(("Task" :keys "t"
-                 :icon ("tag" :set "octicon" :color "cyan")
-                 :file "~/Nextcloud/Notes/org/0mobile.org"
-                 :prepend t
-                 :headline "Inbox"
-                 :template-file "~/.config/doom/templates/org-templates/todo.org")
+(use-package! org-roam-bibtex
+  :after org-roam
+  :config
+  (require 'org-ref)
+  (setq orb-preformat-keywords
+        '("citekey" "title" "url" "file" "author-or-editor" "keywords" "pdf" "doi" "author" "tags" "year" "author-bbrev")))
 
-                ("Contact"
-                 :keys "c"
-                 :icon ("male" :set "faicon" :color "yellow")
-                 :file "~/Nextcloud/Notes/org/contacts.org"
-                 :headline "General"
-                 :template-file "~/.config/doom/templates/org-templates/contact.org")
+;;;; ORG-ROAM-UI
 
-                ("Remember-mutt" :keys "R"
-                 :icon ("sticky-note" :set "faicon" :color "yellow")
-                 :icon ("home" :set "octicon" :color "cyan")
-                 :file "~/Nextcloud/Notes/org/0mobile.org"
-                 :headline "Mail"
-                 :template-file "~/.config/doom/templates/org-templates/mail.org")
-
-                ("Protocol" :keys "P"
-                 :file "~/Nextcloud/Notes/org/0mobile.org"
-                 :icon ("tag" :set "octicon" :color "cyan")
-                 :headline "Inbox"
-                 :children (("Read"
-                             :keys "r"
-                             :headline "Read Later"
-                             :immediate-finish t
-                             :template-file "~/.config/doom/templates/org-templates/protocol-read-later.org")
-                            ("Today"
-                             :keys "t"
-                             :template-file "~/.config/doom/templates/org-templates/protocol-today.org")
-                            ("Important"
-                             :keys "i"
-                             :template-file "~/.config/doom/templates/org-templates/protocol-important.org")))
-
-                ("Email Workflow"
-                 :keys "m"
-                 :icon ("mail" :set "octicon" :color "yellow")
-                 :file "~/Nextcloud/Notes/org/0mobile.org"
-                 :children (("Follow Up"
-                             :keys "f"
-                             :headline "Follow Up"
-                             :template ("* TODO Follow up with %:fromname on %:subject"
-                                        "SCHEDULED:%t"
-                                        "%a"
-                                        "%i"))
-                            ("Auto Follow Up"
-                             :keys "a"
-                             :immediate-finish t
-                             :headline "Follow Up"
-                             :template ("* TODO Follow up with %:fromname on %:subject"
-                                        "%a"
-
-                                        "%i"))
-                            ("Follow Up With Deadline"
-                             :keys "F"
-                             :headline "Follow Up"
-                             :template ("* TODO Follow up with %:fromname on %:subject"
-                                        "SCHEDULED:%t"
-                                        "DEADLINE:%(org-insert-time-stamp (org-read-date nil t \"+2d\"))"
-                                        "%a"
-                                        "%i"))
-                            ("Read Later"
-                             :keys "r"
-                             :headline "Read Later"
-                             :immediate-finish t
-                             :tetmplate ("* TODO Read Later on %:subject"
-                                         "SCHEDULED:%t"
-                                         "%a"
-                                         "%i")
-                             ))))))
-
-  (setq org-protocol-default-template-key "t"))
-
-;;;; MAIL/MUTT
-(after! org
-  (org-add-link-type "message" 'mutt-open-message))
-
-;;;; TSFILE LINKS
-
-(after! org
-  (defvar memacs-root "~/Nextcloud/Notes/memacs/")
-  (defvar memacs-file-pattern "files.org")
-
-  (with-eval-after-load 'org
-    (org-link-set-parameters
-     "tsfile"
-     :follow (lambda (path) (my-handle-tsfile-link path))
-     :help-echo "Opens the linked file with your default application"))
-
-  ;; by John Kitchin
-  (defun my-handle-tsfile-link (querystring)
-    ;; get a list of hits
-    (let ((queryresults (split-string
-                         (s-trim
-                          (shell-command-to-string
-                           (concat
-                            "grep \""
-                            querystring
-                            "\" "
-                            (concat memacs-root memacs-file-pattern))))
-                         "\n" t)))
-      ;; check length of list (number of lines)
-      (cond
-       ((= 0 (length queryresults))
-        ;; edge case: empty query result
-        (message "Sorry, no results found for query: %s" querystring))
-       (t
-        (with-temp-buffer
-          (insert (if (= 1 (length queryresults))
-                      (car queryresults)
-                    (completing-read "Choose: " queryresults)))
-          (org-mode)
-          (goto-char (point-min))
-          (org-next-link)
-          (org-open-at-point "file:"))))))
-
-  (defun marty/dired-copy-filename-as-tsfile-link ()
-    "Copy current file name with its basename as [[tsfile:<basename>]] custom org-mode link."
-    (interactive)
-    (dired-copy-filename-as-kill)       ;; current file name to kill ring
-    (let* ((filename (current-kill 0))) ;; get topmost kill ring element
-      (kill-new (concat "[[tsfile:" filename "]]")))))
+(use-package! org-roam-ui
+  :after org-roam)
