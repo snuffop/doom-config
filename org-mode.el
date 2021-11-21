@@ -179,13 +179,23 @@
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
 
-  (setq prettify-symbols-unprettify-at-point 'right-edge)
 
 
 ;;;;; ORG-MODE-HOOK
 
-  (defun +org*setup-org-mode-hook ()
-    "Setup Org mode buffers."
+  (add-hook! 'org-mode-hook (+org-mode-setup) )
+
+  (defun +org-mode-setup ()
+
+    (auto-fill-mode -1)
+    (flycheck-mode -1)
+    (display-line-numbers-mode -1)
+    (hl-line-mode -1)
+    (auto-revert-mode 1)
+    (visual-line-mode)
+    (variable-pitch-mode 1)
+
+    (setq prettify-symbols-unprettify-at-point 'right-edge)
 
     (push '("#+ACTIVE:"            . ""  ) prettify-symbols-alist)
     (push '("#+BEGIN_EXAMPLE"      . "↦"  ) prettify-symbols-alist)
@@ -251,16 +261,9 @@
     (push '("[X]"                  . "☑" ) prettify-symbols-alist)
     (push '("lambda"               . "λ"  ) prettify-symbols-alist)
     (push '("subtitle"             . "𝙩" ) prettify-symbols-alist)
-    (prettify-symbols-mode)
-    (auto-fill-mode -1)
-    (display-line-numbers-mode -1)
-    (hl-line-mode -1)
-    (auto-revert-mode 1)
-    (visual-line-mode)
-    (variable-pitch-mode 1)
-    )
+    (prettify-symbols-mode))
 
-  (add-hook! org-mode-hook #'+org*setup-org-mode-hook)
+
 
 ;;;;; TAG LIST
   (setq org-tag-alist (quote
@@ -667,6 +670,20 @@ is selected, only the bare key is returned."
                                      (+org:level-1-refile-targets :level . 1))))
     (setq org-agenda-refile org-agenda-files))
 
+;;;;; ADVICE
+;;;;;; Disable spellchecking in SRC regions
+  (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
+    (let* ((rlt ad-return-value)
+           (begin-regexp "^[ \t]*#\\+BEGIN_SRC")
+           (end-regexp "^[ \t]*#\\+END_SRC")
+           (case-fold-search t)
+           b e)
+      (when ad-return-value
+        (save-excursion
+          (setq b (re-search-backward begin-regexp nil t))
+          (if b (setq e (re-search-forward end-regexp nil t))))
+        (if (and b e (< (point) e)) (setq rlt nil)))
+      (setq ad-return-value rlt)))
 ;;;;; END (progn org)
   )
 
@@ -893,16 +910,6 @@ is selected, only the bare key is returned."
   (->> (+org/expand-org-file-name file)
        (find-file)))
 
-;;;; Set Agenda command or replace on reload
-;;;###autoload
-(defun +org/add-to-agenda-custom-commands (x)
-  "Add or replace X in the org-agenda-custom-commands list."
-  (if-let ((key (car x))
-           (index (--find-index (string= key (car it)) org-agenda-custom-commands)))
-      (->> (-replace-at index x org-agenda-custom-commands)
-           (setq org-agenda-custom-commands))
-    (add-to-list 'org-agenda-custom-commands x)));;;
-
 ;;;; Timestamp
 (defun +org/active-timestamp (&optional str)
   (let* ((str (or str ""))
@@ -919,3 +926,4 @@ is selected, only the bare key is returned."
          (analyzed-time (org-read-date-analyze str default-time decoded-time))
          (encoded-time (apply #'encode-time analyzed-time)))
     (format-time-string (org-time-stamp-format t t) encoded-time)))
+
