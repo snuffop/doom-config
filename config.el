@@ -1,4 +1,4 @@
-;;; $doomdir/config.el --- summary -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; $doomdir/config.el --- My Emacs Config File -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; author: marty buchaus <marty@dabuke.com>
 ;; copyright © 2021, marty buchaus, all rights reserved.
@@ -34,7 +34,11 @@
 (setq read-process-output-max (* 1024 1024))
 (setq truncate-string-ellipsis "…")                ; unicode ellispis are nicer than "...", and also save /precious/ space
 (setq warning-minimum-level :emergency)
-(setq garbage-collection-messages t)
+
+(setq garbage-collection-messages nil)
+
+(after! gcmh
+  (setq gcmh-high-cons-threshold 67108864))  ; 33554432 32mb, or 67108864 64mb, or *maybe* 128mb, BUT NOT 512mb
 
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)  ; Make the scratch buffer start in lisp mode
 
