@@ -875,9 +875,7 @@ is selected, only the bare key is returned."
 (use-package! org-roam-timestamps
   :after org-roam
   :config
-  (setq org-roam-timestamps-parent-file t)
-  (setq org-roam-timestamps-remember-timestamps t)
-  (org-roam-timestamps-mode))
+  (setq org-roam-timestamps-parent-file t)  (org-roam-timestamps-mode))
 
 ;;;; ROAM-BIBTEX
 
