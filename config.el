@@ -306,7 +306,6 @@
   (global-wakatime-mode))
 
 (use-package! wakatime-mode
-  :defer t
   :config
   (add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
   (setq wakatime-cli-path "/usr/bin/wakatime"))
