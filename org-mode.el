@@ -1,4 +1,4 @@
-;;; org-mode.el -*- lexical-binding: t; -*-
+;;; org-mode.el --- ORG-MODE -*- lexical-binding: t; -*-
 
 ;; author: marty buchaus <marty@dabuke.com>
 ;; copyright © 2021, marty buchaus, all rights reserved.
@@ -186,7 +186,6 @@
   (add-hook! 'org-mode-hook (+org-mode-setup) )
 
   (defun +org-mode-setup ()
-
     (auto-fill-mode -1)
     (flycheck-mode -1)
     (display-line-numbers-mode -1)
@@ -299,6 +298,18 @@
                         ("WORK"       . ?W))))
 
 ;;;;; FACES
+
+  (after! hl-todo
+    (setq hl-todo-keyword-faces
+          '(("TODO"       . ,(face-foreground "Red"))
+            ("NEXT"       . ,(face-foreground "#008080" ))
+            ("STARTED"    . ,(face-foreground "#E35DBF" ))
+            ("BLOCKED"    . ,(face-foreground "White"   ))
+            ("TODELEGATE" . ,(face-foreground "White"   ))
+            ("DELEGATED"  . ,(face-foreground "pink"    ))
+            ("CANCELED"   . ,(face-foreground "white"   ))
+            ("TICKLE"     . ,(face-foreground "White"   ))
+            ("DONE"       . ,(face-foreground "green"   )))))
 
   (custom-set-faces
    '(org-document-title ((t (:inherit outline-1 :height 1.5))))
@@ -662,28 +673,12 @@ is selected, only the bare key is returned."
   (defun +org:max-level-2-refile-targets () +org:max-level-2-refile-targets)
   (defun max-level-3-refile-targets () max-level-3-refile-targets)
 
-  (after! org
-    :config
-    (setq org-refile-targets (quote ((nil :maxlevel . 5)
-                                     (+org:max-level-2-refile-targets :maxlevel . 2)
-                                     (max-level-3-refile-targets :maxlevel . 3)
-                                     (+org:level-1-refile-targets :level . 1))))
-    (setq org-agenda-refile org-agenda-files))
+  (setq org-refile-targets (quote ((nil :maxlevel . 5)
+                                   (+org:max-level-2-refile-targets :maxlevel . 2)
+                                   (max-level-3-refile-targets :maxlevel . 3)
+                                   (+org:level-1-refile-targets :level . 1))))
+  (setq org-agenda-refile org-agenda-files)
 
-;;;;; ADVICE
-;;;;;; Disable spellchecking in SRC regions
-  (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
-    (let* ((rlt ad-return-value)
-           (begin-regexp "^[ \t]*#\\+BEGIN_SRC")
-           (end-regexp "^[ \t]*#\\+END_SRC")
-           (case-fold-search t)
-           b e)
-      (when ad-return-value
-        (save-excursion
-          (setq b (re-search-backward begin-regexp nil t))
-          (if b (setq e (re-search-forward end-regexp nil t))))
-        (if (and b e (< (point) e)) (setq rlt nil)))
-      (setq ad-return-value rlt)))
 ;;;;; END (progn org)
   )
 
@@ -891,37 +886,4 @@ is selected, only the bare key is returned."
 (use-package! org-roam-ui
   :after org-roam)
 
-
-;;; ORG-AUTOLOAD
-;;;; Expand org file name
-;;;###autoload
-(defun +org/expand-org-file-name (x)
-  "Expand file name X with org-directory."
-  (if (eq (type-of x) 'cons)
-      (-map #'+org/expand-org-file-name x)
-    (expand-file-name x org-directory)))
-
-;;;; Find in files
-;;;###autoload
-(defun +org/find-in-files (file)
-  "Find file in org directory."
-  (->> (+org/expand-org-file-name file)
-       (find-file)))
-
-;;;; Timestamp
-(defun +org/active-timestamp (&optional str)
-  (let* ((str (or str ""))
-         (default-time (org-current-time))
-         (decoded-time (decode-time default-time nil))
-         (analyzed-time (org-read-date-analyze str default-time decoded-time))
-         (encoded-time (apply #'encode-time analyzed-time)))
-    (format-time-string (org-time-stamp-format t) encoded-time)))
-
-(defun +org/inactive-timestamp (&optional str)
-  (let* ((str (or str ""))
-         (default-time (org-current-time))
-         (decoded-time (decode-time default-time nil))
-         (analyzed-time (org-read-date-analyze str default-time decoded-time))
-         (encoded-time (apply #'encode-time analyzed-time)))
-    (format-time-string (org-time-stamp-format t t) encoded-time)))
 

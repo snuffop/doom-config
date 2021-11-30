@@ -23,7 +23,8 @@
 
 
 (map!
- :n "C-:"    #'+spell/correct
+ ;; :n "C-:"    #'+spell/correct
+ :n "C-:"    #'flyspell-correct-wrapper
  :n "C-."    #'embark-act
  :n "C-,"    #'+spell/next-error)
 

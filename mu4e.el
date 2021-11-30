@@ -188,6 +188,7 @@
 ;;;;; Contexts
 
   (setq mu4e-contexts
+
         `(
 ;;;;;; Dabuke
           ,(make-mu4e-context
@@ -211,13 +212,11 @@
                                                (:maildir "/Dabuke/Lists.Linode"         :key ?l)
                                                (:maildir "/Dabuke/Lists.Mutt"           :key ?M)
                                                (:maildir "/Dabuke/Lists.Root"           :key ?r)
-                                               (:maildir "/Dabuke/Lists.Spacemacs"      :key ?m)
                                                (:maildir "/Dabuke/Lists.nextcloud"      :key ?N)
                                                (:maildir "/Dabuke/Lists.ofmasons"       :key ?O)
                                                (:maildir "/Dabuke/Lists.passwordstore"  :key ?W)
                                                (:maildir "/Dabuke/Lists.Racktables"     :key ?R)
                                                (:maildir "/Dabuke/Lists.qutebrowser"    :key ?q)
-                                               (:maildir "/Dabuke/SBL"                  :key ?b)
                                                (:maildir "/Dabuke/Sent"                 :key ?s)
                                                (:maildir "/Dabuke/TrainGood"            :key ?G)
                                                (:maildir "/Dabuke/TrainSpam"            :key ?B)

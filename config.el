@@ -85,7 +85,8 @@
 
 (after! doom-themes
   (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t))
+        doom-themes-enable-italic t
+        doom-themes-padded-modeline t))
 
 ;;;;; MODELINE
 
@@ -106,6 +107,18 @@
                           :foreground (face-foreground 'mode-line))
       )))
 
+;;;;; DASHBOARD
+
+(custom-theme-set-faces! 'doom-dracula
+  '(doom-dashboard-banner :foreground "red" :background "#000000" :weight bold)
+  '(doom-dashboard-footer :inherit font-lock-constant-face)
+  '(doom-dashboard-footer-icon :inherit all-the-icons-red)
+  '(doom-dashboard-loaded :inherit font-lock-warning-face)
+  '(doom-dashboard-menu-desc :inherit font-lock-string-face)
+  '(doom-dashboard-menu-title :inherit font-lock-function-name-face))
+
+(setq fancy-splash-image (expand-file-name "banners/doom-emacs-slant-out-color.png" doom-private-dir))
+
 ;;;;; LINE NUMBERS
 
 (setq display-line-numbers-type 'relative)
@@ -119,6 +132,38 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;;;; PACKAGES
+;;;;; AUTOINSERT
+(defun marty/autoinsert-yas-expand ()
+  (let ((template ( buffer-string )))
+    (delete-region (point-min) (point-max))
+    (yas-expand-snippet template)
+    (evil-insert-state)))
+
+(use-package! autoinsert
+  :init
+  (setq auto-insert-query nil)
+  (setq auto-insert-directory (expand-file-name "templates" doom-private-dir))
+  (add-hook 'find-file-hook 'auto-insert)
+  (auto-insert-mode 1)
+  :config
+  (define-auto-insert "\\.html?$" "default.html")
+  (define-auto-insert "\\.org" ["default.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "\\.sh" ["default.sh" marty/autoinsert-yas-expand])
+  (define-auto-insert "\\.el" ["default.el" marty/autoinsert-yas-expand])
+  (define-auto-insert "Roam/.+\\.org?$" ["defaultRoam.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "Blorg/snuffy-org/.+\\.org?$" ["snuffy-org.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "Sites/snuffy.org/.+\\.org?$" ["snuffy-org-posts.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "salt-master.+\\.org?$" ["salt-master.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/.+/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/tipjar/[^/]+\\.org?$" ["NSI-Documentation-tipjar.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/TVA/[^/]+\\.org?$" ["NSI-Documentation-TVA.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/TVA/ScanReports/.+[^/]+\\.org?$" ["NSI-Documentation-TVA-scanreport.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "NSI-Documentation/Patching/.+[^/]+\\.org?$" ["NSI-Documentation-Patching-Notes.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "masons/[^/].+\\.org?$" ["masonsMeetingMinuets.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand]))
+
 ;;;;; DIRED
 
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
@@ -158,43 +203,21 @@
     ?S "Sign using gpg" "--gpg-sign=" #'magit-read-gpg-secret-key)
   (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
 
-;;;;; FILE-TEMPLATE
+;;;;; SPELL
 
+(after! flyspell
+  (setq ispell-personal-dictionary (expand-file-name "dictionary/personal" doom-private-dir))
+  (setq flyspell-lazy-idle-seconds 0.5))
+
+;;;;; TREEMACS
+
+(after! treemacs
+  (setq +treemacs-git-mode 'extended)
+  (setq treemacs-width 30))
 
 ;;;; MODULES
-
-(defun marty/autoinsert-yas-expand ()
-  (let ((template ( buffer-string )))
-    (delete-region (point-min) (point-max))
-    (yas-expand-snippet template)
-    (evil-insert-state)))
-
-(use-package! autoinsert
-  :init
-  (setq auto-insert-query nil)
-  (setq auto-insert-directory "~/.config/doom/templates")
-  (add-hook 'find-file-hook 'auto-insert)
-  (auto-insert-mode 1)
-  :config
-  (define-auto-insert "\\.html?$" "default.html")
-  (define-auto-insert "\\.org" ["default.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "\\.sh" ["default.sh" marty/autoinsert-yas-expand])
-  (define-auto-insert "\\.el" ["default.el" marty/autoinsert-yas-expand])
-  (define-auto-insert "Roam/.+\\.org?$" ["defaultRoam.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "Blorg/snuffy-org/.+\\.org?$" ["snuffy-org.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "Sites/snuffy.org/.+\\.org?$" ["snuffy-org-posts.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "salt-master.+\\.org?$" ["salt-master.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "NSI-Documentation/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "NSI-Documentation/.+/[^/]+\\.org?$" ["NSI-Documentation.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "NSI-Documentation/tipjar/[^/]+\\.org?$" ["NSI-Documentation-tipjar.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "NSI-Documentation/TVA/[^/]+\\.org?$" ["NSI-Documentation-TVA.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "NSI-Documentation/TVA/ScanReports/.+[^/]+\\.org?$" ["NSI-Documentation-TVA-scanreport.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "NSI-Documentation/Patching/.+[^/]+\\.org?$" ["NSI-Documentation-Patching-Notes.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "masons/[^/].+\\.org?$" ["masonsMeetingMinuets.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
-  (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand]))
-
 ;;;;; ACTIVITY WATCH MODE
+
 
 (defun marty/startactivitywatchmode ()
   (interactive)
@@ -246,13 +269,11 @@
 ;;;;; OUTSHINE
 
 (use-package! outshine
-  :defer t
-  :hook (emacs-lisp-mode . outshine-mode)
   :config
-  (map! :after outshine
-        :map emacs-lisp-mode-map
+  (map! :map emacs-lisp-mode-map
         "TAB" #'outshine-cycle)
-  (add-hook 'emacs-lisp-mode-hook #'outshine-mode)
+  (add-hook 'prog-mode-hook #'outline-minor-mode)
+  (add-hook 'outline-minor-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
 
 ;;;;; PAPERLESS
@@ -314,10 +335,10 @@
 
 ;;;; LOAD
 (load! "functions.el")
-(load! "org-mode.el")
 (load! "keybindings.el")
-(load! "mu4e.el")
 (load! "hydra.el")
+(load! "org-mode.el")
+(load! "mu4e.el")
 
 ;;; CUSTOM
 
