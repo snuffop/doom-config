@@ -335,9 +335,9 @@
 
 ;;;; LOAD
 (load! "functions.el")
+(load! "org-mode.el")
 (load! "keybindings.el")
 (load! "hydra.el")
-(load! "org-mode.el")
 (load! "mu4e.el")
 
 ;;; CUSTOM

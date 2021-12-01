@@ -129,36 +129,3 @@ Do not try to make a new directory or anything fancy."
     (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
     (remove-hook 'occur-hook #'goto-address-mode)))
 
-;;; ORG-AUTOLOAD
-;;;; Expand org file name
-;;;;
-;;;###autoload (autoload '+org/expand-org-file-name )
-(defun +org/expand-org-file-name (x)
-  "Expand file name X with org-directory."
-  (if (eq (type-of x) 'cons)
-      (-map #'+org/expand-org-file-name x)
-    (expand-file-name x org-directory)))
-
-;;;; Find in files
-;;;###autoload
-(defun +org/find-in-files (file)
-  "Find file in org directory."
-  (->> (+org/expand-org-file-name file)
-       (find-file)))
-
-;;;; Timestamp
-(defun +org/active-timestamp (&optional str)
-  (let* ((str (or str ""))
-         (default-time (org-current-time))
-         (decoded-time (decode-time default-time nil))
-         (analyzed-time (org-read-date-analyze str default-time decoded-time))
-         (encoded-time (apply #'encode-time analyzed-time)))
-    (format-time-string (org-time-stamp-format t) encoded-time)))
-
-(defun +org/inactive-timestamp (&optional str)
-  (let* ((str (or str ""))
-         (default-time (org-current-time))
-         (decoded-time (decode-time default-time nil))
-         (analyzed-time (org-read-date-analyze str default-time decoded-time))
-         (encoded-time (apply #'encode-time analyzed-time)))
-    (format-time-string (org-time-stamp-format t t) encoded-time)))

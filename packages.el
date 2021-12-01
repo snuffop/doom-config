@@ -13,6 +13,7 @@
 (package! doct)
 (package! ebuku)
 (package! elfeed-protocol)
+(package! fzf)
 (package! jenkinsfile-mode)
 (package! khalel)
 (package! khardel)

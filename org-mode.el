@@ -121,29 +121,29 @@
 ;;;;; ORG-AGENDA
 
 
-  ;; (setq org-agenda-block-separator nil)
-  ;; (setq org-agenda-compact-blocks t)
-  ;; (setq org-agenda-files marty/org-agenda-files)
-  ;; (setq org-agenda-include-deadlines t)
-  ;; (setq org-agenda-start-on-weekday 1)
-  ;; (setq org-agenda-start-with-log-mode t)
-  ;; (setq org-agenda-tags-column 100) ;; from testing this seems to be a good value
-  ;; (setq org-agenda-window-setup 'current-window)
-  ;; (setq org-deadline-warning-days 14)
+  (setq org-agenda-block-separator nil)
+  (setq org-agenda-compact-blocks t)
+  (setq org-agenda-files marty/org-agenda-files)
+  (setq org-agenda-include-deadlines t)
+  (setq org-agenda-start-on-weekday 1)
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-agenda-tags-column 100) ;; from testing this seems to be a good value
+  (setq org-agenda-window-setup 'current-window)
+  (setq org-deadline-warning-days 14)
 
-  ;; ;; Ignore scheduled tasks in task list
-  ;; (setq org-agenda-todo-ignore-scheduled 'all)
-  ;; (setq org-agenda-todo-ignore-deadlines 'far)
+  ;; Ignore scheduled tasks in task list
+  (setq org-agenda-todo-ignore-scheduled 'all)
+  (setq org-agenda-todo-ignore-deadlines 'far)
 
-  ;; ;; Skip Finished Items
-  ;; (setq org-agenda-skip-deadline-if-done t)
-  ;; (setq org-agenda-skip-scheduled-if-done t)
+  ;; Skip Finished Items
+  (setq org-agenda-skip-deadline-if-done t)
+  (setq org-agenda-skip-scheduled-if-done t)
 
-  ;; (require 'org-projectile)
-  ;; (mapcar #'(lambda (file)
-  ;;             (when (file-exists-p file)
-  ;;               (push file org-agenda-files)))
-  ;;         (org-projectile-todo-files))
+  (require 'org-projectile)
+  (mapcar #'(lambda (file)
+              (when (file-exists-p file)
+                (push file org-agenda-files)))
+          (org-projectile-todo-files))
 
 
 ;;;;; BASE
@@ -299,17 +299,16 @@
 
 ;;;;; FACES
 
-  (after! hl-todo
-    (setq hl-todo-keyword-faces
-          '(("TODO"       . ,(face-foreground "Red"))
-            ("NEXT"       . ,(face-foreground "#008080" ))
-            ("STARTED"    . ,(face-foreground "#E35DBF" ))
-            ("BLOCKED"    . ,(face-foreground "White"   ))
-            ("TODELEGATE" . ,(face-foreground "White"   ))
-            ("DELEGATED"  . ,(face-foreground "pink"    ))
-            ("CANCELED"   . ,(face-foreground "white"   ))
-            ("TICKLE"     . ,(face-foreground "White"   ))
-            ("DONE"       . ,(face-foreground "green"   )))))
+  (setq org-todo-keyword-faces
+        '(("TODO"       . (:foreground "red"     :weight bold))
+          ("NEXT"       . (:foreground "#008080" :weight bold))
+          ("STARTED"    . (:foreground "#E35DBF" :weight bold))
+          ("BLOCKED"    . (:foreground "white"   :weight bold))
+          ("TODELEGATE" . (:foreground "white"   :weight bold))
+          ("DELEGATED"  . (:foreground "pink"    :weight bold))
+          ("CANCELED"   . (:foreground "white"   :weight bold))
+          ("TICKLE"     . (:foreground "white"   :weight bold))
+          ("DONE"       . (:foreground "green"   :weight bold))))
 
   (custom-set-faces
    '(org-document-title ((t (:inherit outline-1 :height 1.5))))
@@ -646,6 +645,37 @@ is selected, only the bare key is returned."
 
 
 
+;;;;;; Expand org file name
+;;;;###autoload (autoload '+org/expand-org-file-name )
+  (defun +org/expand-org-file-name (x)
+    "Expand file name X with org-directory."
+    (if (eq (type-of x) 'cons)
+        (-map #'+org/expand-org-file-name x)
+      (expand-file-name x org-directory)))
+
+;;;;;; Find in files
+;;;;###autoload
+  (defun +org/find-in-files (file)
+    "Find file in org directory."
+    (->> (+org/expand-org-file-name file)
+         (find-file)))
+
+;;;;;; Timestamp
+  (defun +org/active-timestamp (&optional str)
+    (let* ((str (or str ""))
+           (default-time (org-current-time))
+           (decoded-time (decode-time default-time nil))
+           (analyzed-time (org-read-date-analyze str default-time decoded-time))
+           (encoded-time (apply #'encode-time analyzed-time)))
+      (format-time-string (org-time-stamp-format t) encoded-time)))
+
+  (defun +org/inactive-timestamp (&optional str)
+    (let* ((str (or str ""))
+           (default-time (org-current-time))
+           (decoded-time (decode-time default-time nil))
+           (analyzed-time (org-read-date-analyze str default-time decoded-time))
+           (encoded-time (apply #'encode-time analyzed-time)))
+      (format-time-string (org-time-stamp-format t t) encoded-time)))
 ;;;;; REFILE
 
   (setq +org:level-1-refile-targets
@@ -885,5 +915,6 @@ is selected, only the bare key is returned."
 
 (use-package! org-roam-ui
   :after org-roam)
+
 
 
