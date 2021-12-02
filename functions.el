@@ -9,29 +9,6 @@
 ;;; functions
 
 
-;;;; CALENDAR OPEN
-
-(defun mb/open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:org-create-source "Green")
-    (cfw:org-create-file-source "Personal" "~/Nextcloud/Notes/org/Calendar.org" "Blue"))))
-
-(defun my-open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    ;; (cfw:org-create-file-source "Google" "~/.cache/calendar/google.com" "Blue")
-    (cfw:org-create-file-source "Tatjana" "~/.cache/calendar/tatjana.org" "Pink")  ; other org source
-    ;; (cfw:org-create-file-source "Rackspace" "~/.cache/calendar/rackspace.org" "Red")  ; other org source
-    (cfw:org-create-file-source "Next-Personal" "~/Nextcloud/Notes/Calendars/personal.org" "Blue")  ; other org source
-    (cfw:org-create-file-source "Next-Birthdays" "~/Nextcloud/Notes/Calendars/contact_birthdays.org" "Brown")  ; other org source
-    (cfw:org-create-file-source "Next-org-mode" "~/Nextcloud/Notes/Calendars/org-mode.org" "Brown")  ; other org source
-    )))
-
 ;;;; OPEN MUTT MESSAGE
 
 (defun mutt-open-message (message-id)

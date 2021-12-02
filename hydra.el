@@ -1,6 +1,5 @@
 ;;; hydra.el -*- lexical-binding: t; -*-
 
-
 (use-package! major-mode-hydra
   :after hydra
   :preface
@@ -162,8 +161,6 @@
     ("D"   #'tab-bar-close-other-tabs "Delete Other")
     ("r"   #'tab-bar-rename-tab       "Rename")
     ("u"   #'tab-bar-undo-close-tab   "undo close Tab"))))
-
-
 
 
 ;;;; HYDRA GO TO FILE
