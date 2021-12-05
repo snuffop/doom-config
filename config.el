@@ -332,6 +332,7 @@
   (setq wakatime-cli-path "/usr/bin/wakatime"))
 
 ;;;; LOAD
+
 (load! "functions.el")
 (load! "org-mode.el")
 (load! "keybindings.el")
