@@ -37,6 +37,7 @@
       ;;; <leader> a --- Application
       (:prefix-map ("a" . "Application")
        "m"  #'=mu4e
+       "b"  #'ebuku
        "p"  #'paperless
 
        ;; ORG
