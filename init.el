@@ -125,6 +125,8 @@
        upload            ; map local to remote projects via ssh/ftp
 
        :os
+       (cond (IS-MAC
+              macos))
        (tty               ; improve the terminal Emacs experience
         +osc)             ; use OSC-52 escape codes instead of xclip
 
