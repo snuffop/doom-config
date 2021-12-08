@@ -6,6 +6,7 @@
 ;;
 ;;;; Notes
 ;;
+;;  2021 12 08 Modified and working for OSX
 ;;  2021 11 18 Update clean Install and config
 ;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
 ;;
