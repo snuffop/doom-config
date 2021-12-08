@@ -65,8 +65,7 @@
 ;;;;; SET FONTS
 
 (cond (IS-MAC
-       (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
-             doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)))
+       (setq doom-font (font-spec :family "monospace" :size 15 :weight 'regular )))
       (t
 
        (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
