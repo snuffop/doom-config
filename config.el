@@ -65,7 +65,8 @@
 ;;;;; SET FONTS
 
 (cond (IS-MAC
-       (setq doom-font (font-spec :family "monospace" :size 15 :weight 'regular )))
+       (setq doom-font (font-spec :family "monospace" :size 15 :weight 'regular )
+             doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 25 :weight 'regular)))
       (t
 
        (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
@@ -75,9 +76,9 @@
 
 ;;;;; FACES
 
-      (custom-set-faces!
-        '(font-lock-comment-face :slant italic)
-        '(font-lock-keyword-face :slant italic))
+(custom-set-faces!
+  '(font-lock-comment-face :slant italic)
+  '(font-lock-keyword-face :slant italic))
 (setq global-prettify-symbols-mode t)
 
 (custom-set-faces!
@@ -337,7 +338,7 @@
   (cond (IS-MAC
          (setq wakatime-cli-path "/usr/local/bin/wakatime-cli"))
         (t
-          (setq wakatime-cli-path "/usr/bin/wakatime")))
+         (setq wakatime-cli-path "/usr/bin/wakatime"))))
 
 ;;;; LOAD
 
