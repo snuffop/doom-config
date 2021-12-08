@@ -8,6 +8,26 @@
 ;;
 ;;; functions
 
+;;;###autoload
+(defun my-system-type-is-darwin ()
+  "Return true if system is darwin-based (Mac OS X)"
+  (string-equal system-type "darwin")
+  )
+
+;;;###autoload
+;; Check if system is Microsoft Windows
+(defun my-system-type-is-windows ()
+  "Return true if system is Windows-based (at least up to Win7)"
+  (string-equal system-type "windows-nt")
+  )
+
+;;;###autoload
+;; Check if system is GNU/Linux
+(defun my-system-type-is-gnu ()
+  "Return true if system is GNU/Linux-based"
+  (string-equal system-type "gnu/linux")
+  )
+
 
 ;;;; OPEN MUTT MESSAGE
 

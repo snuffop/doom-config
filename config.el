@@ -63,10 +63,17 @@
 
 ;;;; UI
 ;;;;; SET FONTS
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
-      doom-unicode-font (font-spec :family "symbola" :size 15)
-      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))
+
+(when my-system-type-is-darwin ()
+
+      (setq doom-font (font-spec :family "Iosevka SS04" :size 24 :weight 'light )
+            doom-variable-pitch-font (font-spec :family "SF Pro Text" :style "Regular" :size 20 :weight 'regular)))
+
+(when my-system-type-is-gnu ()
+      (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
+            doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
+            doom-unicode-font (font-spec :family "symbola" :size 15)
+            doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24)))
 
 ;;;;; FACES
 
