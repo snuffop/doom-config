@@ -47,7 +47,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
-   '((buffer-read-only . 1)
+   '((\,
+      ((org-roam-directory . "~/Source/NSI/salt-master/")
+       (org-roam-index-file . "~/Source/NSI/salt-master/README.org")
+       (org-roam-db-location . "~/Source/NSI/salt-master/org-roam.db")))
+     (buffer-read-only . 1)
      (org-roam-db-location . "/home/marty/Source/NSI/NSI-Documentation/org-roam.db")
      (org-roam-directory . "/home/marty/Source/NSI/NSI-Documentation/"))))
 (custom-set-faces
