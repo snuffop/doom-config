@@ -230,6 +230,32 @@
                                              "Meet on the level Act by the Plumb and Part upon the Square  AF&AM 832\n"
                                              "https://snuffy.org\n"))))
 
+;;;;;; Joyent
+          ,(make-mu4e-context
+            :name "Joyent"
+            :enter-func (lambda () (mu4e-message "Switch to the Joyent context"))
+            :leave-func (lambda () (mu4e-message "Leaving Joyent context"))
+            :vars '((user-mail-address       . "marty.buchaus@joyent.com")
+                    (mu4e-get-mail-command   . "mbsync Joyent")
+                    (mu4e-trash-folder       . "/Joyent/Trash")
+                    (mu4e-drafts-folder      . "/Joyent/Drafts")
+                    (mu4e-sent-folder        . "/Joyent/Sent")
+                    (mu4e-refile-folder      . "/Joyent/Archive")
+                    (user-full-name          . "Marty Buchaus")
+                    (mu4e-maildir-shortcuts  . ((:maildir "/Joyent/Archive"           :key ?a)
+                                                (:maildir "/Joyent/Drafts"            :key ?d)
+                                                (:maildir "/Joyent/INBOX"             :key ?i)
+                                                (:maildir "/Joyent/Nagios"            :key ?n)
+                                                (:maildir "/Joyent/FollowUp"          :key ?f)
+                                                (:maildir "/Joyent/Sent"              :key ?s)
+                                                (:maildir "/Joyent/Spam"              :key ?S)
+                                                (:maildir "/Joyent/Trash"             :key ?T)))
+                    (message-sendmail-extra-arguments . ("--account=Joyent"))
+                    (mu4e-compose-signature .
+                                            (concat
+                                             "Marty Buchaus\n"
+                                             "Meet on the Level Act by the Plumb and Part upon the Square\n"))))
+
 ;;;;;; Lets Earn Money
           ,(make-mu4e-context
             :name "letsEarnMoney"

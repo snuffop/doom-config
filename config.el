@@ -64,22 +64,21 @@
 ;;;; UI
 ;;;;; SET FONTS
 
-(when my-system-type-is-darwin ()
+(cond (IS-MAC
+       (setq doom-font (font-spec :family "Iosevka SS04" :size 24 :weight 'light )
+             doom-variable-pitch-font (font-spec :family "SF Pro Text" :style "Regular" :size 20 :weight 'regular)))
+      (t
 
-      (setq doom-font (font-spec :family "Iosevka SS04" :size 24 :weight 'light )
-            doom-variable-pitch-font (font-spec :family "SF Pro Text" :style "Regular" :size 20 :weight 'regular)))
-
-(when my-system-type-is-gnu ()
-      (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
-            doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
-            doom-unicode-font (font-spec :family "symbola" :size 15)
-            doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24)))
+       (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
+             doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
+             doom-unicode-font (font-spec :family "symbola" :size 15)
+             doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))))
 
 ;;;;; FACES
 
-(custom-set-faces!
-  '(font-lock-comment-face :slant italic)
-  '(font-lock-keyword-face :slant italic))
+      (custom-set-faces!
+        '(font-lock-comment-face :slant italic)
+        '(font-lock-keyword-face :slant italic))
 (setq global-prettify-symbols-mode t)
 
 (custom-set-faces!
