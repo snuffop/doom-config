@@ -82,8 +82,8 @@
 (setq global-prettify-symbols-mode t)
 
 (custom-set-faces!
- '(mode-line :family "firacode nerd font mono" :height 100)
- '(mode-line-inactive :family "firacode nerd font mono" :height 100))
+  '(mode-line :family "firacode nerd font mono" :height 140)
+  '(mode-line-inactive :family "firacode nerd font mono" :height 140))
 
 ;;;;; THEME
 
