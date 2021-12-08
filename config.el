@@ -65,8 +65,8 @@
 ;;;;; SET FONTS
 
 (cond (IS-MAC
-       (setq doom-font (font-spec :family "DejaVu Sans Mono Nerd Font" :size 24 :weight 'light )
-             doom-variable-pitch-font (font-spec :family "Ubuntu Nerd Font" :style "Regular" :size 20 :weight 'regular)))
+       (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
+             doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)))
       (t
 
        (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
@@ -335,7 +335,10 @@
 (use-package! wakatime-mode
   :config
   (add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
-  (setq wakatime-cli-path "/usr/bin/wakatime"))
+  (cond (IS-MAC
+         (setq wakatime-cli-path "/usr/local/bin/wakatime-cli"))
+        (t
+          (setq wakatime-cli-path "/usr/bin/wakatime")))
 
 ;;;; LOAD
 
