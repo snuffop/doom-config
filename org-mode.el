@@ -19,7 +19,9 @@
                                (concat org-directory "Calendar.org")
                                (concat org-directory "contacts.org")
                                (concat org-directory "Someday.org")
-                               (concat org-directory "0mobile.org")))
+                               (concat org-directory "0mobile.org")
+                               "~/Nextcloud/Notes/Calendars/google.org"
+                               "~/Nextcloud/Notes/Calendars/tatjana.org"))
 ;;;; ORG-MODE
 ;;;;; PACKAGE
 (after! org

@@ -49,6 +49,7 @@
 (package! paperless)
 (package! prescient)
 (package! salt-mode)
+(package! ssh-config-mode)
 (package! systemd)
 (package! wakatime-mode)
 (package! vlf)

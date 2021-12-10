@@ -2,13 +2,13 @@
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2021, Marty Buchaus, all rights reserved.
-;; Created:  1 December 2021
+;; Created: 10 December 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;;; Commentary:
 ;;
-;;
+;;  
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -46,14 +46,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(safe-local-variable-values
-   '((\,
-      ((org-roam-directory . "~/Source/NSI/salt-master/")
-       (org-roam-index-file . "~/Source/NSI/salt-master/README.org")
-       (org-roam-db-location . "~/Source/NSI/salt-master/org-roam.db")))
-     (buffer-read-only . 1)
-     (org-roam-db-location . "/home/marty/Source/NSI/NSI-Documentation/org-roam.db")
-     (org-roam-directory . "/home/marty/Source/NSI/NSI-Documentation/"))))
+ '(safe-local-variable-values '((buffer-read-only . 1))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
