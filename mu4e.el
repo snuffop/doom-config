@@ -187,6 +187,7 @@
           ))
 ;;;;; Contexts
 
+  (setq mu4e-context-policy 'always-ask)
   (setq mu4e-contexts
 
         `(
