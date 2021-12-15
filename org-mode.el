@@ -920,3 +920,8 @@ is selected, only the bare key is returned."
 
 
 
+
+;;;; ORG-PANDOC-IMPORT
+
+(use-package! org-pandoc-import
+  :after org)

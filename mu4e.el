@@ -126,8 +126,8 @@
             #'(lambda ()
                 "My Setting for Composing Messages"
                 (save-excursion (message-add-header "X-Mailer: mu4e/Linux"))
-                (save-excursion (message-add-header "X-PGP-KEY-Fingerprint: 7F6C A60C 06C2 4811 FA1C A2BC 2EBC 5E32 FEE3 0AD4"))
-                (save-excursion (message-add-header "X-PGP-Key-ID: 0x090F6CEA"))
+                (save-excursion (message-add-header "X-PGP-KEY-Fingerprint: CBE2 3C6D 1E97 5793 2C4F 91D8 3B77 E2C6 70F4 ACD2"))
+                (save-excursion (message-add-header "X-PGP-Key-ID: 0x3B77E2C670F4ACD2"))
                 (save-excursion (message-add-header "X-PGP-Key: https://keybase.io/mbuchaus/key.asc "))
                 (marty-mu4e/mu4e-compose-maybe-signed-and-crypted)
                 (set-fill-column 72)
@@ -143,7 +143,7 @@
 
 ;;;;;; Encryption
 
-  (setq epg-user-id "0x090F6CEA")
+  (setq epg-user-id "0x3B77E2C670F4ACD2")
   (setq mu4e-decryption-policy t)
   (setq mu4e-compose-crypto-reply-plain-policy 'sign)
   (setq mml-secure-openpgp-encrypt-to-self t)

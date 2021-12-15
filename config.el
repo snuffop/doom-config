@@ -19,10 +19,11 @@
 (setq user-mail-address "marty@dabuke.com")
 (setq epg-gpg-program "/usr/bin/gpg2")
 
+(setq-default delete-by-moving-to-trash t)
 (setq-default enable-local-variables t)            ; allow for reading the local variables file
-(setq-default window-combination-resize t)
 (setq-default left-margin-width 1)                 ; Define new widths
 (setq-default right-margin-width 2)                ; Define new widths.
+(setq-default window-combination-resize t)
 (setq-default x-stretch-cursor t)
 
 (setq scroll-margin 2)                             ; it's nice to maintain a little margin
@@ -71,9 +72,9 @@
       (t
 
        (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
-             doom-variable-pitch-font (font-spec :family "Ubuntu" :style "Regular" :size 15 :weight 'regular)
+             doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15 )
              doom-unicode-font (font-spec :family "symbola" :size 15)
-             doom-big-font (font-spec :family "DejaVu Sans Mono" :size 24))))
+             doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20))))
 
 ;;;;; FACES
 
@@ -94,6 +95,8 @@
 ;;;;; THEME
 
 (setq doom-theme 'doom-dracula )
+
+(doom-themes-org-config)
 
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -142,6 +145,10 @@
                 shell-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+
+(setq doom-fallback-buffer-name "► Doom"
+      +doom-dashboard-name "► Doom")
 
 ;;;; PACKAGES
 ;;;;; AUTOINSERT
@@ -208,12 +215,25 @@
 ;;;;; MAGIT
 
 (after! magit
-  (setq magit-commit-arguments '("--gpg-sign=7ACF5A8C6A106D1F561F1699E72D93984A1E2483")
-        magit-rebase-arguments '("--autostash" "--gpg-sign=7ACF5A8C6A106D1F561F1699E72D93984A1E2483")
-        magit-pull-arguments   '("--rebase" "--autostash" "--gpg-sign=7ACF5A8C6A106D1F561F1699E72D93984A1E2483"))
+  (setq magit-commit-arguments '("--gpg-sign=CBE23C6D1E9757932C4F91D83B77E2C670F4ACD2")
+        magit-rebase-arguments '("--autostash" "--gpg-sign=CBE23C6D1E9757932C4F91D83B77E2C670F4ACD2")
+        magit-pull-arguments   '("--rebase" "--autostash" "--gpg-sign=CBE23C6D1E9757932C4F91D83B77E2C670F4ACD2"))
   (magit-define-popup-option 'magit-rebase-popup
     ?S "Sign using gpg" "--gpg-sign=" #'magit-read-gpg-secret-key)
   (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
+
+;;;;;; Magit Hub
+(use-package! magithub
+  :after magit
+  :commands (magithub-clone
+             magithub-completion-enable)
+  ;; :ensure t
+  :config
+  (magithub-feature-autoinject t)
+  (setq
+   magithub-clone-default-directory "$HOME/Source/GITHUB"
+   magithub-dir (concat doom-etc-dir "magithub/")
+   magithub-preferred-remote-method 'clone_url))
 
 ;;;;; SPELL
 
@@ -226,6 +246,46 @@
 (after! treemacs
   (setq +treemacs-git-mode 'extended)
   (setq treemacs-width 30))
+
+;;;;; CONSULT
+
+(after! consult
+  (set-face-attribute 'consult-file nil :inherit 'consult-buffer)
+  (setf (plist-get (alist-get 'perl consult-async-split-styles-alist) :initial) ";"))
+;;;;; Marginalia
+(after! marginalia
+  (setq marginalia-censor-variables nil)
+
+  (defadvice! +marginalia--anotate-local-file-colorful (cand)
+    "Just a more colourful version of `marginalia--anotate-local-file'."
+    :override #'marginalia--annotate-local-file
+    (when-let (attrs (file-attributes (substitute-in-file-name
+                                       (marginalia--full-candidate cand))
+                                      'integer))
+      (marginalia--fields
+       ((marginalia--file-owner attrs)
+        :width 12 :face 'marginalia-file-owner)
+       ((marginalia--file-modes attrs))
+       ((+marginalia-file-size-colorful (file-attribute-size attrs))
+        :width 7)
+       ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+        :width 12))))
+
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color)))))
 
 ;;;; MODULES
 ;;;;; ACTIVITY WATCH MODE
@@ -319,6 +379,7 @@
 
 (use-package! systemd
   :defer t
+  :mode "\\.service\\'"
   :config
   (map! :map systemd-mode
         :localleader
@@ -341,10 +402,8 @@
 (use-package! wakatime-mode
   :config
   (add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
-  (cond (IS-MAC
-         (setq wakatime-cli-path "/usr/local/bin/wakatime-cli"))
-        (t
-         (setq wakatime-cli-path "/usr/bin/wakatime"))))
+  (cond (IS-MAC (setq wakatime-cli-path "/usr/local/bin/wakatime-cli"))
+        (IS-LINUX (setq wakatime-cli-path "/usr/bin/wakatime"))))
 
 ;;;; LOAD
 
@@ -353,6 +412,14 @@
 (load! "keybindings.el")
 (load! "hydra.el")
 (load! "mu4e.el")
+
+
+(defun marty/set-patching-macro-registers ()
+  "evil keyboard macros for patching,  running docker containers"
+  (interactive)
+  (evil-set-register ?e [?0 ?i ?* ?* ?* ?* ?* ?* ?  escape ?0])
+  (evil-set-register ?b [?0 ?o escape ?0 ?i ?# ?+ ?e ?n ?d ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0] )
+  (evil-set-register ?t [?0 ?o ?i backspace ?# ?+ ?b ?e ?g ?i ?n ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0]))
 
 ;;; CUSTOM
 
