@@ -194,7 +194,6 @@
     (hl-line-mode -1)
     (auto-revert-mode 1)
     (visual-line-mode)
-    (variable-pitch-mode 1)
 
     (setq prettify-symbols-unprettify-at-point 'right-edge)
 

@@ -72,7 +72,7 @@
       (t
 
        (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'regular )
-             doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15 )
+             doom-variable-pitch-font (font-spec :family "Ubuntu Nerd Font" :size 15 )
              doom-unicode-font (font-spec :family "symbola" :size 15)
              doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20))))
 
