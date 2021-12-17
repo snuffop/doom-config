@@ -156,7 +156,6 @@
   (setq org-persp-startup-org-file "~/Nextcloud/Notes/org/0mobile.org")
   (setq org-projectile-file "todo.org")
   (setq org-fancy-priorities-list '("🅰" "🅱" "🅲" "🅳" "🅴"))
-  (setq org-clock-sound "~/Nextcloud/Music/sounds/shipsBell.wav")
   (setq org-startup-with-inline-images t)  ; Show Inline Images
 
 ;;;;; CLOCKING
@@ -164,6 +163,7 @@
   ;; (setq org-clock-into-drawer "CLOCKING")
   ;; Where to put the clock in and out for tracked items
   (setq org-clock-out-remove-zero-time-clocks t)
+  (setq org-clock-sound "~/Nextcloud/Music/sounds/shipsBell.wav")
 
 ;;;;; LOGGING AND ID
 
@@ -194,7 +194,7 @@
     (hl-line-mode -1)
     (auto-revert-mode 1)
     (visual-line-mode)
-    (variable-pitch-mode)
+    (variable-pitch-mode 1)
 
     (setq prettify-symbols-unprettify-at-point 'right-edge)
 
@@ -321,16 +321,64 @@
    '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
    )
 
-  (add-to-list 'org-tag-faces '("@.*" . (:foreground "red")))
+  (set-face-attribute 'variable-pitch nil
+                      :font "Ubuntu"
+                      :weight 'regular
+                      :height 100)
+
+  (set-face-attribute 'fixed-pitch nil
+                      :font "Droid Sans Mono"
+                      :weight 'regular
+                      :height 100)
+
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-tag nil :foreground nil :inherit '(shadow fixed-pitch) :weight 'bold)
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-tag nil
+                      :foreground nil
+                      :inherit '(shadow fixed-pitch)
+                      :weight 'bold)
+
+  (set-face-attribute 'org-block nil
+                      :inherit 'fixed-pitch)
+
+  (set-face-attribute 'org-code nil
+                      :inherit '(shadow fixed-pitch))
+
+  (set-face-attribute 'org-table nil
+                      :foreground "#83a598"
+                      :inherit '(shadow fixed-pitch))
+
+  (set-face-attribute 'org-verbatim nil
+                      :inherit '(shadow fixed-pitch))
+
+  (set-face-attribute 'org-special-keyword nil
+                      :inherit '(font-lock-comment-face fixed-pitch))
+
+  (set-face-attribute 'org-meta-line nil
+                      :inherit '(font-lock-comment-face fixed-pitch))
+
+  (set-face-attribute 'org-checkbox nil
+                      :inherit 'fixed-pitch)
+
+  (set-face-attribute 'org-link nil
+                      :foreground "royal blue"
+                      :underline t)
+
+  (set-face-attribute 'org-meta-line nil
+                      :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-property-value nil
+                      :inherit 'fixed-pitch)
+
+  (set-face-attribute 'org-special-keyword nil
+                      :inherit '(font-lock-comment-face fixed-pitch))
+
+  (set-face-attribute 'org-tag nil
+                      :inherit '(shadow fixed-pitch)
+                      :weight 'bold
+                      :height 10)
+
+  (set-face-attribute 'org-verbatim nil
+                      :inherit '(shadow fixed-pitch))
+
 
 ;;;;; KEYWORDS
 
