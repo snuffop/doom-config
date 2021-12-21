@@ -254,13 +254,13 @@
   (global-activity-watch-mode))
 
 (use-package! activity-watch-mode
-  :defer t
   :config
   (add-hook 'doom-first-buffer-hook #'marty/startactivitywatchmode))
 
 ;;;;; AGGRESSIVE INDENT
 
 (use-package! aggressive-indent
+  :defer t
   :config
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'clojure-mode-hook    #'aggressive-indent-mode)
@@ -305,23 +305,6 @@
   (add-hook 'prog-mode-hook #'outline-minor-mode)
   (add-hook 'outline-minor-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
-
-;;;;; PAPERLESS
-
-(use-package! paperless
-  :commands (paperless)
-  :config (progn
-            (custom-set-variables
-             '(paperless-capture-directory "~/Nextcloud/Documents/INBOX")
-             '(paperless-root-directory "~/Nextcloud/Documents")))
-  (map! :after paperless
-        :localleader
-        :mode paperless-mode
-        "d"  #'paperless-display
-        "r"  #'paperless-rename
-        "r"  #'paperless-scan-directories
-        "f"  #'paperless-file
-        "x"  #'paperless-execute))
 
 ;;;;; RAINBOW MODE
 
@@ -381,6 +364,6 @@
 
 ;;; CUSTOM
 
-(setq-default custom-file (expand-file-name ".custom.el" doom-private-dir))
+(setq-default custom-file (expand-file-name "custom.el" doom-private-dir))
 (when (file-exists-p custom-file)
   (load custom-file))
