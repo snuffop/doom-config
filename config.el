@@ -219,18 +219,6 @@
     ?S "Sign using gpg" "--gpg-sign=" #'magit-read-gpg-secret-key)
   (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
 
-;;;;;; Magit Hub
-(use-package! magithub
-  :after magit
-  :commands (magithub-clone
-             magithub-completion-enable)
-  ;; :ensure t
-  :config
-  (magithub-feature-autoinject t)
-  (setq
-   magithub-clone-default-directory "$HOME/Source/GITHUB"
-   magithub-dir (concat doom-etc-dir "magithub/")
-   magithub-preferred-remote-method 'clone_url))
 
 ;;;;; SPELL
 
@@ -244,18 +232,17 @@
   (setq +treemacs-git-mode 'extended)
   (setq treemacs-width 30))
 
-
 ;;;; MODULES
 ;;;;; ACTIVITY WATCH MODE
 
+(cond (IS-LINUX
+       (defun marty/startactivitywatchmode ()
+         (interactive)
+         (global-activity-watch-mode))
 
-(defun marty/startactivitywatchmode ()
-  (interactive)
-  (global-activity-watch-mode))
-
-(use-package! activity-watch-mode
-  :config
-  (add-hook 'doom-first-buffer-hook #'marty/startactivitywatchmode))
+       (use-package! activity-watch-mode
+         :config
+         (add-hook 'doom-first-buffer-hook #'marty/startactivitywatchmode))))
 
 ;;;;; AGGRESSIVE INDENT
 

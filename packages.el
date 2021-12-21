@@ -27,7 +27,6 @@
 (package! i3wm-config-mode)
 (package! khalel)
 (package! khardel)
-(package! magithub)
 (package! major-mode-hydra)
 (package! mu4e-column-faces)
 (package! mu4e-marker-icons)
@@ -53,10 +52,12 @@
 (package! vlf)
 
 
-(package! activity-watch-mode      :recipe (:host github :repo "pauldub/activity-watch-mode"))
 (package! org-ol-tree              :recipe (:host github :repo "Townk/org-ol-tree"))
 (package! org-pandoc-import        :recipe (:host github :repo "tecosaur/org-pandoc-import" :files ("*.el" "filters" "preprocessors")))
 (package! org-pandoc-import        :recipe (:host github :repo "tecosaur/org-pandoc-import" :files ("*.el" "filters" "preprocessors")))
 (package! org-pretty-table         :recipe (:host github :repo "Fuco1/org-pretty-table"))
 (package! org-recoll               :recipe (:host github :repo "alraban/org-recoll"))
 (package! outshine                 :recipe (:host github :repo "alphapapa/outshine"))
+
+(cond (IS-LINUX
+       (package! activity-watch-mode      :recipe (:host github :repo "pauldub/activity-watch-mode"))))
