@@ -136,6 +136,7 @@
        :desc "0mobile"       "0" #'(lambda () (interactive) (find-file (concat org-directory "0mobile.org")))
        :desc "Desktop"       "d" #'(lambda () (interactive) (find-file (concat org-directory "desktop.org")))
        :desc "contacts"      "o" #'(lambda () (interactive) (find-file (concat org-directory "contacts.org")))
+       :desc "read-later"    "r" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
        :desc "Tasks"         "g" #'(lambda () (interactive) (find-file (concat org-directory "Tasks.org")))
        :desc "Habits"        "h" #'(lambda () (interactive) (find-file (concat org-directory "Habits.org")))
        :desc "read later"    "l" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))

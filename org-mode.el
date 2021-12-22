@@ -800,8 +800,8 @@ is selected, only the bare key is returned."
           ("t" "Tasks" entry "** TODO %? "
            :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
            :empty-lines-after 1 )
-          ("r" "Rackspace" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Rackspace"))
+          ("y" "Joyent" entry "** %<%H:%M> %?"
+           :if-new (file+olp "%<%Y-%m-%d>.org" ("Joyent"))
            :empty-lines-after 1)
           ("j" "Journal" entry "** %<%H:%M> %?"
            :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
@@ -812,6 +812,10 @@ is selected, only the bare key is returned."
            (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
            :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
            :immediate-finish t
+           :unnarrowed t)
+          ("j" "Joyent" plain
+           (file "~/.config/doom/templates/roam-templates/joyent-entry.org")
+           :if-new (file+head "Joyent/${slug}.org" "#+TITLE: ${title}\n#+filetags: Joyent\n#+category: Joyent\n")
            :unnarrowed t)
           ("t" "tipjar" plain
            (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
