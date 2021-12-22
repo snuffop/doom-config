@@ -16,6 +16,9 @@
 (after! straight
   (add-to-list 'straight-recipes-gnu-elpa-ignored-packages 'seq))
 
+(when noninteractive
+  (add-to-list 'doom-env-whitelist "^SSH_"))
+
 (doom! :input
        ;;chinese
        ;;japanese
