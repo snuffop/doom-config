@@ -56,6 +56,7 @@
 (package! org-pretty-table         :recipe (:host github :repo "Fuco1/org-pretty-table"))
 (package! org-recoll               :recipe (:host github :repo "alraban/org-recoll"))
 (package! outshine                 :recipe (:host github :repo "alphapapa/outshine"))
+(package! embark-vc                :recipe (:host github :repo "elken/embark-vc"))
 
 (cond (IS-LINUX
        (package! activity-watch-mode      :recipe (:host github :repo "pauldub/activity-watch-mode"))))

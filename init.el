@@ -115,7 +115,8 @@
         +offline
         +docsets)
        lsp               ; M-x vscode
-       magit             ; a git porcelain for Emacs
+       (magit             ; a git porcelain for Emacs
+        +forge)
        ;;make              ; run make tasks from Emacs
        (pass              ; password manager for nerds
         +auth)

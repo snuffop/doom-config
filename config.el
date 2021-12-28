@@ -180,18 +180,6 @@
   (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
   (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand]))
 
-;;;;; DIRED
-
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-;; get file icons in dired
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-;; with dired-open plugin, you can launch external programs for certain extensions
-;; for example, i set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
-(setq dired-open-extensions '(("gif" . "sxiv")
-                              ("jpg" . "sxiv")
-                              ("png" . "sxiv")
-                              ("mkv" . "mpv")
-                              ("mp4" . "mpv")))
 ;;;;; COMPANY
 
 (after! company
@@ -208,6 +196,24 @@
 (use-package! company-prescient
   :after company
   :hook (company-mode . company-prescient-mode))
+
+;;;;; DIRED
+
+(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
+;; get file icons in dired
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+;; with dired-open plugin, you can launch external programs for certain extensions
+;; for example, i set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
+(setq dired-open-extensions '(("gif" . "sxiv")
+                              ("jpg" . "sxiv")
+                              ("png" . "sxiv")
+                              ("mkv" . "mpv")
+                              ("mp4" . "mpv")))
+;;;;; EMBARK
+;;;;;; EMBARK VC
+
+(use-package! embark-vc
+  :after embark)
 
 ;;;;; MAGIT
 
