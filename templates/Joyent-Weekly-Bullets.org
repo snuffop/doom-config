@@ -1,0 +1,11 @@
+:PROPERTIES:
+:AUTHOR:   Marty Buchaus
+:EMAIL:    marty.buchaus@joyent.com
+:END:
+#+TITLE:  ${1:`(replace-regexp-in-string "-" " " (capitalize (file-name-nondirectory (file-name-sans-extension (buffer-file-name)))))`}
+#+CATEGORY: Joyent, Reports
+#+STARTUP:  overview
+#+DESCRIPTION: Weekly Bullets for Marty Buchaus
+
+
+* Bullets for the week of

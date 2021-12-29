@@ -6,6 +6,7 @@
 ;;
 ;;;; Notes
 ;;
+;;  2021 12 29 Updated the outshine use-packages with a hook to save 3 seconds on startup time
 ;;  2021 12 08 Modified and working for OSX
 ;;  2021 11 18 Update clean Install and config
 ;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
@@ -176,6 +177,7 @@
   (define-auto-insert "NSI-Documentation/TVA/[^/]+\\.org?$" ["NSI-Documentation-TVA.org" marty/autoinsert-yas-expand])
   (define-auto-insert "NSI-Documentation/TVA/ScanReports/.+[^/]+\\.org?$" ["NSI-Documentation-TVA-scanreport.org" marty/autoinsert-yas-expand])
   (define-auto-insert "NSI-Documentation/Patching/.+[^/]+\\.org?$" ["NSI-Documentation-Patching-Notes.org" marty/autoinsert-yas-expand])
+  (define-auto-insert "Joyent/reports/bullets/.+[^/]+\\.org?$" ["Joyent-Weekly-Bullets.org" marty/autoinsert-yas-expand])
   (define-auto-insert "masons/[^/].+\\.org?$" ["masonsMeetingMinuets.org" marty/autoinsert-yas-expand])
   (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
   (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand]))
@@ -209,20 +211,10 @@
                               ("png" . "sxiv")
                               ("mkv" . "mpv")
                               ("mp4" . "mpv")))
-;;;;; EMBARK
-;;;;;; EMBARK VC
-
-(use-package! embark-vc
-  :after embark)
 
 ;;;;; MAGIT
 
 (after! magit
-  (setq magit-commit-arguments '("--gpg-sign=CBE23C6D1E9757932C4F91D83B77E2C670F4ACD2")
-        magit-rebase-arguments '("--autostash" "--gpg-sign=CBE23C6D1E9757932C4F91D83B77E2C670F4ACD2")
-        magit-pull-arguments   '("--rebase" "--autostash" "--gpg-sign=CBE23C6D1E9757932C4F91D83B77E2C670F4ACD2"))
-  (magit-define-popup-option 'magit-rebase-popup
-    ?S "Sign using gpg" "--gpg-sign=" #'magit-read-gpg-secret-key)
   (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
 
 
@@ -239,16 +231,6 @@
   (setq treemacs-width 30))
 
 ;;;; MODULES
-;;;;; ACTIVITY WATCH MODE
-
-(cond (IS-LINUX
-       (defun marty/startactivitywatchmode ()
-         (interactive)
-         (global-activity-watch-mode))
-
-       (use-package! activity-watch-mode
-         :config
-         (add-hook 'doom-first-buffer-hook #'marty/startactivitywatchmode))))
 
 ;;;;; AGGRESSIVE INDENT
 
@@ -292,17 +274,13 @@
 ;;;;; OUTSHINE
 
 (use-package! outshine
+  :hook (prog-mode . outshine-mode)
   :config
   (map! :map emacs-lisp-mode-map
         "TAB" #'outshine-cycle)
   (add-hook 'prog-mode-hook #'outline-minor-mode)
   (add-hook 'outline-minor-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
-
-;;;;; RAINBOW MODE
-
-(use-package! rainbow-mode
-  :hook (((css-mode scss-mode org-mode emacs-lisp-mode typescript-mode js-mode). rainbow-mode)))
 
 ;;;;; SALT MODE
 

@@ -826,8 +826,6 @@ is selected, only the bare key is returned."
            :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
            :unnarrowed t)))
 
-
-
 ;;;;;; ADD ADITIONAL PROPERTIES
 
   (defun marty/add-other-auto-props-to-org-roam-properties ()
@@ -956,25 +954,3 @@ is selected, only the bare key is returned."
   :after org-roam
   :config
   (setq org-roam-timestamps-parent-file t)  (org-roam-timestamps-mode))
-
-;;;; ROAM-BIBTEX
-
-(use-package! org-roam-bibtex
-  :after org-roam
-  :config
-  (require 'org-ref)
-  (setq orb-preformat-keywords
-        '("citekey" "title" "url" "file" "author-or-editor" "keywords" "pdf" "doi" "author" "tags" "year" "author-bbrev")))
-
-;;;; ORG-ROAM-UI
-
-(use-package! org-roam-ui
-  :after org-roam)
-
-
-
-
-;;;; ORG-PANDOC-IMPORT
-
-(use-package! org-pandoc-import
-  :after org)
