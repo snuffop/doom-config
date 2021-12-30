@@ -320,8 +320,8 @@
 ;;;; LOAD
 
 (load! "functions.el")
-(load! "org-mode.el")
 (load! "keybindings.el")
+(load! "org-mode.el")
 (load! "hydra.el")
 (load! "mu4e.el")
 
