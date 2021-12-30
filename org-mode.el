@@ -322,20 +322,12 @@
    '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
    )
 
-  (cond (IS-MAC ((set-face-attribute 'variable-pitch nil
-                                     :font "Ubuntu Nerd Font"
-                                     :weight 'regular
-                                     :height 100)))
-        (IS-LINUX ((set-face-attribute 'variable-pitch nil
+  (cond (IS-LINUX ((set-face-attribute 'variable-pitch nil
                                        :font "Ubuntu"
                                        :weight 'regular
-                                       :height 100))))
+                                       :height 100))
 
-  (cond (IS-MAC ((set-face-attribute 'fixed-pitch nil
-                                     :font "DejaVuSansMono Nerd Font"
-                                     :weight 'regular
-                                     :height 100)))
-        (IS-LINUX ((set-face-attribute 'fixed-pitch nil
+                  ((set-face-attribute 'fixed-pitch nil
                                        :font "Droid Sans Mono"
                                        :weight 'regular
                                        :height 100))))
