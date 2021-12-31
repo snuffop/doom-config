@@ -1,7 +1,7 @@
 ;;; org-mode.el --- ORG-MODE -*- lexical-binding: t; -*-
 
 ;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2021, marty buchaus, all rights reserved.
+;; copyright © 2022, marty buchaus, all rights reserved.
 ;; created:  1 November 2021
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -88,6 +88,20 @@
            :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2021/reports/"
            :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
            :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2021/reports/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2022-images"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2022/images/"
+           :base-extension "jpg\\|gif\\|png"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2022/images/"
+           :publishing-function org-publish-attachment
+           :recursive t)
+
+          ("NSI-Documentation-TVA-ScanReports-2022-reports"
+           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2022/reports/"
+           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2022/reports/"
            :publishing-function org-publish-attachment
            :recursive t)
 

@@ -1,7 +1,7 @@
 ;;; $doomdir/config.el --- My Emacs Config File -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2021, marty buchaus, all rights reserved.
+;; copyright © 2022, marty buchaus, all rights reserved.
 ;; created:  1 November 2021
 ;;
 ;;;; Notes
@@ -199,6 +199,11 @@
   :after company
   :hook (company-mode . company-prescient-mode))
 
+;;;;; CONSULT
+
+(after! consult
+  (evil-collection-init 'consult))
+
 ;;;;; DIRED
 
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
@@ -231,7 +236,6 @@
   (setq treemacs-width 30))
 
 ;;;; MODULES
-
 ;;;;; AGGRESSIVE INDENT
 
 (use-package! aggressive-indent
@@ -242,6 +246,13 @@
   (add-hook 'php-mode-hook #'aggressive-indent-mode)
   (add-hook 'hy-mode-hook #'aggressive-indent-mode))
 
+;;;;; Ebuku
+
+(use-package! ebuku
+  :defer t
+  :config
+  (evil-collection-init 'ebuku))
+
 ;;;;; I3 WINDOW MANAGER CONFIG
 ;; Syntax highlighting for i3 config
 (use-package! i3wm-config-mode
@@ -250,7 +261,7 @@
 ;;;;; JENKINS
 
 (use-package! jenkinsfile-mode
-:defer t )
+  :defer t )
 
 ;;;;; KHARD
 
@@ -319,11 +330,11 @@
 
 ;;;; LOAD
 
-(load! "functions.el")
-(load! "keybindings.el")
-(load! "org-mode.el")
-(load! "hydra.el")
-(load! "mu4e.el")
+(load! "+keybindings.el")
+(load! "+functions.el")
+(load! "+org-mode.el")
+(load! "+hydra.el")
+(load! "+mu4e.el")
 
 
 (defun marty/set-patching-macro-registers ()

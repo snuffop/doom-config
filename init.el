@@ -90,7 +90,7 @@
        eshell            ; the elisp shell that works everywhere
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
-       vterm             ; the best terminal emulation in Emacs
+       ;;vterm             ; the best terminal emulation in Emacs
 
        :checkers
        (syntax              ; tasing you for every semicolon you forget
@@ -117,7 +117,7 @@
        lsp               ; M-x vscode
        (magit             ; a git porcelain for Emacs
         +forge)
-       ;;make              ; run make tasks from Emacs
+       make              ; run make tasks from Emacs
        (pass              ; password manager for nerds
         +auth)
        pdf               ; pdf enhancements
@@ -159,7 +159,7 @@
        ;;fsharp            ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
-       ;; (go +lsp)         ; the hipster dialect
+       (go +lsp)         ; the hipster dialect
        ;;(haskell +lsp)    ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
@@ -173,7 +173,7 @@
         +lsp
         +fold)
        ;;lean              ; for folks with too much to prove
-       ;;ledger            ; be audit you can be
+       ledger            ; be audit you can be
        lua               ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
@@ -202,9 +202,9 @@
        ;;raku              ; the artist formerly known as perl6
        ;;rest              ; Emacs as a REST client
        ;;rst               ; ReST in peace
-       ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       ;;(rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       ;; +lsp)
+       (ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       (rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       +lsp)
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
        (sh                ; she sells {ba,z,fi}sh shells on the C xor
@@ -226,7 +226,7 @@
 
        :app
        calendar
-       ;;emms
+       emms
        everywhere        ; *leave* Emacs!? You must be joking
        ;; irc               ; how neckbeards socialize
        ;; (rss +org)        ; emacs as an RSS reader

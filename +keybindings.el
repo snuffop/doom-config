@@ -1,7 +1,7 @@
 ;; $DOOMDIR/keybindings.el --- Summary -*- lexical-binding: t; -*-
 ;;
 ;; Author: Marty Buchaus <marty@dabuke.com>
-;; Copyright © 2021, Marty Buchaus, all rights reserved.
+;; Copyright © 2022, Marty Buchaus, all rights reserved.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -37,7 +37,6 @@
       (:prefix-map ("a" . "Application")
        "m"  #'=mu4e
        "b"  #'ebuku
-       "p"  #'paperless
 
        ;; ORG
        (:prefix-map ("o" . "org")
@@ -156,7 +155,8 @@
 ;;;; MODE MAPS
 ;;;;; OVERRIDE ORG MODE MAP
 
-(map! :map org-mode-map
+(map! :after org
+      :map org-mode-map
       ;; Recently, a [tab] keybind in `outline-mode-cycle-map' has begun
       ;; overriding org's [tab] keybind in GUI Emacs. This is needed to undo
       ;; that, and should probably be PRed to org.

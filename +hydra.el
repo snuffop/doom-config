@@ -1,5 +1,9 @@
 ;;; hydra.el -*- lexical-binding: t; -*-
-
+;;
+;; author: marty buchaus <marty@dabuke.com>
+;; copyright © 2022, marty buchaus, all rights reserved.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package! major-mode-hydra
   :after hydra
   :preface

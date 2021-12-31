@@ -3,7 +3,7 @@
 
 * Status () {}
 * Links
-** [[file:2021 Index Org-Journal.org][2021 Index Org-Journal]]
+** [[file:2022 Index Org-Journal.org][2022 Index Org-Journal]]
 ** `(marty/journal-graphicslink)`
 * Tasks
 * Entries
