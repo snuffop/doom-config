@@ -954,3 +954,14 @@ is selected, only the bare key is returned."
   :after org-roam
   :config
   (setq org-roam-timestamps-parent-file t)  (org-roam-timestamps-mode))
+
+;;;; ORG-TRANSCLUSION
+
+(use-package! org-transclusion
+  :after org
+  :init
+  (map!
+   :map global-map "<f12>" #'org-transclusion-add
+   :leader
+   :prefix "n"
+   :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))

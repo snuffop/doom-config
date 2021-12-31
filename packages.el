@@ -38,7 +38,6 @@
 (package! org-ref)
 (package! org-roam-timestamps)
 (package! org-super-agenda)
-(package! org-transclusion)
 (package! org-wild-notifier)
 (package! ox-gfm)
 (package! prescient)
@@ -49,3 +48,4 @@
 (package! wakatime-mode)
 
 (package! outshine                 :recipe (:host github :repo "alphapapa/outshine"))
+(package! org-transclusion         :recipe (:host github :repo "nobiot/org-transclusion"))

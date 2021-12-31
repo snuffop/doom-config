@@ -21,7 +21,6 @@
         :en "C-k"   #'evil-window-up
         :en "C-l"   #'evil-window-right))
 
-
 (map!
  ;; :n "C-:"    #'+spell/correct
  :n "C-:"    #'flyspell-correct-wrapper
