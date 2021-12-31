@@ -38,6 +38,7 @@
 (package! org-ref)
 (package! org-roam-timestamps)
 (package! org-super-agenda)
+(package! org-transclusion)
 (package! org-wild-notifier)
 (package! ox-gfm)
 (package! prescient)
