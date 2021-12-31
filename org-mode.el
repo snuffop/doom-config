@@ -322,15 +322,15 @@
    '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
    )
 
-  (cond (IS-LINUX ((set-face-attribute 'variable-pitch nil
+  (cond (IS-LINUX (set-face-attribute 'variable-pitch nil
                                        :font "Ubuntu"
                                        :weight 'regular
-                                       :height 100))
+                                       :height 100)
 
-                  ((set-face-attribute 'fixed-pitch nil
+                  (set-face-attribute 'fixed-pitch nil
                                        :font "Droid Sans Mono"
                                        :weight 'regular
-                                       :height 100))))
+                                       :height 100)))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-tag nil
