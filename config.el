@@ -6,10 +6,10 @@
 ;;
 ;;;; Notes
 ;;
-;;  2021 12 29 Updated the outshine use-packages with a hook to save 3 seconds on startup time
-;;  2021 12 08 Modified and working for OSX
-;;  2021 11 18 Update clean Install and config
-;;  2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
+;;  * 2021 12 29 Updated the outshine use-packages with a hook to save 3 seconds on startup time
+;;  * 2021 12 08 Modified and working for OSX
+;;  * 2021 11 18 Update clean Install and config
+;;  * 2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -181,6 +181,14 @@
   (define-auto-insert "masons/[^/].+\\.org?$" ["masonsMeetingMinuets.org" marty/autoinsert-yas-expand])
   (define-auto-insert "daily/[^/].+\\.org?$" ["defaultRoamDaily.org" marty/autoinsert-yas-expand])
   (define-auto-insert "/[0-9]\\{8\\}.org$" ["defaultJournal.org" marty/autoinsert-yas-expand]))
+
+;;;;; COMPLETION
+;;;;;; VERTICO
+
+(after! vertico
+  (vertico-reverse-mode 1)
+  (setq vertico-resize t)
+)
 
 ;;;;; COMPANY
 

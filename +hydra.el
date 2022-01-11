@@ -96,42 +96,57 @@
 (pretty-hydra-define hydra-roam-jump
   (:hint nil :color teal :quit-key "q" :title (with-octicon "steps" "Roam Jump" 1 -0.05))
   ("Roam"
-   (("I"   #'org-roam-node-insert "insert (orig)")
+   (
+    ("B"   #'org-roam-demote-entire-buffer "Demote Buffer")
+    ("I"   #'org-roam-node-insert "insert (orig)")
     ("R"   #'marty/org-roam-rg-search "ripgrep search")
     ("a"   #'marty/org-roam-move-todo-to-today "archive to daily")
     ("b"   #'org-roam-buffer "Show Buffer")
+    ("f"   #'org-roam-ref-find "Find Reference")
     ("g"   #'org-roam-graph "roam-graph")
     ("i"   #'org-roam-node-insert-immediate "insert immediate")
     ("j"   #'org-roam-dailies-capture-today "capture today")
     ("m"   #'org-roam-buffer-toggle "buffer toggle")
+    ("M"   #'org-roam-buffer-display-dedicated "buffer dedicated")
     ("n"   #'org-roam-node-find "Find Node")
     ("r"   #'org-roam-refile "roam refile")
-    ("s"   #'org-roam-db-sync "sync DB"))
+    ("R"   #'org-roam-link-replace-all "link replace all")
+    ("s"   #'org-roam-db-sync "sync DB")
+    )
    "Dailies"
-   (("dT"  #'org-roam-dailies-goto-tomorrow "tomorrow")
+   (
+    ("d-"  #'org-roam-dailies-find-directory "Find Directory")
+    ("dT"  #'org-roam-dailies-goto-tomorrow "tomorrow")
     ("dd"  #'org-roam-dailies-goto-date "date")
     ("dn"  #'org-roam-dailies-goto-next-note "next-note")
     ("dp"  #'org-roam-dailies-goto-previous-note "previous-note")
     ("dt"  #'org-roam-dailies-goto-today "today")
-    ("dy"  #'org-roam-dailies-goto-yesterday "yesterday"))
+    ("dy"  #'org-roam-dailies-goto-yesterday "yesterday")
+    )
    "Capture"
-   (("cT"  #'org-roam-dailies-capture-tomorrow "capture tomorrow")
+   (
+    ("cT"  #'org-roam-dailies-capture-tomorrow "capture tomorrow")
     ("cb"  #'marty/org-roam-capture-inbox "capture to inbox")
     ("cc"  #'org-roam-capture "capture")
     ("cd"  #'org-roam-dailies-capture-date "capture by date")
     ("ct"  #'org-roam-dailies-capture-today "capture today")
-    ("cy"  #'org-roam-dailies-capture-yesterday "capture yesterday"))
+    ("cy"  #'org-roam-dailies-capture-yesterday "capture yesterday")
+    )
    "Database"
-   (("DD"  #'org-roam-db-diagnose-node "Diagnose")
+   (
+    ("DD"  #'org-roam-db-diagnose-node "Diagnose")
     ("Dc"  #'org-roam-db-clear-all "Clear All")
-    ("Dt"  #'org-roam-db-autosync-toggle "Auto Sync Toggle"))
+    ("Dt"  #'org-roam-db-autosync-toggle "Auto Sync Toggle")
+    )
    "Object"
-   (("oA"  #'org-roam-alias-remove "remove alias")
+   (
+    ("oA"  #'org-roam-alias-remove "remove alias")
     ("oR"  #'org-roam-ref-remove "remove reference")
     ("oT"  #'org-roam-tag-remove "remove tag")
     ("oa"  #'org-roam-alias-add "add alias")
     ("or"  #'org-roam-ref-add "add reference")
-    ("ot"  #'org-roam-tag-add "add tag"))
+    ("ot"  #'org-roam-tag-add "add tag")
+    )
    "Jump"
    (("Jm" #'dw/org-roam-goto-month "Month")
     ("Je" #'dw/org-roam-goto-year "Year"))))

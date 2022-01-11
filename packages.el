@@ -46,6 +46,6 @@
 (package! systemd)
 (package! vlf)
 (package! wakatime-mode)
+(package! weblorg)
 
 (package! outshine                 :recipe (:host github :repo "alphapapa/outshine"))
-(package! org-transclusion         :recipe (:host github :repo "nobiot/org-transclusion"))

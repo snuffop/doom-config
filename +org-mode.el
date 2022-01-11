@@ -427,8 +427,14 @@
                  :headline "General"
                  :template-file "~/.config/doom/templates/org-templates/contact.org")
 
+                ("Bullets"
+                 :keys "b"
+                 :icon ("sticky-note" :set "faicon" :color "blue")
+                 :file "~/Nextcloud/Notes/org/Joyent/Bullets.org"
+                 :datetree t
+                 )
+
                 ("Remember-mutt" :keys "R"
-                 :icon ("sticky-note" :set "faicon" :color "yellow")
                  :icon ("home" :set "octicon" :color "cyan")
                  :file "~/Nextcloud/Notes/org/0mobile.org"
                  :headline "Mail"
@@ -794,11 +800,11 @@ is selected, only the bare key is returned."
 
   (setq +org-roam-open-buffer-on-find-file nil)
 
-  (set-popup-rules!
-    `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
-      ("^\\*org-roam: " ; node dedicated org-roam buffer
-       :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
+  ;; (set-popup-rules!
+  ;;   `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
+  ;;      :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
+  ;;     ("^\\*org-roam: " ; node dedicated org-roam buffer
+  ;;      :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
 
 ;;;;;; ORG-ROAM HOOKS
 
@@ -968,14 +974,3 @@ is selected, only the bare key is returned."
   :after org-roam
   :config
   (setq org-roam-timestamps-parent-file t)  (org-roam-timestamps-mode))
-
-;;;; ORG-TRANSCLUSION
-
-(use-package! org-transclusion
-  :after org
-  :init
-  (map!
-   :map global-map "<f12>" #'org-transclusion-add
-   :leader
-   :prefix "n"
-   :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))

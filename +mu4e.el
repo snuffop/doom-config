@@ -87,7 +87,7 @@
   (setq mu4e-headers-results-limit 1000)
   (setq mu4e-index-cleanup t)
   (setq mu4e-index-lazy-check t)
-  (setq mu4e-update-interval 300)
+  (setq mu4e-update-interval (* 5 60))
   (setq mu4e-alert-icon "/usr/share/icons/Papirus/64x64/apps/evolution.svg")
 
 ;;;;;; Set from Context  these are default

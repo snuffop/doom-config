@@ -132,6 +132,7 @@
       :prefix "o"
       (:prefix-map ("m" . "MY")
        :desc "0mobile"       "0" #'(lambda () (interactive) (find-file (concat org-directory "0mobile.org")))
+       :desc "Bullets"       "b" #'(lambda () (interactive) (find-file (concat org-directory "Joyent/Bullets.org")))
        :desc "Desktop"       "d" #'(lambda () (interactive) (find-file (concat org-directory "desktop.org")))
        :desc "contacts"      "o" #'(lambda () (interactive) (find-file (concat org-directory "contacts.org")))
        :desc "read-later"    "r" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
