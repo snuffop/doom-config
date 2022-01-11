@@ -309,6 +309,7 @@
       (:prefix ("r" . "refile")
        "." #'+org/refile-to-current-file
        "c" #'+org/refile-to-running-clock
+       "d" #'org-refile-to-datetree
        "l" #'+org/refile-to-last-location
        "f" #'+org/refile-to-file
        "o" #'+org/refile-to-other-window
