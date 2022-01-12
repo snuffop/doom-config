@@ -171,6 +171,7 @@
   (setq org-projectile-file "todo.org")
   (setq org-fancy-priorities-list '("🅰" "🅱" "🅲" "🅳" "🅴"))
   (setq org-startup-with-inline-images t)  ; Show Inline Images
+  (setq org-hide-emphasis-markers t)
 
 ;;;;; CLOCKING
 
