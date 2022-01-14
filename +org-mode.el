@@ -975,3 +975,10 @@ is selected, only the bare key is returned."
   :after org-roam
   :config
   (setq org-roam-timestamps-parent-file t)  (org-roam-timestamps-mode))
+
+;;;; ORG-JIRA
+(use-package! org-jira
+  :after org
+  :config
+  (setq org-jira-working-dir "~/Nextcloud/Notes/Jira")
+  (setq jiralib-url "https://jira.joyent.us"))

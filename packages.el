@@ -33,6 +33,7 @@
 (package! org-appear)
 (package! org-edna)
 (package! org-notifications)
+(package! org-jira)
 (package! org-pdftools)
 (package! org-projectile)
 (package! org-ref)
