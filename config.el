@@ -9,7 +9,7 @@
 ;;  * 2021 12 29 Updated the outshine use-packages with a hook to save 3 seconds on startup time
 ;;  * 2021 12 08 Modified and working for OSX
 ;;  * 2021 11 18 Update clean Install and config
-;;  * 2021 10 12  added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
+;;  * 2021 10 12 added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -52,7 +52,6 @@
 (after! projectile
   (setq projectile-indexing-method 'alien)
   (setq projectile-project-search-path '("~/Source")))
-  ;; (setq projectile-project-root-files-bottom-up (remove ".git" projectile-project-root-files-bottom-up)))
 
 
 (set-window-buffer nil (current-buffer))
@@ -285,6 +284,13 @@
 (use-package! nginx-mode
   :defer t)
 
+;;;;; MIXED-PITCH
+
+(use-package! mixed-pitch
+  :hook (org-mode . mixed-pitch-mode)
+  :config
+  (setq mixed-pitch-face 'variable-pitch))
+
 ;;;;; MUTT-MODE
 
 (use-package! mutt-mode
@@ -343,14 +349,6 @@
 (load! "+org-mode.el")
 (load! "+hydra.el")
 (load! "+mu4e.el")
-
-
-(defun marty/set-patching-macro-registers ()
-  "evil keyboard macros for patching,  running docker containers"
-  (interactive)
-  (evil-set-register ?e [?0 ?i ?* ?* ?* ?* ?* ?* ?  escape ?0])
-  (evil-set-register ?b [?0 ?o escape ?0 ?i ?# ?+ ?e ?n ?d ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0] )
-  (evil-set-register ?t [?0 ?o ?i backspace ?# ?+ ?b ?e ?g ?i ?n ?_ ?e ?x ?a ?m ?p ?l ?e escape ?0]))
 
 ;;; CUSTOM
 
