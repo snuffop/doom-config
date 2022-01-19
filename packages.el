@@ -12,6 +12,8 @@
 (package! evil-snipe :disable t)
 (package! solaire-mode :disable t)
 
+(unpin! org-roam)
+
 (package! aggressive-indent)
 (package! all-the-icons-dired)
 (package! company-prescient)

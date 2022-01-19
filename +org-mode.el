@@ -34,106 +34,132 @@
 
   ;;(require 'find-lisp)
 
-  (defun marty/publish-NSI-Documentation (a b c)
+  ;; (defun marty/publish-NSI-Documentation (a b c)
+  ;;   (setq org-export-with-toc t)
+  ;;   (let ((org-id-extra-files (find-lisp-find-files "~/Source/NSI/NSI-Documentation/" "\.org$")))
+  ;;     (org-html-publish-to-html a b c)))
+
+  (defun marty/publish (a b c)
     (setq org-export-with-toc t)
-    (let ((org-id-extra-files (find-lisp-find-files "~/Source/NSI/NSI-Documentation/" "\.org$")))
-      (org-html-publish-to-html a b c)))
+    (org-html-publish-to-html a b c))
+
+  (defun marty/publish-md (a b c)
+    (setq org-export-with-toc t)
+    (org-md-publish-to-md a b c))
 
   (setq org-publish-project-alist
         '(
-          ("NSI-Documentation-content"
-           :base-directory "~/Source/NSI/NSI-Documentation/"
+          ;; ("NSI-Documentation-content"
+          ;;  :base-directory "~/Source/NSI/NSI-Documentation/"
+          ;;  :base-extension "org"
+          ;;  :publishing-directory "~/Source/NSI/NSI-Documentation/docs"
+          ;;  :publishing-function marty/publish-NSI-Documentation
+          ;;  :exclude "Archive"
+          ;;  :section-numbers nil
+          ;;  :with-toc nil
+          ;;  :auto-sitemap t
+          ;;  :sitemap-filename "filemap.org"
+          ;;  :sitemap-title "& Sitemap"
+          ;;  :headline-levels 10
+          ;;  :auto-preamble t
+          ;;  :recursive t)
+
+          ;; ("NSI-Documentation-images"
+          ;;  :base-directory "~/Source/NSI/NSI-Documentation/images/"
+          ;;  :base-extension "jpg\\|gif\\|png"
+          ;;  :publishing-directory "~/Source/NSI/NSI-Documentation/docs/images/"
+          ;;  :publishing-function org-publish-attachment
+          ;;  :recursive t)
+
+          ;; ("NSI-Documentation-TVA-ScanReports-2020-images"
+          ;;  :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2020/images/"
+          ;;  :base-extension "jpg\\|gif\\|png"
+          ;;  :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2020/images/"
+          ;;  :publishing-function org-publish-attachment
+          ;;  :recursive t)
+
+          ;; ("NSI-Documentation-TVA-ScanReports-2020-reports"
+          ;;  :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2020/reports/"
+          ;;  :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+          ;;  :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2020/reports/"
+          ;;  :publishing-function org-publish-attachment
+          ;;  :recursive t)
+
+          ;; ("NSI-Documentation-TVA-ScanReports-2021-images"
+          ;;  :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2021/images/"
+          ;;  :base-extension "jpg\\|gif\\|png"
+          ;;  :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2021/images/"
+          ;;  :publishing-function org-publish-attachment
+          ;;  :recursive t)
+
+          ;; ("NSI-Documentation-TVA-ScanReports-2021-reports"
+          ;;  :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2021/reports/"
+          ;;  :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+          ;;  :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2021/reports/"
+          ;;  :publishing-function org-publish-attachment
+          ;;  :recursive t)
+
+          ;; ("NSI-Documentation-TVA-ScanReports-2022-images"
+          ;;  :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2022/images/"
+          ;;  :base-extension "jpg\\|gif\\|png"
+          ;;  :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2022/images/"
+          ;;  :publishing-function org-publish-attachment
+          ;;  :recursive t)
+
+          ;; ("NSI-Documentation-TVA-ScanReports-2022-reports"
+          ;;  :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2022/reports/"
+          ;;  :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+          ;;  :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2022/reports/"
+          ;;  :publishing-function org-publish-attachment
+          ;;  :recursive t)
+
+          ;; ("NSI-Documentation-TVA-ScanReports-files"
+          ;;  :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/files/"
+          ;;  :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
+          ;;  :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/files/"
+          ;;  :publishing-function org-publish-attachment
+          ;;  :recursive t)
+
+          ;; ("salt-master"
+          ;;  :base-directory "~/Source/NSI/salt-master/"
+          ;;  :base-extension "org"
+          ;;  :publishing-directory "~/Source/NSI/salt-master/docs"
+          ;;  :publishing-function marty/publish
+          ;;  :exclude "docs"
+          ;;  :section-numbers nil
+          ;;  :with-toc nil
+          ;;  :auto-sitemap t
+          ;;  :sitemap-filename "filemap.org"
+          ;;  :sitemap-title "& Sitemap"
+          ;;  :headline-levels 7
+          ;;  :auto-preamble t
+          ;;  :recursive t)
+
+          ;; ("NSI-Documentation" :components ("NSI-Documentation-content"
+          ;;                                   "NSI-Documentation-images"
+          ;;                                   "NSI-Documentation-TVA-ScanReports-2020-images"
+          ;;                                   "NSI-Documentation-TVA-ScanReports-2020-reports"
+          ;;                                   "NSI-Documentation-TVA-ScanReports-2021-images"
+          ;;                                   "NSI-Documentation-TVA-ScanReports-2021-reports"
+          ;;                                   "NSI-Documentation-TVA-ScanReports-files"))
+
+          ("Joyent-Notes-content"
+           :base-directory "~/Nextcloud/Notes/org/Joyent/"
            :base-extension "org"
-           :publishing-directory "~/Source/NSI/NSI-Documentation/docs"
-           :publishing-function marty/publish-NSI-Documentation
+           :publishing-directory "~/Nextcloud/Notes/org/Joyent/docs"
+           :publishing-function marty/publish-md
            :exclude "Archive"
            :section-numbers nil
-           :with-toc nil
            :auto-sitemap t
            :sitemap-filename "filemap.org"
            :sitemap-title "& Sitemap"
+           :with-todo-keywords
+           :with-toc
            :headline-levels 10
            :auto-preamble t
            :recursive t)
 
-          ("NSI-Documentation-images"
-           :base-directory "~/Source/NSI/NSI-Documentation/images/"
-           :base-extension "jpg\\|gif\\|png"
-           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/images/"
-           :publishing-function org-publish-attachment
-           :recursive t)
-
-          ("NSI-Documentation-TVA-ScanReports-2020-images"
-           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2020/images/"
-           :base-extension "jpg\\|gif\\|png"
-           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2020/images/"
-           :publishing-function org-publish-attachment
-           :recursive t)
-
-          ("NSI-Documentation-TVA-ScanReports-2020-reports"
-           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2020/reports/"
-           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
-           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2020/reports/"
-           :publishing-function org-publish-attachment
-           :recursive t)
-
-          ("NSI-Documentation-TVA-ScanReports-2021-images"
-           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2021/images/"
-           :base-extension "jpg\\|gif\\|png"
-           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2021/images/"
-           :publishing-function org-publish-attachment
-           :recursive t)
-
-          ("NSI-Documentation-TVA-ScanReports-2021-reports"
-           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2021/reports/"
-           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
-           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2021/reports/"
-           :publishing-function org-publish-attachment
-           :recursive t)
-
-          ("NSI-Documentation-TVA-ScanReports-2022-images"
-           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2022/images/"
-           :base-extension "jpg\\|gif\\|png"
-           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2022/images/"
-           :publishing-function org-publish-attachment
-           :recursive t)
-
-          ("NSI-Documentation-TVA-ScanReports-2022-reports"
-           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/2022/reports/"
-           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
-           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/2022/reports/"
-           :publishing-function org-publish-attachment
-           :recursive t)
-
-          ("NSI-Documentation-TVA-ScanReports-files"
-           :base-directory "~/Source/NSI/NSI-Documentation/TVA/ScanReports/files/"
-           :base-extension "ods\\|csv\\|xls\\|xslt\\|pdf"
-           :publishing-directory "~/Source/NSI/NSI-Documentation/docs/TVA/ScanReports/files/"
-           :publishing-function org-publish-attachment
-           :recursive t)
-
-          ("salt-master"
-           :base-directory "~/Source/NSI/salt-master/"
-           :base-extension "org"
-           :publishing-directory "~/Source/NSI/salt-master/docs"
-           :publishing-function marty/publish
-           :exclude "docs"
-           :section-numbers nil
-           :with-toc nil
-           :auto-sitemap t
-           :sitemap-filename "filemap.org"
-           :sitemap-title "& Sitemap"
-           :headline-levels 7
-           :auto-preamble t
-           :recursive t)
-
-          ("NSI-Documentation" :components ("NSI-Documentation-content"
-                                            "NSI-Documentation-images"
-                                            "NSI-Documentation-TVA-ScanReports-2020-images"
-                                            "NSI-Documentation-TVA-ScanReports-2020-reports"
-                                            "NSI-Documentation-TVA-ScanReports-2021-images"
-                                            "NSI-Documentation-TVA-ScanReports-2021-reports"
-                                            "NSI-Documentation-TVA-ScanReports-files"))))
+          ("Joyent-Documentation" :components ("Joyent-Notes-content"))))
 ;;;;; ORG-AGENDA
 
 
@@ -172,6 +198,7 @@
   (setq org-fancy-priorities-list '("🅰" "🅱" "🅲" "🅳" "🅴"))
   (setq org-startup-with-inline-images t)  ; Show Inline Images
   (setq org-hide-emphasis-markers t)
+  (setq org-id-link-to-org-use-id t)
 
 ;;;;; CLOCKING
 
@@ -796,6 +823,9 @@ is selected, only the bare key is returned."
         (list #'org-roam-backlinks-insert-section
               #'org-roam-reflinks-insert-section
               #'org-roam-unlinked-references-insert-section))
+
+  (setq org-id-extra-files (org-roam-list-files))
+  (setq org-roam-completion-everywhere t)
 
 ;;;;;; ORG-ROAM POPUP RULES
 
