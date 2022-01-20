@@ -826,6 +826,7 @@ is selected, only the bare key is returned."
 
   (setq org-id-extra-files (org-roam-list-files))
   (setq org-roam-completion-everywhere t)
+  (setq org-roam-database-connector 'sqlite3)
 
 ;;;;;; ORG-ROAM POPUP RULES
 

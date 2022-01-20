@@ -50,6 +50,8 @@
 (package! wakatime-mode)
 (package! weblorg)
 
+(package! emacsql-sqlite3)
+
 (package! outshine               :recipe (:host github :repo "alphapapa/outshine"))
 (package! mu4e-marker-icons      :recipe (:host github :repo "emacsmirror/mu4e-marker-icons"))
 (package! company-nginx          :recipe (:host github :repo "emacsmirror/company-nginx"))
