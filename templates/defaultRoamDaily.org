@@ -1,6 +1,7 @@
-#+TITLE: Daily Notes for `(marty/org-roam-dailies-title)`
+#+TITLE: Daily Notes  for `(marty/org-roam-dailies-title)`
 #+STARTUP: content
 #+filetags: :2022:daily:
+#+category: DailyJournal
 
 * Status () {}
 * Links

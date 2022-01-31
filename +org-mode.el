@@ -847,35 +847,35 @@ is selected, only the bare key is returned."
 
   (setq org-roam-dailies-capture-templates
         '(("d" "default" entry "* %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :target (file+olp "%<%Y-%m-%d>.org" ("Journal"))
            :empty-lines-after 1 )
           ("t" "Tasks" entry "** TODO %? "
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
+           :target (file+olp "%<%Y-%m-%d>.org" ("Tasks"))
            :empty-lines-after 1 )
           ("y" "Joyent" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Joyent"))
+           :target (file+olp "%<%Y-%m-%d>.org" ("Joyent"))
            :empty-lines-after 1)
           ("j" "Journal" entry "** %<%H:%M> %?"
-           :if-new (file+olp "%<%Y-%m-%d>.org" ("Journal"))
+           :target (file+olp "%<%Y-%m-%d>.org" ("Journal"))
            :empty-lines-after 1)))
 
   (setq org-roam-capture-templates
         '(("d" "default" plain
            (file "~/.config/doom/templates/roam-templates/default-capture-entry.org")
-           :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
+           :target (file+head "${slug}.org" "#+TITLE: ${title}\n#+category: ${title}")
            :immediate-finish t
            :unnarrowed t)
           ("j" "Joyent" plain
            (file "~/.config/doom/templates/roam-templates/joyent-entry.org")
-           :if-new (file+head "Joyent/${slug}.org" "#+TITLE: ${title}\n#+filetags: Joyent\n#+category: Joyent\n")
+           :target (file+head "Joyent/${slug}.org" "#+TITLE: ${title}\n#+filetags: Joyent\n#+category: Joyent\n")
            :unnarrowed t)
           ("t" "tipjar" plain
            (file "~/.config/doom/templates/roam-templates/tipjar-entry.org")
-           :if-new (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
+           :target (file+head "TipJar/${slug}.org" "#+TITLE: ${title}\n#+filetags: tipjar\n#+category: tipjar\n")
            :unnarrowed t)
           ("p" "People" plain
            (file "~/.config/doom/templates/roam-templates/people-entry.org")
-           :if-new (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
+           :target (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
            :unnarrowed t)))
 
 ;;;;;; ADD ADITIONAL PROPERTIES
@@ -999,6 +999,23 @@ is selected, only the bare key is returned."
 
 ;;;;;; END Package
   )
+
+;;;;;; ROAM-UI
+
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
 ;;;; ORG-ROAM-TIMESTAMPS
 

@@ -105,7 +105,7 @@
     ("f"   #'org-roam-ref-find "Find Reference")
     ("g"   #'org-roam-graph "roam-graph")
     ("i"   #'org-roam-node-insert-immediate "insert immediate")
-    ("j"   #'org-roam-dailies-capture-today "capture today")
+    ("j"   #'org-roam-dailies-capture-today  "capture today")
     ("m"   #'org-roam-buffer-toggle "buffer toggle")
     ("M"   #'org-roam-buffer-display-dedicated "buffer dedicated")
     ("n"   #'org-roam-node-find "Find Node")
