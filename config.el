@@ -147,6 +147,21 @@
 (setq doom-fallback-buffer-name "► Doom"
       +doom-dashboard-name "► Doom")
 
+;;;;; SYNTAX LISTS
+
+
+ (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.timer\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.target\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.mount\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.automount\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.slice\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.socket\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.path\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.netdev\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.network\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.link\\'" . conf-unix-mode))
+
 ;;;; PACKAGES
 ;;;;; AUTOINSERT
 (defun marty/autoinsert-yas-expand ()
@@ -252,6 +267,20 @@
   (add-hook 'clojure-mode-hook    #'aggressive-indent-mode)
   (add-hook 'php-mode-hook #'aggressive-indent-mode)
   (add-hook 'hy-mode-hook #'aggressive-indent-mode))
+
+;;;;; CHEZMOI
+
+(use-package! chezmoi
+  :config
+  (map! :leader
+        :prefix "fz"
+          "s" #'chezmoi-write
+          "g" #'chezmoi-magit-status
+          "d" #'chezmoi-diff
+          "e" #'chezmoi-ediff
+          "f" #'chezmoi-find
+          "i" #'chezmoi-write-files-from-target
+          "o" #'chezmoi-open-target))
 
 ;;;;; Ebuku
 
