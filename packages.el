@@ -57,3 +57,4 @@
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
 (package! khalel             :recipe (:host github :repo "emacsmirror/khalel"))
 (package! chezmoi            :recipe (:host github :repo "tuh8888/chezmoi.el"))
+(package! ox-hugo            :recipe (:host github :repo "kaushalmodi/ox-hugo"))
