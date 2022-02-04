@@ -18,6 +18,7 @@
 (package! all-the-icons-dired)
 (package! company-prescient)
 (package! counsel-tramp)
+(package! chezmoi)
 (package! doct)
 (package! ebuku)
 (package! fzf)
@@ -56,5 +57,4 @@
 (package! mu4e-marker-icons  :recipe (:host github :repo "emacsmirror/mu4e-marker-icons"))
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
 (package! khalel             :recipe (:host github :repo "emacsmirror/khalel"))
-(package! chezmoi            :recipe (:host github :repo "tuh8888/chezmoi.el"))
 (package! ox-hugo            :recipe (:host github :repo "kaushalmodi/ox-hugo"))
