@@ -59,3 +59,4 @@
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
 (package! khalel             :recipe (:host github :repo "emacsmirror/khalel"))
 (package! ox-hugo            :recipe (:host github :repo "kaushalmodi/ox-hugo"))
+(package! org-view-mode      :recipe (:host github :repo "amno1/org-view-mode"))

@@ -1030,3 +1030,8 @@ is selected, only the bare key is returned."
   :config
   (setq org-jira-working-dir "~/Nextcloud/Notes/Jira")
   (setq jiralib-url "https://jira.joyent.us"))
+
+;;;; ORG-VIEW-MODE
+
+(use-package! org-view-mode
+  :defer t)
