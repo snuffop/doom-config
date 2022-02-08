@@ -22,6 +22,7 @@
 (package! doct)
 (package! ebuku)
 (package! fzf)
+(package! hyperbole)
 (package! i3wm)
 (package! i3wm-config-mode)
 (package! jenkinsfile-mode)

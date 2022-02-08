@@ -153,6 +153,12 @@
         :desc "VdirSync"      "s"  #'khalel-run-vdirsyncer
         :desc "import"        "i"  #'khalel-import-upcoming-events)))
 
+;;;;; <leader> R --- ROAM
+(map! :leader
+      :prefix "r"
+      "r" #'hydra-roam-jump/body)
+
+
 ;;;; MODE MAPS
 ;;;;; OVERRIDE ORG MODE MAP
 

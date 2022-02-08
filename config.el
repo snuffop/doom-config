@@ -271,6 +271,7 @@
 ;;;;; CHEZMOI
 
 (use-package! chezmoi
+  :defer t
   :config
   (map! :leader
         :prefix "fz"
@@ -289,10 +290,19 @@
   :config
   (evil-collection-init 'ebuku))
 
+;;;;; HYPERBOLE
+;; OMG this is Amazing
+
+(use-package! hyperbole
+  :defer t
+  :config
+  (add-hook 'doom-first-buffer-hook  #'hyperbole-mode))
+
+
 ;;;;; I3 WINDOW MANAGER CONFIG
 ;; Syntax highlighting for i3 config
 (use-package! i3wm-config-mode
-      :defer t )
+  :defer t )
 
 ;;;;; JENKINS
 
