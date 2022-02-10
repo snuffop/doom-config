@@ -25,7 +25,8 @@
  ;; :n "C-:"    #'+spell/correct
  :n "C-:"    #'flyspell-correct-wrapper
  :n "C-."    #'embark-act
- :n "C-,"    #'+spell/next-error)
+ :n "C-,"    #'flyspell-correct-next)
+ ;; :n "C-,"    #'+spell/next-error)
 
 ;;;; LEADER KEYBINDINGS
 

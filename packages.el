@@ -33,7 +33,6 @@
 (package! nginx-mode)
 (package! org-appear)
 (package! org-edna)
-(package! org-jira)
 (package! org-notifications)
 (package! org-pdftools)
 (package! org-projectile)
