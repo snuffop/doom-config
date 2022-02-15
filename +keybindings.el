@@ -139,6 +139,7 @@
        :desc "read-later"    "r" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
        :desc "Tasks"         "g" #'(lambda () (interactive) (find-file (concat org-directory "Tasks.org")))
        :desc "Habits"        "h" #'(lambda () (interactive) (find-file (concat org-directory "Habits.org")))
+       :desc "Joyent Index"  "j" #'(lambda () (interactive) (find-file (concat org-directory "Joyent/index.org")))
        :desc "read later"    "l" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
        :desc "Someday"       "s" #'(lambda () (interactive) (find-file (concat org-directory "Someday.org")))
        :desc "Tip Jar"       "t" #'(lambda () (interactive) (find-file (concat org-directory "TipJar.org")))

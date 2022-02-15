@@ -20,6 +20,7 @@
                                (concat org-directory "contacts.org")
                                (concat org-directory "Someday.org")
                                (concat org-directory "0mobile.org")
+                               (concat org-directory "/Joyent/index.org")
                                "~/Nextcloud/Notes/Calendars/google.org"
                                "~/Nextcloud/Notes/Calendars/tatjana.org"))
 ;;;; ORG-MODE
