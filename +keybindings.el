@@ -11,8 +11,9 @@
 
 ;;;; GLOBAL KEYBINDINGS
 
-(define-key! help-map
-  "h"    #'helpful-at-point)
+;; (define-key! help-map
+;;   "h"    #'helpful-at-point)
+(global-set-key [f7] 'hyrolo-fgrep)
 
 (after! evil
   (map! :m  "-"  #'dired-jump

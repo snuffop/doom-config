@@ -327,7 +327,7 @@
 ;; OMG this is Amazing
 
 (use-package! hyperbole
-  :defer t
+  :after org
   :config
   (add-hook 'doom-first-buffer-hook  #'hyperbole-mode))
 
