@@ -329,7 +329,9 @@
 (use-package! hyperbole
   :after org
   :config
-  (add-hook 'doom-first-buffer-hook  #'hyperbole-mode))
+  (add-hook 'doom-first-buffer-hook  #'hyperbole-mode)
+  (setq hyrolo-file-list (cons "~/.rolo.otl" (cddr (directory-files "~/Nextcloud/Notes/org" t))))
+  )
 
 
 ;;;;; I3 WINDOW MANAGER CONFIG
