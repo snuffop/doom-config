@@ -94,7 +94,7 @@
 
 ;;;;; THEME
 
-(setq doom-theme 'doom-dracula )
+(setq doom-theme 'doom-one )
 
 (doom-themes-org-config)
 
@@ -110,6 +110,8 @@
   (setq doom-modeline-enable-word-count t)
   (setq doom-themes-padded-modeline t)
   (setq auto-revert-check-vc-info t)
+  (setq doom-modeline-github t)
+  (setq doom-modeline-mu4e t)
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
   (setq doom-modeline-major-mode-color-icon (display-graphic-p))
   (setq doom-modeline-major-mode-icon (display-graphic-p))

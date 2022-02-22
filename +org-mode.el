@@ -460,7 +460,8 @@
                  :keys "b"
                  :icon ("sticky-note" :set "faicon" :color "blue")
                  :file "~/Nextcloud/Notes/org/Joyent/Bullets.org"
-                 :datetree t
+                 ;; :datetree t
+                 :function org-reverse-datetree-goto-date-in-file
                  )
 
                 ("Remember-mutt" :keys "R"
