@@ -185,8 +185,10 @@
 ;;;;; SYNTAX LISTS
 
 
- (add-to-list 'auto-mode-alist '("\\.service\\'" . conf-unix-mode))
- (add-to-list 'auto-mode-alist '("\\.timer\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.service\\'" . systemd-mode))
+ (add-to-list 'auto-mode-alist '("\\.service.tmpl\\'" . systemd-mode))
+ (add-to-list 'auto-mode-alist '("\\.timer\\'" . systemd-mode))
+ (add-to-list 'auto-mode-alist '("\\.timer.tmpl\\'" . systemd-mode))
  (add-to-list 'auto-mode-alist '("\\.target\\'" . conf-unix-mode))
  (add-to-list 'auto-mode-alist '("\\.mount\\'" . conf-unix-mode))
  (add-to-list 'auto-mode-alist '("\\.automount\\'" . conf-unix-mode))

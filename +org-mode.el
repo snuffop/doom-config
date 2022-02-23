@@ -9,7 +9,7 @@
 ;;; Code
 ;;;; Pre
 (setq org-directory (concat (getenv "HOME") "/Nextcloud/Notes/org/"))
-(setq org-roam-directory "~/Nextcloud/Notes/org/")
+(setq org-roam-directory (concat (getenv "HOME")"/Nextcloud/Notes/org/"))
 (setq org-roam-dailies/directory "daily/")
 (setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
 
@@ -851,7 +851,7 @@ is selected, only the bare key is returned."
 
   (defun my/org-roam-refresh-agenda-list ()
     (interactive)
-    (setq org-agenda-files (delete-dups (append (my/org-roam-list-notes-by-tag "Project") (my/org-roam-recent 14) marty/org-agenda-files ))))
+    (setq org-agenda-files (delete-dups (append (my/org-roam-list-notes-by-tag "Project") (my/org-roam-recent 30) marty/org-agenda-files ))))
 
   (my/org-roam-refresh-agenda-list)
 
