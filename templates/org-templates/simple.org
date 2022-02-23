@@ -1,0 +1,8 @@
+** FOLLOWUP %[~//.cache/org-popup/msg]
+:PROPERTIES:
+:CREATED: %U
+:END:
+Annotation:  %:annotation
+Link:  %:link
+%i
+%?

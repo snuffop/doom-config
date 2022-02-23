@@ -8,7 +8,7 @@
 ;;
 ;;; Code
 ;;;; Pre
-(setq org-directory "~/Nextcloud/Notes/org/")
+(setq org-directory (concat (getenv "HOME") "/Nextcloud/Notes/org/"))
 (setq org-roam-directory "~/Nextcloud/Notes/org/")
 (setq org-roam-dailies/directory "daily/")
 (setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
@@ -20,9 +20,9 @@
                                (concat org-directory "contacts.org")
                                (concat org-directory "Someday.org")
                                (concat org-directory "0mobile.org")
-                               (concat org-directory "/Joyent/index.org")
-                               "~/Nextcloud/Notes/Calendars/google.org"
-                               "~/Nextcloud/Notes/Calendars/tatjana.org"))
+                               (concat org-directory "Joyent/index.org")
+                               "/home/marty/Nextcloud/Notes/Calendars/google.org"
+                               "/home/marty/Nextcloud/Notes/Calendars/tatjana.org"))
 ;;;; ORG-MODE
 ;;;;; PACKAGE
 (after! org
@@ -367,6 +367,19 @@
                  ;; :datetree t
                  :function org-reverse-datetree-goto-date-in-file
                  )
+
+                ("Simple org-popup"
+                 :keys "s"
+                 :icon ("sticky-note" :set "faicon" :color "red")
+                 :file "~/Nextcloud/Notes/org/0mobile.org"
+                 :immediate-finish t
+                 :prepend t
+                 :headline "Inbox"
+                 :template-file "~/.config/doom/templates/org-templates/simple.org")
+                 ;; :template ("NOTE: %[~//.cache/org-popup/msg]"
+                 ;;            "Captured: %U"
+                 ;;            "%i"
+                 ;;            "%a"))
 
                 ("Remember-mutt" :keys "R"
                  :icon ("home" :set "octicon" :color "cyan")
@@ -815,6 +828,36 @@ is selected, only the bare key is returned."
         (org-roam-add-property (concat (number-to-string calendar-latitude) "," (number-to-string calendar-longitude)) "LAT-LONG"))))
 
 
+;;;;;; DAILIES AGENDA
+
+  (defun my/org-roam-filter-by-tag (tag-name)
+    (lambda (node)
+      (member tag-name (org-roam-node-tags node))))
+
+  (defun my/org-roam-list-notes-by-tag (tag-name)
+    (mapcar #'org-roam-node-file
+            (seq-filter
+            (my/org-roam-filter-by-tag tag-name)
+            (org-roam-node-list))))
+
+  (defun my/org-roam-recent (days)
+  "Return list of files modified in the last DAYS."
+  (let ((mins (round (* 60 24 days))))
+    (split-string
+     (shell-command-to-string
+      (format
+       "find %s -name \"*.org\" -mmin -%s"
+       org-roam-directory mins)))))
+
+  (defun my/org-roam-refresh-agenda-list ()
+    (interactive)
+    (setq org-agenda-files (delete-dups (append (my/org-roam-list-notes-by-tag "Project") (my/org-roam-recent 14) marty/org-agenda-files ))))
+
+  (my/org-roam-refresh-agenda-list)
+
+  (advice-add 'org-roam-db-update-file :after #'my/org-roam-refresh-agenda-list)
+  (advice-add 'org-roam-db-sync :after #'my/org-roam-refresh-agenda-list)
+
 ;;;;;; DAILIES GRAPHICS LINK
 
   (defun marty/org-roam-dailies-graphicslink ()
@@ -904,7 +947,6 @@ is selected, only the bare key is returned."
 
 ;;;;;; END Package
   )
-
 ;;;;;; ROAM-UI
 
 (use-package! websocket
@@ -934,3 +976,12 @@ is selected, only the bare key is returned."
 
 (use-package! org-view-mode
   :defer t)
+
+
+(defun strip-duplicates (list)
+  (let ((new-list nil))
+    (while list
+      (when (and (car list) (not (member (car list) new-list)))
+        (setq new-list (cons (car list) new-list)))
+      (setq list (cdr list)))
+    (nreverse new-list)))
