@@ -69,12 +69,12 @@
 ;;;; UI
 ;;;;; SET FONTS
 
-(cond (IS-MAC (setq doom-font (font-spec :family "DejaVuSansMono Nerd Font" :size 13 )
+(cond (IS-MAC (setq doom-font (font-spec :family "DejaVuSansMono Nerd Font Mono" :size 13 )
                     doom-variable-pitch-font (font-spec :family "Ubuntu Nerd Font" :style "Regular" :size 13 :weight 'regular)))
-      (IS-LINUX (setq doom-font (font-spec :family "Droid Sans Mono" :size 14 :weight 'regular )
+      (IS-LINUX (setq doom-font (font-spec :family "DejaVuSansMono Nerd Font Mono" :size 14 :weight 'regular )
                       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15 )
                       doom-unicode-font (font-spec :family "symbola" :size 15)
-                      doom-big-font (font-spec :family "Droid Sans Mono" :size 20))))
+                      doom-big-font (font-spec :family "Ubuntu" :size 20))))
 
 ;;;;; FACES
 
@@ -89,8 +89,8 @@
          '(mode-line-inactive :family "firacode nerd font mono" :height 140)))
       (t
        (custom-set-faces!
-         '(mode-line :family "firacode nerd font mono" :height 100)
-         '(mode-line-inactive :family "firacode nerd font mono" :height 100))))
+         '(mode-line :family "Fira Sans" :height 105)
+         '(mode-line-inactive :family "Fira Sans" :height 105))))
 
 ;;;;; THEME
 
