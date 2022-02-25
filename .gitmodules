@@ -1,3 +1,0 @@
-[submodule "modules/private/spacemacs"]
-	path = modules/private/spacemacs
-	url = https://github.com/chenyanming/spacemacs_module_for_doom.git
