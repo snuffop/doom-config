@@ -233,4 +233,5 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       (default +bindings +smartparens))
+       (default +bindings +smartparens)
+)
