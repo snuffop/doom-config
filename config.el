@@ -46,12 +46,7 @@
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)  ; Make the scratch buffer start in lisp mode
 
 (display-time-mode 1)                              ; enable time in the mode-line
-
 (global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly Essie
-
-(after! projectile
-  (setq projectile-indexing-method 'alien)
-  (setq projectile-project-search-path '("~/Source")))
 
 (unless (equal "Battery status not available"
                (battery))
@@ -59,6 +54,7 @@
 
 (set-window-buffer nil (current-buffer))
 (setenv "zstd" "/usr/bin/zstd")
+
 
 ;;;;; VTERM
 
@@ -108,7 +104,6 @@
 (after! doom-modeline
   (setq all-the-icons-scale-factor 1.1)
   (setq doom-modeline-enable-word-count t)
-  (setq doom-themes-padded-modeline t)
   (setq auto-revert-check-vc-info t)
   (setq doom-modeline-github t)
   (setq doom-modeline-mu4e t)
@@ -121,12 +116,51 @@
     (progn
       (set-face-attribute 'header-line nil
                           :background (face-background 'mode-line)
-                          :foreground (face-foreground 'mode-line))
-      )))
+                          :foreground (face-foreground 'mode-line))))
+
+  (doom-modeline-def-segment buffer-name
+    "Display the current buffer's name, without any other information."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline--buffer-name)))
+
+  (doom-modeline-def-segment pdf-icon
+    "PDF icon from all-the-icons."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline-icon 'octicon "file-pdf" nil nil
+                         :face (if (doom-modeline--active)
+                                   'all-the-icons-red
+                                 'mode-line-inactive)
+                         :v-adjust 0.02)))
+
+  (defun doom-modeline-update-pdf-pages ()
+    "Update PDF pages."
+    (setq doom-modeline--pdf-pages
+          (let ((current-page-str (number-to-string (eval `(pdf-view-current-page))))
+                (total-page-str (number-to-string (pdf-cache-number-of-pages))))
+            (concat
+             (propertize
+              (concat (make-string (- (length total-page-str) (length current-page-str)) ? )
+                      " P" current-page-str)
+              'face 'mode-line)
+             (propertize (concat "/" total-page-str) 'face 'doom-modeline-buffer-minor-mode)))))
+
+  (doom-modeline-def-segment pdf-pages
+    "Display PDF pages."
+    (if (doom-modeline--active) doom-modeline--pdf-pages
+      (propertize doom-modeline--pdf-pages 'face 'mode-line-inactive)))
+
+  (doom-modeline-def-modeline 'pdf
+    '(bar window-number pdf-pages pdf-icon buffer-name)
+    '(misc-info matches major-mode process vcs)))
 
 ;;;;; DASHBOARD
 
-(custom-theme-set-faces! 'doom-dracula
+(setq doom-fallback-buffer-name "► Doom"
+      +doom-dashboard-name "► Doom")
+
+(custom-theme-set-faces! 'doom-one
   '(doom-dashboard-banner :foreground "red" :background "#000000" :weight bold)
   '(doom-dashboard-footer :inherit font-lock-constant-face)
   '(doom-dashboard-footer-icon :inherit all-the-icons-red)
@@ -238,25 +272,33 @@
 
 (after! vertico
   (vertico-reverse-mode 1)
-  (setq vertico-resize t)
-)
+  (setq vertico-resize t))
+
 
 ;;;;; COMPANY
 
 (after! company
-  (setq company-idle-delay 0.5)
-  (setq company-backends
-        '(company-capf company-dabbrev company-files company-yasnippet)
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2
+        company-backends '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)))
+
 
 (use-package! company-box
   :after company
   :config
   (setq company-box-max-candidates 5))
 
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+
 (use-package! company-prescient
   :after company
   :hook (company-mode . company-prescient-mode))
+
+(set-company-backend! '(text-mode markdown-mode gfm-mode)
+  '(:seperate company-ispell company-files company-yasnippet))
+(set-company-backend! 'ess-r-mode '(company-R-args company-R-objects company-dabbrev-code :separate))
 
 ;;;;; CONSULT
 
@@ -276,11 +318,25 @@
                               ("mkv" . "mpv")
                               ("mp4" . "mpv")))
 
+;;;;; EROS
+
+(setq eros-eval-result-prefix "⟹ ")
+
 ;;;;; MAGIT
 
 (after! magit
   (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
 
+
+;;;;; PROJECTILE
+
+(after! projectile
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-project-search-path '("~/Source"))
+  (setq projectile-ignored-projects '("~/" "/tmp" "~/.emacs.d/.local/straight/repos/"))
+  (defun projectile-ignored-project-function (filepath)
+    "Return t if FILEPATH is within any of `projectile-ignored-projects'"
+    (or (mapcar (lambda (p) (s-starts-with-p p filepath)) projectile-ignored-projects))))
 
 ;;;;; SPELL
 
@@ -293,6 +349,18 @@
 (after! treemacs
   (setq +treemacs-git-mode 'extended)
   (setq treemacs-width 30))
+
+;;;;; WHICHKEY
+
+
+(setq which-key-idle-delay 0.5) ;; I need the help, I really do
+(setq which-key-allow-multiple-replacements t)
+(after! which-key
+  (pushnew!
+   which-key-replacement-alist
+   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
+   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
+   ))
 
 ;;;; MODULES
 ;;;;; AGGRESSIVE INDENT
@@ -342,6 +410,13 @@
 ;; Syntax highlighting for i3 config
 (use-package! i3wm-config-mode
   :defer t )
+
+;;;;; INFO-COLORS
+;;;;;
+(use-package! info-colors
+  :commands (info-colors-fontify-node))
+
+(add-hook 'Info-selection-hook 'info-colors-fontify-node)
 
 ;;;;; JENKINS
 
@@ -401,6 +476,31 @@
         :prefix ("h" . "help")
         "d" #'systemd-doc-directives
         "o" #'systemd-doc-open))
+
+;;;;; THEME MAGIC
+
+(use-package! theme-magic
+  :commands theme-magic-from-emacs
+  :config
+  (defadvice! theme-magic--auto-extract-16-doom-colors ()
+    :override #'theme-magic--auto-extract-16-colors
+    (list
+     (face-attribute 'default :background)
+     (doom-color 'error)
+     (doom-color 'success)
+     (doom-color 'type)
+     (doom-color 'keywords)
+     (doom-color 'constants)
+     (doom-color 'functions)
+     (face-attribute 'default :foreground)
+     (face-attribute 'shadow :foreground)
+     (doom-blend 'base8 'error 0.1)
+     (doom-blend 'base8 'success 0.1)
+     (doom-blend 'base8 'type 0.1)
+     (doom-blend 'base8 'keywords 0.1)
+     (doom-blend 'base8 'constants 0.1)
+     (doom-blend 'base8 'functions 0.1)
+     (face-attribute 'default :foreground))))
 
 ;;;;; VLF
 

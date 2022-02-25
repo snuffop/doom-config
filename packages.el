@@ -10,6 +10,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (package! evil-snipe :disable t)
+(package! evil-escape :disable t)
 (package! solaire-mode :disable t)
 
 (package! aggressive-indent)
@@ -58,3 +59,9 @@
 (package! chezmoi            :recipe (:host github :repo "tuh8888/chezmoi.el"))
 (package! ox-hugo            :recipe (:host github :repo "kaushalmodi/ox-hugo"))
 (package! org-view-mode      :recipe (:host github :repo "amno1/org-view-mode"))
+
+;; TESTING
+(package! info-colors)
+(package! theme-magic :pin "844c4311bd26ebafd4b6a1d72ddcc65d87f074e3")
+(package! modus-themes :pin "18c08990c6b0ec7f144f9155da46988aa8c95e3a")
+
