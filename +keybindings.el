@@ -40,6 +40,11 @@
        "m"  #'=mu4e
        "b"  #'ebuku
 
+       ;; JUMP
+       ;; (:prefix-map ("j" . "Jump")
+       ;;  "RET" #'dired-registers-goto-completing-read
+       ;;  "m"   #'dired-registers-store
+       ;;  "j"   #'dired-registers-goto)
        ;; ORG
        (:prefix-map ("o" . "org")
         "/" #'org-occur-in-agenda-files
@@ -403,6 +408,8 @@
   (kbd "-") 'dired-up-directory
   (kbd "% l") 'dired-downcase
   (kbd "% u") 'dired-upcase
+  ;; (kbd "; m") 'dired-registers-store
+  ;; (kbd "; j") 'dired-registers-goto
   (kbd "; d") 'epa-dired-do-decrypt
   (kbd "; e") 'epa-dired-do-encrypt)
 ;; If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'

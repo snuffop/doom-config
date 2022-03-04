@@ -102,21 +102,28 @@
 ;;;;; MODELINE
 
 (after! doom-modeline
-  (setq all-the-icons-scale-factor 1.1)
-  (setq doom-modeline-enable-word-count t)
-  (setq auto-revert-check-vc-info t)
-  (setq doom-modeline-github t)
-  (setq doom-modeline-mu4e t)
-  (setq doom-modeline-buffer-file-name-style 'relative-to-project)
-  (setq doom-modeline-major-mode-color-icon (display-graphic-p))
-  (setq doom-modeline-major-mode-icon (display-graphic-p))
-  (setq doom-modeline-vcs-max-length 60)
+  (setq auto-revert-check-vc-info t
+        doom-modeline-buffer-file-name-style 'relative-to-project
+        doom-modeline-enable-word-count t
+        doom-modeline-github t
+        doom-modeline-major-mode-color-icon (display-graphic-p)
+        doom-modeline-major-mode-icon (display-graphic-p)
+        doom-modeline-mu4e t
+        doom-modeline-buffer-state-icon t
+        doom-modeline-buffer-modification-icon t
+        doom-modeline-modal-icon nil
+        doom-modeline-vcs-max-length 60)
+
+  (set-face-attribute 'mode-line nil :family "Noto Sans" :height 100)
+  (set-face-attribute 'mode-line-inactive nil :family "Noto Sans" :height 100)
 
   (add-hook! 'doom-modeline-mode-hook
     (progn
       (set-face-attribute 'header-line nil
                           :background (face-background 'mode-line)
-                          :foreground (face-foreground 'mode-line))))
+                          :foreground (face-foreground 'mode-line)
+                          )))
+
 
   (doom-modeline-def-segment buffer-name
     "Display the current buffer's name, without any other information."
@@ -154,6 +161,7 @@
   (doom-modeline-def-modeline 'pdf
     '(bar window-number pdf-pages pdf-icon buffer-name)
     '(misc-info matches major-mode process vcs)))
+
 
 ;;;;; DASHBOARD
 
@@ -348,7 +356,8 @@
 
 (after! treemacs
   (setq +treemacs-git-mode 'extended)
-  (setq treemacs-width 30))
+  (setq treemacs-width 30)
+  (treemacs-load-theme 'Default))
 
 ;;;;; WHICHKEY
 
@@ -394,6 +403,11 @@
   :defer t
   :config
   (evil-collection-init 'ebuku))
+
+;;;;; GRIP
+
+  (setq grip-github-password (auth-source-pass-get 'secret "Application/github.com/emacs-token"))
+
 
 ;;;;; HYPERBOLE
 ;; OMG this is Amazing

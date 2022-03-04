@@ -248,6 +248,7 @@
                     (mu4e-maildir-shortcuts  . ((:maildir "/Joyent/Archive"           :key ?a)
                                                 (:maildir "/Joyent/Drafts"            :key ?d)
                                                 (:maildir "/Joyent/INBOX"             :key ?i)
+                                                (:maildir "/Joyent/sysops"            :key ?y)
                                                 (:maildir "/Joyent/Nagios"            :key ?n)
                                                 (:maildir "/Joyent/FollowUp"          :key ?f)
                                                 (:maildir "/Joyent/Sent"              :key ?s)

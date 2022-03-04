@@ -19,6 +19,7 @@
 (package! counsel-tramp)
 (package! doct)
 (package! ebuku)
+(package! emacsql-sqlite3)
 (package! fzf)
 (package! hyperbole)
 (package! i3wm)
@@ -37,8 +38,8 @@
 (package! org-projectile)
 (package! org-ref)
 (package! org-reverse-datetree)
-(package! org-roam-ui)
 (package! org-roam-timestamps)
+(package! org-roam-ui)
 (package! org-super-agenda)
 (package! org-wild-notifier)
 (package! ox-gfm)
@@ -50,15 +51,13 @@
 (package! wakatime-mode)
 (package! weblorg)
 
-(package! emacsql-sqlite3)
-
-(package! outshine           :recipe (:host github :repo "alphapapa/outshine"))
-(package! mu4e-marker-icons  :recipe (:host github :repo "emacsmirror/mu4e-marker-icons"))
+(package! chezmoi            :recipe (:host github :repo "tuh8888/chezmoi.el"))
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
 (package! khalel             :recipe (:host github :repo "emacsmirror/khalel"))
-(package! chezmoi            :recipe (:host github :repo "tuh8888/chezmoi.el"))
-(package! ox-hugo            :recipe (:host github :repo "kaushalmodi/ox-hugo"))
+(package! mu4e-marker-icons  :recipe (:host github :repo "emacsmirror/mu4e-marker-icons"))
 (package! org-view-mode      :recipe (:host github :repo "amno1/org-view-mode"))
+(package! outshine           :recipe (:host github :repo "alphapapa/outshine"))
+(package! ox-hugo            :recipe (:host github :repo "kaushalmodi/ox-hugo"))
 
 ;; TESTING
 (package! info-colors)
