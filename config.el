@@ -382,6 +382,10 @@
   (add-hook 'php-mode-hook #'aggressive-indent-mode)
   (add-hook 'hy-mode-hook #'aggressive-indent-mode))
 
+;;;;; BEACON
+
+(beacon-mode 1)
+
 ;;;;; CHEZMOI
 
 (use-package! chezmoi
@@ -406,6 +410,7 @@
 
 ;;;;; GRIP
 
+(after! grip-mode)
   (setq grip-github-password (auth-source-pass-get 'secret "Application/github.com/emacs-token"))
 
 

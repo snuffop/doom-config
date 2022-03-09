@@ -15,6 +15,7 @@
 
 (package! aggressive-indent)
 (package! all-the-icons-dired)
+(package! beacon)
 (package! company-prescient)
 (package! counsel-tramp)
 (package! doct)
