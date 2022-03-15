@@ -796,6 +796,15 @@ is selected, only the bare key is returned."
            :target (file+head "People/${slug}.org" "#+TITLE: ${title}\n#+category: people\n#+filetags: :people:\n")
            :unnarrowed t)))
 
+  (require 'org-roam-protocol)
+  (setq org-roam-capture-ref-templates
+        '(("r" "ref" plain (function org-roam-capture--get-point)
+           "%?"
+           :file-name "${slug}"
+           :head "#+TITLE: ${title}
+#+ROAM_KEY: ${ref}"
+           :unnarrowed t)))
+
 ;;;;;; ADD ADITIONAL PROPERTIES
 
   (defun marty/add-other-auto-props-to-org-roam-properties ()

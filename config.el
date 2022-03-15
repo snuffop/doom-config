@@ -55,6 +55,14 @@
 (set-window-buffer nil (current-buffer))
 (setenv "zstd" "/usr/bin/zstd")
 
+;;;;; ON-SAVE
+
+(setq +format-on-save-enabled-modes
+      '(not emacs-lisp-mode  ; elisp's mechanisms are good enough
+            sql-mode         ; sqlformat is currently broken
+            tex-mode         ; latexindent is broken
+            yaml-mode
+            latex-mode))
 
 ;;;;; VTERM
 
@@ -539,6 +547,13 @@
   (cond (IS-MAC (setq wakatime-cli-path "/usr/local/bin/wakatime-cli"))
         (IS-LINUX (setq wakatime-cli-path "/usr/bin/wakatime"))))
 
+;;;;; ZEAL-AT-POINT
+(global-set-key "\C-cd" 'zeal-at-point)
+(add-hook 'python-mode-hook
+          (lambda () (setq zeal-at-point-docset '("python" "django"))))
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda () (set zeal-at-point-docset "emacs-lisp")))
 ;;;; LOAD
 
 (load! "+keybindings.el")

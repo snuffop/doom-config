@@ -51,6 +51,7 @@
 (package! vlf)
 (package! wakatime-mode)
 (package! weblorg)
+(package! zeal-at-point)
 
 (package! chezmoi            :recipe (:host github :repo "tuh8888/chezmoi.el"))
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
