@@ -87,6 +87,14 @@
                 (push file org-agenda-files)))
           (org-projectile-todo-files))
 
+  (setq org-agenda-category-icon-alist
+        `(("work" ,(list (all-the-icons-material "work")) nil nil :ascent center)
+          ("chore" ,(list (all-the-icons-material "home")) nil nil :ascent center)
+          ("events" ,(list (all-the-icons-material "event")) nil nil :ascent center)
+          ("todo" ,(list (all-the-icons-material "check_box")) nil nil :ascent center)
+          ("solution" ,(list (all-the-icons-material "done")) nil nil :ascent center)
+          ("birthday" ,(list (all-the-icons-material "cake")) nil nil :ascent center)
+          ("anniversary" ,(list (all-the-icons-material "favorite")) nil nil :ascent center)))
 
 ;;;;; BASE
 
@@ -750,12 +758,6 @@ is selected, only the bare key is returned."
 
   (setq +org-roam-open-buffer-on-find-file nil)
 
-  ;; (set-popup-rules!
-  ;;   `((,(regexp-quote org-roam-buffer) ; persistent org-roam buffer
-  ;;      :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 1)
-  ;;     ("^\\*org-roam: " ; node dedicated org-roam buffer
-  ;;      :side right :width .12 :height .5 :ttl nil :modeline nil :quit nil :slot 2)))
-
 ;;;;;; ORG-ROAM HOOKS
 
   ;; hook to be run whenever an org-roam capture completes
@@ -985,7 +987,6 @@ is selected, only the bare key is returned."
 
 (use-package! org-view-mode
   :defer t)
-
 
 (defun strip-duplicates (list)
   (let ((new-list nil))

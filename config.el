@@ -394,28 +394,6 @@
 
 (beacon-mode 1)
 
-;;;;; CHEZMOI
-
-(use-package! chezmoi
-  :defer t
-  :config
-  (map! :leader
-        :prefix "fz"
-          "s" #'chezmoi-write
-          "g" #'chezmoi-magit-status
-          "d" #'chezmoi-diff
-          "e" #'chezmoi-ediff
-          "f" #'chezmoi-find
-          "i" #'chezmoi-write-files-from-target
-          "o" #'chezmoi-open-target))
-
-;;;;; Ebuku
-
-(use-package! ebuku
-  :defer t
-  :config
-  (evil-collection-init 'ebuku))
-
 ;;;;; GRIP
 
 (after! grip-mode)
@@ -434,12 +412,13 @@
 
 
 ;;;;; I3 WINDOW MANAGER CONFIG
+
 ;; Syntax highlighting for i3 config
 (use-package! i3wm-config-mode
   :defer t )
 
 ;;;;; INFO-COLORS
-;;;;;
+
 (use-package! info-colors
   :commands (info-colors-fontify-node))
 
@@ -471,11 +450,6 @@
   :config
   (setq mixed-pitch-face 'variable-pitch))
 
-;;;;; MUTT-MODE
-
-(use-package! mutt-mode
-  :defer t)
-
 ;;;;; OUTSHINE
 
 (use-package! outshine
@@ -486,11 +460,6 @@
   (add-hook 'prog-mode-hook #'outline-minor-mode)
   (add-hook 'outline-minor-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
-
-;;;;; SALT MODE
-
-(use-package! salt-mode
-  :defer t)
 
 ;;;;; SYSTEMD MODE
 
@@ -503,31 +472,6 @@
         :prefix ("h" . "help")
         "d" #'systemd-doc-directives
         "o" #'systemd-doc-open))
-
-;;;;; THEME MAGIC
-
-(use-package! theme-magic
-  :commands theme-magic-from-emacs
-  :config
-  (defadvice! theme-magic--auto-extract-16-doom-colors ()
-    :override #'theme-magic--auto-extract-16-colors
-    (list
-     (face-attribute 'default :background)
-     (doom-color 'error)
-     (doom-color 'success)
-     (doom-color 'type)
-     (doom-color 'keywords)
-     (doom-color 'constants)
-     (doom-color 'functions)
-     (face-attribute 'default :foreground)
-     (face-attribute 'shadow :foreground)
-     (doom-blend 'base8 'error 0.1)
-     (doom-blend 'base8 'success 0.1)
-     (doom-blend 'base8 'type 0.1)
-     (doom-blend 'base8 'keywords 0.1)
-     (doom-blend 'base8 'constants 0.1)
-     (doom-blend 'base8 'functions 0.1)
-     (face-attribute 'default :foreground))))
 
 ;;;;; VLF
 

@@ -30,8 +30,7 @@
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;;ivy               ; a search engine for love and life
-       (vertico           ; the search engine of the future
-        +icons)
+       (vertico +icons)
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -82,7 +81,8 @@
        electric          ; smarter, keyword-based electric-indent
        (ibuffer         ; interactive buffer management
         +icons)
-       undo              ; persistent, smarter undo for your inevitable mistakes
+       (undo              ; persistent, smarter undo for your inevitable mistakes
+        +tree)
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
@@ -167,14 +167,11 @@
         +lsp)
        ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
-       (latex             ; writing papers in Emacs has never been so fun
-        +lsp
-        +fold)
+       (latex +lsp +fold)
        ;;lean              ; for folks with too much to prove
        ledger            ; be audit you can be
        lua               ; one-based indices? one-based indices
-       (markdown          ; writing docs for people to ignore
-        +grip)
+       (markdown +grip)
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;; ocaml             ; an objective camel
@@ -188,22 +185,17 @@
         +present
         +pretty
         +roam2)
-       (php               ; perl's insecure younger brother
-        +lsp)
+       (php +lsp)
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       (python            ; beautiful is better than ugly
-        +lsp
-        +pyright
-        +pyenv)
+       (python +lsp +pyright +pyenv)
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
        ;;rest              ; Emacs as a REST client
        ;;rst               ; ReST in peace
        (ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       (rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       +lsp)
+       (rust +lsp)
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
        (sh                ; she sells {ba,z,fi}sh shells on the C xor
