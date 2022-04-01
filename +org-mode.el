@@ -8,6 +8,7 @@
 ;;
 ;;; Code
 ;;;; Pre
+;;;; 
 (setq org-directory (concat (getenv "HOME") "/Nextcloud/Notes/org/"))
 (setq org-roam-directory (concat (getenv "HOME")"/Nextcloud/Notes/org/"))
 (setq org-roam-dailies/directory "daily/")
@@ -23,6 +24,12 @@
                                (concat org-directory "Joyent/index.org")
                                "/home/marty/Nextcloud/Notes/Calendars/google.org"
                                "/home/marty/Nextcloud/Notes/Calendars/tatjana.org"))
+;;;; ORG-SUPERSTAR
+
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "▪" "◆" "✜" "✤" "▶")
+        org-superstar-prettify-item-bullets t ))
+
 ;;;; ORG-MODE
 ;;;;; PACKAGE
 (after! org
@@ -107,13 +114,16 @@
   (setq org-startup-with-inline-images t)  ; Show Inline Images
   (setq org-hide-emphasis-markers t)
   (setq org-id-link-to-org-use-id t)
+
 ;;;;;; ORG-REVERSE-DATETREE
+
   (setq-default org-reverse-datetree-level-formats
                 '("%Y"                    ; year
                   (lambda (time) (format-time-string "%Y-%m %B" (org-reverse-datetree-monday time))) ; month
                   "%Y W%W"                ; week
                   "%Y-%m-%d %A"           ; date
                   ))
+
 ;;;;; CLOCKING
 
   ;; (setq org-clock-into-drawer "CLOCKING")
@@ -384,10 +394,6 @@
                  :prepend t
                  :headline "Inbox"
                  :template-file "~/.config/doom/templates/org-templates/simple.org")
-                 ;; :template ("NOTE: %[~//.cache/org-popup/msg]"
-                 ;;            "Captured: %U"
-                 ;;            "%i"
-                 ;;            "%a"))
 
                 ("Remember-mutt" :keys "R"
                  :icon ("home" :set "octicon" :color "cyan")
@@ -741,6 +747,15 @@ is selected, only the bare key is returned."
 (use-package! doct
   :after org
   :commands (doct))
+;;;; COMPANY-ORG-BLOCK
+
+(use-package! company-org-block
+  :after org
+  :config
+  (setq company-org-block-edit-style 'auto))
+
+(after! org
+  (set-company-backend! 'org-mode-hook '(company-org-block company-capf)))
 
 ;;;; ORG-ROAM
 ;;;;; PACKAGE

@@ -20,6 +20,8 @@
 
   (setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
 
+  (setq mu4e-use-fancy-chars t)
+
 ;;;;; Info
 
   (add-to-list 'mu4e-header-info-custom

@@ -27,15 +27,16 @@
 (setq-default window-combination-resize t)
 (setq-default x-stretch-cursor t)
 
-(setq scroll-margin 2)                             ; it's nice to maintain a little margin
-(setq evil-want-fine-undo t)                       ; by default while in insert all changes are one big blob. be more granular
-(setq undo-limit 80000000)                         ; raise undo-limit to 80mb
 (setq auto-save-default t)                         ; nobody likes to loose work, i certainly don't
 (setq confirm-kill-emacs nil)                      ; stop hounding me and quit
 (setq display-time-24hr-format t)                  ; I wonder what this does
+(setq evil-want-fine-undo t)                       ; by default while in insert all changes are one big blob. be more granular
+(setq inhibit-compacting-font-caches t)
 (setq password-cache-expiry nil)                   ; i can trust my computers ... can't i?
 (setq read-process-output-max (* 1024 1024))
+(setq scroll-margin 2)                             ; it's nice to maintain a little margin
 (setq truncate-string-ellipsis "…")                ; unicode ellispis are nicer than "...", and also save /precious/ space
+(setq undo-limit 80000000)                         ; raise undo-limit to 80mb
 (setq warning-minimum-level :emergency)
 
 (setq garbage-collection-messages nil)
@@ -46,6 +47,8 @@
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)  ; Make the scratch buffer start in lisp mode
 
 (display-time-mode 1)                              ; enable time in the mode-line
+(setq display-time-load-average nil)
+
 (global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly Essie
 
 (unless (equal "Battery status not available"
@@ -68,6 +71,7 @@
 
 (setq vterm-kill-buffer-on-exit t)
 (setq vterm-always-compile-module t)               ; Always compile the vterm module
+(setq vterm-timer-delay nil)                       ; Make Vterm snappier
 (setq vterm-shell "/usr/bin/zsh")
 
 ;;;; UI
@@ -100,15 +104,17 @@
 
 (setq doom-theme 'doom-one )
 
-(doom-themes-org-config)
 
 (after! doom-themes
+  (doom-themes-org-config)
+  (doom-themes-visual-bell-config)
+  (doom-themes-treemacs-config)
+  (setq doom-themes-treemacs-theme "doom-colors")
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t
         doom-themes-padded-modeline t))
 
 ;;;;; MODELINE
-
 (after! doom-modeline
   (setq auto-revert-check-vc-info t
         doom-modeline-buffer-file-name-style 'relative-to-project
@@ -184,37 +190,8 @@
   '(doom-dashboard-menu-desc :inherit font-lock-string-face)
   '(doom-dashboard-menu-title :inherit font-lock-function-name-face))
 
-(setq fancy-splash-image (expand-file-name "banners/doom-emacs-slant-out-color.png" doom-private-dir))
-
-(setq +doom-dashboard-menu-sections
-  '(("Reload last session"
-    :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
-    :when (cond ((require 'persp-mode nil t)
-                  (file-exists-p (expand-file-name persp-auto-save-fname persp-save-dir)))
-                ((require 'desktop nil t)
-                  (file-exists-p (desktop-full-file-name))))
-    :face (:inherit (doom-dashboard-menu-title bold))
-    :action doom/quickload-session)
-    ("Open org-agenda"
-    :icon (all-the-icons-octicon "calendar" :face 'doom-dashboard-menu-title)
-    :when (fboundp 'org-agenda)
-    :action org-agenda)
-    ("Recently opened files"
-    :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
-    :action recentf-open-files)
-    ("Open project"
-    :icon (all-the-icons-octicon "briefcase" :face 'doom-dashboard-menu-title)
-    :action projectile-switch-project)
-    ("Jump to bookmark"
-    :icon (all-the-icons-octicon "bookmark" :face 'doom-dashboard-menu-title)
-    :action bookmark-jump)
-    ("Open private configuration"
-    :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title)
-    :when (file-directory-p doom-private-dir)
-    :action doom/open-private-config)
-    ("Open documentation"
-    :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title)
-    :action doom/help)))
+;; (setq fancy-splash-image (expand-file-name "banners/doom-emacs-slant-out-color.png" doom-private-dir))
+(setq fancy-splash-image (expand-file-name "banners/smaller-cute-demon.png" doom-private-dir))
 
 ;;;;; LINE NUMBERS
 
@@ -294,11 +271,12 @@
 ;;;;; COMPANY
 
 (after! company
-  (setq company-idle-delay 0.5
-        company-minimum-prefix-length 2
+  (setq company-idle-delay 0.0
+        company-minimum-prefix-length 1
+        company-tooltip-align-annotations t
+        company-selection-wrap-around t
         company-backends '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)))
-
 
 (use-package! company-box
   :after company
@@ -348,7 +326,7 @@
 
 (after! projectile
   (setq projectile-indexing-method 'alien)
-  (setq projectile-project-search-path '("~/Source"))
+  (setq projectile-project-search-path '("~/Source" "~/.local/share"))
   (setq projectile-ignored-projects '("~/" "/tmp" "~/.emacs.d/.local/straight/repos/"))
   (defun projectile-ignored-project-function (filepath)
     "Return t if FILEPATH is within any of `projectile-ignored-projects'"
@@ -369,8 +347,7 @@
 
 ;;;;; WHICHKEY
 
-
-(setq which-key-idle-delay 0.5) ;; I need the help, I really do
+(setq which-key-idle-delay 1 ) ;; I need the help, I really do
 (setq which-key-allow-multiple-replacements t)
 (after! which-key
   (pushnew!
@@ -378,6 +355,18 @@
    '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
    '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
    ))
+
+;; tell which-key to behave
+(setq which-key-use-C-h-commands t
+      prefix-help-command #'which-key-C-h-dispatch)
+
+(defadvice! fix-which-key-dispatcher-a (fn &rest args)
+  :around #'which-key-C-h-dispatch
+  (let ((keys (this-command-keys-vector)))
+    (if (equal (elt keys (1- (length keys))) ?\?)
+        (let ((keys (which-key--this-command-keys)))
+          (embark-bindings (seq-take keys (1- (length keys)))))
+      (apply fn args))))
 
 ;;;; MODULES
 ;;;;; AGGRESSIVE INDENT
@@ -450,6 +439,18 @@
   :config
   (setq mixed-pitch-face 'variable-pitch))
 
+;; my pitches getting all mixed up
+(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
+Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
+  (when (memq major-mode mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+
 ;;;;; OUTSHINE
 
 (use-package! outshine
@@ -505,6 +506,7 @@
 (load! "+org-mode.el")
 (load! "+hydra.el")
 (load! "+mu4e.el")
+(load! "abbrev.el")
 
 ;;; CUSTOM
 
