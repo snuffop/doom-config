@@ -58,6 +58,8 @@
 (set-window-buffer nil (current-buffer))
 (setenv "zstd" "/usr/bin/zstd")
 
+(add-to-list 'load-path "~/.config/doom/elisp")
+
 ;;;;; ON-SAVE
 
 (setq +format-on-save-enabled-modes
@@ -506,7 +508,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (load! "+org-mode.el")
 (load! "+hydra.el")
 (load! "+mu4e.el")
-(load! "abbrev.el")
+(load! "+abbrev.el")
 
 ;;; CUSTOM
 

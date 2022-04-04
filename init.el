@@ -19,6 +19,10 @@
 (when noninteractive
   (add-to-list 'doom-env-whitelist "^SSH_"))
 
+(after! gcmh
+  (setq gcmh-high-cons-threshold 33554432))
+(add-hook 'focus-out-hook 'garbage-collect)
+
 (doom! :input
        ;;chinese
        ;;japanese

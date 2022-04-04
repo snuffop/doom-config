@@ -9,19 +9,19 @@
 ;;; Code
 ;;;; Pre
 ;;;; 
-(setq org-directory (concat (getenv "HOME") "/Nextcloud/Notes/org/"))
-(setq org-roam-directory (concat (getenv "HOME")"/Nextcloud/Notes/org/"))
+(setq org-directory (expand-file-name "~/Nextcloud/Notes/org/"))
+(setq org-roam-directory (expand-file-name "~/Nextcloud/Notes/org/"))
+(setq org-contacts-files (expand-file-name "contacts.org" org-directory))
 (setq org-roam-dailies/directory "daily/")
-(setq org-contacts-files '("~/Nextcloud/Notes/org/contacts.org"))
 
 (setq  marty/org-agenda-files (list
-                               (concat org-directory "Tasks.org")
-                               (concat org-directory "Habits.org")
-                               (concat org-directory "Calendar.org")
-                               (concat org-directory "contacts.org")
-                               (concat org-directory "Someday.org")
-                               (concat org-directory "0mobile.org")
-                               (concat org-directory "Joyent/index.org")
+                               (expand-file-name "Tasks.org" org-directory)
+                               (expand-file-name "Habits.org" org-directory)
+                               (expand-file-name "Calendar.org" org-directory)
+                               (expand-file-name "contacts.org" org-directory)
+                               (expand-file-name "Someday.org" org-directory)
+                               (expand-file-name "0mobile.org" org-directory)
+                               (expand-file-name "Joyent/index.org" org-directory)
                                "/home/marty/Nextcloud/Notes/Calendars/google.org"
                                "/home/marty/Nextcloud/Notes/Calendars/tatjana.org"))
 ;;;; ORG-SUPERSTAR
