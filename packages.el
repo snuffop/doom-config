@@ -13,9 +13,6 @@
 (package! evil-escape :disable t)
 (package! solaire-mode :disable t)
 
-(unpin! org)
-(unpin! org-roam)
-
 (package! aggressive-indent)
 (package! all-the-icons-dired)
 (package! beacon)

@@ -8,7 +8,7 @@
 ;;
 ;;; Code
 ;;;; Pre
-;;;; 
+
 (setq org-directory (expand-file-name "~/Nextcloud/Notes/org/"))
 (setq org-roam-directory (expand-file-name "~/Nextcloud/Notes/org/"))
 (setq org-contacts-files (expand-file-name "contacts.org" org-directory))
@@ -744,18 +744,17 @@ is selected, only the bare key is returned."
   )
 
 ;;;; DOCT
+
 (use-package! doct
   :after org
   :commands (doct))
+
 ;;;; COMPANY-ORG-BLOCK
 
 (use-package! company-org-block
   :after org
   :config
   (setq company-org-block-edit-style 'auto))
-
-(after! org
-  (set-company-backend! 'org-mode-hook '(company-org-block company-capf)))
 
 ;;;; ORG-ROAM
 ;;;;; PACKAGE
@@ -971,7 +970,7 @@ is selected, only the bare key is returned."
     (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
       (consult-ripgrep org-roam-directory)))
 
-;;;;;; END Package
+;;;;;; END Package after org-roam
   )
 ;;;;;; ROAM-UI
 

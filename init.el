@@ -13,15 +13,16 @@
 ;;
 ;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
 ;;      directory (for easy access to its source code).
-(after! straight
-  (add-to-list 'straight-recipes-gnu-elpa-ignored-packages 'seq))
+;;
+;; (after! straight
+;;   (add-to-list 'straight-recipes-gnu-elpa-ignored-packages 'seq))
 
-(when noninteractive
-  (add-to-list 'doom-env-whitelist "^SSH_"))
+;; (when noninteractive
+;;   (add-to-list 'doom-env-whitelist "^SSH_"))
 
-(after! gcmh
-  (setq gcmh-high-cons-threshold 33554432))
-(add-hook 'focus-out-hook 'garbage-collect)
+;; (after! gcmh
+;;   (setq gcmh-high-cons-threshold 33554432))
+;; (add-hook 'focus-out-hook 'garbage-collect)
 
 (doom! :input
        ;;chinese
@@ -116,8 +117,7 @@
        (lookup              ; navigate your code and its documentation
         +dictionary
         +offline)
-       (lsp               ; M-x vscode
-        +eglot)
+       lsp               ; M-x vscode
        (magit             ; a git porcelain for Emacs
         +forge)
        make              ; run make tasks from Emacs
