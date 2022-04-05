@@ -60,6 +60,7 @@
 (package! zeal-at-point)
 
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
+(package! consult-org-roam   :recipe (:host github :repo "jgru/consult-org-roam"))
 (package! emacs-with-nyxt    :recipe (:host github :repo "ag91/emacs-with-nyxt"))
 (package! khalel             :recipe (:host github :repo "emacsmirror/khalel"))
 (package! mu4e-marker-icons  :recipe (:host github :repo "emacsmirror/mu4e-marker-icons"))
