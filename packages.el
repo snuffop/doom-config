@@ -53,6 +53,7 @@
 (package! systemd)
 (package! tree-sitter)
 (package! tree-sitter-langs)
+(package! vimrc-mode)
 (package! vlf)
 (package! wakatime-mode)
 (package! weblorg)
