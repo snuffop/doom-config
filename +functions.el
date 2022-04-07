@@ -28,7 +28,6 @@
   (string-equal system-type "gnu/linux")
   )
 
-
 ;;;; OPEN MUTT MESSAGE
 
 (defun mutt-open-message (message-id)
@@ -126,6 +125,17 @@ Do not try to make a new directory or anything fancy."
     (occur-1 prot-common-url-regexp "\\&" (list (current-buffer)) buf-name)
     (remove-hook 'occur-hook #'goto-address-mode)))
 
+
+;;;;;;;;;;;;;;;;
+;; TRAMP QUIT ;;
+;;;;;;;;;;;;;;;;
+
+(defun marty/tramp-quit ()
+  "Quit tramp and Kill all remote Buffers"
+  (interactive)
+  (tramp-cleanup-all-buffers)
+  (tramp-cleanup-all-connections)
+  )
 
 ;;;;;;;;;;;;;;;;;;
 ;; Experamental ;;

@@ -476,6 +476,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
         "d" #'systemd-doc-directives
         "o" #'systemd-doc-open))
 
+;;;;; TRAMP
 ;;;;; VLF
 
 (use-package! vlf-setup
