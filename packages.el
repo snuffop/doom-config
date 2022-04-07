@@ -6,7 +6,7 @@
 ;;
 ;;;; Notes
 ;;
-;; 2021 12 03 mRemoved Github version of org-roam-ui and org-roam-timestamps to melpa version
+;; 2021 12 03 Removed Github version of org-roam-ui and org-roam-timestamps to melpa version
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (package! evil-snipe :disable t)
@@ -18,13 +18,12 @@
 (package! beacon)
 (package! boxy)
 (package! boxy-headings)
-(package! company-prescient)
 (package! company-org-block)
+(package! company-prescient)
 (package! consult-dir)
 (package! doct)
 (package! emacsql-sqlite3)
 (package! fzf)
-(package! hyperbole)
 (package! i3wm)
 (package! i3wm-config-mode)
 (package! info-colors)
@@ -43,15 +42,12 @@
 (package! org-ref)
 (package! org-reverse-datetree)
 (package! org-roam-timestamps)
-(package! org-roam-ui)
 (package! org-super-agenda)
 (package! org-wild-notifier)
 (package! ox-gfm)
 (package! prescient)
 (package! ssh-config-mode)
 (package! systemd)
-(package! tree-sitter)
-(package! tree-sitter-langs)
 (package! vimrc-mode)
 (package! vlf)
 (package! wakatime-mode)

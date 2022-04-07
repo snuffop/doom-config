@@ -390,18 +390,6 @@
 (after! grip-mode)
   (setq grip-github-password (auth-source-pass-get 'secret "Application/github.com/emacs-token"))
 
-
-;;;;; HYPERBOLE
-;; OMG this is Amazing
-
-(use-package! hyperbole
-  :after org
-  :config
-  (add-hook 'doom-first-buffer-hook  #'hyperbole-mode)
-  (setq hyrolo-file-list (cons "~/.rolo.otl" (cddr (directory-files "~/Nextcloud/Notes/org" t))))
-  )
-
-
 ;;;;; I3 WINDOW MANAGER CONFIG
 
 ;; Syntax highlighting for i3 config
