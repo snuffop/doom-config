@@ -51,10 +51,6 @@
 
 (global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly Essie
 
-(unless (equal "Battery status not available"
-               (battery))
-  (display-battery-mode 1))                        ; Display Battery
-
 (set-window-buffer nil (current-buffer))
 (setenv "zstd" "/usr/bin/zstd")
 
