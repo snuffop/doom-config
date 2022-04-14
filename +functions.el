@@ -28,6 +28,16 @@
   (string-equal system-type "gnu/linux")
   )
 
+;;;###autoload
+(defun strip-duplicates (list)
+  " Strip Duplicates from a list "
+  (let ((new-list nil))
+    (while list
+      (when (and (car list) (not (member (car list) new-list)))
+        (setq new-list (cons (car list) new-list)))
+      (setq list (cdr list)))
+    (nreverse new-list)))
+
 ;;;; OPEN MUTT MESSAGE
 
 (defun mutt-open-message (message-id)

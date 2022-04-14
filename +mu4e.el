@@ -455,12 +455,6 @@
   :after mu4e
   :config (mu4e-column-faces-mode))
 
-;;;;; mu4e-marker-icons
-
-(use-package! mu4e-marker-icons
-  :after mu4e
-  :init (mu4e-marker-icons-mode 1))
-
 ;;;; Functions
 
 (defvar marty-mu4e/mu4e-compose-signed-p t)

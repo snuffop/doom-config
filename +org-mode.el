@@ -161,6 +161,7 @@
     (auto-revert-mode 1)
     (visual-line-mode)
     (variable-pitch-mode 1)
+    (my/org-roam-refresh-agenda-list)
 
     (setq prettify-symbols-unprettify-at-point 'right-edge)
 
@@ -980,35 +981,3 @@ is selected, only the bare key is returned."
   :config
   (setq org-roam-timestamps-parent-file t)  (org-roam-timestamps-mode))
 
-;;;; CONSULT-ORG-ROAM
-
-(use-package! consult-org-roam
-   :after org-roam
-   :init
-   (require 'consult-org-roam)
-   ;; Activate the minor-mode
-   (consult-org-roam-mode 1)
-   :custom
-   (consult-org-roam-grep-func #'consult-ripgrep)
-   :config
-   ;; Eventually suppress previewing for certain functions
-   (consult-customize
-    consult-org-roam-forward-links
-    :preview-key (kbd "M-."))
-   :bind
-   ("C-c n e" . consult-org-roam-file-find)
-   ("C-c n b" . consult-org-roam-backlinks)
-   ("C-c n r" . consult-org-roam-search))
-
-;;;; ORG-VIEW-MODE
-
-(use-package! org-view-mode
-  :defer t)
-
-(defun strip-duplicates (list)
-  (let ((new-list nil))
-    (while list
-      (when (and (car list) (not (member (car list) new-list)))
-        (setq new-list (cons (car list) new-list)))
-      (setq list (cdr list)))
-    (nreverse new-list)))

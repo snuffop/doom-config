@@ -145,7 +145,8 @@
        ;;(haskell +lsp)    ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
-       json              ; At least it ain't XML
+       (json              ; At least it ain't XML
+        +lsp)
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        (javascript        ; all(hope(abandon(ye(who(enter(here))))))
         +lsp)
@@ -154,8 +155,10 @@
        (latex +lsp +fold)
        ;;lean              ; for folks with too much to prove
        ledger            ; be audit you can be
-       lua               ; one-based indices? one-based indices
-       (markdown +grip)
+       (lua               ; one-based indices? one-based indices
+        +lsp)
+       (markdown
+        +grip)
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;; ocaml             ; an objective camel
