@@ -195,7 +195,7 @@
 
 ;; (setq dashboard-center-content nil) ;; set to 't' for centered content
 
-(use-package dashboard
+(use-package! dashboard
   :init      ;; tweak dashboard config before loading it
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
@@ -411,6 +411,43 @@ List of keybindings (SPC h b b)")
 
 (beacon-mode 1)
 
+;;;;; CHEZMOI
+
+(use-package! chezmoi
+  :config
+  (setq-default chezmoi-template-display-p t)   ;; Display template values in all source buffers.
+  (setq chezmoi-template-display-p t)           ;; Display template values in current buffer.
+  (setq-default chezmoi-template-display-p nil) ;; Don't display template values by default.
+  (global-set-key (kbd "C-c C f")  #'chezmoi-find)
+  (global-set-key (kbd "C-c C s")  #'chezmoi-write)
+  )
+
+(defun chezmoi--evil-insert-state-enter ()
+  "Run after evil-insert-state-entry."
+  (chezmoi-template-buffer-display nil (point))
+  (remove-hook 'after-change-functions #'chezmoi-template--after-change 1))
+
+(defun chezmoi--evil-insert-state-exit ()
+  "Run after evil-insert-state-exit."
+  (chezmoi-template-buffer-display nil)
+  (chezmoi-template-buffer-display t)
+  (add-hook 'after-change-functions #'chezmoi-template--after-change nil 1))
+
+(defun chezmoi-evil ()
+  (if chezmoi-mode
+      (progn
+        (add-hook 'evil-insert-state-entry-hook #'chezmoi--evil-insert-state-enter nil 1)
+        (add-hook 'evil-insert-state-exit-hook #'chezmoi--evil-insert-state-exit nil 1))
+    (progn
+      (remove-hook 'evil-insert-state-entry-hook #'chezmoi--evil-insert-state-enter 1)
+      (remove-hook 'evil-insert-state-exit-hook #'chezmoi--evil-insert-state-exit 1))))
+
+(add-hook! 'chezmoi-mode-hook #'chezmoi-evil)
+
+(require 'chezmoi-company)
+(add-hook 'chezmoi-mode-hook #'(lambda () (if chezmoi-mode
+                                         (add-to-list 'company-backends 'chezmoi-company-backend)
+                                       (delete 'chezmoi-company-backend 'company-backends))))
 ;;;;; GRIP
 
 (after! grip-mode)
@@ -428,11 +465,6 @@ List of keybindings (SPC h b b)")
   :commands (info-colors-fontify-node))
 
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
-
-;;;;; JENKINS
-
-(use-package! jenkinsfile-mode
-  :defer t )
 
 ;;;;; KHARD
 
