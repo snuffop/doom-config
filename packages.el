@@ -10,7 +10,6 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (package! evil-snipe :disable t)
-(package! evil-escape :disable t)
 (package! solaire-mode :disable t)
 
 (package! aggressive-indent)
