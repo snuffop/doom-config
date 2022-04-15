@@ -56,7 +56,6 @@
 
 (add-to-list 'load-path "~/.config/doom/elisp")
 
-(add-hook! 'doom-first-buffer-hook  #'marty/startwakatime)
 
 ;;;;; ON-SAVE
 
@@ -179,47 +178,19 @@
 
 ;;;;; DASHBOARD
 
-;; (setq doom-fallback-buffer-name "► Doom"
-;;       +doom-dashboard-name "► Doom")
+(setq doom-fallback-buffer-name "► Doom"
+      +doom-dashboard-name "► Doom")
 
-;; (custom-theme-set-faces! 'doom-one
-;;   '(doom-dashboard-banner :foreground "red" :background "#000000" :weight bold)
-;;   '(doom-dashboard-footer :inherit font-lock-constant-face)
-;;   '(doom-dashboard-footer-icon :inherit all-the-icons-red)
-;;   '(doom-dashboard-loaded :inherit font-lock-warning-face)
-;;   '(doom-dashboard-menu-desc :inherit font-lock-string-face)
-;;   '(doom-dashboard-menu-title :inherit font-lock-function-name-face))
+(custom-theme-set-faces! 'doom-one
+  '(doom-dashboard-banner :foreground "red" :background "#000000" :weight bold)
+  '(doom-dashboard-footer :inherit font-lock-constant-face)
+  '(doom-dashboard-footer-icon :inherit all-the-icons-red)
+  '(doom-dashboard-loaded :inherit font-lock-warning-face)
+  '(doom-dashboard-menu-desc :inherit font-lock-string-face)
+  '(doom-dashboard-menu-title :inherit font-lock-function-name-face))
 
-;; ;; (setq fancy-splash-image (expand-file-name "banners/doom-emacs-slant-out-color.png" doom-private-dir))
-;; (setq fancy-splash-image (expand-file-name "banners/smaller-cute-demon.png" doom-private-dir))
+(setq fancy-splash-image (expand-file-name "banners/smaller-cute-demon.png" doom-private-dir))
 
-;; (setq dashboard-center-content nil) ;; set to 't' for centered content
-
-(use-package! dashboard
-  :init      ;; tweak dashboard config before loading it
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-banner-logo-title "\nKEYBINDINGS:\
-\nFind file               (SPC .)     \
-Open buffer list    (SPC b i)\
-\nFind recent files       (SPC f r)   \
-Open the eshell     (SPC e s)\
-\nOpen dired file manager (SPC d d)   \
-List of keybindings (SPC h b b)")
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-startup-banner (expand-file-name "banners/smaller-cute-demon.png" doom-private-dir))
-  (setq dashboard-center-content nil) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
-                          (agenda . 5 )
-                          (bookmarks . 5)
-                          (projects . 5)
-                          (registers . 5)))
-  :config
-  (dashboard-setup-startup-hook)
-  (dashboard-modify-heading-icons '((recents . "file-text")
-                                    (bookmarks . "book"))))
-
-(setq doom-fallback-buffer "*dashboard*")
 
 ;;;;; LINE NUMBERS
 
@@ -539,6 +510,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   (cond (IS-MAC (setq wakatime-cli-path "/usr/local/bin/wakatime-cli"))
         (IS-LINUX (setq wakatime-cli-path "/usr/bin/wakatime"))))
 
+(add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
 
 ;;;; LOAD
 

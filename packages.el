@@ -46,6 +46,7 @@
 (package! ox-gfm)
 (package! prescient)
 (package! ssh-config-mode)
+(package! templatel)
 (package! systemd)
 (package! vimrc-mode)
 (package! vlf)
