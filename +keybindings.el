@@ -131,7 +131,7 @@
 (map! :leader
       :prefix "n"
       "b" #'marty/org-roam-capture-inbox
-      "r" #'hydra-roam-jump/body)
+      "r" #'transient-roam-jump)
 
 ;;;;; <leader> o --- open
 
@@ -164,7 +164,7 @@
 ;;;;; <leader> R --- ROAM
 (map! :leader
       :prefix "r"
-      "r" #'hydra-roam-jump/body)
+      "r" #'transient-roam-jump)
 
 
 ;;;; MODE MAPS
@@ -218,7 +218,7 @@
       "h" #'org-toggle-heading
       "i" #'org-toggle-item
       "I" #'org-id-get-create
-      "m" #'hydra-roam-jump/body
+      "m" #'transient-roam-jump
       "n" #'org-store-link
       "o" #'org-set-property
       "q" #'org-set-tags-command
@@ -416,7 +416,6 @@
 (evil-define-key 'normal peep-dired-mode-map
   (kbd "j") 'peep-dired-next-file
   (kbd "k") 'peep-dired-prev-file)
-
 
 ;;; END
 :

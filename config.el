@@ -378,10 +378,6 @@
   (add-hook 'php-mode-hook #'aggressive-indent-mode)
   (add-hook 'hy-mode-hook #'aggressive-indent-mode))
 
-;;;;; BEACON
-
-(beacon-mode 1)
-
 ;;;;; CHEZMOI
 
 (use-package! chezmoi
@@ -451,25 +447,6 @@
 (use-package! nginx-mode
   :defer t)
 
-;;;;; MIXED-PITCH
-
-(use-package! mixed-pitch
-  :hook (org-mode . mixed-pitch-mode)
-  :config
-  (setq mixed-pitch-face 'variable-pitch))
-
-;; my pitches getting all mixed up
-(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
-  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
-(defun init-mixed-pitch-h ()
-  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
-Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
-  (when (memq major-mode mixed-pitch-modes)
-    (mixed-pitch-mode 1))
-  (dolist (hook mixed-pitch-modes)
-    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
-(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
-
 ;;;;; OUTSHINE
 
 (use-package! outshine
@@ -517,7 +494,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (load! "+keybindings.el")
 (load! "+functions.el")
 (load! "+org-mode.el")
-(load! "+hydra.el")
 (load! "+mu4e.el")
 (load! "+abbrev.el")
 

@@ -24,12 +24,12 @@
        doom-quit         ; DOOM quit-message prompts when you quit Emacus
        (emoji +unicode +github)
        ;; hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-       hydra
+       hydra  ; TODO Migrate to transient   DEPRICATED  I!!!!!
        ;;indent-guides     ; highlighted indent columns
        ligatures         ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
-       ;;nav-flash         ; blink cursor line after big motions
+       nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
        (popup             ; tame sudden yet inevitable temporary windows
@@ -44,7 +44,7 @@
        (window-select     ; visually switch windows
         +numbers)
        workspaces        ; tab emulation, persistence & separate workspaces
-       ;;zen               ; distraction-free coding or writing
+       zen               ; distraction-free coding or writing
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
@@ -66,6 +66,7 @@
        electric          ; smarter, keyword-based electric-indent
        (ibuffer         ; interactive buffer management
         +icons)
+       tramp
        undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
@@ -87,7 +88,7 @@
        ansible
        (debugger          ; FIXME stepping through code, to help you add bugs
         +lsp)
-       ;;direnv
+       direnv
        (docker
         +lsp)
        editorconfig      ; let someone else argue about tabs vs spaces
@@ -106,7 +107,6 @@
        pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
-       ;;taskrunner        ; taskrunner for all your projects
        terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        upload            ; map local to remote projects via ssh/ftp
@@ -153,7 +153,9 @@
         +lsp)
        ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
-       (latex +lsp +fold)
+       (latex
+        +lsp
+        +fold)
        ;;lean              ; for folks with too much to prove
        ledger            ; be audit you can be
        (lua               ; one-based indices? one-based indices
@@ -166,7 +168,7 @@
        (org               ; organize your plain life in plain text
         +dragondrop
         +gnuplot
-        +hugo
+        ;; +hugo
         +noter
         +pandoc
         +pomodoro
@@ -182,7 +184,7 @@
         +lsp
         +xp)
        ;;raku              ; the artist formerly known as perl6
-       ;;rest              ; Emacs as a REST client
+       rest              ; Emacs as a REST client
        ;;rst               ; ReST in peace
        (ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust +lsp)

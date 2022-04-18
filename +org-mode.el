@@ -981,3 +981,67 @@ is selected, only the bare key is returned."
   :config
   (setq org-roam-timestamps-parent-file t)  (org-roam-timestamps-mode))
 
+
+;;;; CONSULT-ORG-ROAM
+
+(use-package! consult-org-roam
+;;  "Found  https://github.com/jgru/consult-org-roam"
+  :after org-roam
+  :init
+  (require 'consult-org-roam)
+  ;; Activate the minor-mode
+  (consult-org-roam-mode 1)
+  :custom
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  :config
+  ;; Eventually suppress previewing for certain functions
+  (consult-customize
+   consult-org-roam-forward-links
+   :preview-key (kbd "M-."))
+  )
+
+;;;; ORG-ROAM-TRANSIENT
+
+(transient-define-prefix transient-roam-jump ()
+  " Roam Sub Menu"
+  ["Roam Transient"
+   ["Roam Base"
+    ("B" "Roam Backlinks"     consult-org-roam-backlinks)
+    ("F" "Find Reference"     org-roam-ref-find )
+    ("I" "Insert (orig)"      org-roam-node-insert )
+    ("M" "Buffer dedicated"   org-roam-buffer-display-dedicated )
+    ("R" "Ripgrep search"     consult-org-roam-search )
+    ("a" "Archive to daily"   marty/org-roam-move-todo-to-today )
+    ("b" "Show Buffer"        org-roam-buffer )
+    ("f" "Find File"          consult-org-roam-file-find )
+    ("g" "Roam graph"         org-roam-graph )
+    ("i" "Insert immediate"   org-roam-node-insert-immediate )
+    ("j" "Capture today"      org-roam-dailies-capture-today)
+    ("m" "Buffer toggle"      org-roam-buffer-toggle)
+    ("n" "Find Node"          org-roam-node-find)
+    ("r" "Roam refile"        org-roam-refile)
+    ("s" "Sync DB"            org-roam-db-sync)]
+   ["Roam Dailies"
+    ("d-" "Find Directory"    org-roam-dailies-find-directory)
+    ("dT" "Tomorrow"          org-roam-dailies-goto-tomorrow)
+    ("dd" "Date"              org-roam-dailies-goto-date)
+    ("dn" "Next note"         org-roam-dailies-goto-next-note)
+    ("dp" "Previous note"     org-roam-dailies-goto-previous-note)
+    ("dt" "Today"             org-roam-dailies-goto-today)
+    ("dy" "Yesterday"         org-roam-dailies-goto-yesterday)]
+   ["Capture"
+    ("cT" "Capture tomorrow"  org-roam-dailies-capture-tomorrow)
+    ("cc" "Capture"           org-roam-capture)
+    ("cd" "Capture by date"   org-roam-dailies-capture-date)
+    ("ct" "Capture today"     org-roam-dailies-capture-today)
+    ("cy" "Capture yesterday" org-roam-dailies-capture-yesterday)]
+   ["Database"
+    ("DD" "Daignose"        org-roam-db-diagnose-node)
+    ("Dc" "Clear all"       org-roam-db-clear-all)]
+   ["Object"
+    ("oA" "Remove alias"     org-roam-alias-remove)
+    ("oR" "Remove reference" org-roam-ref-remove)
+    ("oT" "Remove tag"       org-roam-tag-remove)
+    ("oa" "Add alias"        org-roam-alias-add)
+    ("or" "Add reference"    org-roam-ref-add)
+    ("ot" "Add tag"          org-roam-tag-add)]])
