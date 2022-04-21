@@ -6,6 +6,7 @@
 ;;
 ;;;; Notes
 ;;
+;; 2022 04 21 removed weblorg and tempmlatel  Switched back to ox_hugo
 ;; 2021 12 03 Removed Github version of org-roam-ui and org-roam-timestamps to melpa version
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -44,7 +45,6 @@
 (package! ox-gfm)
 (package! prescient)
 (package! ssh-config-mode)
-(package! templatel)
 (package! systemd)
 (package! vimrc-mode)
 (package! vlf)
