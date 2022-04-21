@@ -24,7 +24,7 @@
        doom-quit         ; DOOM quit-message prompts when you quit Emacus
        (emoji +unicode +github)
        ;; hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-       hydra  ; TODO Migrate to transient   DEPRICATED  I!!!!!
+       ;;hydra  ; TODO Migrate to transient   DEPRICATED  I!!!!!
        ;;indent-guides     ; highlighted indent columns
        ligatures         ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
@@ -71,7 +71,7 @@
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       ;;eshell            ; the elisp shell that works everywhere
+       eshell            ; the elisp shell that works everywhere
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
        vterm             ; the best terminal emulation in Emacs
@@ -125,7 +125,7 @@
         +lsp)
        ;;(clojure           ; java with a lisp
        ;; +lsp)
-       ;;common-lisp       ; if you've seen one lisp, you've seen them all
+       common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .NET, and mono shenanigans
@@ -168,7 +168,7 @@
        (org               ; organize your plain life in plain text
         +dragondrop
         +gnuplot
-        ;; +hugo
+        +hugo
         +noter
         +pandoc
         +pomodoro

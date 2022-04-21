@@ -6,6 +6,7 @@
 ;;
 ;;;; Notes
 ;;
+;;  * 2022 04 21 Start Sanatizeing Config to make publicly available
 ;;  * 2021 12 29 Updated the outshine use-packages with a hook to save 3 seconds on startup time
 ;;  * 2021 12 08 Modified and working for OSX
 ;;  * 2021 11 18 Update clean Install and config
@@ -277,11 +278,6 @@
         company-backends '(company-capf company-dabbrev company-files company-yasnippet)
         company-global-modes '(not comint-mode erc-mode message-mode help-mode gud-mode)))
 
-(use-package! company-box
-  :after company
-  :config
-  (setq company-box-max-candidates 5))
-
 (setq-default history-length 1000)
 (setq-default prescient-history-length 1000)
 
@@ -415,6 +411,12 @@
 (add-hook 'chezmoi-mode-hook #'(lambda () (if chezmoi-mode
                                          (add-to-list 'company-backends 'chezmoi-company-backend)
                                        (delete 'chezmoi-company-backend 'company-backends))))
+;;;;; EBUKU
+
+(with-eval-after-load 'ebuku
+  (+evil-collection-init 'ebuku)
+  (evil-collection-ebuku-setup))
+
 ;;;;; GRIP
 
 (after! grip-mode)

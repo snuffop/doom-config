@@ -38,13 +38,10 @@
       ;;; <leader> a --- Application
       (:prefix-map ("a" . "Application")
        "m"  #'=mu4e
-       "b"  #'ebuku
+       (:prefix-map ("b" . "buku")
+         "b"  #'ebuku
+         "s"  #'ebuku-search-on-all)
 
-       ;; JUMP
-       ;; (:prefix-map ("j" . "Jump")
-       ;;  "RET" #'dired-registers-goto-completing-read
-       ;;  "m"   #'dired-registers-store
-       ;;  "j"   #'dired-registers-goto)
        ;; ORG
        (:prefix-map ("o" . "org")
         "/" #'org-occur-in-agenda-files
