@@ -267,6 +267,21 @@
   (vertico-reverse-mode 1)
   (setq vertico-resize t))
 
+;;;;;; Embark
+;; Open files in (Option) after C-; in embark
+;;
+(defun my/vsplit-file-open (file)
+  (+evil/window-vsplit-and-follow)
+  (find-file file))
+
+(defun my/split-file-open (file)
+  (+evil/window-split-and-follow)
+  (find-file file))
+
+(map! :after embark
+      :map embark-file-map
+      "V" 'my/vsplit-file-open
+      "X" 'my/split-file-open)
 
 ;;;;; COMPANY
 
