@@ -56,7 +56,6 @@
 
 (add-to-list 'load-path "~/.config/doom/elisp")
 
-
 ;;;;; ON-SAVE
 
 (setq +format-on-save-enabled-modes
@@ -175,7 +174,6 @@
     '(bar window-number pdf-pages pdf-icon buffer-name)
     '(misc-info matches major-mode process vcs)))
 
-
 ;;;;; DASHBOARD
 
 (setq doom-fallback-buffer-name "► Doom"
@@ -191,7 +189,6 @@
 
 (setq fancy-splash-image (expand-file-name "banners/smaller-cute-demon.png" doom-private-dir))
 
-
 ;;;;; LINE NUMBERS
 
 (setq display-line-numbers-type 'relative)
@@ -204,12 +201,10 @@
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-
 (setq doom-fallback-buffer-name "► Doom"
       +doom-dashboard-name "► Doom")
 
 ;;;;; SYNTAX LISTS
-
 
  (add-to-list 'auto-mode-alist '("\\.service\\'" . systemd-mode))
  (add-to-list 'auto-mode-alist '("\\.service.tmpl\\'" . systemd-mode))
@@ -266,7 +261,6 @@
   (vertico-reverse-mode 1)
   (setq vertico-resize t))
 
-
 ;;;;; COMPANY
 
 (after! company
@@ -293,10 +287,10 @@
   '(:seperate company-ispell company-files company-yasnippet))
 (set-company-backend! 'ess-r-mode '(company-R-args company-R-objects company-dabbrev-code :separate))
 
-;;;;; CONSULT
+;; ;;;;; CONSULT
 
-(after! consult
-  (evil-collection-init 'consult))
+;; (after! consult
+;;   (evil-collection-init 'consult))
 
 ;;;;; DIRED
 
@@ -319,7 +313,6 @@
 
 (after! magit
   (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
-
 
 ;;;;; PROJECTILE
 
