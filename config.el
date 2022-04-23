@@ -1,7 +1,7 @@
 ;;; $doomdir/config.el --- My Emacs Config File -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
-;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2022, marty buchaus, all rights reserved.
+;; author: Marty Buchaus <marty@dabuke.com>
+;; copyright © 2022, Marty Buchaus, all rights reserved.
 ;; created:  1 November 2021
 ;;
 ;;;; Notes
