@@ -984,21 +984,28 @@ is selected, only the bare key is returned."
 
 ;;;; CONSULT-ORG-ROAM
 
-(use-package! consult-org-roam
-;;  "Found  https://github.com/jgru/consult-org-roam"
-  :after org-roam
-  :init
-  (require 'consult-org-roam)
-  ;; Activate the minor-mode
-  (consult-org-roam-mode 1)
-  :custom
-  (consult-org-roam-grep-func #'consult-ripgrep)
-  :config
-  ;; Eventually suppress previewing for certain functions
-  (consult-customize
-   consult-org-roam-forward-links
-   :preview-key (kbd "M-."))
-  )
+;; (use-package! consult-org-roam
+;; ;;  "Found  https://github.com/jgru/consult-org-roam"
+;;   :after org-roam
+;;   :init
+;;   (require 'consult-org-roam)
+;;   ;; Activate the minor-mode
+;;   (consult-org-roam-mode 1)
+;;   :custom
+;;   (consult-org-roam-grep-func #'consult-ripgrep)
+;;   :config
+;;   ;; Eventually suppress previewing for certain functions
+;;   (consult-customize
+;;    consult-org-roam-forward-links
+;;    :preview-key (kbd "M-."))
+;;   )
+;;;; ORG-ROAM-RG-SEARCH
+
+(defun marty/org-roam-rg-search ()
+  "Search org-roam directory using consult-ripgrep. With live-preview."
+  (interactive)
+  (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
+    (consult-ripgrep org-roam-directory)))
 
 ;;;; ORG-ROAM-TRANSIENT
 
@@ -1006,14 +1013,12 @@ is selected, only the bare key is returned."
   " Roam Sub Menu"
   ["Roam Transient"
    ["Roam Base"
-    ("B" "Roam Backlinks"     consult-org-roam-backlinks)
+    ("/" "RG Search"          marty/org-roam-rg-search)
     ("F" "Find Reference"     org-roam-ref-find )
     ("I" "Insert (orig)"      org-roam-node-insert )
     ("M" "Buffer dedicated"   org-roam-buffer-display-dedicated )
-    ("R" "Ripgrep search"     consult-org-roam-search )
     ("a" "Archive to daily"   marty/org-roam-move-todo-to-today )
     ("b" "Show Buffer"        org-roam-buffer )
-    ("f" "Find File"          consult-org-roam-file-find )
     ("g" "Roam graph"         org-roam-graph )
     ("i" "Insert immediate"   org-roam-node-insert-immediate )
     ("j" "Capture today"      org-roam-dailies-capture-today)

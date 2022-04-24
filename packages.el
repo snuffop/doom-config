@@ -56,7 +56,6 @@
 
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
 (package! consult-tramp      :recipe (:host github :repo "ladicle/consult-tramp"))
-(package! consult-org-roam   :recipe (:host github :repo "jgru/consult-org-roam"))
 (package! khalel             :recipe (:host github :repo "emacsmirror/khalel"))
 (package! outshine           :recipe (:host github :repo "alphapapa/outshine"))
 (package! ox-hugo            :recipe (:host github :repo "kaushalmodi/ox-hugo"))
