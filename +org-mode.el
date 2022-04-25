@@ -989,21 +989,28 @@ is selected, only the bare key is returned."
 
 ;;;; CONSULT-ORG-ROAM
 
-(use-package! consult-org-roam
-;;  "Found  https://github.com/jgru/consult-org-roam"
-  :after org-roam
-  :init
-  (require 'consult-org-roam)
-  ;; Activate the minor-mode
-  (consult-org-roam-mode 1)
-  :custom
-  (consult-org-roam-grep-func #'consult-ripgrep)
-  :config
-  ;; Eventually suppress previewing for certain functions
-  (consult-customize
-   consult-org-roam-forward-links
-   :preview-key (kbd "M-."))
-  )
+;; (use-package! consult-org-roam
+;; ;;  "Found  https://github.com/jgru/consult-org-roam"
+;;   :after org-roam
+;;   :init
+;;   (require 'consult-org-roam)
+;;   ;; Activate the minor-mode
+;;   (consult-org-roam-mode 1)
+;;   :custom
+;;   (consult-org-roam-grep-func #'consult-ripgrep)
+;;   :config
+;;   ;; Eventually suppress previewing for certain functions
+;;   (consult-customize
+;;    consult-org-roam-forward-links
+;;    :preview-key (kbd "M-."))
+;;   )
+;;;; ORG-ROAM-RG-SEARCH
+
+(defun marty/org-roam-rg-search ()
+  "Search org-roam directory using consult-ripgrep. With live-preview."
+  (interactive)
+  (let ((consult-ripgrep-command "rg --null --ignore-case --type org --line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"))
+    (consult-ripgrep org-roam-directory)))
 
 ;;;; ORG-ROAM-TRANSIENT
 (after! org-roam
@@ -1051,3 +1058,59 @@ is selected, only the bare key is returned."
       ("or" "Add reference"    org-roam-ref-add)
       ("ot" "Add tag"          org-roam-tag-add)]])
   )
+
+(transient-define-prefix transient-roam-jump ()
+  " Roam Sub Menu"
+  ["Roam Transient"
+   ["Roam Base"
+    ("/" "RG Search"          marty/org-roam-rg-search)
+    ("F" "Find Reference"     org-roam-ref-find )
+    ("I" "Insert (orig)"      org-roam-node-insert )
+    ("M" "Buffer dedicated"   org-roam-buffer-display-dedicated )
+    ("a" "Archive to daily"   marty/org-roam-move-todo-to-today )
+    ("b" "Show Buffer"        org-roam-buffer )
+    ("g" "Roam graph"         org-roam-graph )
+    ("i" "Insert immediate"   org-roam-node-insert-immediate )
+    ("j" "Capture today"      org-roam-dailies-capture-today)
+    ("m" "Buffer toggle"      org-roam-buffer-toggle)
+    ("n" "Find Node"          org-roam-node-find)
+    ("r" "Roam refile"        org-roam-refile)
+    ("s" "Sync DB"            org-roam-db-sync)]
+   ["Roam Dailies"
+    ("d-" "Find Directory"    org-roam-dailies-find-directory)
+    ("dT" "Tomorrow"          org-roam-dailies-goto-tomorrow)
+    ("dd" "Date"              org-roam-dailies-goto-date)
+    ("dn" "Next note"         org-roam-dailies-goto-next-note)
+    ("dp" "Previous note"     org-roam-dailies-goto-previous-note)
+    ("dt" "Today"             org-roam-dailies-goto-today)
+    ("dy" "Yesterday"         org-roam-dailies-goto-yesterday)]
+   ["Capture"
+    ("cT" "Capture tomorrow"  org-roam-dailies-capture-tomorrow)
+    ("cc" "Capture"           org-roam-capture)
+    ("cd" "Capture by date"   org-roam-dailies-capture-date)
+    ("ct" "Capture today"     org-roam-dailies-capture-today)
+    ("cy" "Capture yesterday" org-roam-dailies-capture-yesterday)]
+   ["Database"
+    ("DD" "Daignose"        org-roam-db-diagnose-node)
+    ("Dc" "Clear all"       org-roam-db-clear-all)]
+   ["Object"
+    ("oA" "Remove alias"     org-roam-alias-remove)
+    ("oR" "Remove reference" org-roam-ref-remove)
+    ("oT" "Remove tag"       org-roam-tag-remove)
+    ("oa" "Add alias"        org-roam-alias-add)
+    ("or" "Add reference"    org-roam-ref-add)
+    ("ot" "Add tag"          org-roam-tag-add)]])
+
+;;;; ORG-ROAM-UI
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))

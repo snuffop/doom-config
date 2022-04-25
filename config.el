@@ -1,7 +1,7 @@
 ;;; $doomdir/config.el --- My Emacs Config File -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
-;; author: marty buchaus <marty@dabuke.com>
-;; copyright © 2022, marty buchaus, all rights reserved.
+;; author: Marty Buchaus <marty@dabuke.com>
+;; copyright © 2022, Marty Buchaus, all rights reserved.
 ;; created:  1 November 2021
 ;;
 ;;;; Notes
@@ -57,7 +57,6 @@
 (setenv "zstd" "/usr/bin/zstd")
 
 (add-to-list 'load-path "~/.config/doom/elisp")
-
 
 ;;;;; ON-SAVE
 
@@ -177,7 +176,6 @@
     '(bar window-number pdf-pages pdf-icon buffer-name)
     '(misc-info matches major-mode process vcs)))
 
-
 ;;;;; DASHBOARD
 
 (setq doom-fallback-buffer-name "► Doom"
@@ -193,7 +191,6 @@
 
 (setq fancy-splash-image (expand-file-name "banners/smaller-cute-demon.png" doom-private-dir))
 
-
 ;;;;; LINE NUMBERS
 
 (setq display-line-numbers-type 'relative)
@@ -206,12 +203,10 @@
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-
 (setq doom-fallback-buffer-name "► Doom"
       +doom-dashboard-name "► Doom")
 
 ;;;;; SYNTAX LISTS
-
 
  (add-to-list 'auto-mode-alist '("\\.service\\'" . systemd-mode))
  (add-to-list 'auto-mode-alist '("\\.service.tmpl\\'" . systemd-mode))
@@ -333,7 +328,6 @@
 
 (after! magit
   (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
-
 
 ;;;;; PROJECTILE
 

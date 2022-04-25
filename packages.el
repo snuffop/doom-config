@@ -13,6 +13,8 @@
 (package! evil-snipe :disable t)
 (package! solaire-mode :disable t)
 
+(unpin! org-roam)
+
 (package! aggressive-indent)
 (package! all-the-icons-dired)
 (package! boxy)
@@ -40,6 +42,7 @@
 (package! org-ref)
 (package! org-reverse-datetree)
 (package! org-roam-timestamps)
+(package! org-roam-ui)
 (package! org-super-agenda)
 (package! org-wild-notifier)
 (package! ox-gfm)
@@ -52,7 +55,6 @@
 
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
 (package! consult-tramp      :recipe (:host github :repo "ladicle/consult-tramp"))
-(package! consult-org-roam   :recipe (:host github :repo "jgru/consult-org-roam"))
 (package! khalel             :recipe (:host github :repo "emacsmirror/khalel"))
 (package! outshine           :recipe (:host github :repo "alphapapa/outshine"))
 (package! ox-hugo            :recipe (:host github :repo "kaushalmodi/ox-hugo"))
