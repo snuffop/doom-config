@@ -6,6 +6,7 @@
 ;;
 ;;;; Notes
 ;;
+;;  * 2022 04 25 Test github runner
 ;;  * 2022 04 21 Start Sanatizeing Config to make publicly available
 ;;  * 2021 12 29 Updated the outshine use-packages with a hook to save 3 seconds on startup time
 ;;  * 2021 12 08 Modified and working for OSX
@@ -271,17 +272,24 @@
 ;; Open files in (Option) after C-; in embark
 ;;
 (defun my/vsplit-file-open (file)
+  (let ((evil-split-window-below t))
   (+evil/window-vsplit-and-follow)
-  (find-file file))
+  (find-file file)))
 
 (defun my/split-file-open (file)
+  (let ((evil-split-window-below t))
   (+evil/window-split-and-follow)
-  (find-file file))
+  (find-file file)))
 
 (map! :after embark
       :map embark-file-map
       "V" 'my/vsplit-file-open
       "X" 'my/split-file-open)
+
+;;;;;; CONSULT
+
+(after! consult
+  (evil-collection-init 'consult))
 
 ;;;;; COMPANY
 
@@ -303,11 +311,6 @@
 (set-company-backend! '(text-mode markdown-mode gfm-mode)
   '(:seperate company-ispell company-files company-yasnippet))
 (set-company-backend! 'ess-r-mode '(company-R-args company-R-objects company-dabbrev-code :separate))
-
-;;;;; CONSULT
-
-(after! consult
-  (evil-collection-init 'consult))
 
 ;;;;; DIRED
 
