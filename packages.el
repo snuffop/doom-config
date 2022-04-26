@@ -13,8 +13,6 @@
 (package! evil-snipe :disable t)
 (package! solaire-mode :disable t)
 
-(unpin! org-roam)
-
 (package! aggressive-indent)
 (package! all-the-icons-dired)
 (package! boxy)
@@ -41,7 +39,6 @@
 (package! org-real)
 (package! org-ref)
 (package! org-reverse-datetree)
-(package! org-roam-timestamps)
 (package! org-roam-ui)
 (package! org-super-agenda)
 (package! org-wild-notifier)
