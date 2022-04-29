@@ -472,6 +472,12 @@
   (add-hook 'outline-minor-mode-hook #'outshine-mode)
   (defvar outline-minor-mode-prefix "\M-#"))
 
+;;;;; SALT MODE
+
+(use-package! salt-mode
+  :defer t
+  :mode "\\.sts\\'")
+
 ;;;;; SYSTEMD MODE
 
 (use-package! systemd

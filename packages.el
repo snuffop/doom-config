@@ -44,6 +44,7 @@
 (package! org-wild-notifier)
 (package! ox-gfm)
 (package! prescient)
+(package! salt-mode)
 (package! ssh-config-mode)
 (package! systemd)
 (package! vimrc-mode)
