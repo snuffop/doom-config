@@ -434,6 +434,13 @@
 (after! grip-mode)
   (setq grip-github-password (auth-source-pass-get 'secret "Application/github.com/emacs-token"))
 
+;;;;; HYPERBOLE
+
+(use-package! hyperbole
+  :defer t)
+
+(add-hook 'doom-first-buffer-hook  'hyperbole-mode 1)
+
 ;;;;; I3 WINDOW MANAGER CONFIG
 
 ;; Syntax highlighting for i3 config
@@ -452,6 +459,14 @@
 (use-package! khardel
   :defer t )
 
+;;;;; MUTTRC
+
+(use-package! muttrc-mode-el
+  :defer t
+  :config
+  (setq auto-mode-alist
+            (append '(("muttrc\\'" . muttrc-mode))
+                    auto-mode-alist)))
 ;;;;; NGINX
 
 (use-package! company-nginx
