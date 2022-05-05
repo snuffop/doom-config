@@ -131,7 +131,7 @@
                 (save-excursion (message-add-header "X-Mailer: mu4e/Linux"))
                 ;; (save-excursion (message-add-header "X-PGP-KEY-Fingerprint: CBE2 3C6D 1E97 5793 2C4F 91D8 3B77 E2C6 70F4 ACD2"))
                 ;; (save-excursion (message-add-header "X-PGP-Key-ID: 0x3B77E2C670F4ACD2"))
-                ;; (save-excursion (message-add-header "X-PGP-Key: https://keybase.io/mbuchaus/key.asc "))
+                (save-excursion (message-add-header "X-PGP-Key: https://keybase.io/mbuchaus/key.asc "))
                 (marty-mu4e/mu4e-compose-maybe-signed-and-crypted)
                 (set-fill-column 72)
                 (turn-on-auto-fill)))
