@@ -516,14 +516,14 @@
   (if (org-pomodoro-active-p)
       (cl-case org-pomodoro-state
         (:pomodoro
-           (format "Pomo: %d minutes - %s" (/ (org-pomodoro-remaining-seconds) 60) org-clock-heading))
+           (format " %d minutes - %s" (/ (org-pomodoro-remaining-seconds) 60) org-clock-heading))
         (:short-break
-         (format "Short break time: %d minutes" (/ (org-pomodoro-remaining-seconds) 60)))
+         (format " : %d minutes" (/ (org-pomodoro-remaining-seconds) 60)))
         (:long-break
-         (format "Long break time: %d minutes" (/ (org-pomodoro-remaining-seconds) 60)))
+         (format " %d minutes" (/ (org-pomodoro-remaining-seconds) 60)))
         (:overtime
-         (format "Overtime! %d minutes" (/ (org-pomodoro-remaining-seconds) 60))))
-    "No active pomo"))
+         (format " %d minutes" (/ (org-pomodoro-remaining-seconds) 60))))
+    ""))
 
 (use-package org-pomodoro
   :after org
