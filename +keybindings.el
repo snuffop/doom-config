@@ -26,8 +26,10 @@
  ;; :n "C-:"    #'+spell/correct
  :n "C-:"    #'flyspell-correct-wrapper
  :n "C-."    #'embark-act
+ :n "gz"     #'zoxide-find-file
  :n "C-,"    #'flyspell-correct-next)
  ;; :n "C-,"    #'+spell/next-error)
+
 
 ;;;; LEADER KEYBINDINGS
 

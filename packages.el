@@ -32,6 +32,7 @@
 (package! info-colors)
 (package! jiralib2)
 (package! khardel)
+(package! khalel)
 (package! mu4e-column-faces)
 (package! nginx-mode)
 (package! org-appear)

@@ -455,7 +455,37 @@
 
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
 
-;;;;; KHARD
+;;;;; CALENDAR
+
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")  ; org-agenda source
+    (cfw:org-create-file-source "Calendar" (concat org-directory "/" "Calendar.org") "Orange")
+
+    )))
+
+;;;;; KHALEL
+
+(use-package! khalel
+  :commands (khalel-export-org-subtree-to-calendar
+             khalel-import-upcoming-events
+             khalel-edit-calender-event
+             khalel-add-capture-template
+             )
+  :config
+  (setq khalel-khal-command "/usr/bin/khal")
+  (setq khalel-vdirsyncer-command "/usr/bin/vdirsyncer")
+  (setq khalel-default-calendar "personal")
+  (setq khalel-capture-key "e")
+  (setq khalel-import-org-file (concat org-directory "/" "Calendar.org"))
+  (setq khalel-import-org-file-confirm-overwrite nil)
+  (setq khalel-import-time-delta "30d")
+  )
+
+;;;;; KHARDEL
 
 (use-package! khardel
   :defer t )
