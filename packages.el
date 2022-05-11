@@ -53,6 +53,7 @@
 (package! vimrc-mode)
 (package! vlf)
 (package! wakatime-mode)
+(package! zoxide)
 
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
 (package! consult-tramp      :recipe (:host github :repo "ladicle/consult-tramp"))
