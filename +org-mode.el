@@ -18,6 +18,7 @@
                                (expand-file-name "Tasks.org" org-directory)
                                (expand-file-name "Habits.org" org-directory)
                                (expand-file-name "Calendar.org" org-directory)
+                               (expand-file-name "GCalendar.org" org-directory)
                                (expand-file-name "contacts.org" org-directory)
                                (expand-file-name "Someday.org" org-directory)
                                (expand-file-name "0mobile.org" org-directory)
@@ -509,32 +510,6 @@
     (dired-copy-filename-as-kill)       ;; current file name to kill ring
     (let* ((filename (current-kill 0))) ;; get topmost kill ring element
       (kill-new (concat "[[tsfile:" filename "]]"))))
-;;;;; ORG-POMODORO-POLYBAR
-
-(defun my/org-pomodoro-time ()
-  "Return the remaining pomodoro time"
-  (if (org-pomodoro-active-p)
-      (cl-case org-pomodoro-state
-        (:pomodoro
-           (format " %d minutes - %s" (/ (org-pomodoro-remaining-seconds) 60) org-clock-heading))
-        (:short-break
-         (format " : %d minutes" (/ (org-pomodoro-remaining-seconds) 60)))
-        (:long-break
-         (format " %d minutes" (/ (org-pomodoro-remaining-seconds) 60)))
-        (:overtime
-         (format " %d minutes" (/ (org-pomodoro-remaining-seconds) 60))))
-    ""))
-
-(use-package org-pomodoro
-  :after org
-  :commands (org-pomodoro)
-  :config
-  (setq
-   org-pomodoro-length 50
-   org-pomodoro-short-break-length 10
-   alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil)))
-   ))
-
 
 ;;;;; FUNCTIONS
 ;;;;;; LONG-LAT
@@ -783,6 +758,11 @@ is selected, only the bare key is returned."
 (use-package! doct
   :after org
   :commands (doct))
+
+;;;; ORG-QL
+
+(use-package! org-ql
+  :after org)
 
 ;;;; COMPANY-ORG-BLOCK
 

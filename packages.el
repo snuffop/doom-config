@@ -13,6 +13,7 @@
 (package! evil-snipe :disable t)
 (package! solaire-mode :disable t)
 
+(package! atomic-chrome)
 (package! aggressive-indent)
 (package! all-the-icons-dired)
 (package! boxy)
@@ -29,6 +30,7 @@
 (package! i3wm)
 (package! i3wm-config-mode)
 (package! info-colors)
+(package! jiralib2)
 (package! khardel)
 (package! mu4e-column-faces)
 (package! nginx-mode)
@@ -55,6 +57,6 @@
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
 (package! consult-tramp      :recipe (:host github :repo "ladicle/consult-tramp"))
 (package! khalel             :recipe (:host github :repo "emacsmirror/khalel"))
-(package! muttrc-mode        :recipe (:host github :repo "neomutt/muttrc-mode-el"))
 (package! outshine           :recipe (:host github :repo "alphapapa/outshine"))
 (package! ox-hugo            :recipe (:host github :repo "kaushalmodi/ox-hugo"))
+(package! org-ql             :recipe (:host github :repo "alphapapa/org-ql"))

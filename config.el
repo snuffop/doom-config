@@ -6,6 +6,7 @@
 ;;
 ;;;; Notes
 ;;
+;;  * 2022 05 10 add TMUX modules
 ;;  * 2022 04 25 Test github runner
 ;;  * 2022 04 21 Start Sanatizeing Config to make publicly available
 ;;  * 2021 12 29 Updated the outshine use-packages with a hook to save 3 seconds on startup time
@@ -459,14 +460,6 @@
 (use-package! khardel
   :defer t )
 
-;;;;; MUTTRC
-
-(use-package! muttrc-mode-el
-  :defer t
-  :config
-  (setq auto-mode-alist
-            (append '(("muttrc\\'" . muttrc-mode))
-                    auto-mode-alist)))
 ;;;;; NGINX
 
 (use-package! company-nginx
