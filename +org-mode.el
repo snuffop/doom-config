@@ -463,6 +463,9 @@
 
   (setq org-protocol-default-template-key "t")
 
+  ;;  ADD CAPTURE TEMPLATE for KHALEL
+  (khalel-add-capture-template)
+
 ;;;;; MAIL/MUTT
   (org-add-link-type "message" 'mutt-open-message)
 

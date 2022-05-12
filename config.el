@@ -478,6 +478,12 @@
   (setq khalel-import-time-delta "30d")
   )
 
+;;  Added to stop Calendar.org from prompting on every startup. 
+
+(setq safe-local-variable-values
+   (quote
+    ((buffer-read-only . 1))))
+
 ;;;;; KHARDEL
 
 (use-package! khardel
