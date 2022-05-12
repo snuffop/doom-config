@@ -125,7 +125,7 @@
         :desc "Switch to 9th workspace"   "9"   #'+workspace/switch-to-8
         :desc "Switch to final workspace" "0"   #'+workspace/switch-to-final)))
 
-;;;;; <leader n --- notes
+;;;;; <leader> n --- notes
 
 (map! :leader
       :prefix "n"
@@ -146,6 +146,7 @@
        :desc "Habits"        "h" #'(lambda () (interactive) (find-file (concat org-directory "Habits.org")))
        :desc "Joyent Index"  "j" #'(lambda () (interactive) (find-file (concat org-directory "Joyent/index.org")))
        :desc "read later"    "l" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
+       :desc "Projects"      "p" #'(lambda () (interactive) (find-file (concat org-directory "Projects.org")))
        :desc "Someday"       "s" #'(lambda () (interactive) (find-file (concat org-directory "Someday.org")))
        :desc "Tip Jar"       "t" #'(lambda () (interactive) (find-file (concat org-directory "TipJar.org")))
        (:prefix-map ("c" . "+config")

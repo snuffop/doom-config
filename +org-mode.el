@@ -13,6 +13,7 @@
 (setq org-roam-directory (expand-file-name "~/Nextcloud/Notes/org/"))
 (setq org-contacts-files (expand-file-name "contacts.org" org-directory))
 (setq org-roam-dailies/directory "daily/")
+(setq org-journal-dir (concat org-directory "/journal"))
 
 (setq  marty/org-agenda-files (list
                                (expand-file-name "Tasks.org" org-directory)
@@ -20,9 +21,11 @@
                                (expand-file-name "Calendar.org" org-directory)
                                (expand-file-name "GCalendar.org" org-directory)
                                (expand-file-name "contacts.org" org-directory)
+                               (expand-file-name "Projects.org" org-directory)
                                (expand-file-name "Someday.org" org-directory)
                                (expand-file-name "0mobile.org" org-directory)
                                (expand-file-name "Joyent/index.org" org-directory)
+                               (expand-file-name "SHOffice.org" org-directory)
                                "/home/marty/Nextcloud/Notes/Calendars/google.org"
                                "/home/marty/Nextcloud/Notes/Calendars/tatjana.org"))
 ;;;; ORG-SUPERSTAR
@@ -390,8 +393,7 @@
                  :icon ("sticky-note" :set "faicon" :color "blue")
                  :file "~/Nextcloud/Notes/org/Joyent/Bullets.org"
                  ;; :datetree t
-                 :function org-reverse-datetree-goto-date-in-file
-                 )
+                 :function org-reverse-datetree-goto-date-in-file)
 
                 ("Simple org-popup"
                  :keys "s"
@@ -402,13 +404,15 @@
                  :headline "Inbox"
                  :template-file "~/.config/doom/templates/org-templates/simple.org")
 
-                ("Remember-mutt" :keys "R"
+                ("Remember-mutt"
+                 :keys "R"
                  :icon ("home" :set "octicon" :color "cyan")
                  :file "~/Nextcloud/Notes/org/0mobile.org"
                  :headline "Mail"
                  :template-file "~/.config/doom/templates/org-templates/mail.org")
 
-                ("Protocol" :keys "P"
+                ("Protocol"
+                 :keys "P"
                  :file "~/Nextcloud/Notes/org/0mobile.org"
                  :icon ("tag" :set "octicon" :color "cyan")
                  :headline "Inbox"

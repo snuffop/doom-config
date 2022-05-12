@@ -1,0 +1,13 @@
+#+TITLE: Daily Notes  for `(marty/org-roam-dailies-title)`
+#+STARTUP: content
+#+filetags: :2022:Journal:
+#+category: DailyJournal
+
+* Status () {}
+* Links
+** `(marty/org-roam-dailies-graphicslink)`
+* Tasks
+
+* Joyent :@joyent:
+
+* Journal

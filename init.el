@@ -174,7 +174,6 @@
         +pomodoro
         +present
         +pretty
-        +journal
         +roam2)
        (php +lsp)
        ;;plantuml          ; diagrams for confusing people more
