@@ -1060,3 +1060,34 @@ is selected, only the bare key is returned."
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+
+;;;; ORG-POMODORO
+
+(use-package! org-pomodoro
+  :after org
+  :commands (org-pomodoro)
+  :config
+  (setq
+   org-pomodoro-length 50
+   org-pomodoro-short-break-length 10
+   ))
+
+(defun my/org-pomodoro-time ()
+  "Return the remaining pomodoro time"
+  (if (org-pomodoro-active-p)
+      (cl-case org-pomodoro-state
+        (:pomodoro
+           (format "Pomo: %d minutes - %s" (/ (org-pomodoro-remaining-seconds) 60) org-clock-heading))
+        (:short-break
+         (format "Short break time: %d minutes" (/ (org-pomodoro-remaining-seconds) 60)))
+        (:long-break
+         (format "Long break time: %d minutes" (/ (org-pomodoro-remaining-seconds) 60)))
+        (:overtime
+         (format "Overtime! %d minutes" (/ (org-pomodoro-remaining-seconds) 60))))
+    "No active pomo"))
+
+;;;; ORG-Jira
+
+(setq jiralib-url "https://jira.joyent.us")
+;; (setq jiralib-user-login-name "marty.buchaus@joyent.com")
+;; (setq jiralib-token  (auth-source-pass-get 'secret "Joyent/jira-pat-token"))

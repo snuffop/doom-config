@@ -86,6 +86,7 @@
           "y" #'password-store-otp-token-copy
           "A" #'password-store-otp-append-from-image
           "Y" #'password-store-otp-uri-copy)))
+       "r"   #'ranger
        (:prefix-map ("t" . "Tramp")
         "C"  #'tramp-cleanup-all-connections
         "B"  #'tramp-cleanup-all-buffers
