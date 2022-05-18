@@ -1089,5 +1089,5 @@ is selected, only the bare key is returned."
 ;;;; ORG-Jira
 
 (setq jiralib-url "https://jira.joyent.us")
-;; (setq jiralib-user-login-name "marty.buchaus@joyent.com")
-;; (setq jiralib-token  (auth-source-pass-get 'secret "Joyent/jira-pat-token"))
+(setq jiralib-user-login-name "marty.buchaus")
+;;#(setq jiralib-token  (auth-source-pass-get 'secret "Joyent/jira-pat-token"))
