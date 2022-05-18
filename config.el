@@ -546,6 +546,10 @@
 
 (add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
 
+;;;;; EVIL
+;;;;;
+(global-evil-matchit-mode 1)
+
 ;;;; LOAD
 
 (load! "+keybindings.el")

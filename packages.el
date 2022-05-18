@@ -25,6 +25,7 @@
 (package! doct)
 (package! ebuku)
 (package! emacsql-sqlite3)
+(package! evil-matchit)
 (package! fzf)
 (package! i3wm)
 (package! i3wm-config-mode)
