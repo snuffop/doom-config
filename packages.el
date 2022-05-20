@@ -13,6 +13,8 @@
 (package! evil-snipe :disable t)
 (package! solaire-mode :disable t)
 
+(unpin! pdf-tools)
+
 (package! atomic-chrome)
 (package! aggressive-indent)
 (package! all-the-icons-dired)
