@@ -550,6 +550,10 @@
 ;;;;;
 (global-evil-matchit-mode 1)
 
+;;;; ESHELL
+;;;;; Aliases
+;;  alias | sed 's/^alias //' | sed -E "s/^([^=]+)='(.+?)'$/\1=\2/" | sed "s/'\\\\''/'/g" | sed "s/'\\\\$/'/;" | sed -E 's/^([^=]+)=(.+)$/alias \1 \2/' >~/.config/doom/eshell/aliases
+
 ;;;; LOAD
 
 (load! "+keybindings.el")

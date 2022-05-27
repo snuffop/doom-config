@@ -1,0 +1,132 @@
+alias _cnf_print echo -e 1>&2
+alias ag ag --color --color-line-number '0;35' --color-match '46;30' --color-path '4;36'
+alias ahome $HOME/.local/bin/tmux-home.sh
+alias al alias | bat -l ini
+alias alphabet echo a b c d e f g h i j k l m n o p q r s t u v w x y z
+alias as colourify as
+alias ascii man ascii | grep -m 1 -A 63 --color=never Oct
+alias b buku --suggest
+alias bw ~/.local/bin/bw-keyctl.sh
+alias cat bat 
+alias ch chezmoi
+alias chapply chezmoi apply
+alias checkrootkits sudo rkhunter --update; sudo rkhunter --propupd; sudo rkhunter --check
+alias checkvirus clamscan --recursive=yes --infected /home
+alias chedit chezmoi edit
+alias chezeck chezmoi git pull -- --rebase && chezmoi diff
+alias chupdate chezmoi update
+alias colourify /usr/bin/grc -es --colour=auto
+alias configure colourify ./configure
+alias cp /bin/cp
+alias cpv rsync -poghb --backup-dir=/tmp/rsync -e /dev/null --progress --
+alias d dirs -v | head -10
+alias diff colourify diff
+alias disks echo "╓───── m o u n t . p o i n t s"; echo "╙────────────────────────────────────── ─ ─ "; lsblk -a; echo ""; echo "╓───── d i s k . u s a g e"; echo "╙────────────────────────────────────── ─ ─ "; df -h;
+alias ducks du -cks * | sort -nr | head -11 |cut -f2- | xargs du -hs
+alias e switch-to-emacsclient
+alias egrep /usr/bin/egrep --color=auto
+alias external_ip curl -s icanhazip.com
+alias fgrep /usr/bin/fgrep --color=auto
+alias fuck sudo $(fc -ln -1)
+alias g++ colourify g++
+alias gas colourify gas
+alias gcc colourify gcc
+alias gclip greenclip print | sed '/^$/d' | fzf -e | xargs -r -d'\n' -I '{}' greenclip print '{}'
+alias gerp grep
+alias gj fasd_dir
+alias grep /usr/bin/grep --color=auto
+alias grep_mac /usr/bin/grep -E `reg_mac`
+alias history fc -fl 1
+alias ifconfig colourify ifconfig
+alias ip ip -4 -c
+alias j jobs -l
+alias jj journalctl --user
+alias jjb journalctl --user -b
+alias jjt journalctl --user -S today
+alias jl journalctl --user -f | ccze -A
+alias kA k -Ah
+alias kH k --help
+alias ka k -ah
+alias kd k -dh
+alias kh k -h
+alias l exa --git-ignore --git --icons --classify --group-directories-first --time-style=long-iso --group --color-scale
+alias la exa -lbhHigUmuSa
+alias ld colourify ld
+alias ll exa --all --header --long --git --icons --classify --group-directories-first --time-style=long-iso --group --color-scale
+alias lld exa -lbhHFGmuSa --git --icons --classify --group-directories-first --time-style=long-iso --group --color-scale
+alias llm exa --all --header --long --sort=modified --git --icons --classify --group-directories-first --time-style=long-iso --group --color-scale
+alias llt exa -l --tree --git --icons --classify --group-directories-first --time-style=long-iso --group --color-scale
+alias lo exa -lbGF --git --icons --classify --group-directories-first --time-style=long-iso --group --color-scale
+alias lol base64 </dev/urandom | lolcat
+alias ls exa --git --icons --classify --group-directories-first --time-style=long-iso --group --color-scale
+alias lt exa --tree
+alias lx exa -lbhHigUmuSa@
+alias maek make
+alias maillog journalctl -n 50 -f -b  -u rspamd -u dovecot -u postfix@-.service | ccze -A
+alias make colourify make
+alias mirror sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist
+alias mkdir mkdir -pv
+alias mutt cd $HOME/Downloads/Mail && /usr/bin/neomutt
+alias mv /bin/mv
+alias myip external_ip
+alias netstat colourify netstat
+alias numalphabet alphabet; echo 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6
+alias pacinst pacman -Slq | fzf -m --preview 'cat <(pacman -Si {1}) <(pacman -Fl {1} | awk "{print $2}")' | xargs -r sudo pacman -S
+alias paclist pacman -Slq | fzf -m --preview 'pacman -Si {1}' | xargs -ro sudo pacman -S
+alias pacman sudo pacman
+alias pacremove pacman -Qq | fzf --multi --preview 'pacman -Qi {1}' | xargs -ro sudo pacman -Rns
+alias parui paru -S --noconfirm
+alias paruorphans paru -R $(pacman -Qtdq)
+alias parup paru -Pu
+alias parur paru -R
+alias parus paru -Ss
+alias parusu paru -Syu --devel --needed --noconfirm
+alias ping colourify ping
+alias pins paru -Slq | fzf -m --preview 'cat (paru -Si {1} | psub) (paru -Fl {1} | awk "{print $2}" | psub)' | xargs -ro paru -S
+alias refunction source ~/.zsh/functions.zsh
+alias reg_email echo "[^[:space:]]+@[^[:space:]]+"
+alias reg_ip echo "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b"
+alias reg_mac echo "[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}:[0-9a-f]{2}"
+alias rewal wal --theme dracula -s -t
+alias rmrf rm -rf
+alias rsu sudo -E su -p
+alias run-help man
+alias scp scp -r
+alias services systemctl list-units  --type=service  --state=running
+alias sjj sudo journalctl
+alias sjjb sudo journalctl -b
+alias sjjt sudo journalctl -S today
+alias slsof sudo lsof -F sn0 | tr -d '\000' | grep deleted | sed 's/^[a-z]*\([0-9]*\)n/\1 /' | sort -n
+alias ss colourify ss
+alias ssmi sshmnt -i 
+alias ssml sshmnt -l
+alias ssmm sshmnt -m 
+alias ssmu sshmnt -u 
+alias susys sudo systemctl
+alias sysu systemctl --user
+alias sysu-services systemctl --user list-units --type=service --state=running
+alias ta tmux attach -t
+alias tad tmux attach -d -t
+alias tartvf tar tvf
+alias tartvzf tar tvzf
+alias tarxvf tar xvf
+alias tempwatch while :; do sensors; sleep 1 && clear; done;
+alias tkss tmux kill-session -t
+alias tksv tmux kill-server
+alias tlol printf '\033k┐(^0^)┌\033\'
+alias tls tmux list-sessions
+alias traceroute colourify /usr/sbin/traceroute
+alias tree exa --tree
+alias ts tmux new-session -s
+alias tsad printf '\033k┐(T_T)┌\033\'
+alias tshrug printf '\033k┐(`-`)┌\033\'
+alias unicode echo ✓ ™  ♪ ♫ ☃ ° Ɵ ∫
+alias updateantivirus sudo freshclam
+alias utcdate TZ=utc date
+alias v nvim
+alias vi nvim
+alias vim nvim
+alias which-command whence
+alias x exit
+alias xsel xsel -b
+alias xup xrdb ~/.Xdefaults

@@ -790,6 +790,18 @@ is selected, only the bare key is returned."
   (setq org-roam-completion-everywhere t)
   (setq org-roam-database-connector 'sqlite3)
 
+;;;;;; ADVICE
+
+;; (defadvice! yeet/org-roam-in-own-workspace-a (&rest _)
+;;   "Open all roam buffers in there own workspace."
+;;   :before #'org-roam-node-find
+;;   :before #'org-roam-node-random
+;;   :before #'org-roam-buffer-display-dedicated
+;;   :before #'org-roam-buffer-toggle
+;;   :before #'org-roam-capture-
+;;   (when (featurep! :ui workspaces)
+;;     (+workspace-switch "*roam*" t)))
+
 ;;;;;; ORG-ROAM POPUP RULES
 
   (setq +org-roam-open-buffer-on-find-file nil)
