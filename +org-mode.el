@@ -169,7 +169,7 @@
     (hl-line-mode -1)
     (auto-revert-mode 1)
     (visual-line-mode)
-    (variable-pitch-mode 1)
+    (mixed-pitch-mode 1)
     (my/org-roam-refresh-agenda-list)
 
     (setq prettify-symbols-unprettify-at-point 'right-edge)

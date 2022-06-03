@@ -16,7 +16,7 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;; Code
+;;; CODE
 ;;;; GLOBAL
 
 (setq user-full-name "Marty Buchaus")
@@ -321,6 +321,9 @@
                               ("mkv" . "mpv")
                               ("mp4" . "mpv")))
 
+;;;;; DASH-DOCSETS
+
+(setq dash-docs-docsets-path (expand-file-name "~/Nextcloud/Misc/DocSets"))
 ;;;;; EROS
 
 (setq eros-eval-result-prefix "⟹ ")

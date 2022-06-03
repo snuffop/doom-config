@@ -11,7 +11,7 @@
        :completion
        (company           ; the ultimate code completion backend
         +childframe)
-       ;;helm              ; the *other* search engine for love and life
+       ;;corfu
        ;;ido               ; the other *other* search engine...
        ;;ivy               ; a search engine for love and life
        (vertico
@@ -98,6 +98,7 @@
        gist              ; interacting with github gists
        (lookup              ; navigate your code and its documentation
         +dictionary
+        +docsets
         +offline)
        lsp               ; M-x vscode
        (magit             ; a git porcelain for Emacs
