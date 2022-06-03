@@ -321,9 +321,6 @@
                               ("mkv" . "mpv")
                               ("mp4" . "mpv")))
 
-;;;;; DASH-DOCSETS
-
-(setq dash-docs-docsets-path (expand-file-name "~/Nextcloud/Misc/DocSets"))
 ;;;;; EROS
 
 (setq eros-eval-result-prefix "⟹ ")
@@ -354,7 +351,7 @@
 (after! treemacs
   (setq +treemacs-git-mode 'extended)
   (setq treemacs-width 30)
-  (treemacs-load-theme 'Default))
+  (treemacs-load-theme 'doom-atom))
 
 ;;;;; WHICHKEY
 
@@ -427,11 +424,23 @@
 (add-hook 'chezmoi-mode-hook #'(lambda () (if chezmoi-mode
                                          (add-to-list 'company-backends 'chezmoi-company-backend)
                                        (delete 'chezmoi-company-backend 'company-backends))))
+;;;;; DEFT
+
+(use-package! deft
+  :commands (deft)
+  :config
+  (setq deft-directory (expand-file-name "~/Nextcloud/Notes/org"))
+  (setq deft-extensions '("org" "txt" "md")))
+
 ;;;;; EBUKU
 
 (with-eval-after-load 'ebuku
   (+evil-collection-init 'ebuku)
   (evil-collection-ebuku-setup))
+
+;;;;; ESHELL
+;;;;;; Aliases
+;;  alias | sed 's/^alias //' | sed -E "s/^([^=]+)='(.+?)'$/\1=\2/" | sed "s/'\\\\''/'/g" | sed "s/'\\\\$/'/;" | sed -E 's/^([^=]+)=(.+)$/alias \1 \2/' >~/.config/doom/eshell/aliases
 
 ;;;;; GRIP
 
@@ -553,9 +562,11 @@
 ;;;;;
 (global-evil-matchit-mode 1)
 
-;;;; ESHELL
-;;;;; Aliases
-;;  alias | sed 's/^alias //' | sed -E "s/^([^=]+)='(.+?)'$/\1=\2/" | sed "s/'\\\\''/'/g" | sed "s/'\\\\$/'/;" | sed -E 's/^([^=]+)=(.+)$/alias \1 \2/' >~/.config/doom/eshell/aliases
+;;;;; ZEAL-AT-POINT
+(use-package! zeal-at-point
+  :config
+  (global-set-key "\C-cd" #'zeal-at-point)
+  (add-to-list 'zeal-at-point-mode-alist '(python-mode . "python")))
 
 ;;;; LOAD
 

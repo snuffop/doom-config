@@ -56,6 +56,7 @@
 (package! vimrc-mode)
 (package! vlf)
 (package! wakatime-mode)
+(package! zeal-at-point)
 (package! zoxide)
 
 (package! company-nginx      :recipe (:host github :repo "emacsmirror/company-nginx"))
