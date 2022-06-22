@@ -424,14 +424,6 @@
 (add-hook 'chezmoi-mode-hook #'(lambda () (if chezmoi-mode
                                          (add-to-list 'company-backends 'chezmoi-company-backend)
                                        (delete 'chezmoi-company-backend 'company-backends))))
-;;;;; DEFT
-
-(use-package! deft
-  :commands (deft)
-  :config
-  (setq deft-directory (expand-file-name "~/Nextcloud/Notes/org"))
-  (setq deft-extensions '("org" "txt" "md")))
-
 ;;;;; EBUKU
 
 (with-eval-after-load 'ebuku
@@ -441,6 +433,10 @@
 ;;;;; ESHELL
 ;;;;;; Aliases
 ;;  alias | sed 's/^alias //' | sed -E "s/^([^=]+)='(.+?)'$/\1=\2/" | sed "s/'\\\\''/'/g" | sed "s/'\\\\$/'/;" | sed -E 's/^([^=]+)=(.+)$/alias \1 \2/' >~/.config/doom/eshell/aliases
+
+;;;;; EVIL
+
+(global-evil-matchit-mode 1)
 
 ;;;;; GRIP
 
@@ -557,10 +553,6 @@
         (IS-LINUX (setq wakatime-cli-path "/usr/bin/wakatime"))))
 
 (add-hook 'doom-first-buffer-hook  #'marty/startwakatime)
-
-;;;;; EVIL
-;;;;;
-(global-evil-matchit-mode 1)
 
 ;;;;; ZEAL-AT-POINT
 (use-package! zeal-at-point

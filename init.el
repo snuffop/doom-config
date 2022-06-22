@@ -18,7 +18,7 @@
         +icons)
 
        :ui
-       deft              ; notational velocity for Emacs
+       ;;deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacus
@@ -87,6 +87,7 @@
 
        :tools
        ansible
+       biblio
        (debugger          ; FIXME stepping through code, to help you add bugs
         +lsp)
        direnv
@@ -106,10 +107,12 @@
        (pass              ; password manager for nerds
         +auth)
        pdf               ; pdf enhancements
-       ;;prodigy           ; FIXME managing external services & code builders
+       prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
+       ;;taskrunner
        terraform         ; infrastructure as code
        tmux              ; an API for interacting with tmux
+       tree-sitter
        upload            ; map local to remote projects via ssh/ftp
 
        :os

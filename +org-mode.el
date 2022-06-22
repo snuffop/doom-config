@@ -25,6 +25,7 @@
                                (expand-file-name "Someday.org" org-directory)
                                (expand-file-name "0mobile.org" org-directory)
                                (expand-file-name "Joyent/index.org" org-directory)
+                               (expand-file-name "Joyent/joyent_task.org" org-directory)
                                (expand-file-name "SHOffice.org" org-directory)
                                "/home/marty/Nextcloud/Notes/Calendars/google.org"
                                "/home/marty/Nextcloud/Notes/Calendars/tatjana.org"))
