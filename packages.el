@@ -27,6 +27,7 @@
 (package! emacsql-sqlite3)
 (package! evil-matchit)
 (package! fzf)
+(package! hyperbole)
 (package! i3wm)
 (package! i3wm-config-mode)
 (package! info-colors)
