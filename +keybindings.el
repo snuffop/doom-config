@@ -149,7 +149,7 @@
        :desc "read later"    "l" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
        :desc "Projects"      "p" #'(lambda () (interactive) (find-file (concat org-directory "Projects.org")))
        :desc "Someday"       "s" #'(lambda () (interactive) (find-file (concat org-directory "Someday.org")))
-       :desc "Tip Jar"       "t" #'(lambda () (interactive) (find-file (concat org-directory "TipJar.org")))
+       :desc "Tip Jar"       "t" #'(lambda () (interactive) (find-file (concat org-directory "TipJar/index.org")))
        (:prefix-map ("c" . "+config")
         :desc "keybindings"  "k"  #'(lambda () (interactive) (find-file (concat doom-private-dir "keybindings.el")))
         :desc "config"       "c"  #'(lambda () (interactive) (find-file (concat doom-private-dir "config.el")))
