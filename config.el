@@ -59,6 +59,10 @@
 
 (add-to-list 'load-path "~/.config/doom/elisp")
 
+;;;;; HOOKS
+
+(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
+
 ;;;;; ON-SAVE
 
 (setq +format-on-save-enabled-modes
@@ -80,10 +84,11 @@
 
 (cond (IS-MAC (setq doom-font (font-spec :family "DejaVuSansMono Nerd Font Mono" :size 13 )
                     doom-variable-pitch-font (font-spec :family "Ubuntu Nerd Font" :style "Regular" :size 13 :weight 'regular)))
-      (IS-LINUX (setq doom-font (font-spec :family "DejaVuSansMono Nerd Font Mono" :size 14 :weight 'regular )
+      (IS-LINUX (setq doom-font (font-spec :family "DejaVuSansMono Nerd Font Mono" :size 14 )
+                      doom-big-font (font-spec :family "DejaVuSansMono Nerd Font Mono" :size 22)
                       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15 )
                       doom-unicode-font (font-spec :family "symbola" :size 15)
-                      doom-big-font (font-spec :family "Ubuntu" :size 20))))
+                      doom-serif-font (font-spec :family "Ubuntu" :size 15))))
 
 ;;;;; FACES
 
@@ -105,13 +110,15 @@
 
 (setq doom-theme 'doom-one )
 
+(remove-hook 'window-setup-hook #'doom-init-theme-h)
+(add-hook 'after-init-hook #'doom-init-theme-h 'append)
 
 (after! doom-themes
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
-  (setq doom-themes-treemacs-theme "doom-colors")
-  (setq doom-themes-enable-bold t
+  (setq doom-themes-treemacs-theme "doom-colors"
+        doom-themes-enable-bold t
         doom-themes-enable-italic t
         doom-themes-padded-modeline t))
 
@@ -285,7 +292,9 @@
 ;;;;;; CONSULT
 
 (after! consult
-  (evil-collection-init 'consult))
+  (evil-collection-init 'consult)
+  (set-face-attribute 'consult-file nil :inherit 'consult-buffer)
+  (setf (plist-get (alist-get 'perl consult-async-split-styles-alist) :initial) ";"))
 
 ;;;;; COMPANY
 
@@ -328,7 +337,38 @@
 ;;;;; MAGIT
 
 (after! magit
+  (setq magit-diff-refine-hunk 'all)
   (setq magit-revision-show-gravatars '("^author:     " . "^commit:     ")))
+
+;;;;; MIXED PITCH
+
+(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
+Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
+  (when (memq major-mode mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+
+(autoload #'mixed-pitch-serif-mode "mixed-pitch"
+  "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch." t)
+
+(after! mixed-pitch
+  (defface variable-pitch-serif
+    '((t (:family "serif")))
+    "A variable-pitch face with serifs."
+    :group 'basic-faces)
+  (setq mixed-pitch-set-height t)
+  (setq variable-pitch-serif-font (font-spec :family "Ubuntu" :size 22))
+  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
+  (defun mixed-pitch-serif-mode (&optional arg)
+    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
+    (interactive)
+    (let ((mixed-pitch-face 'variable-pitch-serif))
+      (mixed-pitch-mode (or arg 'toggle)))))
 
 ;;;;; PROJECTILE
 
@@ -345,6 +385,13 @@
 (after! flyspell
   (setq ispell-personal-dictionary (expand-file-name "dictionary/personal" doom-private-dir))
   (setq flyspell-lazy-idle-seconds 0.5))
+
+;;;;; TRAMP
+
+(after! tramp
+  (setenv "SHELL" "/bin/bash")
+  (setq tramp-shell-prompt-pattern "\\(?:^\\|
+\\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*"))
 
 ;;;;; TREEMACS
 
@@ -377,6 +424,12 @@
       (apply fn args))))
 
 ;;;; MODULES
+;;;;; ACTIVITIY WATCH
+
+(use-package! activity-watch-mode
+  :config
+  (global-activity-watch-mode))
+
 ;;;;; AGGRESSIVE INDENT
 
 (use-package! aggressive-indent
@@ -506,6 +559,43 @@
 
 (use-package! khardel
   :defer t )
+
+;;;;; MARGINALIA
+
+(after! marginalia
+  (setq marginalia-censor-variables nil)
+
+  (defadvice! +marginalia--anotate-local-file-colorful (cand)
+    "Just a more colourful version of `marginalia--anotate-local-file'."
+    :override #'marginalia--annotate-local-file
+    (when-let (attrs (file-attributes (substitute-in-file-name
+                                       (marginalia--full-candidate cand))
+                                      'integer))
+      (marginalia--fields
+       ((marginalia--file-owner attrs)
+        :width 12 :face 'marginalia-file-owner)
+       ((marginalia--file-modes attrs))
+       ((+marginalia-file-size-colorful (file-attribute-size attrs))
+        :width 7)
+       ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+        :width 12))))
+
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+
 
 ;;;;; NGINX
 

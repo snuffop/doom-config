@@ -911,7 +911,10 @@ is selected, only the bare key is returned."
 
   (defun my/org-roam-refresh-agenda-list ()
     (interactive)
-    (setq org-agenda-files (delete-dups (append (my/org-roam-list-notes-by-tag "Project") (my/org-roam-recent 30) marty/org-agenda-files ))))
+    (setq org-agenda-files nil)
+    ;; (setq org-agenda-files (delete-dups (append (my/org-roam-list-notes-by-tag "Project") (my/org-roam-recent 30) marty/org-agenda-files ))))
+    (setq org-agenda-files (delete-dups (append (my/org-roam-list-notes-by-tag "Project") marty/org-agenda-files ))))
+
 
   (my/org-roam-refresh-agenda-list)
 

@@ -61,9 +61,7 @@
        word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       (dired             ; making dired pretty [functional]
-        +ranger
-        +icons)
+       (dired +icons)
        electric          ; smarter, keyword-based electric-indent
        (ibuffer         ; interactive buffer management
         +icons)
@@ -91,9 +89,8 @@
        (debugger          ; FIXME stepping through code, to help you add bugs
         +lsp)
        direnv
-       (docker
-        +lsp)
-       editorconfig      ; let someone else argue about tabs vs spaces
+       docker
+       ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
        gist              ; interacting with github gists
@@ -107,12 +104,12 @@
        (pass              ; password manager for nerds
         +auth)
        pdf               ; pdf enhancements
-       prodigy           ; FIXME managing external services & code builders
+       ;;prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
        ;;taskrunner
        terraform         ; infrastructure as code
        tmux              ; an API for interacting with tmux
-       tree-sitter
+       ;;tree-sitter
        upload            ; map local to remote projects via ssh/ftp
 
        :os
@@ -129,25 +126,25 @@
         +lsp)
        ;;(clojure           ; java with a lisp
        ;; +lsp)
-       common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .NET, and mono shenanigans
        data              ; config/data formats
-       (dart +flutter)   ; paint ui and not much else
+       ;;(dart +flutter)   ; paint ui and not much else
        ;;dhall
        ;;elixir            ; erlang done right
        ;;elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        ;;erlang            ; an elegant language for a more civilized age
-       ;;ess               ; emacs speaks statistics
+       ess               ; emacs speaks statistics
        ;;factor
        ;;faust             ; dsp, but you get to keep your soul
        ;;fsharp            ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
        (go +lsp)         ; the hipster dialect
-       ;;(haskell +lsp)    ; a language that's lazier than I am
+       (haskell +lsp)    ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
        (json              ; At least it ain't XML
@@ -158,14 +155,15 @@
        ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        (latex
+        +latexmk
+        +cdlatex
         +lsp
         +fold)
        ;;lean              ; for folks with too much to prove
+       ;;factor
        ledger            ; be audit you can be
-       (lua               ; one-based indices? one-based indices
-        +lsp)
-       (markdown
-        +grip)
+       lua               ; one-based indices? one-based indices
+       markdown
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;; ocaml             ; an objective camel
@@ -184,18 +182,15 @@
        ;;purescript        ; javascript, but functional
        (python +lsp +pyright +pyenv)
        ;;qt                ; the 'cutest' gui framework ever
-       (racket            ; a DSL for DSLs
-        +lsp
-        +xp)
+       ;;(racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
-       rest              ; Emacs as a REST client
+       ;;rest              ; Emacs as a REST client
        ;;rst               ; ReST in peace
        (ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust +lsp)
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
-       (sh                ; she sells {ba,z,fi}sh shells on the C xor
-        +lsp)
+       sh                ; she sells {ba,z,fi}sh shells on the C xor
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
@@ -217,7 +212,7 @@
        everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        ;;(rss +org)        ; emacs as an RSS reader
-       twitter           ; twitter client https://twitter.com/vnought
+       ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
        (default +bindings +smartparens)
