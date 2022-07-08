@@ -662,11 +662,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 ;;;; LOAD
 
-(load! "+keybindings.el")
-(load! "+functions.el")
-(load! "+org-mode.el")
-(load! "+mu4e.el")
-(load! "+abbrev.el")
+(load! "keybindings.el")
+(load! "functions.el")
+(load! "org-mode.el")
+(load! "mu4e.el")
+(load! "abbrev.el")
 
 ;;; CUSTOM
 

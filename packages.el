@@ -67,3 +67,4 @@
 (package! outshine            :recipe (:host github :repo "alphapapa/outshine"))
 (package! ox-hugo             :recipe (:host github :repo "kaushalmodi/ox-hugo"))
 (package! org-ql              :recipe (:host github :repo "alphapapa/org-ql"))
+
