@@ -6,6 +6,7 @@
 ;;
 ;;;; Notes
 ;;
+;;  * 2022 07 08 Rebuild doom Emacs directory fully
 ;;  * 2022 05 10 add TMUX modules
 ;;  * 2022 04 25 Test github runner
 ;;  * 2022 04 21 Start Sanatizeing Config to make publicly available
@@ -58,10 +59,6 @@
 (setenv "zstd" "/usr/bin/zstd")
 
 (add-to-list 'load-path "~/.config/doom/elisp")
-
-;;;;; HOOKS
-
-(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
 ;;;;; ON-SAVE
 
@@ -117,8 +114,7 @@
   (doom-themes-org-config)
   (doom-themes-visual-bell-config)
   (doom-themes-treemacs-config)
-  (setq doom-themes-treemacs-theme "doom-colors"
-        doom-themes-enable-bold t
+  (setq doom-themes-enable-bold t
         doom-themes-enable-italic t
         doom-themes-padded-modeline t))
 
@@ -397,8 +393,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (after! treemacs
   (setq +treemacs-git-mode 'extended)
-  (setq treemacs-width 30)
-  (treemacs-load-theme 'doom-atom))
+  (setq treemacs-width 30))
 
 ;;;;; WHICHKEY
 
@@ -530,6 +525,12 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (cfw:org-create-file-source "Calendar" (concat org-directory "/" "Calendar.org") "Orange")
 
     )))
+
+;;;;; KEYCHAIN-ENVIRONMENT
+
+(use-package! keychain-environment
+  :init
+  (keychain-refresh-environment))
 
 ;;;;; KHALEL
 

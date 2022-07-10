@@ -32,6 +32,7 @@
 (package! i3wm-config-mode)
 (package! info-colors)
 (package! jiralib2)
+(package! keychain-environment)
 (package! khardel)
 (package! khalel)
 (package! mu4e-column-faces)
