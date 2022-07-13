@@ -419,11 +419,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
       (apply fn args))))
 
 ;;;; MODULES
-;;;;; ACTIVITIY WATCH
-
-(use-package! activity-watch-mode
-  :config
-  (global-activity-watch-mode))
 
 ;;;;; AGGRESSIVE INDENT
 
@@ -490,16 +485,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (after! grip-mode)
   (setq grip-github-password (auth-source-pass-get 'secret "Application/github.com/emacs-token"))
-
-;;;;; HYPERBOLE
-
-(require 'package)
-(setq package-enable-at-startup nil) ;; Prevent double loading of libraries
-(package-initialize)
-(unless (package-installed-p 'hyperbole)
-  (package-refresh-contents)
-  (package-install 'hyperbole))
-(hyperbole-mode 1)
 
 ;;;;; I3 WINDOW MANAGER CONFIG
 

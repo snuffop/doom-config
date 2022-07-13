@@ -24,7 +24,7 @@
                                (expand-file-name "Projects.org" org-directory)
                                (expand-file-name "Someday.org" org-directory)
                                (expand-file-name "0mobile.org" org-directory)
-                               (expand-file-name "Joyent/Joyent_Task.org" org-directory)
+                               (expand-file-name "Joyent/Joyent_Tasks.org" org-directory)
                                (expand-file-name "SHOffice.org" org-directory)
                                "/home/marty/Nextcloud/Notes/Calendars/google.org"
                                "/home/marty/Nextcloud/Notes/Calendars/tatjana.org"))
@@ -42,6 +42,10 @@
 ;;;; ORG-MODE
 ;;;;; PACKAGE
 (after! org
+;;;;; INLINE IMAGES
+
+  (setq org-startup-with-inline-images t
+        org-image-actual-width nil)
 
 ;;;;; PUBLISH ALIST
 
@@ -1100,9 +1104,3 @@ is selected, only the bare key is returned."
         (:overtime
          (format "Overtime! %d minutes" (/ (org-pomodoro-remaining-seconds) 60))))
     "No active pomo"))
-
-;;;; ORG-Jira
-
-(setq jiralib-url "https://jira.joyent.us")
-(setq jiralib-user-login-name "marty.buchaus")
-;;#(setq jiralib-token  (auth-source-pass-get 'secret "Joyent/jira-pat-token"))
