@@ -307,7 +307,7 @@
                                        :height 100)
 
                   (set-face-attribute 'fixed-pitch nil
-                                       :font "Droid Sans Mono"
+                                       :font "DejaVuSansMono Nerd Font Mono"
                                        :weight 'regular
                                        :height 100)))
 
