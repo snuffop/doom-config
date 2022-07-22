@@ -53,7 +53,6 @@
 (package! vimrc-mode)
 (package! vlf)
 (package! wakatime-mode)
-(package! yaml-pro)
 (package! zeal-at-point)
 (package! zoxide)
 
