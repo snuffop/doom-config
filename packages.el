@@ -13,7 +13,6 @@
 (package! evil-snipe :disable t)
 (package! solaire-mode :disable t)
 
-;; (package! atomic-chrome)
 (package! aggressive-indent)
 (package! all-the-icons-dired)
 (package! boxy)
@@ -54,6 +53,7 @@
 (package! vimrc-mode)
 (package! vlf)
 (package! wakatime-mode)
+(package! yaml-pro)
 (package! zeal-at-point)
 (package! zoxide)
 
@@ -63,4 +63,3 @@
 (package! outshine            :recipe (:host github :repo "alphapapa/outshine"))
 (package! ox-hugo             :recipe (:host github :repo "kaushalmodi/ox-hugo"))
 (package! org-ql              :recipe (:host github :repo "alphapapa/org-ql"))
-

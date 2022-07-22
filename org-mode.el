@@ -1066,6 +1066,19 @@ is selected, only the bare key is returned."
       ("or" "Add reference"    org-roam-ref-add)
       ("ot" "Add tag"          org-roam-tag-add)]]))
 
+
+;;;; Insert File Link (Tecosaur)
+
+(defun +org-insert-file-link ()
+  "Insert a file link.  At the prompt, enter the filename."
+  (interactive)
+  (insert (format "[[%s]]" (org-link-complete-file))))
+
+(map! :after org
+      :map org-mode-map
+      :localleader
+      "l f" #'+org-insert-file-link)
+
 ;;;; ORG-ROAM-UI
 
 (use-package! org-roam-ui
@@ -1096,7 +1109,7 @@ is selected, only the bare key is returned."
   (if (org-pomodoro-active-p)
       (cl-case org-pomodoro-state
         (:pomodoro
-           (format "Pomo: %d minutes - %s" (/ (org-pomodoro-remaining-seconds) 60) org-clock-heading))
+         (format "Pomo: %d minutes - %s" (/ (org-pomodoro-remaining-seconds) 60) org-clock-heading))
         (:short-break
          (format "Short break time: %d minutes" (/ (org-pomodoro-remaining-seconds) 60)))
         (:long-break
@@ -1104,3 +1117,4 @@ is selected, only the bare key is returned."
         (:overtime
          (format "Overtime! %d minutes" (/ (org-pomodoro-remaining-seconds) 60))))
     "No active pomo"))
+

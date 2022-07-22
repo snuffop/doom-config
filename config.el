@@ -6,6 +6,7 @@
 ;;
 ;;;; Notes
 ;;
+;;  * 2022 07 19 Attempting Org-Jira again
 ;;  * 2022 07 08 Rebuild doom Emacs directory fully
 ;;  * 2022 05 10 add TMUX modules
 ;;  * 2022 04 25 Test github runner
@@ -467,6 +468,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (add-hook 'chezmoi-mode-hook #'(lambda () (if chezmoi-mode
                                          (add-to-list 'company-backends 'chezmoi-company-backend)
                                        (delete 'chezmoi-company-backend 'company-backends))))
+
 ;;;;; EBUKU
 
 (with-eval-after-load 'ebuku
