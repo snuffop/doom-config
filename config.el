@@ -431,53 +431,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   (add-hook 'php-mode-hook #'aggressive-indent-mode)
   (add-hook 'hy-mode-hook #'aggressive-indent-mode))
 
-;;;;; CHEZMOI
-
-(use-package! chezmoi
-  :config
-  (setq-default chezmoi-template-display-p t)   ;; Display template values in all source buffers.
-  (setq chezmoi-template-display-p t)           ;; Display template values in current buffer.
-  (setq-default chezmoi-template-display-p nil) ;; Don't display template values by default.
-  (global-set-key (kbd "C-c C f")  #'chezmoi-find)
-  (global-set-key (kbd "C-c C s")  #'chezmoi-write)
-  )
-
-(defun chezmoi--evil-insert-state-enter ()
-  "Run after evil-insert-state-entry."
-  (chezmoi-template-buffer-display nil (point))
-  (remove-hook 'after-change-functions #'chezmoi-template--after-change 1))
-
-(defun chezmoi--evil-insert-state-exit ()
-  "Run after evil-insert-state-exit."
-  (chezmoi-template-buffer-display nil)
-  (chezmoi-template-buffer-display t)
-  (add-hook 'after-change-functions #'chezmoi-template--after-change nil 1))
-
-(defun chezmoi-evil ()
-  (if chezmoi-mode
-      (progn
-        (add-hook 'evil-insert-state-entry-hook #'chezmoi--evil-insert-state-enter nil 1)
-        (add-hook 'evil-insert-state-exit-hook #'chezmoi--evil-insert-state-exit nil 1))
-    (progn
-      (remove-hook 'evil-insert-state-entry-hook #'chezmoi--evil-insert-state-enter 1)
-      (remove-hook 'evil-insert-state-exit-hook #'chezmoi--evil-insert-state-exit 1))))
-
-(add-hook! 'chezmoi-mode-hook #'chezmoi-evil)
-
-(require 'chezmoi-company)
-(add-hook 'chezmoi-mode-hook #'(lambda () (if chezmoi-mode
-                                         (add-to-list 'company-backends 'chezmoi-company-backend)
-                                       (delete 'chezmoi-company-backend 'company-backends))))
-
 ;;;;; EBUKU
 
 (with-eval-after-load 'ebuku
   (+evil-collection-init 'ebuku)
   (evil-collection-ebuku-setup))
-
-;;;;; ESHELL
-;;;;;; Aliases
-;;  alias | sed 's/^alias //' | sed -E "s/^([^=]+)='(.+?)'$/\1=\2/" | sed "s/'\\\\''/'/g" | sed "s/'\\\\$/'/;" | sed -E 's/^([^=]+)=(.+)$/alias \1 \2/' >~/.config/doom/eshell/aliases
 
 ;;;;; EVIL
 

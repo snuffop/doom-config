@@ -91,7 +91,6 @@
         "C"  #'tramp-cleanup-all-connections
         "B"  #'tramp-cleanup-all-buffers
         "c"  #'tramp-cleanup-this-connection
-        "t"  #'consult-tramp
         "q"  #'marty/tramp-quit))
 
 ;;;;; <leader> l --- workspace / Layout

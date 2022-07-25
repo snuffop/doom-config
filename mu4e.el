@@ -3,6 +3,9 @@
 ;; Author: Marty Buchaus <marty@dabuke.com>
 ;; Copyright © 2022, Marty Buchaus, all rights reserved.
 ;;
+;;;; Notes
+;;  + 2022 07 25 Removed the work around for mu4e as upstream fixed the module
+;;  code
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Code:
@@ -11,6 +14,7 @@
 
 ;;;; Config
 (after! mu4e
+
 ;;;;; Header Actions
 
   (add-to-list 'mu4e-headers-actions
