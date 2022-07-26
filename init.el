@@ -1,6 +1,10 @@
 ;;; init.el -*- lexical-binding: t; -*-
-;;;
-;;; Commentary:
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;;;; Commentary:
+;;
+;;
 ;;
 ;;; Code
 (doom! :input
@@ -32,17 +36,13 @@
        nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
-       (popup             ; tame sudden yet inevitable temporary windows
-        +all
-        +defaults)
+       (popup +all +defaults)
        ;;tabs              ; a tab bar for Emacs
-       (treemacs          ; a project drawer, like neotree but cooler
-        +lsp)
+       (treemacs +lsp)
        unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
-       (window-select     ; visually switch windows
-        +numbers)
+       (window-select +numbers)
        workspaces        ; tab emulation, persistence & separate workspaces
        zen               ; distraction-free coding or writing
 
@@ -63,60 +63,50 @@
        :emacs
        (dired +icons)
        electric          ; smarter, keyword-based electric-indent
-       (ibuffer         ; interactive buffer management
-        +icons)
+       (ibuffer +icons)
        tramp
        undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       eshell            ; the elisp shell that works everywhere
+       ;;eshell            ; the elisp shell that works everywhere
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
        vterm             ; the best terminal emulation in Emacs
 
        :checkers
-       (syntax              ; tasing you for every semicolon you forget
-        +childframe)
-       (spell              ; tasing you for misspelling mispelling
-        +flyspell
-        +aspell)
+       (syntax +childframe)
+       (spell +flyspell +aspell)
        grammar           ; tasing grammar mistake every you make
 
        :tools
        ansible
        biblio
-       (debugger          ; FIXME stepping through code, to help you add bugs
-        +lsp)
+       (debugger +lsp)
        direnv
        docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
        gist              ; interacting with github gists
-       (lookup              ; navigate your code and its documentation
-        +dictionary
-        +offline)
+       (lookup +dictionary +offline)
        lsp               ; M-x vscode
-       (magit             ; a git porcelain for Emacs
-        +forge)
+       (magit +forge)
        make              ; run make tasks from Emacs
-       (pass              ; password manager for nerds
-        +auth)
+       (pass +auth)
        pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
        ;;taskrunner
        terraform         ; infrastructure as code
        tmux              ; an API for interacting with tmux
-       ;;tree-sitter
+       tree-sitter
        upload            ; map local to remote projects via ssh/ftp
 
        :os
        (cond (IS-MAC
               macos))
-       (tty               ; improve the terminal Emacs experience
-        +osc)             ; use OSC-52 escape codes instead of xclip
+       (tty +osc)
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -147,18 +137,12 @@
        (haskell +lsp)    ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
-       (json              ; At least it ain't XML
-        +lsp)
+       (json +lsp)
        ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
-       (javascript        ; all(hope(abandon(ye(who(enter(here))))))
-        +lsp)
+       (javascript +lsp)
        ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
-       (latex
-        +latexmk
-        +cdlatex
-        +lsp
-        +fold)
+       (latex +latexmk +cdlatex +lsp +fold)
        ;;lean              ; for folks with too much to prove
        ;;factor
        ledger            ; be audit you can be
@@ -167,7 +151,7 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;; ocaml             ; an objective camel
-       (org               ; organize your plain life in plain text
+       (org
         +dragondrop
         +gnuplot
         +hugo
@@ -186,7 +170,7 @@
        ;;raku              ; the artist formerly known as perl6
        ;;rest              ; Emacs as a REST client
        ;;rst               ; ReST in peace
-       (ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust +lsp)
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
@@ -196,13 +180,11 @@
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        web               ; the tubes
-       (yaml              ; JSON, but readable
-        +lsp)
+       (yaml +lsp)
        ;;zig               ; C, but simpler
 
        :email
-       (mu4e
-        +gmail)
+       (:if (executable-find "mu") (mu4e +gmail))
        ;;notmuch
        ;;(wanderlust +gmail)
 

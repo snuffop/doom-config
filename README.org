@@ -1,3 +1,15 @@
-#+TITLE:  Readme
+#+TITLE: Marty's Doom Config
 
-The Doom Emacs configuration of Marty Buchaus. Use at your own risk.
+The Doom Emacs configuration of Marty Buchaus. Use at your own risk, - no really!
+
+
+* Change Log
+** 2022 07 19 Attempting Org-Jira again
+** 2022 07 08 Rebuild doom Emacs directory fully
+** 2022 05 10 add TMUX modules
+** 2022 04 25 Test github runner
+** 2022 04 21 Start Sanatizeing Config to make publicly available
+** 2021 12 29 Updated the outshine use-packages with a hook to save 3 seconds on startup time
+** 2021 12 08 Modified and working for OSX
+** 2021 11 18 Update clean Install and config
+** 2021 10 12 added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308

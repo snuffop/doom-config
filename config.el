@@ -2,19 +2,11 @@
 ;;
 ;; author: Marty Buchaus <marty@dabuke.com>
 ;; copyright © 2022, Marty Buchaus, all rights reserved.
-;; created:  1 November 2021
+;; created:  1 November 2019
 ;;
-;;;; Notes
+;;; Commentary
 ;;
-;;  * 2022 07 19 Attempting Org-Jira again
-;;  * 2022 07 08 Rebuild doom Emacs directory fully
-;;  * 2022 05 10 add TMUX modules
-;;  * 2022 04 25 Test github runner
-;;  * 2022 04 21 Start Sanatizeing Config to make publicly available
-;;  * 2021 12 29 Updated the outshine use-packages with a hook to save 3 seconds on startup time
-;;  * 2021 12 08 Modified and working for OSX
-;;  * 2021 11 18 Update clean Install and config
-;;  * 2021 10 12 added code from Stuff from  https://github.com/Artawower/.doom/blob/main/config.el#L308
+;; See README.org
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -46,9 +38,6 @@
 
 (setq garbage-collection-messages nil)
 
-(after! gcmh
-  (setq gcmh-high-cons-threshold 67108864))  ; 33554432 32mb, or 67108864 64mb, or *maybe* 128mb, BUT NOT 512mb
-
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)  ; Make the scratch buffer start in lisp mode
 
 (display-time-mode 1)                              ; enable time in the mode-line
@@ -57,9 +46,26 @@
 (global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly Essie
 
 (set-window-buffer nil (current-buffer))
-(setenv "zstd" "/usr/bin/zstd")
+;;(setenv "zstd" "/usr/bin/zstd")
 
 (add-to-list 'load-path "~/.config/doom/elisp")
+;;;;; DAEMON
+
+(defun greedily-do-daemon-setup ()
+  (require 'org)
+  (when (require 'mu4e nil t)
+    (setq mu4e-confirm-quit t)
+    (setq +mu4e-lock-greedy t)
+    (setq +mu4e-lock-relaxed t)
+    (+mu4e-lock-add-watcher)
+    (when (+mu4e-lock-available t)
+      (mu4e~start))))
+
+(when (daemonp)
+  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup)
+  (add-hook! 'server-after-make-frame-hook
+    (unless (string-match-p "\\*draft\\|\\*stdin\\|emacs-everywhere" (buffer-name))
+      (switch-to-buffer +doom-dashboard-name))))
 
 ;;;;; ON-SAVE
 
@@ -110,6 +116,10 @@
 
 (remove-hook 'window-setup-hook #'doom-init-theme-h)
 (add-hook 'after-init-hook #'doom-init-theme-h 'append)
+(delq! t custom-theme-load-path)
+
+(custom-set-faces!
+  '(doom-modeline-buffer-modified :foreground "orange"))
 
 (after! doom-themes
   (doom-themes-org-config)
@@ -133,8 +143,8 @@
         doom-modeline-modal-icon nil
         doom-modeline-vcs-max-length 60)
 
-  (set-face-attribute 'mode-line nil :family "Noto Sans" :height 100)
-  (set-face-attribute 'mode-line-inactive nil :family "Noto Sans" :height 100)
+  (set-face-attribute 'mode-line nil :family "Ubuntu" :height 100)
+  (set-face-attribute 'mode-line-inactive nil :family "Ubuntu" :height 100)
 
   (add-hook! 'doom-modeline-mode-hook
     (progn
@@ -142,7 +152,6 @@
                           :background (face-background 'mode-line)
                           :foreground (face-foreground 'mode-line)
                           )))
-
 
   (doom-modeline-def-segment buffer-name
     "Display the current buffer's name, without any other information."
@@ -179,7 +188,17 @@
 
   (doom-modeline-def-modeline 'pdf
     '(bar window-number pdf-pages pdf-icon buffer-name)
-    '(misc-info matches major-mode process vcs)))
+    '(misc-info matches major-mode process vcs))
+
+  (defun doom-modeline-conditional-buffer-encoding ()
+    "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
+    (setq-local doom-modeline-buffer-encoding
+                (unless (and (memq (plist-get (coding-system-plist buffer-file-coding-system) :category)
+                                   '(coding-category-undecided coding-category-utf-8))
+                             (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
+                  t)))
+
+  (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding))
 
 ;;;;; DASHBOARD
 
@@ -195,6 +214,29 @@
   '(doom-dashboard-menu-title :inherit font-lock-function-name-face))
 
 (setq fancy-splash-image (expand-file-name "banners/smaller-cute-demon.png" doom-private-dir))
+
+(defun +doom-dashboard-setup-modified-keymap ()
+  (setq +doom-dashboard-mode-map (make-sparse-keymap))
+  (map! :map +doom-dashboard-mode-map
+        :desc "Find file" :ne "f" #'find-file
+        :desc "Recent files" :ne "r" #'consult-recent-file
+        :desc "Config dir" :ne "C" #'doom/open-private-config
+        :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
+        :desc "Open dotfile" :ne "." (cmd! (doom-project-find-file "~/.config/"))
+        :desc "Notes (roam)" :ne "n" #'org-roam-node-find
+        :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
+        :desc "Switch buffers (all)" :ne "B" #'consult-buffer
+        :desc "IBuffer" :ne "i" #'ibuffer
+        :desc "Previous buffer" :ne "p" #'previous-buffer
+        :desc "Set theme" :ne "t" #'consult-theme
+        :desc "Quit" :ne "Q" #'save-buffers-kill-terminal
+        :desc "Show keybindings" :ne "h" (cmd! (which-key-show-keymap '+doom-dashboard-mode-map))))
+
+(add-transient-hook! #'+doom-dashboard-mode (+doom-dashboard-setup-modified-keymap))
+(add-transient-hook! #'+doom-dashboard-mode :append (+doom-dashboard-setup-modified-keymap))
+(add-hook! 'doom-init-ui-hook :append (+doom-dashboard-setup-modified-keymap))
+
+(map! :leader :desc "Dashboard" "ad" #'+doom-dashboard/open)
 
 ;;;;; LINE NUMBERS
 
@@ -226,6 +268,12 @@
  (add-to-list 'auto-mode-alist '("\\.netdev\\'" . conf-unix-mode))
  (add-to-list 'auto-mode-alist '("\\.network\\'" . conf-unix-mode))
  (add-to-list 'auto-mode-alist '("\\.link\\'" . conf-unix-mode))
+ (add-to-list 'auto-mode-alist '("\\.j2\\'" . jinja2-mode))
+
+;;;;; WINDOWS
+
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
 
 ;;;; PACKAGES
 ;;;;; AUTOINSERT
@@ -606,7 +654,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   (global-set-key "\C-cd" #'zeal-at-point)
   (add-to-list 'zeal-at-point-mode-alist '(python-mode . "python")))
 
-;;;; LOAD
+;;;; LOAD FILES
 
 (load! "keybindings.el")
 (load! "functions.el")
