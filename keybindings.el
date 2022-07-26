@@ -37,15 +37,16 @@
       "TAB"  #'evil-switch-to-windows-last-buffer
       "SPC"  #'execute-extended-command
 
-      ;;; <leader> a --- Application
+;;;;; <leader> a --- Application
+
       (:prefix-map ("a" . "Application")
-       :desc "MU4E"      "m"  #'=mu4e
-       :desc "Dashboard" "d"  #'+doom-dashboard/open
+       :desc "MU4E"              "m"  #'=mu4e
+       :desc "Dashboard"         "d"  #'+doom-dashboard/open
+       :desc "consult-recoll"    "r"  #'consult-recoll
        (:prefix-map ("b" . "buku")
          "b"  #'ebuku
          "s"  #'ebuku-search-on-all)
-
-       ;; ORG
+;; ORG
        (:prefix-map ("o" . "org")
         "/" #'org-occur-in-agenda-files
         "a" #'org-agenda-list
@@ -67,8 +68,7 @@
           "t"  #'org-timer-set-timer
           "p"  #'org-timer-pause-or-continue
           "q"  #'org-timer-stop)))
-
-       ;; Tools
+;; Pass
        (:when (featurep! :tools pass)
         (:prefix-map ("p" . "pass")
          "/"  #'+pass/consult
@@ -87,7 +87,7 @@
           "y" #'password-store-otp-token-copy
           "A" #'password-store-otp-append-from-image
           "Y" #'password-store-otp-uri-copy)))
-       "r"   #'ranger
+;; Tramp
        (:prefix-map ("t" . "Tramp")
         "C"  #'tramp-cleanup-all-connections
         "B"  #'tramp-cleanup-all-buffers
@@ -95,6 +95,7 @@
         "q"  #'marty/tramp-quit))
 
 ;;;;; <leader> l --- workspace / Layout
+
       (:when (featurep! :ui workspaces)
        (:prefix-map ("l" . "workspace")
         :desc "Display tab bar"           "SPC" #'+workspace/display
@@ -103,7 +104,6 @@
         :desc "Switch to last workspace"  "`"   #'+workspace/other
         :desc "Move workspace left"       "<"   #'+workspace/swap-left
         :desc "Move workspace right"      ">"   #'+workspace/swap-right
-        :desc "Burly open Bookmark "      "b"   #'burly-open-bookmark
         :desc "New workspace"             "n"   #'+workspace/new
         :desc "Create named workspace"    "N"   #'+workspace/new-named
         :desc "open workspace from file"  "o"   #'+workspace/load
@@ -141,7 +141,7 @@
        :desc "0mobile"       "0" #'(lambda () (interactive) (find-file (concat org-directory "0mobile.org")))
        :desc "Bullets"       "b" #'(lambda () (interactive) (find-file (concat org-directory "Joyent/Bullets.org")))
        :desc "Desktop"       "d" #'(lambda () (interactive) (find-file (concat org-directory "desktop.org")))
-       :desc "MD Cheat"      "D" #'(lambda () ( interactive) (find-file "~/Nextcloud/Notes/markdown/markdown-cheat-sheet.md"))
+       :desc "MD Cheat"      "D" #'(lambda () (interactive) (find-file "~/Nextcloud/Notes/markdown/markdown-cheat-sheet.md"))
        :desc "contacts"      "o" #'(lambda () (interactive) (find-file (concat org-directory "contacts.org")))
        :desc "read-later"    "r" #'(lambda () (interactive) (find-file (concat org-directory "read-later.org")))
        :desc "Tasks"         "g" #'(lambda () (interactive) (find-file (concat org-directory "Tasks.org")))
