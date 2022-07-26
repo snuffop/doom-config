@@ -215,28 +215,6 @@
 
 (setq fancy-splash-image (expand-file-name "banners/smaller-cute-demon.png" doom-private-dir))
 
-(defun +doom-dashboard-setup-modified-keymap ()
-  (setq +doom-dashboard-mode-map (make-sparse-keymap))
-  (map! :map +doom-dashboard-mode-map
-        :desc "Find file" :ne "f" #'find-file
-        :desc "Recent files" :ne "r" #'consult-recent-file
-        :desc "Config dir" :ne "C" #'doom/open-private-config
-        :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
-        :desc "Open dotfile" :ne "." (cmd! (doom-project-find-file "~/.config/"))
-        :desc "Notes (roam)" :ne "n" #'org-roam-node-find
-        :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
-        :desc "Switch buffers (all)" :ne "B" #'consult-buffer
-        :desc "IBuffer" :ne "i" #'ibuffer
-        :desc "Previous buffer" :ne "p" #'previous-buffer
-        :desc "Set theme" :ne "t" #'consult-theme
-        :desc "Quit" :ne "Q" #'save-buffers-kill-terminal
-        :desc "Show keybindings" :ne "h" (cmd! (which-key-show-keymap '+doom-dashboard-mode-map))))
-
-(add-transient-hook! #'+doom-dashboard-mode (+doom-dashboard-setup-modified-keymap))
-(add-transient-hook! #'+doom-dashboard-mode :append (+doom-dashboard-setup-modified-keymap))
-(add-hook! 'doom-init-ui-hook :append (+doom-dashboard-setup-modified-keymap))
-
-(map! :leader :desc "Dashboard" "ad" #'+doom-dashboard/open)
 
 ;;;;; LINE NUMBERS
 
@@ -341,6 +319,20 @@
   (set-face-attribute 'consult-file nil :inherit 'consult-buffer)
   (setf (plist-get (alist-get 'perl consult-async-split-styles-alist) :initial) ";"))
 
+;;;;;; CONSULT-RECOLL
+
+  (defun my-recoll-format (title url mime-type)
+    ;; remove from url the common prefixes /home/jao/{org/doc,doc,...}
+    (let* ((u (replace-regexp-in-string "/home/marty/" "" url))
+           (u (replace-regexp-in-string
+               "\\(doc\\|org/doc\\|.emacs.d/gnus/Mail\\|var/mail\\)/" "" u)))
+      (format "%s (%s, %s)"
+              (propertize title 'face 'consult-recoll-title-face)
+              (propertize u 'face 'consult-recoll-url-face)
+              (propertize mime-type 'face 'consult-recoll-mime-face))))
+
+  (setq consult-recoll-format-candidate #'my-recoll-format)
+
 ;;;;; COMPANY
 
 (after! company
@@ -361,6 +353,7 @@
 (set-company-backend! '(text-mode markdown-mode gfm-mode)
   '(:seperate company-ispell company-files company-yasnippet))
 (set-company-backend! 'ess-r-mode '(company-R-args company-R-objects company-dabbrev-code :separate))
+
 
 ;;;;; DIRED
 

@@ -39,7 +39,8 @@
 
       ;;; <leader> a --- Application
       (:prefix-map ("a" . "Application")
-       "m"  #'=mu4e
+       :desc "MU4E"      "m"  #'=mu4e
+       :desc "Dashboard" "d"  #'+doom-dashboard/open
        (:prefix-map ("b" . "buku")
          "b"  #'ebuku
          "s"  #'ebuku-search-on-all)
