@@ -46,9 +46,9 @@
 (global-subword-mode 1)                            ; CamelCase and it makes refactoring slightly Essie
 
 (set-window-buffer nil (current-buffer))
-;;(setenv "zstd" "/usr/bin/zstd")
 
 (add-to-list 'load-path "~/.config/doom/elisp")
+
 ;;;;; DAEMON
 
 (defun greedily-do-daemon-setup ()
