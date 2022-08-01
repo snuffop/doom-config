@@ -13,13 +13,11 @@
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       (company           ; the ultimate code completion backend
-        +childframe)
+       (company +childframe)
        ;;corfu
        ;;ido               ; the other *other* search engine...
        ;;ivy               ; a search engine for love and life
-       (vertico
-        +icons)
+       (vertico +icons)
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -37,8 +35,8 @@
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
        (popup +all +defaults)
-       ;;tabs              ; a tab bar for Emacs
-       (treemacs +lsp)
+       ;; tabs              ; a tab bar for Emacs
+       treemacs
        unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB

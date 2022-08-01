@@ -38,30 +38,6 @@
       (setq list (cdr list)))
     (nreverse new-list)))
 
-;;;; Tecosaur
-;;;;; Conditional display of encodeing
-(defun doom-modeline-conditional-buffer-encoding ()
-  "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
-  (setq-local doom-modeline-buffer-encoding
-              (unless (and (memq (plist-get (coding-system-plist buffer-file-coding-system) :category)
-                                 '(coding-category-undecided coding-category-utf-8))
-                           (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
-                t)))
-
-;;;;; Geedily daemon
-(defun greedily-do-daemon-setup ()
-  (require 'org)
-  (when (require 'mu4e nil t)
-    (setq mu4e-confirm-quit t)
-    (setq +mu4e-lock-greedy t)
-    (setq +mu4e-lock-relaxed t)
-    (+mu4e-lock-add-watcher)
-    (when (+mu4e-lock-available t)
-      (mu4e~start))))
-
-(when (daemonp)
-  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup))
-
 ;;;; OPEN MUTT MESSAGE
 
 (defun mutt-open-message (message-id)
@@ -200,35 +176,3 @@ is nil, refile in the current file."
         ))
     )
   )
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; EZF Emacs Fuzzy Finder ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; https://www.masteringemacs.org/article/fuzzy-finding-emacs-instead-of-fzf
-(defun ezf-default (filename)
-  "EZF completion with your default completion system."
-  (completing-read-multiple
-   "Pick a Candidate: "
-   (with-temp-buffer
-     (insert-file-contents-literally filename nil)
-     (string-lines (buffer-string) t))))
-
-(defvar ezf-separators " "
-  "Regexp of separators `ezf' should use to split a line.")
-
-(defun ezf (filename &optional field completing-fn)
-  "Wrapper that calls COMPLETION-FN with FILENAME.
-
-Optionally split each line of string by `ezf-separators' if FIELD
-is non-nil and return FIELD.
-
-If COMPLETING-FN is nil default to `ezf-default'."
-  (when-let (candidates (funcall (or completing-fn 'ezf-default) filename))
-    (mapconcat (lambda (candidate)
-                 (shell-quote-argument
-                  (if field
-                      (nth (1- field) (split-string candidate ezf-separators t " "))
-                    candidate)))
-               candidates
-               " ")))

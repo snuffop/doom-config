@@ -4,8 +4,10 @@
 ;; Copyright © 2022, Marty Buchaus, all rights reserved.
 ;;
 ;;;; Notes
+;;
 ;;  + 2022 07 25 Removed the work around for mu4e as upstream fixed the module
 ;;  code
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Code:
@@ -13,6 +15,7 @@
 (add-load-path! "/usr/share/emacs/site-lisp/mu4e")
 
 ;;;; Config
+
 (after! mu4e
 
 ;;;;; Header Actions
