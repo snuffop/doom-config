@@ -43,6 +43,7 @@
        :desc "MU4E"              "m"  #'=mu4e
        :desc "Dashboard"         "d"  #'+doom-dashboard/open
        :desc "consult-recoll"    "r"  #'consult-recoll
+       :desc "Xeft-mode"         "x"  #'xeft
        (:prefix-map ("b" . "buku")
          "b"  #'ebuku
          "s"  #'ebuku-search-on-all)
@@ -93,6 +94,30 @@
         "B"  #'tramp-cleanup-all-buffers
         "c"  #'tramp-cleanup-this-connection
         "q"  #'marty/tramp-quit))
+
+;;;;; <leader> f --- file
+      (:prefix-map ("f" . "file")
+       :desc "Open project editorconfig"   "c"   #'editorconfig-find-current-editorconfig
+       :desc "Copy this file"              "C"   #'doom/copy-this-file
+       :desc "Find directory"              "d"   #'+default/dired
+       :desc "Delete this file"            "D"   #'doom/delete-this-file
+       :desc "Find file in emacs.d"        "e"   #'doom/find-file-in-emacsd
+       :desc "Browse emacs.d"              "E"   #'doom/browse-in-emacsd
+       :desc "Find file"                   "f"   #'find-file
+       :desc "Find file from here"         "F"   #'+default/find-file-under-here
+       :desc "Locate file"                 "l"   #'locate
+       :desc "Find file in private config" "p"   #'doom/find-file-in-private-config
+       :desc "Browse private config"       "P"   #'doom/open-private-config
+       :desc "Recent files"                "r"   #'recentf-open-files
+       :desc "Rename/move file"            "R"   #'doom/move-this-file
+       :desc "Save file"                   "s"   #'save-buffer
+       :desc "Save file as..."             "S"   #'write-file
+       :desc "Sudo find file"              "u"   #'doom/sudo-find-file
+       :desc "Sudo this file"              "U"   #'doom/sudo-this-file
+       :desc "Yank file path"              "y"   #'+default/yank-buffer-path
+       :desc "Yank file path from project" "Y"   #'+default/yank-buffer-path-relative-to-project
+       :desc "Search Directory FD"         "/"   #'+vertico/consult-fd
+       )
 
 ;;;;; <leader> l --- workspace / Layout
 

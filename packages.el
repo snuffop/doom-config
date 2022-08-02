@@ -13,6 +13,12 @@
 (package! evil-snipe :disable t)
 (package! solaire-mode :disable t)
 
+(unpin! jinja2-mode)
+(unpin! ansible)
+(unpin! ansible-doc)
+(unpin! yaml-mode)
+(unpin! company-ansible)
+
 (package! aggressive-indent)
 (package! all-the-icons-dired)
 (package! boxy)
@@ -60,3 +66,4 @@
 (package! outshine            :recipe (:host github :repo "alphapapa/outshine"))
 (package! ox-hugo             :recipe (:host github :repo "kaushalmodi/ox-hugo"))
 (package! org-ql              :recipe (:host github :repo "alphapapa/org-ql"))
+(package! xeft                :recipe (:host github :repo "casouri/xeft"))

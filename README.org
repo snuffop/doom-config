@@ -4,6 +4,7 @@ The Doom Emacs configuration of Marty Buchaus. Use at your own risk, - no really
 
 
 * Change Log
+** 2022 08 02 Moved and rebuild with new doom profile system
 ** 2022 07 19 Attempting Org-Jira again
 ** 2022 07 08 Rebuild doom Emacs directory fully
 ** 2022 05 10 add TMUX modules
